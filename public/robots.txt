@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /data/phpmorphy
+Disallow: /admin
+Disallow: /base/*
+Host: https://buhurt.ru

@@ -1,0 +1,876 @@
+<?php namespace App\Http\Controllers;
+
+use App\Models\Book;
+use App\Models\Film;
+use App\Models\Game;
+use App\Models\Band;
+use App\Models\Album;
+use App\Models\Genre;
+use App\Models\Person;
+use App\Models\Company;
+use App\Models\Helpers;
+use App\Models\Country;
+use App\Models\NotFound;
+use App\Models\Platform;
+use App\Models\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\DB;
+
+class SearchController extends Controller {
+
+	protected $prefix = 'search';
+
+	protected $x_small_limit = 3;
+	protected $small_limit = 5;
+	protected $normal_limit = 28;
+	protected $default_sort = 'name';
+	protected $default_sort_direction = 'asc';
+
+	/**
+	 * @return mixed
+	 */
+	public function everything()
+	{
+		$presearch_query =  Input::get('query');
+		$search_query =  $this->prepare_query($presearch_query);
+		$order = 'name';
+
+		if(!empty($search_query))
+		{
+			$length = mb_strlen($search_query);
+			$min_length = 3;
+			if($min_length > $length)
+			{
+				$message = 'Для поиска нужно хотя бы '.$min_length.' буквы';
+				return View::make($this->prefix.'.error', array(
+					'message' => $message
+				));
+			}
+			else
+			{
+				$search_result = $this->main_search($search_query, $order, $presearch_query);
+
+				if(!$search_result) {
+
+					$search_query2ru = Helpers::switch2ru($search_query);
+					//die($search_query2ru);
+					$search_result2ru = $this->main_search($search_query2ru, $order, $search_query2ru);
+					//die($search_result2ru);
+
+					if(!$search_result2ru) {
+
+						$search_query2en = Helpers::switch2en($search_query);
+						$search_result2en = $this->main_search($search_query2en, $order, $search_query2en);
+
+						if(!$search_result2en) {
+
+							//$message = 'Кажется, по этому запросу ничего не найдено. <a href="/admin/add/">Добавить элемент</a>?';
+							$not_found = new NotFound();
+
+							$user_id = 1;
+							if (Auth::check()) {
+								$user_id = Auth::user()->id;
+							}
+							$search = $search_query;
+
+							$not_found->user_id = $user_id;
+							$not_found->search = $search;
+							$not_found->save();
+
+							$message = 'Кажется, по этому запросу ничего не найдено.';
+							if (Helpers::is_admin()) {
+								$message .= ' 
+									<a href="/admin/add/">Добавить элемент</a>?</p>
+									
+									<p>
+									Быстро создать
+									<a href="/admin/q_add/books/?new_name='.urlencode($search).'">книгу</a>,
+									<a href="/admin/q_add/films/?new_name='.urlencode($search).'">фильм</a>,
+									<a href="/admin/q_add/games/?new_name='.urlencode($search).'">игру</a>,
+									<a href="/admin/q_add/albums/?new_name='.urlencode($search).'">альбом</a>
+								';
+							} else {
+								$message .= ' Мы постараемся добавить произведение, которое вы искали, в ближайшее время.';
+							}
+
+							return View::make($this->prefix . '.error', array(
+								'message' => $message
+							));
+
+						} else {return $search_result2en;}
+
+					} else {return $search_result2ru;}
+
+				} else {return $search_result;}
+			}
+		}
+		else
+		{
+			$message = 'Кажется, запрос пуст';
+			return View::make($this->prefix.'.error', array(
+				'message' => $message
+			));
+		}
+
+	}
+
+	/**
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function everything_json()
+	{
+		$result_array = array();
+		$persons = $books = $films = $games = $albums = $bands = array();
+
+		$limit = 3;
+
+		$presearch_query =  Input::get('term');
+		$search_query =  $this->prepare_query($presearch_query);
+
+		if(!empty($search_query)) {
+
+			$persons = Person::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->pluck('name')
+			;
+
+			$books = Book::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->pluck('name')
+			;
+
+			$films = Film::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->pluck('name')
+			;
+
+			$games = Game::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->pluck('name')
+			;
+
+			$albums = Album::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->pluck('name')
+			;
+
+			$bands = Band::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->pluck('name')
+			;
+
+		} else {
+			//$persons = $books = $films = $games = $albums = $bands = array();
+		}
+
+		foreach($persons 	as $key => $value) 		{$result_array[] = $value;}
+		foreach($books 		as $key => $value) 		{$result_array[] = $value;}
+		foreach($films 		as $key => $value) 		{$result_array[] = $value;}
+		foreach($games 		as $key => $value) 		{$result_array[] = $value;}
+		foreach($albums 	as $key => $value) 		{$result_array[] = $value;}
+		foreach($bands 		as $key => $value) 		{$result_array[] = $value;}
+
+		$result = $result_array;
+
+		//echo $result;
+		return View::make($this->prefix . '.json', array(
+			'result' => $result,
+		));
+
+	}
+
+
+	public function advanced()
+	{
+
+		return View::make($this->prefix.'.advanced.index', array(
+			//'message' => $message
+		));
+
+	}
+
+
+	public function persons()
+	{
+		$sub_section = '';
+		$section = 'persons';
+		$title = 'Персоны';
+		$subtitle = '';
+
+		$sort = $this->default_sort;
+		$sort_direction = $this->default_sort_direction;
+		$limit = $this->normal_limit;
+
+		$elements = Person::orderBy($sort, $sort_direction)
+			//->remember(60)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.advanced.list', array(
+			'title' => $title,
+			'subtitle' => $subtitle,
+			'sub_section' => $sub_section,
+			'section' => $section,
+			'elements' => $elements
+		));
+
+	}
+
+
+	public function companies()
+	{
+		$sub_section = '';
+		$section = 'companies';
+		$title = 'Компании';
+		$subtitle = '';
+
+		$sort = $this->default_sort;
+		$sort_direction = $this->default_sort_direction;
+		$limit = $this->normal_limit;
+
+		$elements = Company::orderBy($sort, $sort_direction)
+			//->remember(60)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.advanced.list', array(
+			'title' => $title,
+			'subtitle' => $subtitle,
+			'sub_section' => $sub_section,
+			'section' => $section,
+			'elements' => $elements
+		));
+
+	}
+
+
+	public function bands()
+	{
+		$sub_section = '';
+		$section = 'bands';
+		$title = 'Группы';
+		$subtitle = '';
+
+		$sort = $this->default_sort;
+		$sort_direction = $this->default_sort_direction;
+		$limit = $this->normal_limit;
+
+		$elements = Band::orderBy($sort, $sort_direction)
+			//->remember(60)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.advanced.list', array(
+			'title' => $title,
+			'subtitle' => $subtitle,
+			'sub_section' => $sub_section,
+			'section' => $section,
+			'elements' => $elements
+		));
+
+	}
+
+
+	public function collections()
+	{
+		$sub_section = '';
+		$section = 'collections';
+		$title = 'Коллекции';
+		$subtitle = '';
+
+		$sort = $this->default_sort;
+		$sort_direction = $this->default_sort_direction;
+		$limit = $this->normal_limit;
+
+		$elements = Collection::orderBy($sort, $sort_direction)
+			//->remember(60)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.advanced.list', array(
+			'title' => $title,
+			'subtitle' => $subtitle,
+			'sub_section' => $sub_section,
+			'section' => $section,
+			'elements' => $elements
+		));
+
+	}
+
+
+	public function genres($section)
+	{
+		$sub_section = 'genres';
+		$title = Helpers::get_section_name($section);
+		$subtitle = 'Жанры';
+		$type = Helpers::get_section_type($section);
+
+		$sort = $this->default_sort;
+		$sort_direction = $this->default_sort_direction;
+		$limit = $this->normal_limit;
+
+		$elements = Genre::where('element_type', '=', $type)
+			->orderBy($sort, $sort_direction)
+			//->remember(60)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.advanced.list', array(
+			'title' => $title,
+			'subtitle' => $subtitle,
+			'sub_section' => $sub_section,
+			'section' => $section,
+			'elements' => $elements
+		));
+
+	}
+
+
+	public function countries()
+	{
+		$sub_section = 'countries';
+		$section = 'films';
+		$title = 'Страны';
+		$subtitle = '';
+
+		$sort = $this->default_sort;
+		$sort_direction = $this->default_sort_direction;
+		$limit = $this->normal_limit;
+
+		$elements = Country::orderBy($sort, $sort_direction)
+			//->remember(60)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.advanced.list', array(
+			'title' => $title,
+			'subtitle' => $subtitle,
+			'sub_section' => $sub_section,
+			'section' => $section,
+			'elements' => $elements
+		));
+	}
+
+
+	public function platforms()
+	{
+		$sub_section = 'platforms';
+		$section = 'games';
+		$title = 'Игровые платформы';
+		$subtitle = '';
+
+		$sort = $this->default_sort;
+		$sort_direction = $this->default_sort_direction;
+		$limit = $this->normal_limit;
+
+		$elements = Platform::orderBy($sort, $sort_direction)
+			//->remember(60)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.advanced.list', array(
+			'title' => $title,
+			'subtitle' => $subtitle,
+			'sub_section' => $sub_section,
+			'section' => $section,
+			'elements' => $elements
+		));
+	}
+
+
+	public function years($section)
+	{
+		$sub_section = 'years';
+		$title = Helpers::get_section_name($section);
+		$subtitle = 'Года';
+
+		$sort = 'year';
+		$sort_direction = 'desc';
+		//$limit = $this->normal_limit;
+
+		$elements = DB::table($section)
+			//->select('year')
+			->selectRaw('`year` as `id`, `year` as `name`')
+			->distinct()
+			->orderBy($sort, $sort_direction)
+			//->remember(60)
+			->get()
+			//->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.advanced.years_list', array(
+			'title' => $title,
+			'subtitle' => $subtitle,
+			'sub_section' => $sub_section,
+			'section' => $section,
+			'elements' => $elements
+		));
+
+	}
+
+
+	public function person_name()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$persons = Person::where('name', 'like', '%'.$query.'%')
+				->limit($limit)
+				//->remember(60)
+				->get()
+			;
+			$result = '['.Helpers::object2js_array($persons).']';
+		}
+
+		echo $result;
+	}
+
+	public function company_name()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$companies = Company::where('name', 'like', '%'.$query.'%')
+				->limit($limit)
+				//->remember(60)
+				->get()
+			;
+			$result = '['.Helpers::object2js_array($companies).']';
+		}
+
+		echo $result;
+	}
+
+	public function collection_name()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$collections = Collection::where('name', 'like', '%'.$query.'%')
+				->limit($limit)
+				//->remember(60)
+				->get()
+			;
+			$result = '['.Helpers::object2js_array($collections).']';
+		}
+
+		echo $result;
+	}
+
+	public function platform_name()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$platforms = Platform::where('name', 'like', '%'.$query.'%')
+				->limit($limit)
+				//->remember(60)
+				->get()
+			;
+			$result = '['.Helpers::object2js_array($platforms).']';
+		}
+
+		echo $result;
+	}
+
+
+	public function country_name()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$countries = Country::where('name', 'like', '%'.$query.'%')
+				->limit($limit)
+				//->remember(60)
+				->get()
+			;
+			$result = '['.Helpers::object2js_array($countries).']';
+		}
+
+		echo $result;
+	}
+
+	public function book_name()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$books = Book::where('name', 'like', '%'.$query.'%')
+				//->where('element_type', '=', 'Book')
+				->limit($limit)
+				//->remember(60)
+				->get();
+			$result = '['.Helpers::object2js_array($books).']';
+		}
+
+		echo $result;
+	}
+	public function book_genre()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$genres = Genre::where('name', 'like', '%'.$query.'%')
+				->where('element_type', '=', 'Book')
+				->limit($limit)
+				//->remember(60)
+				->get();
+			$result = '['.Helpers::object2js_array($genres).']';
+		}
+
+		echo $result;
+	}
+
+	public function film_name()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$films = Film::where('name', 'like', '%'.$query.'%')
+				->limit($limit)
+				//->remember(60)
+				->get();
+			$result = '['.Helpers::object2js_array($films).']';
+		}
+
+		echo $result;
+	}
+	public function film_genre()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$genres = Genre::where('name', 'like', '%'.$query.'%')
+				->where('element_type', '=', 'Film')
+				->limit($limit)
+				//->remember(60)
+				->get();
+			$result = '['.Helpers::object2js_array($genres).']';
+		}
+
+		echo $result;
+	}
+
+	public function game_name()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$games = Game::where('name', 'like', '%'.$query.'%')
+				->limit($limit)
+				//->remember(60)
+				->get();
+			$result = '['.Helpers::object2js_array($games).']';
+		}
+
+		echo $result;
+	}
+	public function game_genre()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$genres = Genre::where('name', 'like', '%'.$query.'%')
+				->where('element_type', '=', 'Game')
+				->limit($limit)
+				//->remember(60)
+				->get();
+			$result = '['.Helpers::object2js_array($genres).']';
+		}
+
+		echo $result;
+	}
+
+	public function album_name()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$albums = Album::where('name', 'like', '%'.$query.'%')
+				->limit($limit)
+				//->remember(60)
+				->get();
+			$result = '['.Helpers::object2js_array($albums).']';
+		}
+
+		echo $result;
+	}
+	public function band_name()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$bands = Band::where('name', 'like', '%'.$query.'%')
+				->limit($limit)
+				//->remember(60)
+				->get();
+			$result = '['.Helpers::object2js_array($bands).']';
+		}
+
+		echo $result;
+	}
+	public function album_genre()
+	{
+		$limit = $this->small_limit;
+
+		$query = Input::get('term');
+
+		$result = '';
+
+		if(!empty($query))
+		{
+			$genres = Genre::where('name', 'like', '%'.$query.'%')
+				->where('element_type', '=', 'Album')
+				->limit($limit)
+				//->remember(60)
+				->get();
+			$result = '['.Helpers::object2js_array($genres).']';
+		}
+
+		echo $result;
+	}
+
+	private function prepare_query($query)
+	{
+		$replace_from = [
+			'/-/',
+			'/–/',
+			'/—/',
+			'/\'/',
+			'/, /',
+			'/ & /',
+			'/  /',
+			'/ % /'
+		];
+		$replace_to = [
+			'%',
+			'%',
+			'%',
+			'%',
+			'%',
+			'%',
+			' ',
+			'%'
+		];
+		$query = preg_replace($replace_from, $replace_to, $query);
+		return $query;
+	}
+
+	private function main_search($search_query, $order, $presearch_query) {
+
+		$persons = Person::where('name', 'like', '%' . $search_query . '%')->orderBy($order)->get(); //->remember(5)
+		$books = Book::where(function($query) use ($search_query)
+		{
+			$query
+				->where('name', 'like', '%' . $search_query . '%')
+				->orWhere('alt_name', 'like', '%' . $search_query . '%')
+			;
+		})->orderBy($order)->get(); //->remember(5)
+		$films = Film::where(function($query) use ($search_query)
+		{
+			$query
+				->where('name', 'like', '%' . $search_query . '%')
+				->orWhere('alt_name', 'like', '%' . $search_query . '%')
+			;
+		})->orderBy($order)->get(); //->remember(5)
+		//echo '<pre>'.print_r($films, true).'</pre>';
+		//$films = Film::where('name', 'like', '%' . $search_query . '%')->get();
+		$games = Game::where(function($query) use ($search_query)
+		{
+			$query
+				->where('name', 'like', '%' . $search_query . '%')
+				->orWhere('alt_name', 'like', '%' . $search_query . '%')
+			;
+		})->orderBy($order)->get(); //->remember(5)
+		//echo '<pre>'.print_r($games, true).'</pre>';
+		$albums = Album::where(function($query) use ($search_query)
+		{
+			$query
+				->where('name', 'like', '%' . $search_query . '%')
+				//->orWhere('alt_name', 'like', '%' . $search_query . '%')
+			;
+		})->orderBy($order)->get(); //->remember(5)
+		//echo '<pre>'.print_r($games, true).'</pre>';
+		$bands = Band::where(function($query) use ($search_query)
+		{
+			$query
+				->where('name', 'like', '%' . $search_query . '%')
+				//->orWhere('alt_name', 'like', '%' . $search_query . '%')
+			;
+		})->orderBy($order)->get(); //->remember(5)
+		//echo '<pre>'.print_r($games, true).'</pre>';
+
+		if(!count($persons) && !count($books) && !count($films) && !count($games) && !count($albums) && !count($bands))
+		{
+			return false;
+		}
+		else
+		{
+			return View::make($this->prefix . '.index', array(
+				'query' => $presearch_query,
+				'persons' => $persons,
+				'books' => $books,
+				'films' => $films,
+				'games' => $games,
+				'albums' => $albums,
+				'bands' => $bands
+			));
+		}
+
+	}
+
+	/**
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function get_list_json() {
+
+		$result_array = array();
+		$persons = $books = $films = $games = $albums = $bands = array();
+
+		$limit = 3;
+
+		$presearch_query = urldecode(Input::get('query'));
+		$search_query =  $this->prepare_query($presearch_query);
+
+		if(!empty($search_query)) {
+
+			$persons = Person::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->get()
+			;
+
+			$books = Book::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->get()
+			;
+
+			$films = Film::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->get()
+			;
+
+			$games = Game::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->get()
+			;
+
+			$albums = Album::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->get()
+			;
+
+			$bands = Band::where('name', 'like', '%' . $search_query . '%')
+				->limit($limit)
+				->get()
+			;
+
+		} else {
+			//$persons = $books = $films = $games = $albums = $bands = array();
+		}
+
+		foreach($persons as $key => $value) {
+			$result_array['persons'][$value->id]['id'] = $value->id;
+			$result_array['persons'][$value->id]['name'] = $value->name;
+		}
+
+		foreach($books as $key => $value) {
+			$result_array['books'][$value->id]['id'] = $value->id;
+			$result_array['books'][$value->id]['name'] = $value->name;
+		}
+
+		foreach($films as $key => $value) {
+			$result_array['films'][$value->id]['id'] = $value->id;
+			$result_array['films'][$value->id]['name'] = $value->name;
+		}
+
+		foreach($games as $key => $value) {
+			$result_array['games'][$value->id]['id'] = $value->id;
+			$result_array['games'][$value->id]['name'] = $value->name;
+		}
+
+		foreach($albums as $key => $value) {
+			$result_array['albums'][$value->id]['id'] = $value->id;
+			$result_array['albums'][$value->id]['name'] = $value->name;
+		}
+
+		foreach($bands as $key => $value) {
+			$result_array['bands'][$value->id]['id'] = $value->id;
+			$result_array['bands'][$value->id]['name'] = $value->name;
+		}
+
+		$result = $result_array;
+
+		//echo $result;
+		return View::make($this->prefix . '.list_json', array(
+			'result' => $result,
+		));
+
+	}
+}

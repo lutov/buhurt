@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<url><loc>https://buhurt.ru/</loc><changefreq>daily</changefreq><priority>1.00</priority></url>
+<url><loc>https://buhurt.ru/books</loc><changefreq>daily</changefreq><priority>1.00</priority></url>
+<url><loc>https://buhurt.ru/films</loc><changefreq>daily</changefreq><priority>1.00</priority></url>
+<url><loc>https://buhurt.ru/games</loc><changefreq>daily</changefreq><priority>1.00</priority></url>
+<url><loc>https://buhurt.ru/albums</loc><changefreq>daily</changefreq><priority>1.00</priority></url>
+<url><loc>https://buhurt.ru/search/advanced</loc><changefreq>monthly</changefreq><priority>0.90</priority></url>
+<url><loc>https://buhurt.ru/books/random</loc><changefreq>always</changefreq><priority>0.85</priority></url>
+<url><loc>https://buhurt.ru/about</loc><changefreq>monthly</changefreq><priority>0.50</priority></url>
+<url><loc>https://buhurt.ru/icons</loc><changefreq>never</changefreq><priority>0.50</priority></url>
+</urlset>
