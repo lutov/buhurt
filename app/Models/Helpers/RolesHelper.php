@@ -9,20 +9,46 @@
 namespace App\Models\Helpers;
 
 use Auth;
+use Illuminate\Http\Request;
 
 class RolesHelper {
 
 	/**
-	 * @return bool
+	 * @param Request $request
+	 * @param string $role
+	 * @return bool|mixed
 	 */
-	public static function is_admin() {
+	private static function is(Request $request, string $role = '') {
 
 		$result = false;
 
-		if(Auth::check()) {
-			if('admin' == Auth::user()->roles()->first()->role) {
-				$result = true;
+		if (Auth::check()) {
+
+			if($request->session()->exists($role)) {
+
+				$result = session($role);
+
+			} else {
+
+				if ($role == Auth::user()->roles()->first()->role) {
+
+					$result = true;
+					session([$role => true]);
+
+				} else {
+
+					session([$role => false]);
+					$result = false;
+
+				}
+
 			}
+
+		} else {
+
+			session([$role => false]);
+			$result = false;
+
 		}
 
 		return $result;
@@ -30,35 +56,42 @@ class RolesHelper {
 	}
 
 	/**
+	 * @param Request $request
 	 * @return bool
 	 */
-	public static function is_moderator() {
+	public static function isAdmin(Request $request) {
 
-		$result = false;
+		$role = 'admin';
 
-		if(Auth::check()) {
-			$role = Auth::user()->roles()->first()->role;
-			if('admin' == $role || 'moderator' == $role) {
-				$result = true;
-			}
-		}
+		$result = RolesHelper::is($request, $role);
 
 		return $result;
 
 	}
 
 	/**
+	 * @param Request $request
 	 * @return bool
 	 */
-	public static function is_banned() {
+	public static function isModerator(Request $request) {
 
-		$result = false;
+		$role = 'moderator';
 
-		if(Auth::check()) {
-			if('banned' == Auth::user()->roles()->first()->role) {
-				$result = true;
-			}
-		}
+		$result = RolesHelper::is($request, $role);
+
+		return $result;
+
+	}
+
+	/**
+	 * @param Request $request
+	 * @return bool
+	 */
+	public static function isBanned(Request $request) {
+
+		$role = 'banned';
+
+		$result = RolesHelper::is($request, $role);
 
 		return $result;
 

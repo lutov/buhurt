@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
+use Illuminate\Http\Request;
 use Session;
 use View;
 use Cache;
@@ -28,8 +29,12 @@ class HomeController extends Controller {
 	|
 	*/
 
-	public function index()
-	{
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function index(Request $request) {
+
 		$limit = 9;
 		$minutes = 10;
 		$order_by = 'updated_at';
@@ -180,6 +185,7 @@ class HomeController extends Controller {
 		}
 
 		return View::make('index', array(
+			'request' => $request,
 			'books' => $books,
 			'films' => $films,
 			'games' => $games,
@@ -198,8 +204,8 @@ class HomeController extends Controller {
 	}
 
 
-	public function icons()
-	{
+	public function icons() {
+
 		$minutes = 60;
 		// remember(60)->
 		$icons = Cache::remember('icons', $minutes, function() {
@@ -209,6 +215,7 @@ class HomeController extends Controller {
 		return View::make('static.icons', array(
 			'icons' => $icons
 		));
+
 	}
 
 }

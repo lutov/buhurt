@@ -14,17 +14,21 @@
 
 		<link rel="stylesheet" href="/data/bootstrap-4.0.0-dist/css/bootstrap.min.css">
 		<!--link href="/data/css/normalize.min.css" rel="stylesheet" type="text/css" /-->
-		<link href="/data/css/fonts.css" rel="stylesheet" type="text/css" />		
-		<!--link href="/data/css/main.css" rel="stylesheet" type="text/css" /-->
-		<link href="/data/js/jquery_rating/styles/jquery.rating.css" rel="stylesheet" type="text/css" />
+		<!--link href="/data/css/fonts.css" rel="stylesheet" type="text/css" /-->
+		<!--link href="/data/js/jquery_rating/styles/jquery.rating.css" rel="stylesheet" type="text/css" /-->
 		<!--link rel="stylesheet" href="/data/js/jquery-ui-1.12.1.custom/jquery-ui.min.css"-->
+		<link href="/data/bootstrap-star-rating/css/star-rating.min.css" rel="stylesheet" type="text/css" />
+		<!--link href="/data/bootstrap-star-rating/themes/krajee-uni/theme.min.css" rel="stylesheet" type="text/css" /-->
+		<link href="/data/css/main.css" rel="stylesheet" type="text/css" />
 
 		<script type="text/javascript" src="/data/js/jquery-2.1.1.min.js"></script>		
-		<script type="text/javascript" src="/data/js/jquery_rating/js/jquery.rating-2.0.min.mod.js"></script>
+		<!--script type="text/javascript" src="/data/js/jquery_rating/js/jquery.rating-2.0.min.mod.js"></script-->
 		<script src="/data/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="/data/js/jquery.lightbox_me.min.js"></script>		
 		<script type="text/javascript" src="/data/js/main.min.js"></script>
 		<script type="text/javascript" src="/data/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/data/bootstrap-star-rating/js/star-rating.min.js"></script>
+		<!--script type="text/javascript" src="/data/bootstrap-star-rating/themes/krajee-uni/theme.min.js"></script-->
 
 	</head>
 	
@@ -69,7 +73,7 @@
 
 									<a class="dropdown-item" href="{!! URL::action('UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
 									<a class="dropdown-item" href="/search/advanced">Расширенный поиск</a>
-									@if (RolesHelper::is_admin())
+									@if (RolesHelper::isAdmin($request))
 									<a class="dropdown-item" href="/books/random">Случайная книга</a>
 									@endif
 
@@ -169,10 +173,55 @@
 					});
 
                     @if(Auth::check())
-                    $('.rating').rating({
-                        fx: 'full',
-                        url: '/rates/rate',
+
+                    $('.fast_rating').rating({
+
+						//fx: 'full',
+                        //url: '/rates/rate',
+
+						language: 'ru',
+						theme: 'krajee-uni',
+                        //size: 'xs',
+                        emptyStar: '&#9734;',
+                        filledStar: '&#9733;',
+                        clearButton: '&#10006;',
+						min: 0,
+						max: 10,
+						step: 1.0,
                         stars: '10',
+                        animate: false,
+                        showCaption: true,
+                        showClear: false,
+                        //defaultCaption: 'Нет оценки',
+                        clearCaption: 'Нет оценки',
+                        starCaptions: {
+						    1: 'Очень плохо',
+						    2: 'Плохо',
+						    3: 'Посредственно',
+						    4: 'Ниже среднего',
+						    5: 'Средне',
+						    6: 'Выше среднего',
+						    7: 'Неплохо',
+						    8: 'Хорошо',
+						    9: 'Отлично',
+						    10: 'Великолепно'
+						},
+                        starCaptionClasses: function(val) {
+						    //console.log(val);
+                            if (val === null) {
+                                return 'badge badge-default';
+                            } else if (val <= 3) {
+                                return 'badge badge-danger';
+                            } else if (val <= 5) {
+                                return 'badge badge-warning';
+                            }  else if (val <= 7) {
+                                return 'badge badge-primary';
+                            } else {
+                                return 'badge badge-success';
+                            }
+                        }
+
+						/*
                         callback: function(responce){
                             //this.vote_success.fadeOut(2000);
 
@@ -183,7 +232,9 @@
 
                             }, 'json');
                         }
+                        */
                     });
+
                     @endif
 
                     <?php

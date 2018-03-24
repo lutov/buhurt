@@ -11,6 +11,6 @@
 		<h2 class="pb-3">@yield('subtitle')</h2>
 	</section>
 
-	{!! ElementsHelper::getElements($elements, $section) !!}
+	{!! ElementsHelper::getElements($request, $elements, $section) !!}
 
 @stop

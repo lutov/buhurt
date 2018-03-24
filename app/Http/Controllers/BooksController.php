@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
+use Illuminate\Http\Request;
 use Input;
 use View;
 use Redirect;
@@ -14,7 +15,7 @@ class BooksController extends Controller {
 
 	private $prefix = 'books';
 
-    public function show_all() {
+    public function show_all(Request $request) {
 
 		$section = $this->prefix;
 		$get_section = Section::where('alt_name', '=', $section)->first();
@@ -66,6 +67,7 @@ class BooksController extends Controller {
 		}
 
         return View::make($this->prefix.'.index', array(
+			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,

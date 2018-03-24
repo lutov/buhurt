@@ -10,6 +10,7 @@ namespace App\Models\Helpers;
 
 use DB;
 use Cache;
+use Illuminate\Http\Request;
 
 class DummyHelper {
 
@@ -148,9 +149,10 @@ class DummyHelper {
 	}
 
 	/**
+	 * @param Request $request
 	 * @return string
 	 */
-	public static function getStats() {
+	public static function getStats(Request $request) {
 
 		$stats = '';
 
@@ -192,7 +194,7 @@ class DummyHelper {
 		$stats .= TextHelper::number($stats_array['albums'], array('альбом', 'альбома', 'альбомов'));
 		$stats .= '</a></li>';
 
-		if(RolesHelper::is_admin()) {
+		if(RolesHelper::isAdmin($request)) {
 
 			$stats .= '<li class="nav-item"><a class="nav-link disabled" href="#">';
 			$stats .= TextHelper::number($stats_array['users'], array('пользователь', 'пользователя', 'пользователей')).', ';

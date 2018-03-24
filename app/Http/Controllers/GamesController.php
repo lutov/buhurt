@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use Auth;
+use Illuminate\Http\Request;
 use Input;
 use View;
 use Redirect;
@@ -16,8 +17,8 @@ class GamesController extends Controller {
 
 	private $limit = 28;
 
-    public function show_all()
-    {
+    public function show_all(Request $request) {
+
 		$section = $this->prefix;
 		$get_section = Section::where('alt_name', '=', $section)->first();
 		$ru_section = $get_section->name;
@@ -66,6 +67,7 @@ class GamesController extends Controller {
 		}
 
 		return View::make($this->prefix.'.index', array(
+			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,

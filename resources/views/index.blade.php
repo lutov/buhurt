@@ -18,10 +18,10 @@
 
 		<section class="text-center"> <h2 class="pb-3">Рекомендации</h2></section>
 		{!! ElementsHelper::getHeader(); !!}
-		{!! ElementsHelper::getRecommend('books'); !!}
-		{!! ElementsHelper::getRecommend('films'); !!}
-		{!! ElementsHelper::getRecommend('games'); !!}
-		{!! ElementsHelper::getRecommend('albums'); !!}
+		{!! ElementsHelper::getRecommend($request, 'books'); !!}
+		{!! ElementsHelper::getRecommend($request, 'films'); !!}
+		{!! ElementsHelper::getRecommend($request, 'games'); !!}
+		{!! ElementsHelper::getRecommend($request, 'albums'); !!}
 		{!! ElementsHelper::getFooter(); !!}
 
 
@@ -34,10 +34,10 @@
 			);
 		?>
 		{!! ElementsHelper::getHeader(); !!}
-		{!! ElementsHelper::getElements($books, 'books', $options) !!}
-		{!! ElementsHelper::getElements($films, 'films', $options) !!}
-		{!! ElementsHelper::getElements($games, 'games', $options) !!}
-		{!! ElementsHelper::getElements($albums, 'albums', $options) !!}
+		{!! ElementsHelper::getElements($request, $books, 'books', $options) !!}
+		{!! ElementsHelper::getElements($request, $films, 'films', $options) !!}
+		{!! ElementsHelper::getElements($request, $games, 'games', $options) !!}
+		{!! ElementsHelper::getElements($request, $albums, 'albums', $options) !!}
 		{!! ElementsHelper::getFooter(); !!}
 
 	</div>

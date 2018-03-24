@@ -25,7 +25,7 @@
 							<a class="nav-link" href="/icons">Авторы иконок</a>
 						</li>
 
-						@if (RolesHelper::is_admin())
+						@if (RolesHelper::isAdmin($request))
 							<li class="nav-item">
 								<a class="nav-link" href="/admin/add/">Пополнение базы</a>
 							</li>
@@ -34,7 +34,7 @@
 							</li>
 						@endif
 
-						<li>{!! DummyHelper::getStats() !!}</li>
+						<li>{!! DummyHelper::getStats($request) !!}</li>
 
 					</ul>
 

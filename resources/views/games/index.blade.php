@@ -1,18 +1,16 @@
 @extends('layouts.default')
 
-@section('title')
-	{{$ru_section}}
-@stop
+@section('title'){{$ru_section}}@stop
 
-@section('subtitle')
-
-@stop
+@section('subtitle')@stop
 
 @section('content')
 
-  	<h1>@yield('title')</h1>
-    <h2>@yield('subtitle')</h2>
+	<section class="text-center">
+		<h1 class="pt-5">@yield('title')</h1>
+		<h2 class="pb-3">@yield('subtitle')</h2>
+	</section>
 
-	{!! Helpers::get_elements($elements, $section, $sort_options, true, true) !!}
+	{!! ElementsHelper::getElements($request, $elements, $section) !!}
 
 @stop

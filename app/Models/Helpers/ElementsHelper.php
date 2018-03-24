@@ -11,6 +11,7 @@ namespace App\Models\Helpers;
 use DB;
 use Auth;
 use Form;
+use Illuminate\Http\Request;
 use Input;
 use App\Models\Rate;
 
@@ -62,11 +63,12 @@ class ElementsHelper {
 	}
 
 	/**
-	 * @param object $element
+	 * @param Request $request
+	 * @param $element
 	 * @param string $section
 	 * @return string
 	 */
-	public static function getElement($element, string $section = '') {
+	public static function getElement(Request $request, $element, string $section = '') {
 
 		$elements_list = '';
 
@@ -103,35 +105,91 @@ class ElementsHelper {
 
 			$elements_list .= '</p>';
 
-			$elements_list .= '<div class="rating">';
-			if (isset($element->rates) && 0 != count($element->rates) && Auth::check()) {
+				/*
+				<p id="element_edit_button">
+                    <a href="/admin/delete/books/{!! $book->id !!}" onclick="return window.confirm('Удалить книгу?');">
+                        <img src="/data/img/design/delete2.svg" alt="Удалить" />
+                    </a>
+                </p>
+				<p id="element_edit_button"><a href="/admin/edit/books/{!! $book->id !!}"><img src="/data/img/design/edit.svg" alt="Редактировать" /></a></p>
+				*/
 
-				$user_id = Auth::user()->id;
-				$rate = $element
-					->rates
-					->where('user_id', $user_id)
-					->toArray()
-				;
+				/*
 
-				if(0 != count($rate)) {
-					$elements_list .= '<input name="val" value="' . array_shift($rate)['rate'] . '" type="hidden">';
+				<span id="like" title="Хочу"
+							@if(0 == $wanted) class="like" onclick="like('{!! $section !!}', '{!! $book->id !!}')" @else class="liked" onclick="unlike('{!! $section !!}', '{!! $book->id !!}')" @endif
+									></span>
+							<span id="dislike" title="Не хочу"
+							@if(0 == $not_wanted) class="dislike"  onclick="dislike('{!! $section !!}', '{!! $book->id !!}')" @else class="disliked" onclick="undislike('{!! $section !!}', '{!! $book->id !!}')" @endif
+					></span>
+
+				 * */
+
+
+			if(Auth::check()) {
+
+				$elements_list .= '<div class="d-flex justify-content-between align-items-center pb-3">';
+				$elements_list .= '<div class="btn-group">';
+
+				if(RolesHelper::isAdmin($request)) {
+
+					$elements_list .= '<a role="button" class="btn btn-sm btn-outline-success" href="/admin/edit/'.$section.'/'.$element->id.'" title="Редактировать">';
+					$elements_list .= '&#9998;';
+					$elements_list .= '</a>';
+
 				}
 
+				$elements_list .= '<button type="button" class="btn btn-sm btn-outline-success" title="Хочу">';
+				$elements_list .= '&#10084;';
+				$elements_list .= '</button>';
+
+				$elements_list .= '<button type="button" class="btn btn-sm btn-outline-danger" title="Не хочу">';
+				$elements_list .= '&#9785;';
+				$elements_list .= '</button>';
+
+				if(RolesHelper::isAdmin($request)) {
+
+					$elements_list .= '<a role="button" class="btn btn-sm btn-outline-danger" href="/admin/delete/'.$section.'/'.$element->id.'" onclick="return window.confirm(\'Удалить?\');" title="Удалить">';
+					$elements_list .= '&#10006;';
+					$elements_list .= '</a>';
+
+				}
+
+				$elements_list .= '</div>';
+				//$elements_list .= '<small class="text-muted"></small>';
+				$elements_list .= '</div>';
+
+				$elements_list .= '<div class="fast_rating_block">';
+				if (isset($element->rates) && 0 != count($element->rates)) {
+
+					$user_id = Auth::user()->id;
+					$rate = $element
+						->rates
+						->where('user_id', $user_id)
+						->toArray();
+
+					if (0 != count($rate)) {
+
+						$elements_list .= '<input name="val" value="' . array_shift($rate)['rate'] . '" class="fast_rating" type="text" autocomplete="off">';
+
+					} else {
+
+						$elements_list .= '<input name="val" value="0" class="fast_rating" type="text" autocomplete="off">';
+
+					}
+				} else {
+
+					$elements_list .= '<input name="val" value="0" class="fast_rating" type="text" autocomplete="off">';
+
+				}
+				//$elements_list .= '<input type="hidden" name="vote_id" value="'.$section.'/'.$element->id.'"/>';
+				$elements_list .= '</div>';
+
+			} else {
+
+
+
 			}
-			$elements_list .= '<input type="hidden" name="vote_id" value="'.$section.'/'.$element->id.'"/>';
-			$elements_list .= '</div>';
-
-			//$elements_list .= '<div class="d-flex justify-content-between align-items-center">';
-
-			//$elements_list .= '<div class="btn-group">';
-
-			//$elements_list .= '<button type="button" class="btn btn-sm btn-outline-secondary">View</button>';
-
-			//$elements_list .= '</div>';
-
-			//$elements_list .= '<small class="text-muted">'.$user_rate.'</small>';
-
-			//$elements_list .= '</div>';
 
 			$elements_list .= '</div>';
 
@@ -157,79 +215,15 @@ class ElementsHelper {
 	}
 
 	/**
+	 * @param Request $request
 	 * @param $elements
-	 * @param $section
-	 * @param $subsection
-	 * @param array $sort_options
-	 * @param bool $paginate
-	 * @return string
-	 */
-	public static function get_list($elements, $section, $subsection, $sort_options = array(), $paginate = true) {
-
-		$elements_list = '';
-		$default_sort = 'name';
-
-		//var_dump($elements[0]->rates[0]->rate);
-
-		if(!empty($sort_options)) {
-
-			$sort_direction = ElementsHelper::get_sort_direction();
-
-			$elements_list .= Form::open(array('class' => 'sort', 'method' => 'GET'));
-			$elements_list .= Form::hidden('view', Input::get('view', 'plates'));
-			$elements_list .= Form::select('sort', $sort_options, Input::get('sort', $default_sort));
-			$elements_list .= Form::select('sort_direction', $sort_direction, Input::get('sort_direction', 'desc'));
-			$elements_list .= Form::hidden('page', Input::get('page', 1));
-			$elements_list .= '&nbsp;';
-			$elements_list .= Form::submit('Сортировать');
-			$elements_list .= Form::close();
-
-		}
-
-		$elements_list .= '<ul>';
-
-		foreach ($elements as $element) {
-
-			if('' != $element->name) {
-				$elements_list .= '<li>';
-				$elements_list .= '<a href="/' . $section . '/';
-				if (!empty($subsection)) {
-					$elements_list .= $subsection . '/';
-				}
-				$elements_list .= $element->id . '">';
-				$elements_list .= $element->name;
-				$elements_list .= '</a>';
-				$elements_list .= '</li>';
-			}
-
-		}
-
-		$elements_list .= '</ul>';
-
-		if ($paginate) {
-			$elements_list .= $elements->appends(
-				array(
-					//'view' => Input::get('view', 'plates'),
-					//'sort' => Input::get('sort', $default_sort),
-					//'sort_direction' => Input::get('sort_direction', 'desc')
-				)
-			)->render();
-		}
-
-		return $elements_list;
-	}
-
-	/**
-	 * @param object $elements
 	 * @param string $section
 	 * @param array $options
-	 * @param array $sort_options
 	 * @return string
 	 */
-	public static function getElements($elements, string $section = '', array $options = array(), array $sort_options = array()) {
+	public static function getElements(Request $request, $elements, string $section = '', array $options = array()) {
 
 		$elements_list = '';
-		$default_sort = $section.'.created_at';
 
 		if(!count($options)) {
 			$options = array(
@@ -239,69 +233,11 @@ class ElementsHelper {
 			);
 		}
 
-		/*
-		$view = Input::get('view', 'plates');
-		if('table' == $view) {
-
-			$elements_list .= '<table class="elements_table">';
-
-			foreach ($elements as $element) {
-				$elements_list .= '<tr>';
-
-				$elements_list .= '<td>';
-				$elements_list .= '<a href="/' . $section . '/' . $element->id . '">';
-				$elements_list .= $element->name;
-				$elements_list .= '</a>';
-				$elements_list .= '</td>';
-
-				$elements_list .= '<td>';
-				$elements_list .= $element->alt_name;
-				$elements_list .= '</td>';
-
-				$elements_list .= '<td>';
-				$elements_list .= $element->year;
-				$elements_list .= '</td>';
-
-				$elements_list .= '<td>';
-				$elements_list .= '<div class="rating">';
-				if (isset($element->rates) && 0 != count($element->rates) && Auth::check())
-				{
-					$user_id = Auth::user()->id;
-					$rate = $element
-						->rates
-						->where('user_id', $user_id)
-						->toArray()
-					;
-
-					/*
-					if(Helpers::is_admin()) {
-						Config::set('app.debug', true);
-						echo '<pre>'.print_r($rate, true).'</pre>';
-					}
-					* /
-					if(0 != count($rate)) {
-						$elements_list .= '<input name="val" value="' . array_shift($rate)['rate'] . '" type="hidden">';
-					}
-				}
-				$elements_list .= '<input type="hidden" name="vote_id" value="'.$section.'/'.$element->id.'"/>';
-				$elements_list .= '</div>';
-				$elements_list .= '</td>';
-
-				$elements_list .= '</tr>';
-			}
-
-			$elements_list .= '</table>';
-
-		} else {
-
-		}
-		*/
-
 		if($options['header']) {$elements_list .= ElementsHelper::getHeader();}
 
 		foreach ($elements as $element) {
 
-			$elements_list .= ElementsHelper::getElement($element, $section);
+			$elements_list .= ElementsHelper::getElement($request, $element, $section);
 
 		}
 
@@ -309,48 +245,11 @@ class ElementsHelper {
 
 		if ($options['paginate']) {
 
-			$elements_list .= $elements->appends(
-				array(
-					//'view' => Input::get('view', 'plates'),
-					'sort' => Input::get('sort', $default_sort),
-					'sort_direction' => Input::get('sort_direction', 'desc')
-				)
-			)->render();
+			$elements_list .= $elements->render();
 
 		}
 
-		if(!empty($sort_options)) {
 
-			$sort_direction = ElementsHelper::get_sort_direction();
-
-			//$elements_list .= '<section class="text-center pb-3">';
-			$elements_list .= Form::open(array('class' => 'sort', 'method' => 'GET'));
-			$elements_list .= Form::hidden('view', Input::get('view', 'plates'));
-			$elements_list .= Form::select('sort', $sort_options, Input::get('sort', $default_sort));
-			$elements_list .= Form::select('sort_direction', $sort_direction, Input::get('sort_direction', 'desc'));
-			$elements_list .= Form::hidden('page', Input::get('page', 1));
-			$elements_list .= '&nbsp;';
-			$elements_list .= Form::submit('Сортировать');
-			$elements_list .= Form::close();
-			//$elements_list .= '</section>';
-
-		}
-
-		/*
-		if($switch2table) {
-
-			$elements_list .= '<section class="text-center">';
-			$elements_list .= Form::open(array('class' => 'switch2table', 'method' => 'GET')); // 'url' => Helpers::append_url_param('table_view', 'true'),
-			$elements_list .= Form::hidden('view', 'table');
-			$elements_list .= Form::hidden('sort', Input::get('sort', $default_sort));
-			$elements_list .= Form::hidden('sort_direction', Input::get('sort_direction', 'desc'));
-			$elements_list .= Form::hidden('page', Input::get('page', 1));
-			$elements_list .= Form::submit('Показать таблицу');
-			$elements_list .= Form::close();
-			$elements_list .= '</section>';
-
-		}
-		*/
 
 		return $elements_list;
 	}
@@ -380,10 +279,11 @@ class ElementsHelper {
 	}
 
 	/**
+	 * @param Request $request
 	 * @param $section
 	 * @return string
 	 */
-	public static function getRecommend($section) {
+	public static function getRecommend(Request $request, $section) {
 
 		$result = '';
 
@@ -409,7 +309,7 @@ class ElementsHelper {
 			$element = $obj_of_type->find($element_id);
 
 			if (!empty($element)) {
-				$result = ElementsHelper::getElement($element, $section);
+				$result = ElementsHelper::getElement($request, $element, $section);
 			}
 		}
 

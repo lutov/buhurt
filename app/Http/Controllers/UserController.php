@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use DB;
+use Illuminate\Http\Request;
 use URL;
 use Auth;
 use View;
@@ -131,15 +132,18 @@ class UserController extends Controller {
 
 
 	/**
-	 * Log in to site.
-	 *
-	 * @return Response
+	 * @param Request $request
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	public function login()
-	{
+	public function login(Request $request) {
+
 		if (Auth::attempt(array('email' => Input::get('email'), 'password' => Input::get('password')), true) ||
 			Auth::attempt(array('username' => Input::get('email'), 'password' => Input::get('password')), true)) {
+
+			$request->session()->flush();
+
 			return Redirect::back()->with('message', 'Добро&nbsp;пожаловать');
+
 		}
 
 		return Redirect::back()->withInput(Input::except('password'))->with('message', 'Неправильные&nbsp;данные,&nbsp;попробуйте&nbsp;еще&nbsp;раз');
@@ -147,13 +151,14 @@ class UserController extends Controller {
 
 
 	/**
-	 * Log out from site.
-	 *
-	 * @return Response
+	 * @param Request $request
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	public function logout()
-	{
+	public function logout(Request $request) {
+
 		Auth::logout();
+
+		$request->session()->flush();
 
 		return Redirect::to('/')->with('message', 'До&nbsp;свидания');
 	}
