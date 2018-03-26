@@ -101,7 +101,7 @@ class CommentsHelper {
 	/**
 	 * @return string
 	 */
-	public static function show_comment_form (){
+	public static function showCommentForm (){
 
 		if(Auth::check()) {
 
@@ -125,6 +125,26 @@ class CommentsHelper {
 			return DummyHelper::reg2comment();
 
 		}
+
+	}
+
+	/**
+	 * @param $comments
+	 * @return string
+	 */
+	public static function showComments($comments) {
+
+		//echo '<pre>'.print_r($comments, true).'</pre>';
+
+		$comments_list = '';
+
+		foreach($comments as $key => $comment) {
+
+			$comments_list .= CommentsHelper::render($comment);
+
+		}
+
+		return $comments_list;
 
 	}
 

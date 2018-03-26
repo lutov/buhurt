@@ -181,7 +181,7 @@
 
 						language: 'ru',
 						theme: 'krajee-uni',
-                        //size: 'xs',
+                        size: 'xs',
                         emptyStar: '&#9734;',
                         filledStar: '&#9733;',
                         clearButton: '&#10006;',
@@ -264,4 +264,4 @@
 
     	</header>
 
-		<main role="main" class="container p-5">
+		<main role="main" class="container pt-5 pb-5">

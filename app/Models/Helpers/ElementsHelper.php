@@ -55,7 +55,7 @@ class ElementsHelper {
 		$elements_list = '';
 
 		$elements_list .= '<div class="album">';
-		$elements_list .= '<div class="container">';
+		//$elements_list .= '<div class="container">';
 		$elements_list .= '<div class="row">';
 
 		return $elements_list;
@@ -207,7 +207,7 @@ class ElementsHelper {
 		$elements_list = '';
 
 		$elements_list .= '</div>';
-		$elements_list .= '</div>';
+		//$elements_list .= '</div>';
 		$elements_list .= '</div>';
 
 		return $elements_list;
@@ -258,7 +258,7 @@ class ElementsHelper {
 	 * @param $element
 	 * @return array
 	 */
-	public static function count_rating($element) {
+	public static function countRating($element) {
 
 		$rates = $element->rates;
 		$rates_count = $rates->count('rate');
@@ -321,7 +321,7 @@ class ElementsHelper {
 	 * @param array $options
 	 * @return array
 	 */
-	public static function get_similar($options = array()) {
+	public static function getSimilar($options = array()) {
 
 		$sim_elem = [];
 
@@ -347,6 +347,282 @@ class ElementsHelper {
 		}
 
 		return $sim_elem;
+
+	}
+
+
+	/**
+	 * @param Request $request
+	 * @param string $section
+	 * @param $element
+	 * @param array $info
+	 * @return string
+	 */
+	public static function getCardHeader(Request $request, string $section = '', $element, array $info = array()) {
+
+		$element_title = '';
+
+		$element_title .= '<div class="row mt-5">';
+			$element_title .= '<div class="col-md-12">';
+
+				if(isset($info['writers'])) {
+
+					$element_title .= '<div class="h2">';
+					$element_title .= DatatypeHelper::arrayToString($info['writers'], ', ', '/persons/', false, 'author');
+					$element_title .= '</div>';
+
+				}
+
+				$element_title .= '<h1 itemprop="name">'.$element->name.'</h1>';
+
+				if(!empty($element->alt_name)) {
+
+					$element_title .= '<div class="h3" itemprop="alternativeHeadline">'.$element->alt_name.'</div>';
+
+				}
+
+				$element_title .= '<div class="btn-group mt-3">';
+
+					if(RolesHelper::isAdmin($request)) {
+
+						$class = 'btn btn-sm btn-outline-success';
+						$href = '/admin/edit/'.$section.'/'.$element->id;
+						$element_title .= '<a role="button" class="'.$class.'" href="'.$href.'" title="Редактировать">';
+						$element_title .= '&#9998;';
+						$element_title .= '</a>';
+
+					}
+
+					$class = 'btn btn-sm btn-outline-success';
+					$handler = 'onclick="like(\''.$section.'\', \''.$element->id.'\')"';
+					$element_title .= '<button type="button" class="'.$class.'" '.$handler.' title="Хочу">';
+					$element_title .= '&#10084;';
+					$element_title .= '</button>';
+
+					$class = 'btn btn-sm btn-outline-danger';
+					$handler = 'onclick="dislike(\''.$section.'\', \''.$element->id.'\')"';
+					$element_title .= '<button type="button" class="'.$class.'" '.$handler.' title="Не хочу">';
+					$element_title .= '&#9785;';
+					$element_title .= '</button>';
+
+					if(RolesHelper::isAdmin($request)) {
+
+						$class = 'btn btn-sm btn-outline-danger';
+						$href = '/admin/delete/'.$section.'/'.$element->id;
+						$handler = 'onclick="return window.confirm(\'Удалить?\');"';
+						$element_title .= '<a role="button" class="'.$class.'" href="'.$href.'" '.$handler.' title="Удалить"">';
+						$element_title .= '&#10006;';
+						$element_title .= '</a>';
+
+					}
+
+				$element_title .= '</div>';
+
+			$element_title .= '</div>';
+		$element_title .= '</div>';
+
+		$element_title .= '<div class="row mt-3">';
+			$element_title .= '<div class="col-md-12">';
+
+			if(Auth::check()) {
+
+				$element_title .= '<div><input class="main_rating" name="val" value="'.$info['rate'].'" type="text"></div>';
+
+			} else {
+
+				$element_title .= DummyHelper::regToRate();
+
+			}
+
+			if(!empty($rating)) {
+
+				$element_title .= '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
+				$element_title .= 'Средняя оценка: <b itemprop="ratingValue">'.$rating['average'].'</b>';
+				$element_title .= TextHelper::number($rating['count'], array('голос', 'голоса', 'голосов'));
+				$element_title .= '</div>';
+
+			}
+
+			$element_title .= '</div>';
+		$element_title .= '</div>';
+
+		$element_title .= '<div class="row mt-5">';
+			$element_title .= '<div class="col-md-12">';
+
+				if(isset($info['publishers']) && count($info['publishers'])) {
+
+					$element_title .= DatatypeHelper::arrayToString($info['publishers'], ', ', '/companies/', false, 'publisher');
+					$element_title .= ', ';
+
+				}
+
+				if(!empty($element->year)) {
+
+					$element_title .= '<a itemprop="datePublished" href="/years/'.$section.'/'.$element->year.'">'.$element->year.'</a>';
+					$element_title .= '. ';
+
+				}
+
+				if(count($info['genres'])) {
+
+					$element_title .= DatatypeHelper::collectionToString(
+						$info['genres'],
+						'genre',
+						', ',
+						'/genres/'.$section.'/',
+						false,
+						'genre'
+					);
+
+				}
+
+			$element_title .= '</div>';
+		$element_title .= '</div>';
+
+		return $element_title;
+
+	}
+
+	/**
+	 * @param Request $request
+	 * @param string $section
+	 * @param $element
+	 * @param array $info
+	 * @return string
+	 */
+	public static function getCardBody(Request $request, string $section = '', $element, array $info = array()) {
+
+		$element_body = '';
+
+		$element_body .= '<div class="row mt-3">';
+
+			$element_body .= '<div class="col-md-3">';
+
+				$element_body .= '<img itemprop="image" src="/data/img/covers/'.$section.'/'.$info['cover'].'.jpg" alt="'.$element->name.'" class="img-fluid" />';
+
+			$element_body .= '</div>';
+
+			$element_body .= '<div itemprop="description" class="col-md-9">';
+
+				$element_body .= '<p>'.nl2br($element->description).'</p>';
+
+			$element_body .= '</div>';
+
+		$element_body .= '</div>';
+
+		return $element_body;
+
+	}
+
+	/**
+	 * @param Request $request
+	 * @param string $section
+	 * @param $element
+	 * @param array $info
+	 * @return string
+	 */
+	public static function getCardFooter(Request $request, string $section = '', $element, array $info = array()) {
+
+		$options = array(
+			'header' => true,
+			'paginate' => false,
+			'footer' => true,
+		);
+
+		$element_footer = '';
+
+		$element_footer .= '<div class="row mt-3">';
+			$element_footer .= '<div class="col-md-12">';
+
+			if(count($info['collections'])) {
+				$element_footer .= '<p>';
+				$element_footer .= 'Коллекции: ';
+				$element_footer .= DatatypeHelper::collectionToString(
+					$info['collections'],
+					'collection',
+					', ',
+					'/collections/',
+					false,
+					"isPartOf"
+				);
+				$element_footer .= '</p>';
+			}
+
+			if(0 < $info['relations']) {
+				$element_footer .= '<p>';
+					$element_footer .= '<a href="relations/">';
+						$element_footer .= 'Связи ';
+						$element_footer .= '('.$info['relations'].')';
+					$element_footer .= '</a>';
+				$element_footer .= '</p>';
+			}
+
+			$element_footer .= '</div>';
+		$element_footer .= '</div>';
+
+		if(RolesHelper::isAdmin($request)) {
+
+			$element_footer .= '<p>';
+				$element_footer .= '<a href="relations/">Установить связи</a>';
+			$element_footer .= '</p>';
+
+		}
+
+        if(count($info['similar'])) {
+
+			$element_footer .= '<h3>Похожие</h3>';
+			$element_footer .= ElementsHelper::getElements($request, $info['similar'], $section, $options);
+
+        }
+
+		return $element_footer;
+
+	}
+
+	/**
+	 * @param $comments
+	 * @return string
+	 */
+	public static function getCardComments($comments) {
+
+		$element_comments = '';
+
+		$element_comments .= '<h3>Комментарии</h3>';
+
+		$element_comments .= '<div class="row mt-3">';
+
+			$element_comments .= '<div class="col-md-12">';
+
+				$element_comments .= CommentsHelper::showCommentForm();
+
+				$element_comments .= '<div itemscope itemtype="http://schema.org/UserComments" class="comments">';
+
+				$element_comments .= CommentsHelper::showComments($comments);
+
+				$element_comments .= '</div>';
+
+			$element_comments .= '</div>';
+
+		$element_comments .= '</div>';
+
+		return $element_comments;
+
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getCardScripts() {
+
+		$element_scripts = '';
+
+		if(Auth::check()) {
+
+			$element_scripts = '<script type="text/javascript" src="/data/js/card.js"></script>';
+
+		}
+
+		return $element_scripts;
 
 	}
 

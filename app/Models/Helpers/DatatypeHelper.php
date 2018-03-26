@@ -18,7 +18,7 @@ class DatatypeHelper {
 	 * @param bool $no_link
 	 * @return string $string
 	 */
-	public static function array2string($object, $delimiter = ', ', $path = '/', $no_link = false, $itemprop = false) {
+	public static function arrayToString($object, $delimiter = ', ', $path = '/', $no_link = false, $itemprop = false) {
 		$string = '';
 		$number = count($object);
 		$i = 1;
@@ -50,7 +50,7 @@ class DatatypeHelper {
 	 * @param bool $no_link
 	 * @return string $string
 	 */
-	public static function collection2string($object, $type = 'collection', $delimiter = ', ', $path = '/', $no_link = false, $itemprop = false) {
+	public static function collectionToString($object, $type = 'collection', $delimiter = ', ', $path = '/', $no_link = false, $itemprop = false) {
 		$string = '';
 		$number = count($object);
 		$i = 1;
@@ -79,7 +79,7 @@ class DatatypeHelper {
 	 * @param bool $no_quotes
 	 * @return string
 	 */
-	public static function object2js_array($object, $delimiter = ', ', $no_quotes = false)
+	public static function objectToJsArray($object, $delimiter = ', ', $no_quotes = false)
 	{
 		$string = '';
 		$number = count($object);
@@ -103,7 +103,7 @@ class DatatypeHelper {
 	 * @param string $id
 	 * @return string
 	 */
-	public static function object2list($object, $id = '')
+	public static function objectToList($object, $id = '')
 	{
 		$string = '<ul id="'.$id.'">';
 

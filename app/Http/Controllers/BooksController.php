@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\ElementsHelper;
 use Auth;
 use Illuminate\Http\Request;
 use Input;
@@ -85,10 +86,14 @@ class BooksController extends Controller {
         return View::make($this->prefix.'.collection');
     }
 	
-    public function show_item($id) {
+    public function show_item(Request $request, $id) {
 
 		$book = Book::find($id);
+
 		if(count($book)) {
+
+			$similar = array();
+
 			$writers = $book->writers;
 			$publishers = $book->publishers;
 			$genres = $book->genres; $genres = $genres->sortBy('name');
@@ -164,7 +169,7 @@ class BooksController extends Controller {
 
 			$section = $this->prefix;
 
-			$rating = Helpers::count_rating($book);
+			$rating = ElementsHelper::countRating($book);
 			
 			$section_type = 'Book';
 			$relations = ElementRelation::where('to_id', '=', $id)
@@ -177,11 +182,12 @@ class BooksController extends Controller {
 			$sim_limit = 3;
 
 			for($i = 0; $i < $sim_limit; $i++) {
-				$similar[] = Helpers::get_similar($sim_options);
+				$similar[] = ElementsHelper::getSimilar($sim_options);
 			}
 
 			return View::make($this->prefix . '.item', array(
-				'book' => $book,
+				'request' => $request,
+				'element' => $book,
 				'writers' => $writers,
 				'publishers' => $publishers,
 				'genres' => $genres,
@@ -196,9 +202,11 @@ class BooksController extends Controller {
 				'relations' => $relations,
 				'similar' => collect($similar)
 			));
-		}
-		else {
+
+		} else {
+
 			return Redirect::to('/base/books');
+
 		}
     }
 
@@ -206,7 +214,7 @@ class BooksController extends Controller {
 	 * @param $id
 	 * @return \Illuminate\Contracts\View\View
 	 */
-	public function get_json($id) {
+	public function getJson($id) {
 
 		$user_rate = 0;
 		$wanted = 0;
@@ -228,7 +236,7 @@ class BooksController extends Controller {
 
 		$section = $this->prefix;
 
-		$rating = Helpers::count_rating($book);
+		$rating = ElementsHelper::countRating($book);
 
 		$section_type = 'Book';
 		$relations = ElementRelation::where('to_id', '=', $id)
@@ -241,7 +249,7 @@ class BooksController extends Controller {
 		$sim_limit = 0;
 
 		for($i = 0; $i < $sim_limit; $i++) {
-			$similar[] = Helpers::get_similar($sim_options);
+			$similar[] = ElementsHelper::getSimilar($sim_options);
 		}
 
 		return View::make($this->prefix . '.json', array(

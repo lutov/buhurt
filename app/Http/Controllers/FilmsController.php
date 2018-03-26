@@ -86,7 +86,7 @@ class FilmsController extends Controller {
         return View::make($this->prefix.'.collection');
     }
 	
-    public function show_item($id)
+    public function show_item(Request $request, $id)
 	{
 		$film = Film::find($id);
 		if (count($film)) {
@@ -184,7 +184,8 @@ class FilmsController extends Controller {
 			}
 
 			return View::make($this->prefix . '.item', array(
-				'film' => $film,
+				'request' => $request,
+				'element' => $film,
 				'screenwriters' => $screenwriters,
 				'producers' => $producers,
 				'directors' => $directors,

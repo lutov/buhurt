@@ -17,7 +17,7 @@ class TextHelper {
 	 * @param string $end_str - символ/строка завершения. Вставляется в конце обрезанной строки
 	 * @return string
 	 */
-	public static function words_limit($input_text, $limit = 50, $end_str = '…') {
+	public static function wordsLimit($input_text, $limit = 50, $end_str = '…') {
 
 		$input_text = strip_tags($input_text);
 		$words = explode(' ', $input_text); // создаём из строки массив слов
