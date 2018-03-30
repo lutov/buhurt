@@ -163,8 +163,12 @@ class UserController extends Controller {
 		return Redirect::to('/')->with('message', 'До&nbsp;свидания');
 	}
 
-
-	public function view($id)
+	/**
+	 * @param Request $request
+	 * @param $id
+	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 */
+	public function view(Request $request, $id)
 	{
 		if(Auth::check() && $id == Auth::user()->id) {
 			$user = Auth::user();
@@ -299,6 +303,7 @@ class UserController extends Controller {
 			//die(print_r($chart_rates));
 
 			return View::make('user.profile', array(
+				'request' => $request,
 				'user' => $user,
 				'avatar' => $avatar,
 				'books_rated' => $books_rated,

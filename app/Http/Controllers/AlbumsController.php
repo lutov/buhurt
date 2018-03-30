@@ -84,9 +84,14 @@ class AlbumsController extends Controller {
     {
         return View::make($this->prefix.'.collection');
     }
-	
-    public function show_item($id)
-	{
+
+	/**
+	 * @param Request $request
+	 * @param $id
+	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 */
+    public function show_item(Request $request, $id) {
+
 		$album = Album::find($id);
 
 		if(count($album)) {
@@ -177,12 +182,14 @@ class AlbumsController extends Controller {
 			$sim_options['genres'] = $genres;
 			$sim_limit = 3;
 
+			$similar = array();
 			for($i = 0; $i < $sim_limit; $i++) {
 				$similar[] = Helpers::get_similar($sim_options);
 			}
 
 			return View::make($this->prefix . '.item', array(
-				'album' => $album,
+				'request' => $request,
+				'element' => $album,
 				'tracks' => $tracks,
 				//'publishers' => $publishers,
 				'bands' => $bands,
@@ -200,7 +207,7 @@ class AlbumsController extends Controller {
 			));
 		}
 		else {
-			return Redirect::to('/base/albums/');
+			return Redirect::to('/albums/');
 		}
 	}
 	

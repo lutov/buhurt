@@ -193,18 +193,27 @@ class HomeController extends Controller {
 		));
 	}
 
-	public function about()
-	{
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function about(Request $request) {
+
 		$id = 1;
 		$user = User::find($id);
 
 		return View::make('static.about', array(
+			'request' => $request,
 			'user' => $user
 		));
+
 	}
 
-
-	public function icons() {
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function icons(Request $request) {
 
 		$minutes = 60;
 		// remember(60)->
@@ -213,6 +222,7 @@ class HomeController extends Controller {
 		});
 
 		return View::make('static.icons', array(
+			'request' => $request,
 			'icons' => $icons
 		));
 

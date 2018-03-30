@@ -373,6 +373,14 @@ class ElementsHelper {
 
 				}
 
+				if(isset($info['bands']) && count($info['bands'])) {
+
+					$element_title .= '<div class="h2">';
+					$element_title .= DatatypeHelper::arrayToString($info['bands'], ', ', '/bands/');
+					$element_title .= '</div>';
+
+				}
+
 				$element_title .= '<h1 itemprop="name">'.$element->name.'</h1>';
 
 				if(!empty($element->alt_name)) {
@@ -449,6 +457,8 @@ class ElementsHelper {
 		$element_title .= '<div class="row mt-5">';
 			$element_title .= '<div class="col-md-12">';
 
+				$element_title .= '<p>';
+
 				if(isset($info['publishers']) && count($info['publishers'])) {
 
 					$element_title .= DatatypeHelper::arrayToString($info['publishers'], ', ', '/companies/', false, 'publisher');
@@ -459,6 +469,17 @@ class ElementsHelper {
 				if(!empty($element->year)) {
 
 					$element_title .= '<a itemprop="datePublished" href="/years/'.$section.'/'.$element->year.'">'.$element->year.'</a>';
+					$element_title .= ' г. ';
+
+				}
+
+				if(isset($info['countries'])) {
+
+					$element_title .= DatatypeHelper::arrayToString(
+						$info['countries'],
+						', ',
+						'/countries/'.$section.'/'
+					);
 					$element_title .= '. ';
 
 				}
@@ -473,6 +494,97 @@ class ElementsHelper {
 						false,
 						'genre'
 					);
+
+				}
+
+				if(!empty($element->length)) {
+
+					$element_title .= '. ';
+					$element_title .= '<meta itemprop="duration" content="T'.$element->length.'M" />'.$element->length.' мин. ';
+
+				}
+
+				$element_title .= '</p>';
+
+				if(isset($info['directors']) && count($info['directors'])) {
+
+					$element_title .= '<p>';
+					$element_title .= 'Режиссер: '.DatatypeHelper::arrayToString(
+						$info['directors'],
+						', ',
+						'/persons/',
+						false,
+						'director'
+					);
+					$element_title .= '</p>';
+
+				}
+
+				if(isset($info['screenwriters']) && count($info['screenwriters'])) {
+
+					$element_title .= '<p>';
+					$element_title .= 'Сценарий: '.DatatypeHelper::arrayToString(
+						$info['screenwriters'],
+						', ',
+						'/persons/',
+						false,
+						'creator'
+					);
+					$element_title .= '</p>';
+
+				}
+
+				if(isset($info['producers']) && count($info['producers'])) {
+
+					$element_title .= '<p>';
+					$element_title .= 'Продюсер: '.DatatypeHelper::arrayToString(
+						$info['producers'],
+						', ',
+						'/persons/',
+						false,
+						'producer'
+					);
+					$element_title .= '</p>';
+
+				}
+
+				if(isset($info['game_developers']) && count($info['game_developers'])) {
+
+					$element_title .= '<p>';
+					$element_title .= 'Разработчик: '.DatatypeHelper::arrayToString(
+						$info['game_developers'],
+						', ',
+						'/companies/',
+						false,
+						'creator'
+					);
+					$element_title .= '</p>';
+
+				}
+
+				if(isset($info['game_publishers']) && count($info['game_publishers'])) {
+
+					$element_title .= '<p>';
+					$element_title .= 'Издатель: '.DatatypeHelper::arrayToString(
+						$info['game_publishers'],
+						', ',
+						'/companies/',
+						false,
+						'publisher'
+					);
+					$element_title .= '</p>';
+
+				}
+
+				if(isset($info['game_platforms']) && count($info['game_platforms'])) {
+
+					$element_title .= '<p>';
+					$element_title .= 'Платформы: '.DatatypeHelper::arrayToString(
+						$info['game_platforms'],
+						', ',
+						'/platforms/'.$section.'/'
+					);
+					$element_title .= '</p>';
 
 				}
 
@@ -505,6 +617,36 @@ class ElementsHelper {
 			$element_body .= '<div itemprop="description" class="col-md-9">';
 
 				$element_body .= '<p>'.nl2br($element->description).'</p>';
+
+				if(isset($info['actors']) && count($info['actors'])) {
+
+					$element_body .= '<p>';
+					$element_body .= 'В ролях: '.DatatypeHelper::arrayToString(
+						$info['actors'],
+						', ',
+						'/persons/',
+						false,
+						'actor'
+					);
+					$element_body .= '</p>';
+
+				}
+
+				if(isset($info['tracks']) && count($info['tracks'])) {
+
+					$element_body .= '<ol>';
+					$element_body .= '<li>'.DatatypeHelper::objectToJsArray($info['tracks'], '</li><li>', true).'</li>';
+					$element_body .= '</ol>';
+
+				}
+
+				if(('films' == $section) && RolesHelper::isAdmin($request)) {
+
+					$element_body .= '<p>';
+					$element_body .= DummyHelper::getExtLink('rutracker', $element->name);
+					$element_body .= '</p>';
+
+				}
 
 			$element_body .= '</div>';
 

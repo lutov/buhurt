@@ -84,8 +84,13 @@ class GamesController extends Controller {
     {
         return View::make($this->prefix.'.collection');
     }
-	
-    public function show_item($id)
+
+	/**
+	 * @param Request $request
+	 * @param $id
+	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 */
+    public function show_item(Request $request, $id)
 	{
 		$game = Game::find($id);
 
@@ -177,12 +182,14 @@ class GamesController extends Controller {
 			$sim_options['genres'] = $genres;
 			$sim_limit = 3;
 
+			$similar = array();
 			for($i = 0; $i < $sim_limit; $i++) {
 				$similar[] = Helpers::get_similar($sim_options);
 			}
 
 			return View::make($this->prefix . '.item', array(
-				'game' => $game,
+				'request' => $request,
+				'element' => $game,
 				'developers' => $developers,
 				'publishers' => $publishers,
 				'platforms' => $platforms,
