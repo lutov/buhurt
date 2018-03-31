@@ -6,9 +6,28 @@
 
 @section('content')
 
+	<?php
+
+			$has_genres = (count($fav_gens_books) || count($fav_gens_films) || count($fav_gens_games) || count($fav_gens_albums)) ? true : false;
+			$has_rates = (!empty($chart_rates)) ? true : false;
+			$has_options = (Auth::check() && Auth::user()->id == $user->id) ? true : false;
+
+	?>
+
 	<section class="text-center">
 		<h1 class="pt-5">@yield('title')</h1>
 		<h2 class="pb-3">@yield('subtitle')</h2>
+		<ul class="list-inline">
+
+			@if($has_genres)<li class="list-inline-item"><a href="#genres">Любимые жанры</a></li>@endif
+
+			@if($has_rates)<li class="list-inline-item"><a href="#rates">Распределение оценок</a></li>@endif
+
+			<li class="list-inline-item"><a href="#achievements">Достижения</a></li>
+
+			@if($has_options)<li class="list-inline-item"><a href="#options">Настройки</a></li>@endif
+
+		</ul>
 	</section>
 
 	<div class="row mt-5">
@@ -84,10 +103,9 @@
 
 	</div>
 
-	@if(count($fav_gens_books) || count($fav_gens_films) || count($fav_gens_games) || count($fav_gens_albums))
-
+	@if($has_genres)
 		<section class="text-center mt-5">
-			<h2>Любимые жанры</h2>
+			<h2 id="genres">Любимые жанры</h2>
 		</section>
 
 		<div class="row mt-5">
@@ -104,12 +122,14 @@
 		</div>
 	@endif
 
-	@if(!empty($chart_rates))
+	@if($has_rates)
 
+		<script>var chart_rates = [{!! implode($chart_rates, ', ') !!}];</script>
 		<script src="/data/js/chart/Chart.js"></script>
+		<script src="/data/js/rates_chart.js"></script>
 
 		<section class="text-center mt-5">
-			<h2>Распределение оценок</h2>
+			<h2 id="rates">Распределение оценок</h2>
 		</section>
 
 		<div class="row mt-5">
@@ -122,97 +142,109 @@
 
 		</div>
 
-		<script>
-            var randomColorFactor = function() {
-                return Math.round(Math.random() * 255);
-            };
-            var randomColor = function() {
-                return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',.7)';
-            };
+	@endif
 
-            var barChartData = {
-                labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                datasets: [{
-                    label: 'Выставлено оценок',
-                    backgroundColor: randomColor(),
-                    data: [{!! implode($chart_rates, ', ') !!}]
-                },]
+	<section class="text-center mt-5">
+		<h2 id="achievements">Достижения</h2>
+	</section>
 
-            };
+	<div class="row mt-5">
 
-            window.onload = function() {
-                var ctx = $("#chart_rates");
-                window.myBar = new Chart(ctx, {
-                    type: 'bar',
-                    data: barChartData,
-                    options: {
-                        // Elements options apply to all of the options unless overridden in a dataset
-                        // In this case, we are setting the border of each bar to be 2px wide and green
-                        elements: {
-                            rectangle: {
-                                borderWidth: 2,
-                                borderColor: randomColor(),
-                                borderSkipped: 'bottom'
-                            }
-                        },
-                        responsive: true,
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: false,
-                        }
-                    }
-                });
-
-            };
-		</script>
-
-	<div class="element_card">
-		<div class="element_description">
+		<div class="col-md-12">
 
 			{!! AchievementsHelper::render($achievements, $user_achievements) !!}
-			
-			@endif
-
-            @if(Auth::check() && Auth::user()->id == $user->id)
-                <h3>Аватар</h3>
-                {!! Form::open(array('action' => 'UserController@avatar', 'class' => 'avatar', 'method' => 'POST', 'files' => true)) !!}
-                <p>{!! Form::file('avatar'); !!}</p>
-                {!! Form::submit('Загрузить', $attributes = array('id' => 'upload_avatar')) !!}
-                {!! Form::close() !!}
-
-                <h3>Безопасность</h3>
-                <p><a href="{!! URL::action('UserController@change_password') !!}">Сменить пароль</a></p>
-
-                <h3>Настройки</h3>
-                {!! Form::open(array('url' => 'user/'.$user->id.'/options', 'class' => 'options', 'method' => 'POST')) !!}
-                <?php
-                foreach($options as $option) {
-
-                    $status = false;
-                    $option_id = $option->id;
-                    $status = in_array($option_id, $user_options);
-
-                    echo '<p>'.Form::hidden($option->name, $value = '0', $attributes = array('autocomplete' => 'off')).
-                    Form::checkbox($option->name, 1, $status, $attributes = array(
-                        'id' => $option->name,
-                        'autocomplete' => 'off')
-                    ).' <label for="'.$option->name.'">'.$option->description.'</label></p>';
-                }
-                ?>
-                {!! Form::submit('Сохранить', $attributes = array('id' => 'set_options')) !!}
-                {!! Form::close() !!}
-            @endif
 
 		</div>
 
 	</div>
 
-		<script>
-			$(document).tooltip({
-            	position: { my: "left+5 center", at: "right center" }
-           	});
-		</script>
+	@if($has_options)
+
+		<section class="text-center mt-5">
+			<h2 id="options">Настройки</h2>
+		</section>
+
+		<div class="row mt-5 align-top">
+
+			<div class="col-md-12">
+
+				<h3 class="mb-3">Аватар</h3>
+
+				{!! Form::open(array('action' => 'UserController@avatar', 'class' => 'avatar', 'method' => 'POST', 'files' => true)) !!}
+
+				<div class="w-50">
+					<div class="custom-file">
+						<input type="file" name="avatar" class="custom-file-input" id="customFile">
+						<label class="custom-file-label" for="customFile">Choose file</label>
+					</div>
+				</div>
+
+				<div class="mt-3">
+					{!! Form::submit('Загрузить', $attributes = array(
+                        'id' => 'upload_avatar',
+                        'type' => 'button',
+                        'class' => 'btn btn-secondary'
+                    )) !!}
+				</div>
+
+				{!! Form::close() !!}
+
+			</div>
+
+		</div>
+
+		<div class="row mt-5 align-top">
+
+			<div class="col-md-12 align-top">
+
+				<h3 class="mb-3">Безопасность</h3>
+				<p>
+					<a href="{!! URL::action('UserController@change_password') !!}" type="button" class="btn btn-secondary">
+						Сменить пароль
+					</a>
+				</p>
+
+			</div>
+
+		</div>
+
+		<div class="row mt-5 align-top">
+
+			<div class="col-md-12 align-top">
+
+				<h3  class="mb-3">Комментарии</h3>
+				{!! Form::open(array('url' => 'user/'.$user->id.'/options', 'class' => 'options', 'method' => 'POST')) !!}
+				<?php
+				foreach($options as $option) {
+
+					$status = false;
+					$option_id = $option->id;
+					$status = in_array($option_id, $user_options);
+
+					echo '<p>'.Form::hidden($option->name, $value = '0', $attributes = array('autocomplete' => 'off')).
+						Form::checkbox($option->name, 1, $status, $attributes = array(
+							'id' => $option->name,
+							'autocomplete' => 'off')
+						).' <label for="'.$option->name.'">'.$option->description.'</label></p>';
+				}
+				?>
+				{!! Form::submit('Сохранить', $attributes = array(
+					'id' => 'set_options',
+					'type' => 'button',
+					'class' => 'btn btn-secondary'
+				)) !!}
+				{!! Form::close() !!}
+
+			</div>
+
+		</div>
+
+	@endif
+
+	<!--script>
+        $(document).tooltip({
+            position: { my: "left+5 center", at: "right center" }
+        });
+	</script-->
 
 @stop

@@ -21,7 +21,7 @@ class AchievementsHelper {
 		$in_line = 7;
 		$i = 1;
 
-		$result = '<table class="achievements">';
+		$result = '<table class="achievements table table-bordered">';
 
 		foreach($achievements as $value)
 		{
@@ -32,16 +32,17 @@ class AchievementsHelper {
 			$result .= '<td';
 			if(false !== $is_achieved) {
 				$path = '/data/img/achievements/'.$value->id.'.png';
-				$result .=' class="achieved"';
-				$content = '<img src="'.$path.'" alt="'.$value->name.'" />';
-			}
-			else
-			{
-				$content = '?';
+				//$result .=' class="achieved"';
+				$content = '<img src="'.$path.'" alt="'.$value->name.'" class="img-fluid" />';
+			} else {
+				//$content = '?';
+				$path = '/data/img/achievements/0.png';
+				//$result .=' class="achieved"';
+				$content = '<img src="'.$path.'" alt="'.$value->name.'" class="img-fluid" />';
 			}
 			//$result .= ' id="achievement'.$value->id.'"';
 			$result .= ' title="'.$value->description.'"';
-			$result .='>';
+			$result .=' class="">';
 			$result .= $content;
 			$result .= '</td>';
 

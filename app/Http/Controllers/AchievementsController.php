@@ -8,8 +8,8 @@ use App\Models\AchievementUser;
 
 class AchievementsController extends Controller {
 
-	public function check()
-	{
+	public function check() {
+
 		$result = '{"msg_type":"message", "message":"Оценка&nbsp;сохранена", "msg_img":[]}';
 
         $need_update = Cache::get('need_update', true);
@@ -60,8 +60,8 @@ class AchievementsController extends Controller {
 		return $result;
 	}
 
-	private function chain_of_events($user_id)
-	{
+	private function chain_of_events($user_id) {
+
 		// Вы зарегистрировались на сайте, добавили произведение в список желаемого, поставили оценку и оставили комментарий
 		$result = false;
 
