@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\RolesHelper;
 use DB;
+use Illuminate\Http\Request;
 use View;
 use Input;
 use Config;
@@ -12,8 +14,8 @@ class PersonsController extends Controller {
 
 	private $prefix = 'persons';
 
-    public function show_all()
-    {
+    public function show_all(Request $request) {
+
 	    $persons = DB::table($this->prefix)->paginate(27);
 		$photos = array();
 		$default_photo = 0;
@@ -47,8 +49,8 @@ class PersonsController extends Controller {
         return View::make($this->prefix.'.collection');
     }
 	
-    public function show_item($id)
-    {
+    public function show_item(Request $request, $id) {
+
 		$person = Person::find($id);
 
 		if(isset($person->id)) {
@@ -123,7 +125,7 @@ class PersonsController extends Controller {
 				//->toArray()
 			;
 			
-			if(Helpers::is_admin()) {
+			if(RolesHelper::isAdmin($request)) {
 				//Config::set('app.debug', true);
 				
 			}			
@@ -145,6 +147,7 @@ class PersonsController extends Controller {
 			);
 
 			return View::make($this->prefix . '.item', array(
+				'request' => $request,
 				'person' => $person,
 				'photo' => $photo,
 				'books' => $books,
@@ -165,8 +168,8 @@ class PersonsController extends Controller {
 		}
     }
 	
-    public function show_authors()
-    {
+    public function show_authors() {
+
         return View::make($this->prefix.'.authors');
     }	
 	
@@ -188,6 +191,7 @@ class PersonsController extends Controller {
 		DB::table('screenwriters_films')->where('person_id', '=', $id)->update(array('person_id' => $recipient_id));
 		DB::table('producers_films')->where('person_id', '=', $id)->update(array('person_id' => $recipient_id));
 		DB::table('writers_genres')->where('person_id', '=', $id)->update(array('person_id' => $recipient_id));
+		DB::table('actors_films')->where('person_id', '=', $id)->update(array('person_id' => $recipient_id));
 
 		DB::table('persons')->where('id', '=', $id)->update(array('name' => ''));
 

@@ -2,6 +2,7 @@
 
 use Auth;
 use DB;
+use Illuminate\Http\Request;
 use View;
 use Input;
 use Redirect;
@@ -11,18 +12,25 @@ use App\Models\Genre;
 
 class GenresController extends Controller {
 
-    public function show_all()
-    {
+    public function show_all() {
+
 		/*
 	    $genres = DB::table($this->prefix);
         return View::make('books.genres', array(
 			'books' => $genres
 		));
 		*/
+
     }
-	
-    public function show_item($section, $id)
-    {
+
+	/**
+	 * @param Request $request
+	 * @param $section
+	 * @param $id
+	 * @return \Illuminate\Contracts\View\View
+	 */
+    public function show_item(Request $request, $section, $id) {
+
 		//$section = $this->prefix;
 		$get_section = Section::where('alt_name', '=', $section)->first();
 		$ru_section = $get_section->name;
@@ -87,17 +95,20 @@ class GenresController extends Controller {
 		}
 
 		if(!empty($genre)) {
+
 			return View::make('genres.item', array(
+				'request' => $request,
 				'genre' => $genre,
 				'elements' => $elements,
 				'section' => $section,
 				'ru_section' => $ru_section,
 				'sort_options' => $sort_options
 			));
-		}
-		else
-		{
+
+		} else {
+
 			echo 'test';
+
 		}
     }
 	

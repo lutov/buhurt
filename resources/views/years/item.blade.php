@@ -1,20 +1,26 @@
 @extends('layouts.default')
 
-@section('title')
-	{{$year}}
-@stop
+@section('title'){{$year}}@stop
 
-@section('subtitle')
-	{{$ru_section}}
-@stop
+@section('subtitle')@stop
 
 @section('content')
 
-    <h2>@yield('subtitle')</h2>
-  	<h1>{{trim($year)}}-й год</h1>
+	<section class="text-center">
+		<h1 class="pt-5">{{trim($year)}}-й год</h1>
+		<h2 class="pb-3">@yield('subtitle')</h2>
+	</section>
 
-  	<div class="element_additional_info"></div>
+	<section class="text-center mt-5">
+		<h2 id="section">{!! $ru_section !!}</h2>
+	</section>
 
-	{!! Helpers::get_elements($elements, $section, $sort_options) !!}
+	<div class="row mt-5">
+
+		<div class="col-md-12">
+			{!! ElementsHelper::getElements($request, $elements, $section) !!}
+		</div>
+
+	</div>
 
 @stop

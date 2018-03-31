@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Redirect;
 use Input;
@@ -10,8 +11,8 @@ class CompaniesController extends Controller {
 
 	private $prefix = 'companies';
 
-    public function show_all()
-    {
+    public function show_all() {
+
 		/*
 	    $persons = DB::table($this->prefix)->paginate(27);
 		$photos = array();
@@ -50,7 +51,7 @@ class CompaniesController extends Controller {
     }
 	*/
 	
-    public function show_item($id)
+    public function show_item(Request $request, $id)
     {
 		$company = Company::find($id);
 
@@ -76,6 +77,7 @@ class CompaniesController extends Controller {
 			);
 
 			return View::make($this->prefix . '.item', array(
+				'request' => $request,
 				'company' => $company,
 				'company_logo' => $logo,
 				'books_published' => $books_published,

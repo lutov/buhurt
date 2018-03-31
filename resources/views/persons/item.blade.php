@@ -1,68 +1,142 @@
 @extends('layouts.default')
 
-@section('title')
-	{!! $person->name !!}
-@stop
+@section('title'){!! $person->name !!}@stop
 
-@section('subtitle')
-
-@stop
+@section('subtitle')@stop
 
 @section('content')
 
-    <h2>@yield('subtitle')</h2>
-  	<h1>@yield('title')</h1>
+	<section class="text-center">
+		<h1 class="pt-5">@yield('title')</h1>
+		<h2 class="pb-3">@yield('subtitle')</h2>
+		<ul class="list-inline">
 
-  	<div class="book_additional_info">
-    	<p>
-    	</p>
-    </div>
+			@if(count($books))<li class="list-inline-item"><a href="#writer">Писатель</a></li>@endif
+			@if(count($screenplays))<li class="list-inline-item"><a href="#screenwriter">Сценарист</a></li>@endif
+			@if(count($directions))<li class="list-inline-item"><a href="#director">Режиссёр</a></li>@endif
+			@if(count($productions))<li class="list-inline-item"><a href="#producer">Продюссер</a></li>@endif
+			@if(count($actions))<li class="list-inline-item"><a href="#actor">Актёр</a></li>@endif
 
-	<div class="element_card">
-		<div class="element_img">@if(0 !== $photo) <img src="/data/img/covers/persons/{!! $photo !!}.jpg" alt="{!! $person->name !!}" /> @endif</div><!--
-		--><div class="element_description">
-			@if(!empty($person->bio)) <p>{!! nl2br($person->bio) !!}</p> @endif
-			
-			@if(count($books))
-				<p>Жанры: {!! Helpers::array2string($top_genres, ', ', '/genres/books/') !!}</p>
-			@endif
+		</ul>
+	</section>
+
+	<div class="row mt-5 align-top">
+
+		<div class="col-md-3">
+
+			@if(0 !== $photo) <img src="/data/img/covers/persons/{!! $photo !!}.jpg" alt="{!! $person->name !!}" class="img-fluid" /> @endif
+
 		</div>
-    </div>
 
-	@if(Helpers::is_admin())
+		<div class="col-md-9">
 
-		{!! Form::open(array('action' => array('PersonsController@transfer', $person->id), 'class' => 'transfer', 'method' => 'POST', 'files' => false)) !!}
-		<p>{!! Form::text('recipient_id', $value = '', $attributes = array('placeholder' => 'Преемник', 'id' => 'recipient', 'class' => 'half')) !!}</p>
-		<p>
-			{!! Form::submit('Перенести', $attributes = array('id' => 'do_transfer')) !!}
-		</p>
-		{!! Form::close() !!}
+			@if(!empty($person->bio)) <p>{!! nl2br($person->bio) !!}</p> @endif
 
-	@endif
+			@if(count($books))<p>Жанры: {!! DatatypeHelper::arrayToString($top_genres, ', ', '/genres/books/') !!}</p>@endif
+
+		</div>
+
+	</div>
 
 	@if(count($books))
-	<h3>Писатель</h3>
-	{!! Helpers::get_elements($books, 'books') !!}
+
+		<section class="text-center mt-5">
+			<h2 id="writer">Писатель</h2>
+		</section>
+
+		<div class="row mt-5">
+
+			<div class="col-md-12">
+				{!! ElementsHelper::getElements($request, $books, 'books') !!}
+			</div>
+
+		</div>
+
 	@endif
 
 	@if(count($screenplays))
-	<h3>Сценарист</h3>
-	{!! Helpers::get_elements($screenplays, 'films') !!}
+
+		<section class="text-center mt-5">
+			<h2 id="screenwriter">Сценарист</h2>
+		</section>
+
+		<div class="row mt-5">
+
+			<div class="col-md-12">
+				{!! ElementsHelper::getElements($request, $screenplays, 'films') !!}
+			</div>
+
+		</div>
+
 	@endif
 
     @if(count($directions))
-    <h3>Режиссер</h3>
-    {!! Helpers::get_elements($directions, 'films') !!}
+
+		<section class="text-center mt-5">
+			<h2 id="director">Режиссер</h2>
+		</section>
+
+		<div class="row mt-5">
+
+			<div class="col-md-12">
+				{!! ElementsHelper::getElements($request, $directions, 'films') !!}
+			</div>
+
+		</div>
+
     @endif
 
 	@if(count($productions))
-	<h3>Продюсер</h3>
-	{!! Helpers::get_elements($productions, 'films') !!}
+
+		<section class="text-center mt-5">
+			<h2 id="producer">Продюсер</h2>
+		</section>
+
+		<div class="row mt-5">
+
+			<div class="col-md-12">
+				{!! ElementsHelper::getElements($request, $productions, 'films') !!}
+			</div>
+
+		</div>
+
 	@endif
 
     @if(count($actions))
-    <h3>Актёр</h3>
-    {!! Helpers::get_elements($actions, 'films') !!}
+
+		<section class="text-center mt-5">
+			<h2 id="actor">Актёр</h2>
+		</section>
+
+		<div class="row mt-5">
+
+			<div class="col-md-12">
+				{!! ElementsHelper::getElements($request, $actions, 'films') !!}
+			</div>
+
+		</div>
+
     @endif
+
+	@if(RolesHelper::isAdmin($request))
+
+		<div class="form-group">
+		{!! Form::open(array('action' => array('PersonsController@transfer', $person->id), 'class' => 'transfer', 'method' => 'POST', 'files' => false)) !!}
+		<p>{!! Form::text('recipient_id', $value = '', $attributes = array(
+			'placeholder' => 'Преемник',
+			'id' => 'recipient',
+			'class' => 'form-control'
+		)) !!}</p>
+		<p>
+			{!! Form::submit('Перенести', $attributes = array(
+				'id' => 'do_transfer',
+				'type' => 'button',
+				'class' => 'btn btn-secondary'
+			)) !!}
+		</p>
+		{!! Form::close() !!}
+		</div>
+
+	@endif
 
 @stop

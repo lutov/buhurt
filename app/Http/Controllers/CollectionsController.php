@@ -2,6 +2,7 @@
 
 use Auth;
 use DB;
+use Illuminate\Http\Request;
 use View;
 use Input;
 use Redirect;
@@ -12,18 +13,19 @@ use App\Models\Game;
 
 class CollectionsController extends Controller {
 
-    public function show_all()
-    {
+    public function show_all() {
+
 		/*
 	    $genres = DB::table($this->prefix);
         return View::make('books.genres', array(
 			'books' => $genres
 		));
 		*/
+
     }
 	
-    public function show_item($id)
-    {
+    public function show_item(Request $request, $id) {
+
 		$collection = Collection::find($id);
 
 		$sort_direction = 'asc';
@@ -60,6 +62,7 @@ class CollectionsController extends Controller {
 		;
 
 		return View::make('collections.item', array(
+			'request' => $request,
 			'books' => $books,
 			'films' => $films,
 			'games' => $games,

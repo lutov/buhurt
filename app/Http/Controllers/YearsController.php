@@ -2,6 +2,7 @@
 
 use Auth;
 use DB;
+use Illuminate\Http\Request;
 use View;
 use Input;
 use Redirect;
@@ -17,8 +18,8 @@ class YearsController extends Controller {
 
 	//private $prefix = 'persons';
 
-    public function show_all()
-    {
+    public function show_all() {
+
 	    $persons = DB::table($this->prefix)->paginate(27);
 		$photos = array();
 		$default_photo = 0;
@@ -40,10 +41,17 @@ class YearsController extends Controller {
 			'persons' => $persons,
 			'photos' => $photos
 		));
+
     }
-	
-    public function show_item($section, $year)
-    {
+
+	/**
+	 * @param Request $request
+	 * @param $section
+	 * @param $year
+	 * @return \Illuminate\Contracts\View\View
+	 */
+    public function show_item(Request $request, $section, $year) {
+
 		//$get_section = Section::where('alt_name', '=', $section)->first();
 		$ru_section = Helpers::get_section_name($section);
 		$type = Helpers::get_section_type($section);
@@ -87,9 +95,7 @@ class YearsController extends Controller {
 				//->toSql()
 			;
 			//die($elements);
-		}
-		else
-		{
+		} else {
 			$elements = $type::orderBy($sort, $sort_direction)
 				->where('year', '=', $year)
 				->paginate($limit)
@@ -98,6 +104,7 @@ class YearsController extends Controller {
 
 		if(!empty($elements)) {
 			return View::make('years.item', array(
+				'request' => $request,
 				'year' => $year,
 				'elements' => $elements,
 				'section' => $section,
