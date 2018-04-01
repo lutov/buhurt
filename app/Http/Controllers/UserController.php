@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\SectionsHelper;
 use DB;
 use Illuminate\Http\Request;
 use URL;
@@ -29,9 +30,10 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
+	public function index() {
+
 		return View::make('user.index');
+
 	}
 
 	/**
@@ -39,9 +41,10 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function register()
-	{
+	public function register() {
+
 		return View::make('user.register');
+
 	}
 
 	/**
@@ -49,8 +52,8 @@ class UserController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
-	{
+	public function store() {
+
 		$rules = array(
 			'email' 	=> 'required|email|unique:users,email',
 			'password' 	=> 'required',
@@ -60,13 +63,14 @@ class UserController extends Controller {
 
 		$validator = Validator::make(Input::all(), $rules);
 
-		if($validator->fails())
-		{
+		if($validator->fails()) {
+
 			return Redirect::to(URL::action('UserController@register'))
 				->withInput()
 				->withErrors($validator)
 				->with('message', 'При&nbsp;заполнении&nbsp;допущены&nbsp;ошибки')
 			;
+
 		}
 
 		$user_name = strip_tags(Input::get('username'));
@@ -75,11 +79,12 @@ class UserController extends Controller {
 		$user_name = str_replace("*", "", $user_name);
 		$user_name = str_replace("%", "", $user_name);
 
-		if(empty($user_name))
-		{
+		if(empty($user_name)) {
+
 			return Redirect::to(URL::action('UserController@register'))
 				->withInput()
 				->with('message', 'Имя&nbsp;пользователя&nbsp;содержит&nbsp;недопустимые&nbsp;символы');
+
 		}
 
 		$credentials = array(
@@ -168,12 +173,11 @@ class UserController extends Controller {
 	 * @param $id
 	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
 	 */
-	public function view(Request $request, $id)
-	{
+	public function view(Request $request, $id) {
+
 		if(Auth::check() && $id == Auth::user()->id) {
 			$user = Auth::user();
-		}
-		else {
+		} else {
 			$user = User::find($id);
 		}
 
@@ -336,21 +340,30 @@ class UserController extends Controller {
 	}
 
 
-	public function rates($id, $section)
-	{
+	/**
+	 * @param Request $request
+	 * @param $id
+	 * @param $section
+	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 */
+	public function rates(Request $request, $id, $section) {
+
 		if(Auth::check() && $id == Auth::user()->id) {
+
 			$user = Auth::user();
-		}
-		else {
+
+		} else {
+
 			$user = User::find($id);
+
 		}
 
 		if(isset($user->id)) {
 
 			$user_id = $user->id;
 
-			$section_name = Helpers::get_section_name($section);
-			$type = Helpers::get_section_type($section);
+			$section_name = SectionsHelper::getSectionName($section);
+			$type = SectionsHelper::getSectionType($section);
 
 			$sort = Input::get('sort', 'rates.created_at');
 			$sort_direction = Input::get('sort_direction', 'desc');
@@ -382,27 +395,29 @@ class UserController extends Controller {
 			;
 
 			return View::make('user.rates.index', array(
+				'request' => $request,
 				'user' => $user,
 				'section' => $section,
 				'section_name' => $section_name,
 				'sort_options' => $sort_options,
 				'elements' => $elements
 			));
-		}
-		else {
+		} else {
+
 			return Redirect::to('/');
+
 		}
 	}
 
 
-	public function rates_export($id, $section)
-	{
+	public function rates_export($id, $section) {
+
 		if(Auth::check() && $id == Auth::user()->id) {
 
 			$user = Auth::user();
 			$user_id = $user->id;
 
-			$type = Helpers::get_section_type($section);
+			$type = SectionsHelper::getSectionType($section);
 
 			$sort = Input::get('sort', 'rates.created_at');
 			$sort_direction = Input::get('sort_direction', 'desc');
@@ -426,14 +441,15 @@ class UserController extends Controller {
 			$path = '/files/rates/user_'.$user_id.'-'.$section.'_rates.csv';
 			$rates = '"Название";"Оригинальное название";"Год";"Оценка";"Время выставления оценки"'."\n";
 
-			foreach($elements as $element)
-			{
+			foreach($elements as $element) {
+
 				$rates .= '"'.$element->name.'";';
 				$rates .= '"'.$element->alt_name.'";';
 				$rates .= '"'.$element->year.'";';
 				$rates .= '"'.$element->rates[0]->rate.'";';
 				$rates .= '"'.$element->rates[0]->created_at.'"';
 				$rates .= "\n";
+
 			}
 
 			//echo '<pre>'.print_r($elements[0]->rates[0]->created_at, true).'</pre>';
@@ -449,20 +465,29 @@ class UserController extends Controller {
 		}
 	}
 
+	/**
+	 * @param Request $request
+	 * @param $id
+	 * @param $section
+	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 */
+	public function wanted(Request $request, $id, $section) {
 
-	public function wanted($id, $section)
-	{
 		if(Auth::check() && $id == Auth::user()->id) {
+
 			$user = Auth::user();
 		}
 		else {
+
 			$user = User::find($id);
+
 		}
 
 		if(isset($user->id)) {
+
 			//$section = $this->prefix;
 			$get_section = Section::where('alt_name', '=', $section)->first();
-			//$ru_section = $get_section->name;
+			$ru_section = $get_section->name;
 			$type = $get_section->type;
 
 			$sort = Input::get('sort', $section.'.created_at');
@@ -499,8 +524,10 @@ class UserController extends Controller {
 			;
 
 			return View::make('user.wanted.index', array(
+				'request' => $request,
 				'user' => $user,
 				'section' => $section,
+				'ru_section' => $ru_section,
 				'sort_options' => $sort_options,
 				'elements' => $elements
 			));
@@ -510,19 +537,28 @@ class UserController extends Controller {
 		}
 	}
 
+	/**
+	 * @param Request $request
+	 * @param $id
+	 * @param $section
+	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 */
+	public function not_wanted(Request $request, $id, $section) {
 
-	public function not_wanted($id, $section)
-	{
 		if(Auth::check() && $id == Auth::user()->id) {
+
 			$user = Auth::user();
-		}
-		else {
+
+		} else {
+
 			$user = User::find($id);
+
 		}
 
 		if(isset($user->id)) {
+
 			$get_section = Section::where('alt_name', '=', $section)->first();
-			//$ru_section = $get_section->name;
+			$ru_section = $get_section->name;
 			$type = $get_section->type;
 
 			$sort = Input::get('sort', $section.'.created_at');
@@ -559,8 +595,10 @@ class UserController extends Controller {
 			;
 
 			return View::make('user.not_wanted.index', array(
+				'request' => $request,
 				'user' => $user,
 				'section' => $section,
+				'ru_section' => $section,
 				'sort_options' => $sort_options,
 				'elements' => $elements
 			));
@@ -571,10 +609,10 @@ class UserController extends Controller {
 	}
 
 
-	public function avatar()
-	{
-		if(Auth::check())
-		{
+	public function avatar() {
+
+		if(Auth::check()) {
+
 			$id = Auth::user()->id;
 			//$avatar = Input::get('avatar');
 			$path = public_path() . '/data/img/avatars/';
@@ -595,8 +633,8 @@ class UserController extends Controller {
 	}
 
 
-	public function change_password()
-	{
+	public function change_password() {
+
 		if (Auth::check()) {
 			//$id = Auth::user()->id;
 
@@ -652,8 +690,8 @@ class UserController extends Controller {
 	}
 
 	
-	public function vk_auth()
-	{
+	public function vk_auth() {
+
 		if (!Auth::check()) {
 
 			$VK_APP_ID = env('VK_APP_ID', '');
@@ -804,8 +842,8 @@ class UserController extends Controller {
 		}
 	}
 
-	public function options($id)
-	{
+	public function options($id) {
+
 		if(Auth::check() && $id == Auth::user()->id) {
 
 			$user = Auth::user();
@@ -865,9 +903,11 @@ class UserController extends Controller {
 			}
 
 			return Redirect::to('/user/'.$user->id.'/profile')->with('message', 'Настройки&nbsp;сохранены');
-		}
-		else {
+
+		} else {
+
 			return Redirect::to('/')->with('message', 'Нет&nbsp;прав&nbsp;доступа');
+
 		}
 	}
 }

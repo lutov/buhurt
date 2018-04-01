@@ -13,6 +13,7 @@ use App\Models\Country;
 use App\Models\NotFound;
 use App\Models\Platform;
 use App\Models\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
@@ -31,38 +32,37 @@ class SearchController extends Controller {
 	/**
 	 * @return mixed
 	 */
-	public function everything()
-	{
+	public function everything(Request $request) {
+
 		$presearch_query =  Input::get('query');
 		$search_query =  $this->prepare_query($presearch_query);
 		$order = 'name';
 
-		if(!empty($search_query))
-		{
+		if(!empty($search_query)) {
+
 			$length = mb_strlen($search_query);
 			$min_length = 3;
-			if($min_length > $length)
-			{
+			if($min_length > $length) {
 				$message = 'Для поиска нужно хотя бы '.$min_length.' буквы';
 				return View::make($this->prefix.'.error', array(
 					'message' => $message
 				));
-			}
-			else
-			{
-				$search_result = $this->main_search($search_query, $order, $presearch_query);
+
+			} else {
+
+				$search_result = $this->main_search($request, $search_query, $order, $presearch_query);
 
 				if(!$search_result) {
 
 					$search_query2ru = Helpers::switch2ru($search_query);
 					//die($search_query2ru);
-					$search_result2ru = $this->main_search($search_query2ru, $order, $search_query2ru);
+					$search_result2ru = $this->main_search($request, $search_query2ru, $order, $search_query2ru);
 					//die($search_result2ru);
 
 					if(!$search_result2ru) {
 
 						$search_query2en = Helpers::switch2en($search_query);
-						$search_result2en = $this->main_search($search_query2en, $order, $search_query2en);
+						$search_result2en = $this->main_search($request, $search_query2en, $order, $search_query2en);
 
 						if(!$search_result2en) {
 
@@ -105,13 +105,13 @@ class SearchController extends Controller {
 
 				} else {return $search_result;}
 			}
-		}
-		else
-		{
+		} else {
+
 			$message = 'Кажется, запрос пуст';
 			return View::make($this->prefix.'.error', array(
 				'message' => $message
 			));
+
 		}
 
 	}
@@ -119,8 +119,8 @@ class SearchController extends Controller {
 	/**
 	 * @return \Illuminate\Contracts\View\View
 	 */
-	public function everything_json()
-	{
+	public function everything_json() {
+
 		$result_array = array();
 		$persons = $books = $films = $games = $albums = $bands = array();
 
@@ -181,19 +181,24 @@ class SearchController extends Controller {
 
 	}
 
-
-	public function advanced()
-	{
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function advanced(Request $request) {
 
 		return View::make($this->prefix.'.advanced.index', array(
-			//'message' => $message
+			'request' => $request
 		));
 
 	}
 
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function persons(Request $request) {
 
-	public function persons()
-	{
 		$sub_section = '';
 		$section = 'persons';
 		$title = 'Персоны';
@@ -209,6 +214,7 @@ class SearchController extends Controller {
 		;
 
 		return View::make($this->prefix.'.advanced.list', array(
+			'request' => $request,
 			'title' => $title,
 			'subtitle' => $subtitle,
 			'sub_section' => $sub_section,
@@ -218,9 +224,12 @@ class SearchController extends Controller {
 
 	}
 
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function companies(Request $request) {
 
-	public function companies()
-	{
 		$sub_section = '';
 		$section = 'companies';
 		$title = 'Компании';
@@ -236,6 +245,7 @@ class SearchController extends Controller {
 		;
 
 		return View::make($this->prefix.'.advanced.list', array(
+			'request' => $request,
 			'title' => $title,
 			'subtitle' => $subtitle,
 			'sub_section' => $sub_section,
@@ -245,9 +255,12 @@ class SearchController extends Controller {
 
 	}
 
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function bands(Request $request) {
 
-	public function bands()
-	{
 		$sub_section = '';
 		$section = 'bands';
 		$title = 'Группы';
@@ -263,6 +276,7 @@ class SearchController extends Controller {
 		;
 
 		return View::make($this->prefix.'.advanced.list', array(
+			'request' => $request,
 			'title' => $title,
 			'subtitle' => $subtitle,
 			'sub_section' => $sub_section,
@@ -272,9 +286,12 @@ class SearchController extends Controller {
 
 	}
 
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function collections(Request $request) {
 
-	public function collections()
-	{
 		$sub_section = '';
 		$section = 'collections';
 		$title = 'Коллекции';
@@ -290,6 +307,7 @@ class SearchController extends Controller {
 		;
 
 		return View::make($this->prefix.'.advanced.list', array(
+			'request' => $request,
 			'title' => $title,
 			'subtitle' => $subtitle,
 			'sub_section' => $sub_section,
@@ -299,9 +317,13 @@ class SearchController extends Controller {
 
 	}
 
+	/**
+	 * @param Request $request
+	 * @param $section
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function genres(Request $request, $section) {
 
-	public function genres($section)
-	{
 		$sub_section = 'genres';
 		$title = Helpers::get_section_name($section);
 		$subtitle = 'Жанры';
@@ -318,6 +340,7 @@ class SearchController extends Controller {
 		;
 
 		return View::make($this->prefix.'.advanced.list', array(
+			'request' => $request,
 			'title' => $title,
 			'subtitle' => $subtitle,
 			'sub_section' => $sub_section,
@@ -327,9 +350,12 @@ class SearchController extends Controller {
 
 	}
 
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function countries(Request $request) {
 
-	public function countries()
-	{
 		$sub_section = 'countries';
 		$section = 'films';
 		$title = 'Страны';
@@ -345,6 +371,7 @@ class SearchController extends Controller {
 		;
 
 		return View::make($this->prefix.'.advanced.list', array(
+			'request' => $request,
 			'title' => $title,
 			'subtitle' => $subtitle,
 			'sub_section' => $sub_section,
@@ -353,9 +380,12 @@ class SearchController extends Controller {
 		));
 	}
 
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function platforms(Request $request) {
 
-	public function platforms()
-	{
 		$sub_section = 'platforms';
 		$section = 'games';
 		$title = 'Игровые платформы';
@@ -371,6 +401,7 @@ class SearchController extends Controller {
 		;
 
 		return View::make($this->prefix.'.advanced.list', array(
+			'request' => $request,
 			'title' => $title,
 			'subtitle' => $subtitle,
 			'sub_section' => $sub_section,
@@ -379,9 +410,13 @@ class SearchController extends Controller {
 		));
 	}
 
+	/**
+	 * @param Request $request
+	 * @param $section
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function years(Request $request, $section) {
 
-	public function years($section)
-	{
 		$sub_section = 'years';
 		$title = Helpers::get_section_name($section);
 		$subtitle = 'Года';
@@ -401,6 +436,7 @@ class SearchController extends Controller {
 		;
 
 		return View::make($this->prefix.'.advanced.years_list', array(
+			'request' => $request,
 			'title' => $title,
 			'subtitle' => $subtitle,
 			'sub_section' => $sub_section,
@@ -411,8 +447,8 @@ class SearchController extends Controller {
 	}
 
 
-	public function person_name()
-	{
+	public function person_name() {
+
 		$limit = $this->small_limit;
 
 		$query = Input::get('term');
@@ -723,7 +759,7 @@ class SearchController extends Controller {
 		return $query;
 	}
 
-	private function main_search($search_query, $order, $presearch_query) {
+	private function main_search(Request $request, $search_query, $order, $presearch_query) {
 
 		$persons = Person::where('name', 'like', '%' . $search_query . '%')->orderBy($order)->get(); //->remember(5)
 		$books = Book::where(function($query) use ($search_query)
@@ -767,13 +803,14 @@ class SearchController extends Controller {
 		})->orderBy($order)->get(); //->remember(5)
 		//echo '<pre>'.print_r($games, true).'</pre>';
 
-		if(!count($persons) && !count($books) && !count($films) && !count($games) && !count($albums) && !count($bands))
-		{
+		if(!count($persons) && !count($books) && !count($films) && !count($games) && !count($albums) && !count($bands)) {
+
 			return false;
-		}
-		else
-		{
+
+		} else {
+
 			return View::make($this->prefix . '.index', array(
+				'request' => $request,
 				'query' => $presearch_query,
 				'persons' => $persons,
 				'books' => $books,
@@ -782,6 +819,7 @@ class SearchController extends Controller {
 				'albums' => $albums,
 				'bands' => $bands
 			));
+
 		}
 
 	}

@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use DB;
+use Illuminate\Http\Request;
 use View;
 use Input;
 use Redirect;
@@ -10,8 +11,8 @@ class BandsController extends Controller {
 
 	private $prefix = 'bands';
 
-    public function show_all()
-    {
+    public function show_all() {
+
 	    $bands = DB::table($this->prefix)->paginate(27);
 		$photos = array();
 		$default_photo = 0;
@@ -33,20 +34,23 @@ class BandsController extends Controller {
 			'bands' => $bands,
 			'photos' => $photos
 		));
+
     }
 	
-    public function show_collections()
-    {
+    public function show_collections() {
+
         return View::make($this->prefix.'.collections');
+
     }
 	
-    public function show_collection()
-    {
+    public function show_collection() {
+
         return View::make($this->prefix.'.collection');
+
     }
 	
-    public function show_item($id)
-    {
+    public function show_item(Request $request, $id) {
+
 		$band = Band::find($id);
 
 		if(isset($band->id)) {
@@ -73,6 +77,7 @@ class BandsController extends Controller {
 			);
 
 			return View::make($this->prefix . '.item', array(
+				'request' => $request,
 				'band' => $band,
 				'photo' => $photo,
 				'albums' => $albums,
@@ -82,22 +87,22 @@ class BandsController extends Controller {
 				//'productions' => $productions,
 				'sort_options' => $sort_options
 			));
-		}
-		else
-		{
+		} else {
 			// нет такой буквы
 			return Redirect::home()->with('message', 'Нет такой персоны');
 		}
     }
 	
-    public function show_authors()
-    {
+    public function show_authors() {
+
         return View::make($this->prefix.'.authors');
+
     }	
 	
-    public function show_author()
-    {
+    public function show_author() {
+
         return View::make($this->prefix.'.author');
+
     }
 	
 }

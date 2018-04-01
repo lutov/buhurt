@@ -9,6 +9,7 @@
 namespace App\Models\Helpers;
 
 use App\Models\Section;
+use Cache;
 
 class SectionsHelper {
 
@@ -16,9 +17,16 @@ class SectionsHelper {
 	 * @param $section
 	 * @return mixed
 	 */
-	public static function get_section_name($section) {
+	public static function getSectionName($section) {
 
-		$result = Section::where('alt_name', '=', $section)->value('name'); //->remember(60)
+		$minutes = 60;
+		$var_name = $section.'_name';
+		$result = Cache::remember($var_name, $minutes, function() use ($section) {
+
+			return Section::where('alt_name', '=', $section)->value('name');
+
+		});
+
 		return $result;
 
 	}
@@ -28,9 +36,16 @@ class SectionsHelper {
 	 * @param $section
 	 * @return mixed
 	 */
-	public static function get_section_type($section) {
+	public static function getSectionType($section) {
 
-		$result = Section::where('alt_name', '=', $section)->value('type'); //->remember(60)
+		$minutes = 60;
+		$var_name = $section.'_type';
+		$result = Cache::remember($var_name, $minutes, function() use ($section) {
+
+			return Section::where('alt_name', '=', $section)->value('type');
+
+		});
+
 		return $result;
 
 	}
@@ -40,9 +55,9 @@ class SectionsHelper {
 	 * @param $section
 	 * @return mixed
 	 */
-	public static function get_object_by($section) {
+	public static function getObjectBy($section) {
 
-		$type = SectionsHelper::get_section_type($section);
+		$type = SectionsHelper::getSectionType($section);
 		$result = new $type;
 
 		return $result;

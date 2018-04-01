@@ -4,3 +4,32 @@
     font-size: 1.1em !important;
 
 }
+
+.ui-autocomplete {
+    position: absolute;
+    z-index: 99999 !important;
+    cursor: default;
+    padding: 0;
+    margin-top: 2px;
+    list-style: none;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ui-autocomplete>li {
+    padding: 3px 12px;
+}
+
+.ui-autocomplete>li.ui-state-focus, .ui-autocomplete>li:hover {
+    background-color: #DDD;
+}
+
+.ui-helper-hidden-accessible {
+    display: none;
+}

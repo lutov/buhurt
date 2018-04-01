@@ -249,7 +249,55 @@ class ElementsHelper {
 
 		}
 
+		return $elements_list;
 
+	}
+
+	/**
+	 * @param Request $request
+	 * @param $elements
+	 * @param string $section
+	 * @param string $subsection
+	 * @param array $options
+	 * @return string
+	 */
+	public static function getList(Request $request, $elements, string $section = '', string $subsection = '', array $options = array()) {
+
+		$elements_list = '';
+
+		if(!count($options)) {
+			$options = array(
+				'header' => true,
+				'footer' => true,
+				'paginate' => true,
+			);
+		}
+
+		$elements_list .= '<ul class="list-unstyled">';
+
+		foreach ($elements as $element) {
+
+			if('' != $element->name) {
+				$elements_list .= '<li>';
+				$elements_list .= '<a href="/' . $section . '/';
+				if (!empty($subsection)) {
+					$elements_list .= $subsection . '/';
+				}
+				$elements_list .= $element->id . '">';
+				$elements_list .= $element->name;
+				$elements_list .= '</a>';
+				$elements_list .= '</li>';
+			}
+
+		}
+
+		$elements_list .= '</ul>';
+
+		if ($options['paginate']) {
+
+			$elements_list .= $elements->render();
+
+		}
 
 		return $elements_list;
 	}
@@ -287,7 +335,7 @@ class ElementsHelper {
 
 		$result = '';
 
-		$type = SectionsHelper::get_section_type($section);
+		$type = SectionsHelper::getSectionType($section);
 		//die($type);
 
 		$rows = Rate::where('element_type', '=', $type)

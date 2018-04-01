@@ -13,22 +13,15 @@
 		<link rel="shortcut icon" href="https://buhurt.ru/favicon.ico" type="image/x-icon">
 
 		<link rel="stylesheet" href="/data/bootstrap-4.0.0-dist/css/bootstrap.min.css">
-		<!--link href="/data/css/normalize.min.css" rel="stylesheet" type="text/css" /-->
-		<!--link href="/data/css/fonts.css" rel="stylesheet" type="text/css" /-->
-		<!--link href="/data/js/jquery_rating/styles/jquery.rating.css" rel="stylesheet" type="text/css" /-->
-		<!--link rel="stylesheet" href="/data/js/jquery-ui-1.12.1.custom/jquery-ui.min.css"-->
 		<link href="/data/bootstrap-star-rating/css/star-rating.min.css" rel="stylesheet" type="text/css" />
-		<!--link href="/data/bootstrap-star-rating/themes/krajee-uni/theme.min.css" rel="stylesheet" type="text/css" /-->
 		<link href="/data/css/main.css" rel="stylesheet" type="text/css" />
 
-		<script type="text/javascript" src="/data/js/jquery-2.1.1.min.js"></script>		
-		<!--script type="text/javascript" src="/data/js/jquery_rating/js/jquery.rating-2.0.min.mod.js"></script-->
+		<script type="text/javascript" src="/data/js/jquery-2.1.1.min.js"></script>
 		<script src="/data/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="/data/js/jquery.lightbox_me.min.js"></script>		
-		<script type="text/javascript" src="/data/js/main.min.js"></script>
+		<script type="text/javascript" src="/data/js/jquery.lightbox_me.min.js"></script>
 		<script type="text/javascript" src="/data/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="/data/bootstrap-star-rating/js/star-rating.min.js"></script>
-		<!--script type="text/javascript" src="/data/bootstrap-star-rating/themes/krajee-uni/theme.min.js"></script-->
+		<script type="text/javascript" src="/data/js/main.min.js"></script>
 
 	</head>
 	
@@ -48,6 +41,7 @@
 				</button>
 
 				<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+
 					<ul class="navbar-nav mr-auto">
 
 						<li class="nav-item">
