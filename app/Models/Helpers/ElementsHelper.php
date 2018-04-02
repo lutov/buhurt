@@ -466,7 +466,7 @@ class ElementsHelper {
 						$class = 'btn btn-sm btn-outline-danger';
 						$href = '/admin/delete/'.$section.'/'.$element->id;
 						$handler = 'onclick="return window.confirm(\'Удалить?\');"';
-						$element_title .= '<a role="button" class="'.$class.'" href="'.$href.'" '.$handler.' title="Удалить"">';
+						$element_title .= '<a role="button" class="'.$class.'" href="'.$href.'" '.$handler.' title="Удалить">';
 						$element_title .= '&#10006;';
 						$element_title .= '</a>';
 
