@@ -449,15 +449,25 @@ class ElementsHelper {
 
 					}
 
-					$class = 'btn btn-sm btn-outline-success';
-					$handler = 'onclick="like(\''.$section.'\', \''.$element->id.'\')"';
-					$element_title .= '<button type="button" class="'.$class.'" '.$handler.' title="Хочу">';
+					if(1 === $info['wanted']) {
+						$class = 'btn btn-sm btn-success';
+						$handler = 'onclick="unlike(\''.$section.'\', \''.$element->id.'\')"';
+					} else {
+						$class = 'btn btn-sm btn-outline-success';
+						$handler = 'onclick="like(\''.$section.'\', \''.$element->id.'\')"';
+					}
+					$element_title .= '<button type="button" class="'.$class.'" '.$handler.' id="want_'.$element->id.'" title="Хочу">';
 					$element_title .= '&#10084;';
 					$element_title .= '</button>';
 
-					$class = 'btn btn-sm btn-outline-danger';
-					$handler = 'onclick="dislike(\''.$section.'\', \''.$element->id.'\')"';
-					$element_title .= '<button type="button" class="'.$class.'" '.$handler.' title="Не хочу">';
+					if(1 === $info['not_wanted']) {
+						$class = 'btn btn-sm btn-danger';
+						$handler = 'onclick="undislike(\''.$section.'\', \''.$element->id.'\')"';
+					} else {
+						$class = 'btn btn-sm btn-outline-danger';
+						$handler = 'onclick="dislike(\''.$section.'\', \''.$element->id.'\')"';
+					}
+					$element_title .= '<button type="button" class="'.$class.'" '.$handler.' id="not_want_'.$element->id.'" title="Не хочу">';
 					$element_title .= '&#9785;';
 					$element_title .= '</button>';
 
@@ -771,9 +781,11 @@ class ElementsHelper {
 
 	/**
 	 * @param $comments
+	 * @param string $section
+	 * @param int $element_id
 	 * @return string
 	 */
-	public static function getCardComments($comments) {
+	public static function getCardComments($comments, string $section = '', int $element_id = 0) {
 
 		$element_comments = '';
 
@@ -783,7 +795,7 @@ class ElementsHelper {
 
 			$element_comments .= '<div class="col-md-12">';
 
-				$element_comments .= CommentsHelper::showCommentForm();
+				$element_comments .= CommentsHelper::showCommentForm($section, $element_id);
 
 				$element_comments .= '<div itemscope itemtype="http://schema.org/UserComments" class="comments">';
 
@@ -800,15 +812,22 @@ class ElementsHelper {
 	}
 
 	/**
+	 * @param string $section
+	 * @param int $element_id
 	 * @return string
 	 */
-	public static function getCardScripts() {
+	public static function getCardScripts(string $section = '', int $element_id = 0) {
 
 		$element_scripts = '';
 
+		$element_scripts .= '<form method="POST">';
+		$element_scripts .= '<input type="hidden" name="element_section" id="element_section" value="'.$section.'" autocomplete="off">';
+		$element_scripts .= '<input type="hidden" name="element_id" id="element_id" value="'.$element_id.'" autocomplete="off">';
+		$element_scripts .= '</form>';
+
 		if(Auth::check()) {
 
-			$element_scripts = '<script type="text/javascript" src="/data/js/card.js"></script>';
+			$element_scripts .= '<script type="text/javascript" src="/data/js/card.js"></script>';
 
 		}
 

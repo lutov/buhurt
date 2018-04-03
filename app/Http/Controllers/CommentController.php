@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\CommentsHelper;
+use App\Models\Helpers\SectionsHelper;
 use Input;
 use Auth;
 use EMTypograph;
@@ -13,20 +15,20 @@ class CommentController extends Controller {
 	protected $prefix = 'comments';
 
 	/**
-	 *
+	 * @return string
 	 */
-	public function add()
-    {
+	public function add() {
+
 		$text =  Input::get('comment');
 		$section =  Input::get('section');
 		$element =  Input::get('element');
 
-		$type = Helpers::get_section_type($section);
+		$type = SectionsHelper::getSectionType($section);
 
 		$result = '';
 
-		if(!empty($text))
-		{
+		if(!empty($text)) {
+
 			$text = EMTypograph::fast_apply($text, array(
 				'Text.paragraphs' => 'off',
 				'Text.breakline' => 'off',
@@ -40,31 +42,32 @@ class CommentController extends Controller {
 			$comment->comment = $text;
 			$comment->save();
 			
-			$new_comment = Helpers::render_comment($comment, true);
+			$new_comment = CommentsHelper::render($comment, true);
 
 			$message = 'Комментарий сохранён';
 			$result = '{"message":"'.$message.'", "comment_text":"'.$new_comment.'"}';
+
 		}
 
 		return $result;
     }
 
 	/**
-	 *
+	 * @return string
 	 */
-	public function edit()
-    {
+	public function edit() {
+
 		$text =  Input::get('comment');
 		$section =  Input::get('section');
 		$element =  Input::get('element');
 		$id =  Input::get('id');
 
-		$type = Helpers::get_section_type($section);
+		$type = SectionsHelper::getSectionType($section);
 
 		$result = '';
 
-		if(!empty($text))
-		{
+		if(!empty($text))  {
+
 			$text = EMTypograph::fast_apply($text, array(
 				'Text.paragraphs' => 'off',
 				'Text.breakline' => 'off',
@@ -79,20 +82,21 @@ class CommentController extends Controller {
 			$comment->comment = $text;
 			$comment->save();
 
-			$new_comment = Helpers::render_comment($comment, true);
+			$new_comment = CommentsHelper::render($comment, true);
 
 			$message = 'Комментарий сохранён';
 			$result = '{"message":"'.$message.'", "comment_text":"'.$new_comment.'"}';
+
 		}
 
 		return $result;
     }
 
 	/**
-	 *
+	 * @return string
 	 */
-	public function delete()
-    {
+	public function delete() {
+
 		$id =  Input::get('id');
 
 		$result = '';
@@ -108,5 +112,6 @@ class CommentController extends Controller {
 		}
 
 		return $result;
+
     }
 }

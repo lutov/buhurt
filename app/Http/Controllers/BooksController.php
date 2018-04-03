@@ -36,8 +36,7 @@ class BooksController extends Controller {
 
 	    //$books = Book::orderBy($sort, $sort_direction)->paginate($limit);
 
-		if(Auth::check())
-		{
+		if(Auth::check()) {
 			$user_id = Auth::user()->id;
 			$not_wanted = Wanted::select('element_id')
 				->where('element_type', '=', $type)
@@ -59,9 +58,7 @@ class BooksController extends Controller {
 				->whereNotIn('id', $not_wanted)
 				->paginate($limit)
 			;
-		}
-		else
-		{
+		} else {
 			$elements = Book::orderBy($sort, $sort_direction)
 				->paginate($limit)
 			;

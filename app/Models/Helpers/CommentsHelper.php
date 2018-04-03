@@ -94,9 +94,9 @@ class CommentsHelper {
 
 				$comments_text .= '</div>';
 
-				$comments_text .= '<div class="col-md-10" id="comment_' . $comment->id . '_text">';
+				$comments_text .= '<div class="col-md-10">';
 
-					$comments_text .= '<p class="p-3 bg-white border">'.nl2br($comment->comment).'</p>';
+					$comments_text .= '<p class="p-3 bg-white border" id="comment_' . $comment->id . '_text">'.nl2br($comment->comment).'</p>';
 
 				$comments_text .= '</div>';
 
@@ -116,17 +116,24 @@ class CommentsHelper {
 
 
 	/**
+	 * @param $section
+	 * @param $element_id
 	 * @return string
 	 */
-	public static function showCommentForm (){
+	public static function showCommentForm (string $section = '', int $element_id = 0) {
 
 		if(Auth::check()) {
 
 			$form = '';
 
-			$form .= '<span role="button" class="btn btn-primary" onclick="show_comment_form();">Написать комментарий</span>';
+			$form .= '<span role="button" class="btn btn-primary" data-toggle="collapse" data-target="#comment_form" aria-expanded="false" aria-controls="comment_form">Написать комментарий</span>';
 
-			$form .= Form::open(array('action' => 'CommentController@add', 'class' => 'comment_form', 'method' => 'POST'));
+			$form .= Form::open(array(
+				'action' => 'CommentController@add',
+				'class' => 'collapse',
+				'method' => 'POST',
+				'id' => 'comment_form'
+			));
 
 			$form .= '<div class="mt-3">';
 			$form .= Form::textarea('comment', $value = null, $attributes = array(
@@ -142,6 +149,7 @@ class CommentsHelper {
 				'id' => 'comment_save',
 				'role' => 'button',
 				'class' => 'btn btn-secondary',
+				'onclick' => 'comment_add(\''.$section.'\', \''.$element_id.'\')'
 			));
 			$form .= Form::close();
 			$form .= '</div>';

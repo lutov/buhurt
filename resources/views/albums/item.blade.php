@@ -14,6 +14,8 @@
 		<?php // move it to controller obviously
 		$info = array(
 			'rate' => $rate,
+			'wanted' => $wanted,
+			'not_wanted' => $not_wanted,
 			'genres' => $genres,
 			'cover' => $cover,
 			'similar' => $similar,
@@ -32,8 +34,8 @@
 
 	</div>
 
-	{!! ElementsHelper::getCardComments($comments) !!}
+	{!! ElementsHelper::getCardComments($comments, $section, $element->id) !!}
 
-	{!! ElementsHelper::getCardScripts() !!}
+	{!! ElementsHelper::getCardScripts($section, $element->id) !!}
 
 @stop

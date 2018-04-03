@@ -21,7 +21,7 @@
 		<script type="text/javascript" src="/data/js/jquery.lightbox_me.min.js"></script>
 		<script type="text/javascript" src="/data/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="/data/bootstrap-star-rating/js/star-rating.min.js"></script>
-		<script type="text/javascript" src="/data/js/main.min.js"></script>
+		<script type="text/javascript" src="/data/js/main.js"></script>
 
 	</head>
 	
@@ -246,14 +246,7 @@
                     @endif
 					
 				});
-				
-					$(window).scroll(function(){
-						if ($(window).scrollTop() > 400) {
-							$('#side_panel').addClass('side_panel_fixed');
-						} else {
-							$('#side_panel').removeClass('side_panel_fixed');
-						}
-					});
+
             </script>
 
     	</header>

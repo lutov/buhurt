@@ -1,9 +1,4 @@
-/**
- *
- */
-
-function show_entrance()
-{
+function show_entrance() {
     var entrance_block = $( "#entrance_block" );
 
     entrance_block.lightbox_me({
@@ -12,8 +7,7 @@ function show_entrance()
     });
 }
 
-function show_registration()
-{
+function show_registration() {
     var registration_block = $( "#registration_block" );
 
     registration_block.lightbox_me({
@@ -22,49 +16,60 @@ function show_registration()
     });
 }
 
-function like(section, id)
-{
-    var do_want = $('#like');
-    if(do_want.hasClass('like'))
+function like(section, id) {
+
+    var do_want = $('#want_'+id);
+    var like_class = 'btn-outline-success';
+    var liked_class = 'btn-success';
+
+    if(do_want.hasClass(like_class))
     {
         var path = '/like/'+section+'/'+id;
         $.post(
             path,
             {},
-            function(data)
-            {
-                do_want.removeClass('like');
-                do_want.addClass('liked');
+            function(data) {
+                do_want.removeClass(like_class);
+                do_want.addClass(liked_class);
                 //console.log(data);
                 show_popup(JSON.parse(data));
             }
         );
     }
+
 }
-    function unlike(section, id)
+
+function unlike(section, id) {
+
+    var do_want = $('#want_'+id);
+    var like_class = 'btn-outline-success';
+    var liked_class = 'btn-success';
+
+    if(do_want.hasClass(liked_class))
     {
-        var do_want = $('#like');
-        if(do_want.hasClass('liked'))
-        {
-            var path = '/unlike/'+section+'/'+id;
-            $.post(
-                path,
-                {},
-                function(data)
-                {
-                    do_want.removeClass('liked');
-                    do_want.addClass('like');
-                    //console.log(data);
-                    show_popup(JSON.parse(data));
-                }
-            );
-        }
+        var path = '/unlike/'+section+'/'+id;
+        $.post(
+            path,
+            {},
+            function(data)
+            {
+                do_want.removeClass(liked_class);
+                do_want.addClass(like_class);
+                //console.log(data);
+                show_popup(JSON.parse(data));
+            }
+        );
     }
 
-function dislike(section, id)
-{
-    var do_not_want = $('#dislike');
-    if(do_not_want.hasClass('dislike'))
+}
+
+function dislike(section, id) {
+
+    var do_not_want = $('#not_want_'+id);
+    var dislike_class = 'btn-outline-danger';
+    var disliked_class = 'btn-danger';
+
+    if(do_not_want.hasClass(dislike_class))
     {
         var path = '/dislike/'+section+'/'+id;
         $.post(
@@ -72,33 +77,39 @@ function dislike(section, id)
             {},
             function(data)
             {
-                do_not_want.removeClass('dislike');
-                do_not_want.addClass('disliked');
+                do_not_want.removeClass(dislike_class);
+                do_not_want.addClass(disliked_class);
                 //console.log(data);
                 show_popup(JSON.parse(data));
             }
         );
     }
+
 }
-    function undislike(section, id)
+
+function undislike(section, id) {
+
+    var do_not_want = $('#not_want_'+id);
+    var dislike_class = 'btn-outline-danger';
+    var disliked_class = 'btn-danger';
+
+    if(do_not_want.hasClass(disliked_class))
     {
-        var do_not_want = $('#dislike');
-        if(do_not_want.hasClass('disliked'))
-        {
-            var path = '/undislike/'+section+'/'+id;
-            $.post(
-                path,
-                {},
-                function(data)
-                {
-                    do_not_want.removeClass('disliked');
-                    do_not_want.addClass('dislike');
-                    //console.log(data);
-                    show_popup(JSON.parse(data));
-                }
-            );
-        }
+        var path = '/undislike/'+section+'/'+id;
+        $.post(
+            path,
+            {},
+            function(data)
+            {
+                do_not_want.removeClass(disliked_class);
+                do_not_want.addClass(dislike_class);
+                //console.log(data);
+                show_popup(JSON.parse(data));
+            }
+        );
     }
+
+}
 
 function scroll_to (elem) {
     $('html, body').animate({ scrollTop: $(elem).offset().top }, 500);
@@ -165,9 +176,6 @@ function comment_edit(id) {
     var id_field = $('#comment_id');
     var comment = element.html();
     comment = comment.replace(/<br>/g, "");
-    //var comment_form = '<form><textarea name="comment_'+id+'_edited">'+comment+'</textarea><input type="button" onclick="comment_send('+id+')"/></form>';
-
-    //parent_element.replaceWith(comment_form);
 
     id_field.val(id);
     form.val(comment);

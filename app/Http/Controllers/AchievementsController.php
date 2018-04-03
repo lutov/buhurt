@@ -10,7 +10,7 @@ class AchievementsController extends Controller {
 
 	public function check() {
 
-		$result = '{"msg_type":"message", "message":"Оценка&nbsp;сохранена", "msg_img":[]}';
+		$result = '{"msg_type":"message", "message":"Проверка&nbsp;достижений", "msg_img":[]}';
 
         $need_update = Cache::get('need_update', true);
 
@@ -219,8 +219,8 @@ class AchievementsController extends Controller {
 	}
 
 
-	private function bro_machine($user_id)
-	{
+	private function bro_machine($user_id) {
+
 		// Вы оценили 10 фантастических произведений и 10 мюзиклов
 		$result = false;
 

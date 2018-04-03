@@ -121,7 +121,7 @@ Route::group(array('prefix' => 'collections'), function()
 Route::group(array('middleware' => 'auth'), function() {
 	// Rates
 	Route::group(array('prefix' => 'rates'), function () {
-		Route::any('rate', array('uses' => 'RatesController@rate'));
+		Route::any('rate/{section}/{id}', array('uses' => 'RatesController@rate'));
 		Route::get('unrate/{section}/{id}', array('uses' => 'RatesController@unrate'));
 	});
 

@@ -1,9 +1,11 @@
 $(document).ready(function() {
 
-    $('.main_rating').rating({
+    var main_rating = $('.main_rating');
 
-        //fx: 'full',
-        //url: '/rates/rate',
+    var element_section = $('#element_section');
+    var element_id = $('#element_id');
+
+    main_rating.rating({
 
         language: 'ru',
         theme: 'krajee-uni',
@@ -47,25 +49,37 @@ $(document).ready(function() {
             }
         }
 
-        /*
-        callback: function(responce){
-            //this.vote_success.fadeOut(2000);
-
-            $.post('/achievements', {}, function(data) {
-                //console.log(data);
-
-                show_popup(data);
-
-            }, 'json');
-        }
-        */
-
     });
 
-    /*
-    $('#comment_save').click(function(){
-        comment_add('{!! $section !!}', '{!! $element->id !!}');
+    main_rating.on('rating:change', function(event, value, caption) {
+
+        // console.log(value);
+        // console.log(caption);
+
+        var path = '/rates/rate/';
+
+        path += element_section.val();
+        path += '/';
+        path += element_id.val();
+
+        var params = {
+            rate_val: value
+        };
+
+        $.post(path, params, function(data) {
+
+            //console.log(data);
+            show_popup(data);
+
+        }, 'json');
+
+        $.post('/achievements', {}, function(data) {
+
+            //console.log(data);
+            show_popup(data);
+
+        }, 'json');
+
     });
-    */
 
 });
