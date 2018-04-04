@@ -1,7 +1,10 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\RolesHelper;
+use App\Models\Helpers\SectionsHelper;
 use DB;
 use Auth;
+use Illuminate\Http\Request;
 use View;
 use Input;
 use Validator;
@@ -74,14 +77,20 @@ class DatabaseController extends Controller {
 			'collections' => $collections
 		));
 	}
-	
-	public function edit($section, $id)
-	{
+
+	/**
+	 * @param Request $request
+	 * @param $section
+	 * @param $id
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function edit(Request $request, $section, $id) {
+
 		//$section = Input::get('section');
 		//$id = Input::get('id');
 
-		switch($section)
-		{
+		switch($section) {
+
 			case 'books':
 				$element = Book::find($id);
 				$genres = Genre::where('element_type', '=', 'Book')->orderBy('name')->get(); //->remember(60)
@@ -116,6 +125,7 @@ class DatabaseController extends Controller {
 				$countries = array();
 				$platforms = array();
 				break;
+
 		}
 
 		$collections = Collection::orderBy('name')
@@ -131,6 +141,7 @@ class DatabaseController extends Controller {
 		}
 
 		return View::make('database.edit', array(
+			'request' => $request,
 			'section' => $section,
 			'element' => $element,
 			'element_cover' => $element_cover,
@@ -141,8 +152,8 @@ class DatabaseController extends Controller {
 		));
 	}
 
-	public function save()
-	{
+	public function save() {
+
 		//die('<pre>'.print_r($_POST, true));
 
 		$section = Input::get('section');
@@ -1006,34 +1017,48 @@ class DatabaseController extends Controller {
 	 * @param $full_path
 	 * @return bool
 	 */
-	private function resize_crop($real_path, $full_path)
-	{
-		$resize = ResizeCrop::resize($real_path, $full_path, 185, 0);
+	private function resize_crop($real_path, $full_path) {
+
+		$width = 185 * 2;
+		$height = 270 * 2;
+
+		$resize = ResizeCrop::resize($real_path, $full_path, $width, 0);
 		$size = getimagesize($full_path);
-		if(270 > $size[1])
-		{
-			$diff = (270 - $size[1]) / 2;
-			$crop = ResizeCrop::crop($full_path, $full_path, array(0, -$diff, 185, (270 - $diff)));
+		if($height > $size[1]) {
+			$diff = ($height - $size[1]) / 2;
+			$crop = ResizeCrop::crop($full_path, $full_path, array(0, -$diff, $width, ($height - $diff)));
 		}
 
 		return true;
 	}
 
+	/**
+	 * @param Request $request
+	 * @param $section
+	 * @param $id
+	 * @return bool|\Illuminate\Http\RedirectResponse
+	 */
+	public function delete(Request $request, $section, $id)	{
 
-	public function delete($section, $id)	{
-
-		if(Helpers::is_admin()) {
-			$section_name = Helpers::get_section_type($section);
+		if(RolesHelper::isAdmin($request)) {
+			$section_name = SectionsHelper::getSectionType($section);
 			$section_name::find($id)->delete();
 			return Redirect::to('/'.$section);
 		}
 
+		return false;
+
 	}
-	
-	public function q_add($section = '') {
+
+	/**
+	 * @param Request $request
+	 * @param string $section
+	 * @return bool|\Illuminate\Http\RedirectResponse
+	 */
+	public function q_add(Request $request, $section = '') {
 		
-		if(Helpers::is_admin()) {
-			$section_name = Helpers::get_section_type($section);
+		if(RolesHelper::isAdmin($request)) {
+			$section_name = SectionsHelper::getSectionType($section);
 			$new = new $section_name;
 			$name = Input::get('new_name');
 			$new->name = urldecode($name);
@@ -1043,6 +1068,8 @@ class DatabaseController extends Controller {
 			$new->save();
 			return Redirect::to('/'.$section.'/'.$new->id);
 		}
-		
+
+		return false;
+
 	}
 }

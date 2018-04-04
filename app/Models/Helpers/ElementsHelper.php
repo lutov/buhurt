@@ -437,53 +437,6 @@ class ElementsHelper {
 
 				}
 
-				$element_title .= '<div class="btn-group mt-3">';
-
-					if(RolesHelper::isAdmin($request)) {
-
-						$class = 'btn btn-sm btn-outline-success';
-						$href = '/admin/edit/'.$section.'/'.$element->id;
-						$element_title .= '<a role="button" class="'.$class.'" href="'.$href.'" title="Редактировать">';
-						$element_title .= '&#9998;';
-						$element_title .= '</a>';
-
-					}
-
-					if(1 === $info['wanted']) {
-						$class = 'btn btn-sm btn-success';
-						$handler = 'onclick="unlike(\''.$section.'\', \''.$element->id.'\')"';
-					} else {
-						$class = 'btn btn-sm btn-outline-success';
-						$handler = 'onclick="like(\''.$section.'\', \''.$element->id.'\')"';
-					}
-					$element_title .= '<button type="button" class="'.$class.'" '.$handler.' id="want_'.$element->id.'" title="Хочу">';
-					$element_title .= '&#10084;';
-					$element_title .= '</button>';
-
-					if(1 === $info['not_wanted']) {
-						$class = 'btn btn-sm btn-danger';
-						$handler = 'onclick="undislike(\''.$section.'\', \''.$element->id.'\')"';
-					} else {
-						$class = 'btn btn-sm btn-outline-danger';
-						$handler = 'onclick="dislike(\''.$section.'\', \''.$element->id.'\')"';
-					}
-					$element_title .= '<button type="button" class="'.$class.'" '.$handler.' id="not_want_'.$element->id.'" title="Не хочу">';
-					$element_title .= '&#9785;';
-					$element_title .= '</button>';
-
-					if(RolesHelper::isAdmin($request)) {
-
-						$class = 'btn btn-sm btn-outline-danger';
-						$href = '/admin/delete/'.$section.'/'.$element->id;
-						$handler = 'onclick="return window.confirm(\'Удалить?\');"';
-						$element_title .= '<a role="button" class="'.$class.'" href="'.$href.'" '.$handler.' title="Удалить">';
-						$element_title .= '&#10006;';
-						$element_title .= '</a>';
-
-					}
-
-				$element_title .= '</div>';
-
 			$element_title .= '</div>';
 		$element_title .= '</div>';
 
@@ -668,7 +621,62 @@ class ElementsHelper {
 
 			$element_body .= '<div class="col-md-3">';
 
-				$element_body .= '<img itemprop="image" src="/data/img/covers/'.$section.'/'.$info['cover'].'.jpg" alt="'.$element->name.'" class="img-fluid" />';
+				$element_body .= '<div class="card">';
+
+					$element_body .= '<img itemprop="image" src="/data/img/covers/'.$section.'/'.$info['cover'].'.jpg" alt="'.$element->name.'" class="card-img-top" />';
+
+					$element_body .= '<div class="card-body text-center">';
+
+						$element_body .= '<div class="btn-group">';
+
+						if(RolesHelper::isAdmin($request)) {
+
+							$class = 'btn btn-sm btn-outline-success';
+							$href = '/admin/edit/'.$section.'/'.$element->id;
+							$element_body .= '<a role="button" class="'.$class.'" href="'.$href.'" title="Редактировать">';
+							$element_body .= '&#9998;';
+							$element_body .= '</a>';
+
+						}
+
+						if(1 === $info['wanted']) {
+							$class = 'btn btn-sm btn-success';
+							$handler = 'onclick="unlike(\''.$section.'\', \''.$element->id.'\')"';
+						} else {
+							$class = 'btn btn-sm btn-outline-success';
+							$handler = 'onclick="like(\''.$section.'\', \''.$element->id.'\')"';
+						}
+						$element_body .= '<button type="button" class="'.$class.'" '.$handler.' id="want_'.$element->id.'" title="Хочу">';
+						$element_body .= '&#10084;';
+						$element_body .= '</button>';
+
+						if(1 === $info['not_wanted']) {
+							$class = 'btn btn-sm btn-danger';
+							$handler = 'onclick="undislike(\''.$section.'\', \''.$element->id.'\')"';
+						} else {
+							$class = 'btn btn-sm btn-outline-danger';
+							$handler = 'onclick="dislike(\''.$section.'\', \''.$element->id.'\')"';
+						}
+						$element_body .= '<button type="button" class="'.$class.'" '.$handler.' id="not_want_'.$element->id.'" title="Не хочу">';
+						$element_body .= '&#9785;';
+						$element_body .= '</button>';
+
+						if(RolesHelper::isAdmin($request)) {
+
+							$class = 'btn btn-sm btn-outline-danger';
+							$href = '/admin/delete/'.$section.'/'.$element->id;
+							$handler = 'onclick="return window.confirm(\'Удалить?\');"';
+							$element_body .= '<a role="button" class="'.$class.'" href="'.$href.'" '.$handler.' title="Удалить">';
+							$element_body .= '&#10006;';
+							$element_body .= '</a>';
+
+						}
+
+						$element_body .= '</div>';
+
+					$element_body .= '</div>';
+
+				$element_body .= '</div>';
 
 			$element_body .= '</div>';
 

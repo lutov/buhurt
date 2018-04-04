@@ -81,7 +81,7 @@ class DummyHelper {
 				$url = 'ru.wikipedia.org/w/index.php';
 				$query = 'search';
 				$target = '_blank';
-				$site_name = 'Википедия';
+				$site_name = 'Вики';
 				break;
 
 			case 'wiki_en': // https://en.wikipedia.org/w/index.php?search=евангелинон
@@ -142,7 +142,7 @@ class DummyHelper {
 
 		}
 
-		$link .= '<a href="'.$protocol.'://'.$url.'?'.$query.'='.urlencode($name).'" target="'.$target.'">'.$site_name.'</a>';
+		$link .= '<a href="'.$protocol.'://'.$url.'?'.$query.'='.urlencode($name).'" target="'.$target.'" role="button" class="btn btn-sm btn-outline-primary">'.$site_name.'</a>';
 
 		return $link;
 

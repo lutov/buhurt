@@ -79,8 +79,8 @@ class DatatypeHelper {
 	 * @param bool $no_quotes
 	 * @return string
 	 */
-	public static function objectToJsArray($object, $delimiter = ', ', $no_quotes = false)
-	{
+	public static function objectToJsArray($object, $delimiter = ', ', $no_quotes = false) {
+
 		$string = '';
 		$number = count($object);
 		$i = 1;
@@ -96,6 +96,7 @@ class DatatypeHelper {
 			$i++;
 		}
 		return $string;
+
 	}
 
 	/**
@@ -103,13 +104,13 @@ class DatatypeHelper {
 	 * @param string $id
 	 * @return string
 	 */
-	public static function objectToList($object, $id = '')
-	{
-		$string = '<ul id="'.$id.'">';
+	public static function objectToList($object, $id = '') {
+
+		$string = '<ul class="list-group list-group-flush" id="'.$id.'">';
 
 		foreach ($object as $property) {
 
-			$string .= '<li>';
+			$string .= '<li class="list-group-item">';
 			$string .= $property->name;
 			$string .= '</li>';
 
@@ -118,6 +119,7 @@ class DatatypeHelper {
 		$string .= '</ul>';
 
 		return $string;
+
 	}
 
 }

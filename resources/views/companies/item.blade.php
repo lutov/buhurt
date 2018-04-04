@@ -14,6 +14,7 @@
 			@if(count($books_published))<li class="list-inline-item"><a href="#books_published">Изданные книги</a></li>@endif
 			@if(count($games_developed))<li class="list-inline-item"><a href="#games_developed">Разработанные игры</a></li>@endif
 			@if(count($games_published))<li class="list-inline-item"><a href="#games_published">Изданные игры</a></li>@endif
+			@if(RolesHelper::isAdmin($request))<li class="list-inline-item"><a href="#transfer">Преемник</a></li>@endif
 
 		</ul>
 	</section>
@@ -84,7 +85,7 @@
 
 	@if(RolesHelper::isAdmin($request))
 
-		<div class="form-group">
+		<div id="transfer" class="form-group">
 			{!! Form::open(array('action' => array('CompaniesController@transfer', $company->id), 'class' => 'transfer', 'method' => 'POST', 'files' => false)) !!}
 			<p>{!! Form::text('recipient_id', $value = '', $attributes = array(
 			'placeholder' => 'Преемник',
