@@ -1,7 +1,10 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\RolesHelper;
+use App\Models\Helpers\SectionsHelper;
 use Auth;
 use DB;
+use Illuminate\Http\Request;
 use View;
 use Input;
 use Redirect;
@@ -25,8 +28,7 @@ class RelationsController extends Controller {
 		*/
     }
 	
-    public function show_item($section, $id)
-    {
+    public function show_item(Request $request, $section, $id) {
 
 		$books = $films = $games = [];
 		
@@ -36,8 +38,8 @@ class RelationsController extends Controller {
 			$relation[$value->id] = $value->name;
 		}
 		
-		$section_name = Helpers::get_object_by($section);
-		$section_type = Helpers::get_section_type($section);
+		$section_name = SectionsHelper::getObjectBy($section);
+		$section_type = SectionsHelper::getSectionType($section);
 		$element = $section_name::find($id);
 		
 		$relations = ElementRelation::with($section)
@@ -51,39 +53,8 @@ class RelationsController extends Controller {
 		$sort_direction = 'asc';
 		$limit = 28;
 
-		/*
-		$books = Book::select('books.*')
-			->leftJoin('elements_relations', 'books.id', '=', 'elements_relations.element_id')
-			->where('relation_id', '=', $id)
-			->where('element_type', '=', 'Book')
-			->orderBy('name', $sort_direction)
-			//>remember(60)
-			//->get()
-			->paginate($limit)
-		;
-
-		$films = Film::select('films.*')
-			->leftJoin('elements_relations', 'films.id', '=', 'elements_relations.element_id')
-			->where('relation_id', '=', $id)
-			->where('element_type', '=', 'Film')
-			->orderBy('name', $sort_direction)
-			//->remember(60)
-			//->get()
-			->paginate($limit)
-		;
-
-		$games = Game::select('games.*')
-			->leftJoin('elements_relations', 'games.id', '=', 'elements_relations.element_id')
-			->where('relation_id', '=', $id)
-			->where('element_type', '=', 'Game')
-			->orderBy('name', $sort_direction)
-			//->remember(60)
-			//->get()
-			->paginate($limit)
-		;
-		*/
-
 		return View::make('relations.item', array(
+			'request' => $request,
 			'element' => $element,
 			'section' => $section,
 			'books' => $books,
@@ -94,9 +65,9 @@ class RelationsController extends Controller {
 		));
     }
 	
-    public function add_relation($section, $id) {
+    public function add_relation(Request $request, $section, $id) {
 
-		if(Helpers::is_admin()) {
+		if(RolesHelper::isAdmin($request)) {
 			
 			$books = $films = $games = [];
 			
@@ -106,8 +77,8 @@ class RelationsController extends Controller {
 				$relation_list[$value->id] = $value->alt_name;
 			}
 			
-			$section_name = Helpers::get_object_by($section);
-			$section_type = Helpers::get_section_type($section);
+			$section_name = SectionsHelper::getObjectBy($section);
+			$section_type = SectionsHelper::getSectionType($section);
 			$element = $section_name::find($id);
 			
 			$relations_input = Input::get('relations');

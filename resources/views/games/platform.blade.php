@@ -1,23 +1,24 @@
 @extends('layouts.default')
 
-@section('title')
-	{{$platform->name}}
-@stop
+@section('title'){{$platform->name}}@stop
 
-@section('subtitle')
-	{{$ru_section}}
-@stop
+@section('subtitle'){{$ru_section}}@stop
 
 @section('content')
 
-    <h2>@yield('subtitle')</h2>
-  	<h1>@yield('title')</h1>
+	<section class="text-center">
+		<h1 class="pt-5">@yield('title')</h1>
+		<h2 class="pb-3">@yield('subtitle')</h2>
+	</section>
 
-  	<div class="element_additional_info">
-    	<p>
-    	</p>
-    </div>
+	<div class="row mt-5">
 
-	{!! Helpers::get_elements($games, $section, $sort_options) !!}
+		<div class="col-md-12">
+
+			{!! ElementsHelper::getElements($request, $games, $section) !!}
+
+		</div>
+
+	</div>
 
 @stop

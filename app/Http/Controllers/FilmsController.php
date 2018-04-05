@@ -36,9 +36,21 @@ class FilmsController extends Controller {
 			$section.'.year' => 'Год'
 		);
 
-		if(Auth::check())
-		{
+		$wanted = array();
+		$not_wanted = array();
+
+		if(Auth::check())  {
+
 			$user_id = Auth::user()->id;
+
+			$wanted = Wanted::select('element_id')
+				->where('element_type', '=', $type)
+				->where('wanted', '=', 1)
+				->where('user_id', '=', $user_id)
+				//->remember(10)
+				->pluck('element_id')
+			;
+
 			$not_wanted = Wanted::select('element_id')
 				->where('element_type', '=', $type)
 				->where('not_wanted', '=', 1)
@@ -72,7 +84,9 @@ class FilmsController extends Controller {
 			'elements' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,
-			'sort_options' => $sort_options
+			'sort_options' => $sort_options,
+			'wanted' => $wanted->toArray(),
+			'not_wanted' => $not_wanted->toArray(),
 		));
     }
 

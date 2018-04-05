@@ -1,13 +1,15 @@
 <?php
 
-class NotWanted extends Eloquent  {
+use Illuminate\Database\Eloquent\Model;
+
+class NotWanted extends Model  {
 
 	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'not_wanted';
+	protected $table = 'wanted';
 
 	/**
 	 * Record remains in the database, but marked with a special label
@@ -19,17 +21,16 @@ class NotWanted extends Eloquent  {
 	/**
 	 * Отношение с пользователями
 	 */
-	public function user()
-	{
-		//return $this->belongsTo('User');
-	}	
-	
-	/**
-	 * Отношение с книгами
-	 */
-	public function book()
-	{
-		return $this->belongsTo('App\Models\Book');
+	public function user() {
+
+		return $this->belongsTo('User');
+
+	}
+
+	public function element() {
+
+		return $this->morphTo();
+
 	}
 
 }

@@ -61,18 +61,20 @@ class Game extends Eloquent  {
 	/**
 	 * Отношение с желаемым
 	 */
-	public function wanted()
-	{
+	public function wanted() {
+
 		return $this->morphMany('App\Models\Wanted', 'element');
+
 	}
 
 
 	/**
 	 * Отношение с нежелаемым
 	 */
-	public function not_wanted()
-	{
+	public function not_wanted() {
+
 		return $this->morphMany('App\Models\NotWanted', 'element');
+
 	}
 
 	/**

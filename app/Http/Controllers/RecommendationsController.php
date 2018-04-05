@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\SectionsHelper;
 use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
@@ -48,7 +49,7 @@ class RecommendationsController extends Controller {
 
     		$user_id = Auth::user()->id;
 
-    		$type = Helpers\SectionsHelper::get_section_type($input['element_type']);
+    		$type = SectionsHelper::getSectionType($input['element_type']);
 
     		$exploded_rate = explode(' - ', $input['rates']);
 
@@ -118,6 +119,7 @@ class RecommendationsController extends Controller {
     	$elements = new Collection();
 
 		return View::make('recommendations.personal', array(
+			'request' => $request,
 			'elements' => $elements,
 			'forms' => $forms,
 		));

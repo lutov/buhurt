@@ -145,7 +145,7 @@
                 </div>
 
                 <div class="card mt-3">
-                    <div class="card-header" data-toggle="collapse" data-target="#countries" aria-expanded="false" aria-controls="countries">
+                    <div class="card-header" data-toggle="collapse" data-target="#countries_container" aria-expanded="false" aria-controls="countries_container">
                         Страны
                     </div>
                     <div class="collapse" id="countries_container">

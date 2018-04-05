@@ -66,6 +66,7 @@
 								<div class="dropdown-menu" aria-labelledby="dropdown01">
 
 									<a class="dropdown-item" href="{!! URL::action('UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
+									<a class="dropdown-item" href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a>
 									<a class="dropdown-item" href="/search/advanced">Расширенный поиск</a>
 									@if (RolesHelper::isAdmin($request))
 									<a class="dropdown-item" href="/books/random">Случайная книга</a>
@@ -184,7 +185,7 @@
 						step: 1.0,
                         stars: '10',
                         animate: false,
-                        showCaption: true,
+                        showCaption: false,
                         showClear: false,
                         //defaultCaption: 'Нет оценки',
                         clearCaption: 'Нет оценки',

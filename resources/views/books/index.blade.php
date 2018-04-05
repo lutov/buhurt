@@ -11,6 +11,16 @@
 		<h2 class="pb-3">@yield('subtitle')</h2>
 	</section>
 
-	{!! ElementsHelper::getElements($request, $elements, $section) !!}
+	<?php
+	$options = array(
+		'header' => true,
+		'footer' => true,
+		'paginate' => true,
+		'wanted' => $wanted,
+		'not_wanted' => $not_wanted,
+	);
+	?>
+
+	{!! ElementsHelper::getElements($request, $elements, $section, $options) !!}
 
 @stop

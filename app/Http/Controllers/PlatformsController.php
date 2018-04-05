@@ -2,6 +2,7 @@
 
 use Auth;
 use DB;
+use Illuminate\Http\Request;
 use View;
 use Input;
 use Redirect;
@@ -13,26 +14,29 @@ class PlatformsController extends Controller {
 
 	private $prefix = 'games';
 
-    public function show_all()
-    {
+    public function show_all() {
+
 	    $genres = DB::table($this->prefix);
         return View::make('books.genres', array(
 			'books' => $genres
 		));
+
     }
 	
-    public function show_collections()
-    {
+    public function show_collections() {
+
         return View::make($this->prefix.'.collections');
+
     }
 	
-    public function show_collection()
-    {
+    public function show_collection() {
+
         return View::make($this->prefix.'.collection');
+
     }
 	
-    public function show_item($id)
-    {
+    public function show_item(Request $request, $id) {
+
 		$section = $this->prefix;
 		$get_section = Section::where('alt_name', '=', $section)->first();
 		$ru_section = $get_section->name;
@@ -55,8 +59,8 @@ class PlatformsController extends Controller {
 
 			//$games = $platform->games()->orderBy($sort, $sort_direction)->paginate($limit);
 
-			if(Auth::check())
-			{
+			if(Auth::check()) {
+
 				$user_id = Auth::user()->id;
 				$not_wanted = Wanted::select('element_id')
 					->where('element_type', '=', $type)
@@ -78,15 +82,17 @@ class PlatformsController extends Controller {
 					->whereNotIn($section.'.id', $not_wanted)
 					->paginate($limit)
 				;
-			}
-			else
-			{
+
+			} else {
+
 				$elements = $platform->$section()->orderBy($sort, $sort_direction)
 					->paginate($limit)
 				;
+
 			}
 
 			return View::make('games.platform', array(
+				'request' => $request,
 				'platform' => $platform,
 				'games' => $elements,
 				'section' => $section,

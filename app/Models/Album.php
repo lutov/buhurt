@@ -61,30 +61,34 @@ class Album extends Eloquent  {
 	/**
 	 * Отношение с желаемым
 	 */
-	public function wanted()
-	{
+	public function wanted() {
+
 		return $this->morphMany('App\Models\Wanted', 'element');
+
 	}
 
 
 	/**
 	 * Отношение с нежелаемым
 	 */
-	public function not_wanted()
-	{
+	public function not_wanted() {
+
 		return $this->morphMany('App\Models\NotWanted', 'element');
+
 	}
 
 	/**
 	 * Отношение с
 	 */
-	public function bands()
-	{
+	public function bands() {
+
 		return $this->belongsToMany('App\Models\Band', 'bands_albums', 'album_id', 'band_id');
+
 	}
 
-	public function tracks()
-	{
+	public function tracks() {
+
 		return $this->hasMany('App\Models\Track');
+
 	}
 }

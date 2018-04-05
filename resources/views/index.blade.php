@@ -49,10 +49,19 @@
 				);
 			?>
 			{!! ElementsHelper::getHeader(); !!}
+
+			<?php $options['wanted'] = $wanted['books']; $options['not_wanted'] = $not_wanted['books']; ?>
 			{!! ElementsHelper::getElements($request, $books, 'books', $options) !!}
+
+			<?php $options['wanted'] = $wanted['films']; $options['not_wanted'] = $not_wanted['films']; ?>
 			{!! ElementsHelper::getElements($request, $films, 'films', $options) !!}
+
+			<?php $options['wanted'] = $wanted['games']; $options['not_wanted'] = $not_wanted['games']; ?>
 			{!! ElementsHelper::getElements($request, $games, 'games', $options) !!}
+
+			<?php $options['wanted'] = $wanted['albums']; $options['not_wanted'] = $not_wanted['albums']; ?>
 			{!! ElementsHelper::getElements($request, $albums, 'albums', $options) !!}
+
 			{!! ElementsHelper::getFooter(); !!}
 
 		</div>

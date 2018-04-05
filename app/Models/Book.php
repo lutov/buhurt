@@ -82,9 +82,19 @@ class Book extends Eloquent  {
 	/**
 	 * Отношение с желаемым
 	 */
-	public function wanted()
-	{
+	public function wanted() {
+
 		return $this->morphMany('App\Models\Wanted', 'element');
+
+	}
+
+	/**
+	 * Отношение с желаемым
+	 */
+	public function not_wanted() {
+
+		return $this->morphMany('App\Models\Wanted', 'element');
+
 	}
 
 }

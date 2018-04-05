@@ -1,5 +1,8 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\SectionsHelper;
+use App\Models\Helpers\TextHelper;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use View;
 use DB;
@@ -7,16 +10,17 @@ use App\Models\Helpers;
 
 class RandomController extends Controller {
 
-	public function index()
-	{
+	public function index() {
+
 		return View::make('random.index', array(
 
 		));
+
 	}
 
 
-	public function books()
-	{
+	public function books(Request $request) {
+
 		$bookname_table = 'random_booknames';
 
 		$word_one = 'ХЛЕБ';
@@ -161,11 +165,11 @@ class RandomController extends Controller {
 			die('Error occured while text processing: ' . $e->getMessage());
 		}
 
-		$book = Helpers::mb_ucwords(mb_strtolower($base_form[0])).' '.mb_strtolower($all_forms[1]);
-		$writers = Helpers::mb_ucwords($writer_word_one.' '.$writer_word_two);
+		$book = TextHelper::mb_ucwords(mb_strtolower($base_form[0])).' '.mb_strtolower($all_forms[1]);
+		$writers = TextHelper::mb_ucwords($writer_word_one.' '.$writer_word_two);
 		$year = '1'.rand(0, 9).rand(0, 9).rand(0, 9 );
-		$genre = Helpers::mb_ucfirst($genre);
-		$publisher = Helpers::mb_ucwords($publisher);
+		$genre = TextHelper::mb_ucfirst($genre);
+		$publisher = TextHelper::mb_ucwords($publisher);
 		$comments = '';
 		$user_rate = 0;
 		$wanted = 0;
@@ -174,6 +178,7 @@ class RandomController extends Controller {
 		$section = 'books';
 
 		return View::make('random.books', array(
+			'request' => $request,
 			'book' => $book,
 			'writers' => $writers,
 			'year' => $year,
@@ -190,7 +195,7 @@ class RandomController extends Controller {
 
 	public function get_json($section) {
 
-		$type = Helpers::get_section_type($section);
+		$type = SectionsHelper::getSectionType($section);
 		$list = $type::pluck('id');
 		$size = count($list);
 		$random_id = $list[rand(0, $size)];

@@ -96,6 +96,7 @@ class SearchController extends Controller {
 							}
 
 							return View::make($this->prefix . '.error', array(
+								'request' => $request,
 								'message' => $message
 							));
 
@@ -109,6 +110,7 @@ class SearchController extends Controller {
 
 			$message = 'Кажется, запрос пуст';
 			return View::make($this->prefix.'.error', array(
+				'request' => $request,
 				'message' => $message
 			));
 

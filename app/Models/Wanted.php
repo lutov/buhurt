@@ -21,14 +21,16 @@ class Wanted extends Model {
 	/**
 	 * Отношение с пользователями
 	 */
-	public function user()
-	{
-		//return $this->belongsTo('User');
+	public function user() {
+
+		return $this->belongsTo('User');
+
 	}
 
-	public function element()
-	{
+	public function element() {
+
 		return $this->morphTo();
+
 	}
 
 }

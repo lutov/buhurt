@@ -30,9 +30,9 @@ use App\Models\ElementCollection;
 
 class DatabaseController extends Controller {
 
-	public function add($section = '') {
-		switch($section)
-		{
+	public function add(Request $request, $section = '') {
+
+		switch($section) {
 			case 'books':
 				$genres = Genre::where('element_type', '=', 'Book')->orderBy('name')->get(); //->remember(60)
 				$countries = array();
@@ -70,6 +70,7 @@ class DatabaseController extends Controller {
 			->get();
 
 		return View::make('database.add', array(
+			'request' => $request,
 			'section' => $section,
 			'genres' => $genres,
 			'platforms' => $platforms,

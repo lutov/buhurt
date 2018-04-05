@@ -66,9 +66,10 @@ class ElementsHelper {
 	 * @param Request $request
 	 * @param $element
 	 * @param string $section
+	 * @param array $options
 	 * @return string
 	 */
-	public static function getElement(Request $request, $element, string $section = '') {
+	public static function getElement(Request $request, $element, string $section = '', array $options = array()) {
 
 		$elements_list = '';
 
@@ -95,40 +96,49 @@ class ElementsHelper {
 
 			$elements_list .= '</a>';
 
-			$elements_list .= '<div class="card-body">';
-
-			$elements_list .= '<p class="card-text">';
+			$elements_list .= '<div class="card-header">';
 
 			$elements_list .= '<a href="'.$link.'">';
 			$elements_list .= $element->name;
 			$elements_list .= '</a>';
 
-			$elements_list .= '</p>';
+  			$elements_list .= '</div>';
 
-				/*
-				<p id="element_edit_button">
-                    <a href="/admin/delete/books/{!! $book->id !!}" onclick="return window.confirm('Удалить книгу?');">
-                        <img src="/data/img/design/delete2.svg" alt="Удалить" />
-                    </a>
-                </p>
-				<p id="element_edit_button"><a href="/admin/edit/books/{!! $book->id !!}"><img src="/data/img/design/edit.svg" alt="Редактировать" /></a></p>
-				*/
+			$elements_list .= '<div class="card-body text-center">';
 
-				/*
-
-				<span id="like" title="Хочу"
-							@if(0 == $wanted) class="like" onclick="like('{!! $section !!}', '{!! $book->id !!}')" @else class="liked" onclick="unlike('{!! $section !!}', '{!! $book->id !!}')" @endif
-									></span>
-							<span id="dislike" title="Не хочу"
-							@if(0 == $not_wanted) class="dislike"  onclick="dislike('{!! $section !!}', '{!! $book->id !!}')" @else class="disliked" onclick="undislike('{!! $section !!}', '{!! $book->id !!}')" @endif
-					></span>
-
-				 * */
+			//$elements_list .= '<p class="card-text">';
+			//$elements_list .= '</p>';
 
 
 			if(Auth::check()) {
 
-				$elements_list .= '<div class="d-flex justify-content-between align-items-center pb-3">';
+				$elements_list .= '<div class="fast_rating_block">';
+				if (isset($element->rates) && 0 != count($element->rates)) {
+
+					$user_id = Auth::user()->id;
+					$rate = $element
+						->rates
+						->where('user_id', $user_id)
+						->toArray();
+
+					if (0 != count($rate)) {
+
+						$elements_list .= '<input name="val" value="' . array_shift($rate)['rate'] . '" class="fast_rating" id="rating_'.$section.'_'.$element->id.'" type="text" autocomplete="off">';
+
+					} else {
+
+						$elements_list .= '<input name="val" value="0" class="fast_rating" id="rating_'.$section.'_'.$element->id.'" type="text" autocomplete="off">';
+
+					}
+				} else {
+
+					$elements_list .= '<input name="val" value="0" class="fast_rating" id="rating_'.$section.'_'.$element->id.'" type="text" autocomplete="off">';
+
+				}
+
+				$elements_list .= '</div>';
+
+				$elements_list .= '<div class="mt-3">';
 				$elements_list .= '<div class="btn-group">';
 
 				if(RolesHelper::isAdmin($request)) {
@@ -139,13 +149,31 @@ class ElementsHelper {
 
 				}
 
-				$elements_list .= '<button type="button" class="btn btn-sm btn-outline-success" title="Хочу">';
-				$elements_list .= '&#10084;';
-				$elements_list .= '</button>';
+				if(isset($options['wanted'])) {
+					if (in_array($element->id, $options['wanted'])) {
+						$class = 'btn btn-sm btn-success';
+						$handler = 'onclick="unlike(\'' . $section . '\', \'' . $element->id . '\')"';
+					} else {
+						$class = 'btn btn-sm btn-outline-success';
+						$handler = 'onclick="like(\'' . $section . '\', \'' . $element->id . '\')"';
+					}
+					$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Хочу">';
+					$elements_list .= '&#10084;';
+					$elements_list .= '</button>';
+				}
 
-				$elements_list .= '<button type="button" class="btn btn-sm btn-outline-danger" title="Не хочу">';
-				$elements_list .= '&#9785;';
-				$elements_list .= '</button>';
+				if(isset($options['not_wanted'])) {
+					if (in_array($element->id, $options['not_wanted'])) {
+						$class = 'btn btn-sm btn-danger';
+						$handler = 'onclick="undislike(\'' . $section . '\', \'' . $element->id . '\')"';
+					} else {
+						$class = 'btn btn-sm btn-outline-danger';
+						$handler = 'onclick="dislike(\'' . $section . '\', \'' . $element->id . '\')"';
+					}
+					$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="not_want_' . $element->id . '" title="Не хочу">';
+					$elements_list .= '&#9785;';
+					$elements_list .= '</button>';
+				}
 
 				if(RolesHelper::isAdmin($request)) {
 
@@ -159,31 +187,19 @@ class ElementsHelper {
 				//$elements_list .= '<small class="text-muted"></small>';
 				$elements_list .= '</div>';
 
-				$elements_list .= '<div class="fast_rating_block">';
-				if (isset($element->rates) && 0 != count($element->rates)) {
+				$elements_list .= '<script>';
 
-					$user_id = Auth::user()->id;
-					$rate = $element
-						->rates
-						->where('user_id', $user_id)
-						->toArray();
+					$elements_list .= '$(\'#rating_'.$section.'_'.$element->id.'\').on(\'rating:change\', function(event, value, caption) {';
 
-					if (0 != count($rate)) {
+						$elements_list .= 'var path = \'/rates/rate/'.$section.'/'.$element->id.'\';';
+						$elements_list .= 'var params = {rate_val: value};';
 
-						$elements_list .= '<input name="val" value="' . array_shift($rate)['rate'] . '" class="fast_rating" type="text" autocomplete="off">';
+						$elements_list .= '$.post(path, params, function(data) {show_popup(data);}, \'json\');';
+						$elements_list .= '$.post(\'/achievements\', {}, function(data) {show_popup(data);}, \'json\');';
 
-					} else {
+					$elements_list .= '});';
 
-						$elements_list .= '<input name="val" value="0" class="fast_rating" type="text" autocomplete="off">';
-
-					}
-				} else {
-
-					$elements_list .= '<input name="val" value="0" class="fast_rating" type="text" autocomplete="off">';
-
-				}
-				//$elements_list .= '<input type="hidden" name="vote_id" value="'.$section.'/'.$element->id.'"/>';
-				$elements_list .= '</div>';
+				$elements_list .= '</script>';
 
 			} else {
 
@@ -193,7 +209,16 @@ class ElementsHelper {
 
 			$elements_list .= '</div>';
 
+			if(isset($options['add_text'])) {
+
+				$elements_list .= '<div class="card-footer text-muted">';
+				$elements_list .= $options['add_text'];
+				$elements_list .= '</div>';
+
+			}
+
 			$elements_list .= '</div>';
+
 			$elements_list .= '</div>';
 
 		}
@@ -237,7 +262,7 @@ class ElementsHelper {
 
 		foreach ($elements as $element) {
 
-			$elements_list .= ElementsHelper::getElement($request, $element, $section);
+			$elements_list .= ElementsHelper::getElement($request, $element, $section, $options);
 
 		}
 
@@ -758,7 +783,7 @@ class ElementsHelper {
 
 			if(0 < $info['relations']) {
 				$element_footer .= '<p>';
-					$element_footer .= '<a href="relations/">';
+					$element_footer .= '<a href="/'.$section.'/'.$element->id.'/relations/">';
 						$element_footer .= 'Связи ';
 						$element_footer .= '('.$info['relations'].')';
 					$element_footer .= '</a>';
@@ -771,7 +796,7 @@ class ElementsHelper {
 		if(RolesHelper::isAdmin($request)) {
 
 			$element_footer .= '<p>';
-				$element_footer .= '<a href="relations/">Установить связи</a>';
+				$element_footer .= '<a href="/'.$section.'/'.$element->id.'/relations/">Установить связи</a>';
 			$element_footer .= '</p>';
 
 		}
