@@ -12,15 +12,17 @@
         
 		<link rel="shortcut icon" href="https://buhurt.ru/favicon.ico" type="image/x-icon">
 
-		<link rel="stylesheet" href="/data/bootstrap-4.0.0-dist/css/bootstrap.min.css">
+		<link href="/data/bootstrap-4.0.0-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 		<link href="/data/bootstrap-star-rating/css/star-rating.min.css" rel="stylesheet" type="text/css" />
+		<link href="/data/js/ion.rangeSlider-master/css/ion.rangeSlider.css" rel="stylesheet" type="text/css" />
+		<link href="/data/js/ion.rangeSlider-master/css/ion.rangeSlider.skinFlat.css" rel="stylesheet" type="text/css" />
 		<link href="/data/css/main.css" rel="stylesheet" type="text/css" />
 
 		<script type="text/javascript" src="/data/js/jquery-2.1.1.min.js"></script>
-		<script src="/data/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-		<script type="text/javascript" src="/data/js/jquery.lightbox_me.min.js"></script>
+		<script type="text/javascript" src="/data/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="/data/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="/data/bootstrap-star-rating/js/star-rating.min.js"></script>
+		<script type="text/javascript" src="/data/js/ion.rangeSlider-master/js/ion.rangeSlider.min.js"></script>
 		<script type="text/javascript" src="/data/js/main.js"></script>
 
 	</head>
