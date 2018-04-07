@@ -33,3 +33,11 @@
 .ui-helper-hidden-accessible {
     display: none;
 }
+
+.irs-from, .irs-to, .irs-single {
+    background: #007bff;
+}
+
+.irs-from:after, .irs-to:after, .irs-single:after {
+    border-top-color: #007bff;
+}

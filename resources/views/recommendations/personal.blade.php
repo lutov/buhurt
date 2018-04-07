@@ -13,7 +13,54 @@
 
 	<script>
 
-        $(function() {
+        function toggle_section(section, status) {
+
+            if(true === status) {
+
+                if('books' === section) {
+
+                    $('#books_options input').removeAttr('disabled');
+                    $('#books_options').show();
+
+                    $('#films_options input').attr('disabled', 'disabled');
+                    $('#films_options').hide();
+
+                    $('#games_options input').attr('disabled', 'disabled');
+                    $('#games_options').hide();
+
+                }
+
+                if('films' === section) {
+
+                    $('#films_options input').removeAttr('disabled');
+                    $('#films_options').show();
+
+                    $('#books_options input').attr('disabled', 'disabled');
+                    $('#books_options').hide();
+
+                    $('#games_options input').attr('disabled', 'disabled');
+                    $('#games_options').hide();
+
+                }
+
+                if('games' === section) {
+
+                    $('#games_options input').removeAttr('disabled');
+                    $('#games_options').show();
+
+                    $('#films_options input').attr('disabled', 'disabled');
+                    $('#films_options').hide();
+
+                    $('#books_options input').attr('disabled', 'disabled');
+                    $('#books_options').hide();
+
+                }
+
+            }
+
+        }
+
+        $(document).ready(function() {
 
             var today = new Date();
             var year = today.getFullYear();
@@ -36,6 +83,8 @@
 				step: 1,
                 type: 'double',
                 prettify_enabled: false,
+                grid: true,
+                grid_snap: true,
                 from: 7,
 				to: 10
             });
@@ -46,8 +95,12 @@
                 max: 30,
                 step: 3,
                 prettify_enabled: false,
+                grid: true,
+                grid_snap: true,
                 from: 15
             });
+
+            toggle_section('films', true);
 
         } );
 
@@ -78,66 +131,58 @@
 			<fieldset class="col-md-12">
 
 				<legend class="col-form-legend">Раздел</legend>
-				<div class="btn-group btn-group-toggle" data-toggle="buttons">
-					<label class="btn btn-outline-success">
-						<input type="radio" name="element_type" id="books" autocomplete="off"> Книги
-					</label>
-					<label class="btn btn-outline-success active">
-						<input type="radio" name="element_type" id="films" autocomplete="off" checked> Фильмы
-					</label>
-					<label class="btn btn-outline-success">
-						<input type="radio" name="element_type" id="games" autocomplete="off"> Игры
-					</label>
+				<div class="custom-control custom-radio custom-control-inline" onclick="toggle_section('books', $('#element_type_books').prop('checked'));">
+					<input type="radio" id="element_type_books" name="element_type" value="books" class="custom-control-input" autocomplete="off">
+					<label class="custom-control-label" for="element_type_books">Книги</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline" onclick="toggle_section('films', $('#element_type_films').prop('checked'));">
+					<input type="radio" id="element_type_films" name="element_type" value="films" class="custom-control-input" autocomplete="off" checked>
+					<label class="custom-control-label" for="element_type_films">Фильмы</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline" onclick="toggle_section('games', $('#element_type_games').prop('checked'));">
+					<input type="radio" id="element_type_games" name="element_type" value="games" class="custom-control-input" autocomplete="off">
+					<label class="custom-control-label" for="element_type_games">Игры</label>
 				</div>
 
 				<legend class="col-form-legend mt-4">Рейтинги</legend>
-				<div class="btn-group btn-group-toggle" data-toggle="buttons">
-					<label class="btn btn-outline-success">
-						<input type="radio" name="ratings" id="high" autocomplete="off"> Высокие
-					</label>
-					<label class="btn btn-outline-success active">
-						<input type="radio" name="ratings" id="any" autocomplete="off" checked> Любые
-					</label>
-					<label class="btn btn-outline-success">
-						<input type="radio" name="ratings" id="low" autocomplete="off"> Низкие
-					</label>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="ratings_high" name="ratings" value="high" class="custom-control-input" autocomplete="off">
+					<label class="custom-control-label" for="ratings_high">Высокие</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="ratings_any" name="ratings" value="any" class="custom-control-input" autocomplete="off" checked>
+					<label class="custom-control-label" for="ratings_any">Любые</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="ratings_low" name="ratings" value="low" class="custom-control-input" autocomplete="off">
+					<label class="custom-control-label" for="ratings_low">Низкие</label>
 				</div>
 
 				<legend class="col-form-legend mt-4">Количество оценок</legend>
-				<div class="btn-group btn-group-toggle" data-toggle="buttons">
-					<label class="btn btn-outline-success">
-						<input type="radio" name="rates_count" id="high" autocomplete="off"> Много
-					</label>
-					<label class="btn btn-outline-success active">
-						<input type="radio" name="rates_count" id="high" autocomplete="off" checked> Все равно
-					</label>
-					<label class="btn btn-outline-success">
-						<input type="radio" name="rates_count" id="high" autocomplete="off"> Мало
-					</label>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="rates_count_high" name="rates_count" value="high" class="custom-control-input" autocomplete="off">
+					<label class="custom-control-label" for="rates_count_high">Много</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="rates_count_any" name="rates_count" value="any" class="custom-control-input" autocomplete="off" checked>
+					<label class="custom-control-label" for="rates_count_any">Все равно</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="rates_count_low" name="rates_count" value="low" class="custom-control-input" autocomplete="off">
+					<label class="custom-control-label" for="rates_count_low">Мало</label>
 				</div>
 
 				<legend class="col-form-legend mt-4">Годы выпуска</legend>
+				<div><input name="years" id="years_interval"></div>
 
-				<div>
-					<input name="years" id="years_interval">
+				<legend class="col-form-legend mt-4">Исключения</legend>
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" name="include_wanted" value="1" id="include_wanted">
+					<label class="custom-control-label" for="include_wanted">Включать произведения из списка желаемого</label>
 				</div>
-
-				<div>
-
-					<p>
-						<input type="checkbox" name="include_wanted" value="1" id="include_wanted">
-						<label for="include_wanted">Включать произведения из списка желаемого</label>
-					</p>
-
-				</div>
-
-				<div>
-
-					<p>
-						<input type="checkbox" name="include_not_wanted" value="1" id="include_not_wanted">
-						<label for="include_not_wanted">Включать произведения из списка нежелаемого</label>
-					</p>
-
+				<div class="custom-control custom-checkbox">
+					<input type="checkbox" class="custom-control-input" name="include_not_wanted" value="1" id="include_not_wanted">
+					<label class="custom-control-label" for="include_not_wanted">Включать произведения из списка нежелаемого</label>
 				</div>
 
 			</fieldset>
@@ -148,162 +193,130 @@
 
 		<div class="tab-pane" id="filter-2" role="tabpanel">
 
-			<fieldset>
+			<div class="form-row">
 
-				<!--legend>Тип рекомендаций</legend-->
+				<fieldset class="col-md-12">
 
-				<div class="radio">
+					<legend class="col-form-legend">Принцип рекомендации</legend>
+					<div class="custom-control custom-radio">
+						<input type="radio" id="liked_genres" name="recommendation_principle" value="liked_genres" class="custom-control-input" autocomplete="off" checked>
+						<label class="custom-control-label" for="liked_genres">В жанрах, которые я хорошо оцениваю</label>
+					</div>
+					<div class="custom-control custom-radio">
+						<input type="radio" id="faved_genres" name="recommendation_principle" value="faved_genres" class="custom-control-input" autocomplete="off">
+						<label class="custom-control-label" for="faved_genres">В жанрах, которые я часто оцениваю</label>
+					</div>
+					<div class="custom-control custom-radio">
+						<input type="radio" id="more_of_the_same" name="recommendation_principle" value="more_of_the_same" class="custom-control-input" autocomplete="off">
+						<label class="custom-control-label" for="more_of_the_same">Еще не оцененные произведения высоко оцененных авторов</label>
+					</div>
+					<div class="custom-control custom-radio">
+						<input type="radio" id="similar_users" name="recommendation_principle" value="similar_users" class="custom-control-input" autocomplete="off">
+						<label class="custom-control-label" for="similar_users">Понравившееся пользователям с похожими оценками</label>
+					</div>
 
-					<span>Принцип рекомендации</span>
-					<p>
-						<input type="radio" name="recommendation_principle" value="liked_genres" id="liked_genres" checked>
-						<label for="liked_genres">В жанрах, которые я хорошо оцениваю</label>
-					</p>
-					<p>
-						<input type="radio" name="recommendation_principle" value="faved_genres" id="faved_genres">
-						<label for="faved_genres">В жанрах, которые я часто оцениваю</label>
-					</p>
-					<p>
-						<input type="radio" name="recommendation_principle" value="more_of_the_same" id="more_of_the_same">
-						<label for="more_of_the_same">Еще не оцененные произведения высоко оцененных авторов</label>
-					</p>
-					<p>
-						<input type="radio" name="recommendation_principle" value="similar_users" id="similar_users">
-						<label for="similar_users">Понравившееся пользователям с похожими оценками</label>
-					</p>
+					<legend class="col-form-legend mt-4">Релевантные оценки</legend>
+					<div><input name="rates" id="rates_interval"></div>
 
-				</div>
+				</fieldset>
 
-				<div>
-
-					<p>
-						<label for="rates_val">Релевантные оценки:</label>
-						<input type="text" name="rates" id="rates_val" readonly style="border:0; margin: 0;">
-					</p>
-
-					<div id="rates_interval"></div>
-
-				</div>
-
-			</fieldset>
+			</div>
 
 		</div>
 
 		<div class="tab-pane" id="filter-3" role="tabpanel">
 
-			<fieldset>
+			<div class="form-row">
 
-				<!--legend>Точные настройки</legend-->
+				<fieldset class="col-md-12" id="books_options">
 
-				<div id="books_options">
+					<legend class="col-form-legend">Издательства</legend>
+					<?php
+					$largest_publishers = '';
+					foreach($forms['largest_publishers'] as $key => $publisher) {
 
-					<div class="checkbox">
+						$checkbox_id = 'publisher'.$publisher->company_id;
 
-						<span>Издательства</span>
+						$largest_publishers .= '<div class="custom-control custom-checkbox">';
+						$largest_publishers .= '<input type="checkbox" name="publisher[]" id="'.$checkbox_id.'" value="'.$publisher->company_id.'" class="custom-control-input" autocomplete="off" checked>';
+						$largest_publishers .= '<label for="'.$checkbox_id.'" class="custom-control-label">'.$publisher->company_name.'</label>';
+						$largest_publishers .= '</div>';
 
-						<p>
-							<?php
+					}
+					echo $largest_publishers;
+					?>
 
-							//echo DebugHelper::dump($forms);
+				</fieldset>
 
-							$largest_publishers = '';
+				<fieldset class="col-md-12" id="films_options">
 
-							foreach($forms['largest_publishers'] as $key => $publisher) {
+					<legend class="col-form-legend">Страны</legend>
+					<?php
+					$cinema_countries = '';
+					foreach($forms['cinema_countries'] as $key => $country) {
 
-								$checkbox_id = 'publisher'.$publisher->company_id;
-								$largest_publishers .= '<input type="checkbox" name="publishers[]" id="'.$checkbox_id.'" checked>';
-								$largest_publishers .= '&nbsp;';
-								$largest_publishers .= '<label for="'.$checkbox_id.'">'.$publisher->company_name.'</label>';
-								$largest_publishers .= '<br/>';
+						$checkbox_id = 'country'.$country->country_id;
 
-							}
+						$cinema_countries .= '<div class="custom-control custom-checkbox">';
+						$cinema_countries .= '<input type="checkbox" name="country[]" id="'.$checkbox_id.'" value="'.$country->country_id.'" class="custom-control-input" autocomplete="off" checked>';
+						$cinema_countries .= '<label for="'.$checkbox_id.'" class="custom-control-label">'.$country->country_name.'</label>';
+						$cinema_countries .= '</div>';
 
-							echo $largest_publishers;
+					}
+					echo $cinema_countries;
+					?>
 
-							?>
-						</p>
+				</fieldset>
 
-					</div>
+				<fieldset class="col-md-12" id="games_options">
 
-				</div>
+					<legend class="col-form-legend">Платформы</legend>
+					<?php
+					$top_platforms = '';
+					foreach($forms['top_platforms'] as $key => $platform) {
 
-				<div id="films_options">
+						$checkbox_id = 'platform'.$platform->platform_id;
 
-					<div class="checkbox">
+						$top_platforms .= '<div class="custom-control custom-checkbox">';
+						$top_platforms .= '<input type="checkbox" name="platform[]" id="'.$checkbox_id.'" value="'.$platform->platform_id.'" class="custom-control-input" autocomplete="off" checked>';
+						$top_platforms .= '<label for="'.$checkbox_id.'" class="custom-control-label">'.$platform->platform_name.'</label>';
+						$top_platforms .= '</div>';
 
-						<span>Страны</span>
-						<p>
-							<?php
+					}
+					echo $top_platforms;
+					?>
 
-							$cinema_countries = '';
+				</fieldset>
 
-							foreach($forms['cinema_countries'] as $key => $country) {
+				<fieldset class="col-md-12 mt-4">
+					<legend class="col-form-legend">Количество рекомендаций</legend>
+					<div><input name="recommendations" id="rec_num_interval"></div>
+				</fieldset>
 
-								$checkbox_id = 'country'.$country->country_id;
-								$cinema_countries .= '<input type="checkbox" name="countries[]" id="'.$checkbox_id.'" checked>';
-								$cinema_countries .= '&nbsp;';
-								$cinema_countries .= '<label for="'.$checkbox_id.'">'.$country->country_name.'</label>';
-								$cinema_countries .= '<br/>';
-
-							}
-
-							echo $cinema_countries;
-
-							?>
-						</p>
-
-					</div>
-
-				</div>
-
-				<div id="games_options">
-
-					<div class="checkbox">
-
-						<span>Платформы</span>
-						<p>
-							<?php
-
-							$top_platforms = '';
-
-							foreach($forms['top_platforms'] as $key => $platform) {
-
-								$checkbox_id = 'platform'.$platform->platform_id;
-								$top_platforms .= '<input type="checkbox" name="platforms[]" id="'.$checkbox_id.'" checked>';
-								$top_platforms .= '&nbsp;';
-								$top_platforms .= '<label for="'.$checkbox_id.'">'.$platform->platform_name.'</label>';
-								$top_platforms .= '<br/>';
-
-							}
-
-							echo $top_platforms;
-
-							?>
-						</p>
-
-					</div>
-
-				</div>
-
-				<div>
-
-					<p>
-						<label for="rec_num_val">Количество рекомендаций:</label>
-						<input type="text" name="recommendations" id="rec_num_val" readonly style="border:0; margin: 0;">
-					</p>
-
-					<div id="rec_num_interval"></div>
-
-				</div>
-
-			</fieldset>
+			</div>
 
 		</div>
 
 	</div>
 
-		<div><input type="submit" class="btn btn-primary btn-block" value="Искать"></div>
+	<div><input type="submit" class="btn btn-primary mt-4" value="Искать"></div>
 
 	</form>
+
+	@if(count($elements))
+	<div class="row mt-5">
+
+		<div class="col-md-12">
+			<?php $options = array(
+				'header' => true,
+				'paginate' => false,
+				'footer' => true,
+			); ?>
+			{!! ElementsHelper::getElements($request, $elements, $section, $options) !!}
+
+		</div>
+
+	</div>
+	@endif
 
 @stop

@@ -20,7 +20,7 @@ class DebugHelper {
 
 		$result = '';
 
-		if($pre) {$result .= '<pre>';}
+		if($pre) {$result .= '<pre class="mt-5">';}
 
 		$result .= print_r($variable, true);
 

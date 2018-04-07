@@ -41,20 +41,65 @@ class RecommendationsController extends Controller {
 		 * )
 		 */
 
+		$section = '';
+		$elements = new Collection();
+
 		$input = $request->all();
 
     	if(count($input)) {
 
     		//echo DebugHelper::dump($input);
 
+			/*
+Array
+(
+    [element_type] => films
+    [ratings] => any
+    [rates_count] => any
+    [years] => 2000;2018
+    [recommendation_principle] => liked_genres
+    [rates] => 7;10
+    [country] => Array
+        (
+            [0] => 20
+            [1] => 18
+            [2] => 19
+            [3] => 5
+            [4] => 23
+            [5] => 6
+            [6] => 27
+            [7] => 12
+            [8] => 11
+            [9] => 10
+            [10] => 1
+            [11] => 13
+            [12] => 3
+            [13] => 25
+            [14] => 22
+            [15] => 26
+            [16] => 7
+            [17] => 17
+            [18] => 15
+            [19] => 24
+        )
+
+    [recommendations] => 15
+)
+			 */
+
     		$user_id = Auth::user()->id;
 
-    		$type = SectionsHelper::getSectionType($input['element_type']);
+    		$section = $input['element_type'];
+    		$type = SectionsHelper::getSectionType($section);
+    		$object = SectionsHelper::getObjectBy($section);
 
-    		$exploded_rate = explode(' - ', $input['rates']);
-
+    		$exploded_rate = explode(';', $input['rates']);
     		$min_rate = $exploded_rate[0];
     		$max_rate = $exploded_rate[1];
+
+			$principle = array();
+
+			$limit = $input['recommendations'];
 
 			if('liked_genres' == $input['recommendation_principle']) {
 
@@ -65,11 +110,24 @@ class RecommendationsController extends Controller {
 					'total_gens' => $input['recommendations'],
 				);
 
-				$genres = UserHelper::getFavGenres($user_id, $type, $options);
+				$principle = UserHelper::getFavGenres($user_id, $type, $options);
 
-				echo DebugHelper::dump($genres);
+				//echo DebugHelper::dump($genres);
 
 			}
+
+			$elements = $object->with(array('rates' => function($query)
+					{
+						$query
+							->where('user_id', '=', Auth::user()->id)
+							->where('element_type', '=', 'Book')
+						;
+					})
+				)
+				->whereIn('id', $principle)
+				->limit($limit)
+				->get()
+			;
 
 		}
 
@@ -116,10 +174,9 @@ class RecommendationsController extends Controller {
 
 		});
 
-    	$elements = new Collection();
-
 		return View::make('recommendations.personal', array(
 			'request' => $request,
+			'section' => $section,
 			'elements' => $elements,
 			'forms' => $forms,
 		));
