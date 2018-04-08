@@ -104,13 +104,12 @@ class ElementsHelper {
 
   			$elements_list .= '</div>';
 
-			$elements_list .= '<div class="card-body text-center">';
-
-			//$elements_list .= '<p class="card-text">';
-			//$elements_list .= '</p>';
-
-
 			if(Auth::check()) {
+
+				$elements_list .= '<div class="card-body text-center">';
+
+				//$elements_list .= '<p class="card-text">';
+				//$elements_list .= '</p>';
 
 				$elements_list .= '<div class="fast_rating_block">';
 				if (isset($element->rates) && 0 != count($element->rates)) {
@@ -138,76 +137,80 @@ class ElementsHelper {
 
 				$elements_list .= '</div>';
 
-				$elements_list .= '<div class="mt-3">';
-				$elements_list .= '<div class="btn-group">';
+				if((RolesHelper::isAdmin($request)) || (isset($options['wanted']) || isset($options['not_wanted']))) {
 
-				if(RolesHelper::isAdmin($request)) {
+					$elements_list .= '<div class="mt-3">';
+					$elements_list .= '<div class="btn-group">';
 
-					$elements_list .= '<a role="button" class="btn btn-sm btn-outline-success" href="/admin/edit/'.$section.'/'.$element->id.'" title="Редактировать">';
-					$elements_list .= '&#9998;';
-					$elements_list .= '</a>';
+					if (RolesHelper::isAdmin($request)) {
 
-				}
+						$elements_list .= '<a role="button" class="btn btn-sm btn-outline-success" href="/admin/edit/' . $section . '/' . $element->id . '" title="Редактировать">';
+						$elements_list .= '&#9998;';
+						$elements_list .= '</a>';
 
-				if(isset($options['wanted'])) {
-					if (in_array($element->id, $options['wanted'])) {
-						$class = 'btn btn-sm btn-success';
-						$handler = 'onclick="unlike(\'' . $section . '\', \'' . $element->id . '\')"';
-					} else {
-						$class = 'btn btn-sm btn-outline-success';
-						$handler = 'onclick="like(\'' . $section . '\', \'' . $element->id . '\')"';
 					}
-					$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Хочу">';
-					$elements_list .= '&#10084;';
-					$elements_list .= '</button>';
-				}
 
-				if(isset($options['not_wanted'])) {
-					if (in_array($element->id, $options['not_wanted'])) {
-						$class = 'btn btn-sm btn-danger';
-						$handler = 'onclick="undislike(\'' . $section . '\', \'' . $element->id . '\')"';
-					} else {
-						$class = 'btn btn-sm btn-outline-danger';
-						$handler = 'onclick="dislike(\'' . $section . '\', \'' . $element->id . '\')"';
+					if (isset($options['wanted'])) {
+						if (in_array($element->id, $options['wanted'])) {
+							$class = 'btn btn-sm btn-success';
+							$handler = 'onclick="unlike(\'' . $section . '\', \'' . $element->id . '\')"';
+						} else {
+							$class = 'btn btn-sm btn-outline-success';
+							$handler = 'onclick="like(\'' . $section . '\', \'' . $element->id . '\')"';
+						}
+						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Хочу">';
+						$elements_list .= '&#10084;';
+						$elements_list .= '</button>';
 					}
-					$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="not_want_' . $element->id . '" title="Не хочу">';
-					$elements_list .= '&#9785;';
-					$elements_list .= '</button>';
-				}
 
-				if(RolesHelper::isAdmin($request)) {
+					if (isset($options['not_wanted'])) {
+						if (in_array($element->id, $options['not_wanted'])) {
+							$class = 'btn btn-sm btn-danger';
+							$handler = 'onclick="undislike(\'' . $section . '\', \'' . $element->id . '\')"';
+						} else {
+							$class = 'btn btn-sm btn-outline-danger';
+							$handler = 'onclick="dislike(\'' . $section . '\', \'' . $element->id . '\')"';
+						}
+						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="not_want_' . $element->id . '" title="Не хочу">';
+						$elements_list .= '&#9785;';
+						$elements_list .= '</button>';
+					}
 
-					$elements_list .= '<a role="button" class="btn btn-sm btn-outline-danger" href="/admin/delete/'.$section.'/'.$element->id.'" onclick="return window.confirm(\'Удалить?\');" title="Удалить">';
-					$elements_list .= '&#10006;';
-					$elements_list .= '</a>';
+					if (RolesHelper::isAdmin($request)) {
 
-				}
+						$elements_list .= '<a role="button" class="btn btn-sm btn-outline-danger" href="/admin/delete/' . $section . '/' . $element->id . '" onclick="return window.confirm(\'Удалить?\');" title="Удалить">';
+						$elements_list .= '&#10006;';
+						$elements_list .= '</a>';
 
-				$elements_list .= '</div>';
-				//$elements_list .= '<small class="text-muted"></small>';
-				$elements_list .= '</div>';
+					}
 
-				$elements_list .= '<script>';
+					$elements_list .= '</div>';
+					//$elements_list .= '<small class="text-muted"></small>';
+					$elements_list .= '</div>';
 
-					$elements_list .= '$(\'#rating_'.$section.'_'.$element->id.'\').on(\'rating:change\', function(event, value, caption) {';
+					$elements_list .= '<script>';
 
-						$elements_list .= 'var path = \'/rates/rate/'.$section.'/'.$element->id.'\';';
-						$elements_list .= 'var params = {rate_val: value};';
+					$elements_list .= '$(\'#rating_' . $section . '_' . $element->id . '\').on(\'rating:change\', function(event, value, caption) {';
 
-						$elements_list .= '$.post(path, params, function(data) {show_popup(data);}, \'json\');';
-						$elements_list .= '$.post(\'/achievements\', {}, function(data) {show_popup(data);}, \'json\');';
+					$elements_list .= 'var path = \'/rates/rate/' . $section . '/' . $element->id . '\';';
+					$elements_list .= 'var params = {rate_val: value};';
+
+					$elements_list .= '$.post(path, params, function(data) {show_popup(data);}, \'json\');';
+					$elements_list .= '$.post(\'/achievements\', {}, function(data) {show_popup(data);}, \'json\');';
 
 					$elements_list .= '});';
 
-				$elements_list .= '</script>';
+					$elements_list .= '</script>';
+
+				}
+
+				$elements_list .= '</div>';
 
 			} else {
 
 
 
 			}
-
-			$elements_list .= '</div>';
 
 			if(isset($options['add_text'])) {
 
@@ -650,48 +653,50 @@ class ElementsHelper {
 
 					$element_body .= '<img itemprop="image" src="/data/img/covers/'.$section.'/'.$info['cover'].'.jpg" alt="'.$element->name.'" class="card-img-top" />';
 
-					$element_body .= '<div class="card-body text-center">';
+					if(Auth::check()) {
+
+						$element_body .= '<div class="card-body text-center">';
 
 						$element_body .= '<div class="btn-group">';
 
-						if(RolesHelper::isAdmin($request)) {
+						if (RolesHelper::isAdmin($request)) {
 
 							$class = 'btn btn-sm btn-outline-success';
-							$href = '/admin/edit/'.$section.'/'.$element->id;
-							$element_body .= '<a role="button" class="'.$class.'" href="'.$href.'" title="Редактировать">';
+							$href = '/admin/edit/' . $section . '/' . $element->id;
+							$element_body .= '<a role="button" class="' . $class . '" href="' . $href . '" title="Редактировать">';
 							$element_body .= '&#9998;';
 							$element_body .= '</a>';
 
 						}
 
-						if(1 === $info['wanted']) {
+						if (1 === $info['wanted']) {
 							$class = 'btn btn-sm btn-success';
-							$handler = 'onclick="unlike(\''.$section.'\', \''.$element->id.'\')"';
+							$handler = 'onclick="unlike(\'' . $section . '\', \'' . $element->id . '\')"';
 						} else {
 							$class = 'btn btn-sm btn-outline-success';
-							$handler = 'onclick="like(\''.$section.'\', \''.$element->id.'\')"';
+							$handler = 'onclick="like(\'' . $section . '\', \'' . $element->id . '\')"';
 						}
-						$element_body .= '<button type="button" class="'.$class.'" '.$handler.' id="want_'.$element->id.'" title="Хочу">';
+						$element_body .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Хочу">';
 						$element_body .= '&#10084;';
 						$element_body .= '</button>';
 
-						if(1 === $info['not_wanted']) {
+						if (1 === $info['not_wanted']) {
 							$class = 'btn btn-sm btn-danger';
-							$handler = 'onclick="undislike(\''.$section.'\', \''.$element->id.'\')"';
+							$handler = 'onclick="undislike(\'' . $section . '\', \'' . $element->id . '\')"';
 						} else {
 							$class = 'btn btn-sm btn-outline-danger';
-							$handler = 'onclick="dislike(\''.$section.'\', \''.$element->id.'\')"';
+							$handler = 'onclick="dislike(\'' . $section . '\', \'' . $element->id . '\')"';
 						}
-						$element_body .= '<button type="button" class="'.$class.'" '.$handler.' id="not_want_'.$element->id.'" title="Не хочу">';
+						$element_body .= '<button type="button" class="' . $class . '" ' . $handler . ' id="not_want_' . $element->id . '" title="Не хочу">';
 						$element_body .= '&#9785;';
 						$element_body .= '</button>';
 
-						if(RolesHelper::isAdmin($request)) {
+						if (RolesHelper::isAdmin($request)) {
 
 							$class = 'btn btn-sm btn-outline-danger';
-							$href = '/admin/delete/'.$section.'/'.$element->id;
+							$href = '/admin/delete/' . $section . '/' . $element->id;
 							$handler = 'onclick="return window.confirm(\'Удалить?\');"';
-							$element_body .= '<a role="button" class="'.$class.'" href="'.$href.'" '.$handler.' title="Удалить">';
+							$element_body .= '<a role="button" class="' . $class . '" href="' . $href . '" ' . $handler . ' title="Удалить">';
 							$element_body .= '&#10006;';
 							$element_body .= '</a>';
 
@@ -699,7 +704,9 @@ class ElementsHelper {
 
 						$element_body .= '</div>';
 
-					$element_body .= '</div>';
+						$element_body .= '</div>';
+
+					}
 
 				$element_body .= '</div>';
 

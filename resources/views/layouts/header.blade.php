@@ -68,7 +68,9 @@
 								<div class="dropdown-menu" aria-labelledby="dropdown01">
 
 									<a class="dropdown-item" href="{!! URL::action('UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
+									@if (RolesHelper::isAdmin($request))
 									<a class="dropdown-item" href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a>
+									@endif
 									<a class="dropdown-item" href="/search/advanced">Расширенный поиск</a>
 									@if (RolesHelper::isAdmin($request))
 									<a class="dropdown-item" href="/books/random">Случайная книга</a>
@@ -87,8 +89,8 @@
 								</a>
 								<div class="dropdown-menu" aria-labelledby="dropdown01">
 
-									<a class="dropdown-item" href="#" onclick="show_entrance();">Войти</a>
-									<a class="dropdown-item" href="/user/logout/" onclick="show_registration();">Зарегистрироваться</a>
+									<a class="dropdown-item" href="/user/login/">Войти</a>
+									<a class="dropdown-item" href="/user/register/">Зарегистрироваться</a>
 
 								</div>
 							</li>
@@ -113,48 +115,6 @@
 				</div>
 
 			</nav>
-
-			@if (!Auth::check())
-			<div id="entrance_block">
-
-				{!! Form::open(array('action' => 'UserController@login', 'id' => 'entrance_form', 'class' => 'entrance_form', 'method' => 'POST')) !!}
-
-					<p>{!! Form::text('email', $value = null, $attributes = array('placeholder' => 'Логин или e-mail', 'class' => 'full')) !!}</p>
-					<p>{!! Form::password('password', $attributes = array('placeholder' => 'Пароль', 'class' => 'full')) !!}</p>
-					<p>{!! Form::submit('Войти', $attributes = array('class' => 'full')) !!}</p>
-
-				{!! Form::close() !!}
-
-				<p>
-					<span class="symlink"
-					onclick="window.open('https://oauth.vk.com/authorize?client_id=4591194&redirect_uri=https://buhurt.ru/user/vk_auth&scope=email&display=popup');">
-						Вконтакте
-					</span>
-				</p>
-
-			</div>
-
-			<div id="registration_block">
-
-				{!! Form::open(array('action' => 'UserController@store', 'id' => 'registration_form', 'class' => 'registration_form', 'method' => 'POST')) !!}
-
-					<p>{!! Form::text('email', $value = null, $attributes = array('placeholder' => 'E-mail', 'class' => 'full', 'autocomplete' => 'off')) !!}</p>
-					<p>{!! Form::text('username', $value = null, $attributes = array('placeholder' => 'Логин', 'class' => 'full', 'autocomplete' => 'off')) !!}</p>
-					<p>{!! Form::password('password', $attributes = array('placeholder' => 'Пароль', 'class' => 'full', 'autocomplete' => 'off')) !!}</p>
-					<!--p-->{!! Recaptcha::render(array('theme' => 'clean', 'lang' => 'ru')) !!}<!--/p-->
-					<p>{!! Form::submit('Зарегистрироваться', $attributes = array('class' => 'full')) !!}</p>
-
-				{!! Form::close() !!}
-
-				<p>
-					<span class="symlink"
-					onclick="window.open('https://oauth.vk.com/authorize?client_id=4591194&redirect_uri=https://buhurt.ru/user/vk_auth&scope=email&display=popup');">
-						Вконтакте
-					</span>
-				</p>
-
-			</div>
-			@endif
 
 			<script>
 				$(document).ready(function(){

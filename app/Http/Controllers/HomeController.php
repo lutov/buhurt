@@ -39,8 +39,18 @@ class HomeController extends Controller {
 		$minutes = 10;
 		$order_by = 'updated_at';
 
-		$wanted = array();
-		$not_wanted = array();
+		$wanted = array(
+			'books' => array(),
+			'films' => array(),
+			'games' => array(),
+			'albums' => array(),
+		);
+		$not_wanted = array(
+			'books' => array(),
+			'films' => array(),
+			'games' => array(),
+			'albums' => array(),
+		);
 
 		if(Auth::check()) {
 

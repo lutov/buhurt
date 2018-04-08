@@ -26,31 +26,47 @@ use App\Models\Achievement;
 class UserController extends Controller {
 
 	/**
-	 * User Form.
-	 *
-	 * @return Response
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
 	 */
-	public function index() {
+	public function index(Request $request) {
 
-		return View::make('user.index');
+		if(Auth::check()) {
+
+			return Redirect::to('/');
+
+		} else {
+
+			return View::make('user.index', array(
+				'request' => $request
+			));
+
+		}
 
 	}
 
 	/**
-	 * Registration form.
-	 *
-	 * @return Response
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
 	 */
-	public function register() {
+	public function register(Request $request) {
 
-		return View::make('user.register');
+		if(Auth::check()) {
+
+			return Redirect::to('/');
+
+		} else {
+
+			return View::make('user.register', array(
+				'request' => $request
+			));
+
+		}
 
 	}
 
 	/**
-	 * Registring new user and storing him to DB.
-	 *
-	 * @return Response
+	 * @return \Illuminate\Http\RedirectResponse
 	 */
 	public function store() {
 
@@ -127,7 +143,7 @@ class UserController extends Controller {
 
 		Mail::raw($email, function($message) use ($user)
 		{
-			$message->from('robot@free-buhurt.club', 'Бугурт');
+			$message->from('robot@buhurt.ru', 'Бугурт');
 
 			$message->to($user->email)->subject('Вы зарегистрировались в системе «Бугурт»');
 		});

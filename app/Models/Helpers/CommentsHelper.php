@@ -158,7 +158,7 @@ class CommentsHelper {
 
 		} else {
 
-			return DummyHelper::reg2comment();
+			return DummyHelper::regToComment();
 
 		}
 

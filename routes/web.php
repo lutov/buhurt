@@ -184,15 +184,14 @@ Route::group(array('prefix' => 'user'), function()
 {
 	Route::get('logout', array('uses' => 'UserController@logout'));
 
-	Route::group(array('middleware' => 'guest',), function()
-	{
-		//Route::get('login', array('uses' => 'UserController@index'));
+	Route::group(array('middleware' => 'guest',), function() {
+
 		Route::get('register', array('uses' => 'UserController@register'));
-        //Route::get('store', array('uses' => 'UserController@store'));
-		
-		Route::post('login', array('uses' => 'UserController@login'));
-		//Route::post('register', array('uses' => 'UserController@register'));
 		Route::post('register', array('uses' => 'UserController@store'));
+
+		Route::get('login', array('uses' => 'UserController@index'));
+		Route::post('login', array('uses' => 'UserController@login'));
+
 	});
 
 	Route::get('{id}/profile', array('uses' => 'UserController@view'));

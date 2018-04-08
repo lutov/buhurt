@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title')Регистрация@stop
+@section('title')Вход@stop
 
 @section('subtitle')@stop
 
@@ -8,7 +8,7 @@
 
     <section class="text-center">
         <h1 class="pt-5">@yield('title')</h1>
-        <!--h2 class="pb-3">@yield('subtitle')</h2-->
+    <!--h2 class="pb-3">@yield('subtitle')</h2-->
     </section>
 
     <div class="row mt-5">
@@ -38,16 +38,13 @@
                     </div>
                 @endif
 
-                {!! Form::open(array('action' => 'UserController@store', 'id' => 'registration_form', 'class' => 'registration_form', 'method' => 'POST')) !!}
+                    {!! Form::open(array('action' => 'UserController@login', 'id' => 'entrance_form', 'class' => 'entrance_form', 'method' => 'POST')) !!}
 
-                <p>{!! Form::text('email', $value = null, $attributes = array('placeholder' => 'E-mail', 'class' => 'form-control w-100', 'autocomplete' => 'off')) !!}</p>
-                <p>{!! Form::text('username', $value = null, $attributes = array('placeholder' => 'Логин', 'class' => 'form-control w-100', 'autocomplete' => 'off')) !!}</p>
-                <p>{!! Form::password('password', $attributes = array('placeholder' => 'Пароль', 'class' => 'form-control w-100', 'autocomplete' => 'off')) !!}</p>
-                <p>{!! Recaptcha::render(array('theme' => 'clean', 'lang' => 'ru')) !!}</p>
-                <p>
-                    {!! Form::submit('Зарегистрироваться', $attributes = array('class' => 'btn btn-success')) !!}
-                </p>
-                {!! Form::close() !!}
+                    <p>{!! Form::text('email', $value = null, $attributes = array('placeholder' => 'Логин или e-mail', 'class' => 'form-control w-100')) !!}</p>
+                    <p>{!! Form::password('password', $attributes = array('placeholder' => 'Пароль', 'class' => 'form-control w-100')) !!}</p>
+                    <p>{!! Form::submit('Войти', $attributes = array('class' => 'btn btn-success')) !!}</p>
+
+                    {!! Form::close() !!}
 
             </div>
 

@@ -19,12 +19,12 @@ class DummyHelper {
 	 */
 	public static function regToRate() {
 
-		return '<p class="note">
-			<span class="symlink" onclick="show_registration();">Зарегистрируйтесь</span>
+		return '<small class="text-muted">
+			<a href="/user/register">Зарегистрируйтесь</a>
 			или
-			<span class="symlink" onclick="show_entrance();">войдите</span>
+			<a href="/user/login">войдите</a>,
 			чтобы поставить оценку
-		</p>';
+		</small>';
 
 	}
 
@@ -34,12 +34,12 @@ class DummyHelper {
 	 */
 	public static function regToComment() {
 
-		return '<p class="note">
-			<span class="symlink" onclick="show_registration();">Зарегистрируйтесь</span>
+		return '<small class="text-muted">
+			<a href="/user/register">Зарегистрируйтесь</a>
 			или
-			<span class="symlink" onclick="show_entrance();">войдите</span>
+			<a href="/user/login">войдите</a>,
 			чтобы добавить комментарий
-		</p>';
+		</small>';
 
 	}
 
@@ -48,12 +48,12 @@ class DummyHelper {
 	 */
 	public static function regToAdd() {
 
-		return '<p class="note">
-			<span class="symlink" onclick="show_registration();">Зарегистрируйтесь</span>
+		return '<small class="text-muted">
+			<a href="/user/register">Зарегистрируйтесь</a>
 			или
-			<span class="symlink" onclick="show_entrance();">войдите</span>
+			<a href="/user/login">войдите</a>,
 			чтобы добавить элемент
-		</p>';
+		</small>';
 
 	}
 
