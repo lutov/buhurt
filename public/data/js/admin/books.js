@@ -5,27 +5,27 @@ $(document).ready(function() {
     var collections = $('#collections');
     // book
     $('#book_name').autocomplete({
-        source: "{!! URL::action('SearchController@book_name') !!}", // url-адрес
+        source: "/search/book_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     $('#book_genre').autocomplete({
-        source: "{!! URL::action('SearchController@book_genre') !!}", // url-адрес
+        source: "/search/book_genre/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     writer.autocomplete({
-        source: "{!! URL::action('SearchController@person_name') !!}", // url-адрес
+        source: "/search/person_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     publisher.autocomplete({
-        source: "{!! URL::action('SearchController@company_name') !!}", // url-адрес
+        source: "/search/company_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     collections.autocomplete({
-        source: "{!! URL::action('SearchController@collection_name') !!}", // url-адрес
+        source: "/search/collection_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });

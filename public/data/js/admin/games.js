@@ -5,32 +5,32 @@ $(document).ready(function(){
     var collections = $('#collections');
     // game
     $('#game_name').autocomplete({
-        source: "{!! URL::action('SearchController@game_name') !!}", // url-адрес
+        source: "/search/game_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     $('#game_genre').autocomplete({
-        source: "{!! URL::action('SearchController@game_genre') !!}", // url-адрес
+        source: "/search/game_genre/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     $('#game_platform').autocomplete({
-        source: "{!! URL::action('SearchController@platform_name') !!}", // url-адрес
+        source: "/search/platform_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     developer.autocomplete({
-        source: "{!! URL::action('SearchController@company_name') !!}", // url-адрес
+        source: "/search/company_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     publisher.autocomplete({
-        source: "{!! URL::action('SearchController@company_name') !!}", // url-адрес
+        source: "/search/company_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     collections.autocomplete({
-        source: "{!! URL::action('SearchController@collection_name') !!}", // url-адрес
+        source: "/search/collection_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });

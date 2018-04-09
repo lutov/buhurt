@@ -90,11 +90,15 @@ class ElementsHelper {
 			$elements_list .= '<div class="col-md-3">';
 			$elements_list .= '<div class="card mb-4 box-shadow">';
 
+			$elements_list .= '<div class="card-img-box">';
+
 			$elements_list .= '<a href="'.$link.'">';
 
 			$elements_list .= '<img class="card-img-top" src="/data/img/covers/' . $section . '/' . $element_cover . '.jpg" alt="' . $element->name . ' (' . $element->year . ')" />';
 
 			$elements_list .= '</a>';
+
+			$elements_list .= '</div>';
 
 			$elements_list .= '<div class="card-header">';
 
@@ -106,7 +110,7 @@ class ElementsHelper {
 
 			if(Auth::check()) {
 
-				$elements_list .= '<div class="card-body text-center">';
+				$elements_list .= '<div class="card-body text-center d-none d-xl-block">';
 
 				//$elements_list .= '<p class="card-text">';
 				//$elements_list .= '</p>';

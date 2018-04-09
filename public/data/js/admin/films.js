@@ -7,42 +7,42 @@ $(document).ready(function() {
     var collections = $('#collections');
     // film
     $('#film_name').autocomplete({
-        source: "{!! URL::action('SearchController@film_name') !!}", // url-адрес
+        source: "/search/film_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     $('#film_genre').autocomplete({
-        source: "{!! URL::action('SearchController@film_genre') !!}", // url-адрес
+        source: "/search/film_genre/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     director.autocomplete({
-        source: "{!! URL::action('SearchController@person_name') !!}", // url-адрес
+        source: "/search/person_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     producer.autocomplete({
-        source: "{!! URL::action('SearchController@person_name') !!}", // url-адрес
+        source: "/search/person_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     screenwriter.autocomplete({
-        source: "{!! URL::action('SearchController@person_name') !!}", // url-адрес
+        source: "/search/person_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     actors.autocomplete({
-        source: "{!! URL::action('SearchController@person_name') !!}", // url-адрес
+        source: "/search/person_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     collections.autocomplete({
-        source: "{!! URL::action('SearchController@collection_name') !!}", // url-адрес
+        source: "/search/collection_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
     $('#film_country').autocomplete({
-        source: "{!! URL::action('SearchController@country_name') !!}", // url-адрес
+        source: "/search/country_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });

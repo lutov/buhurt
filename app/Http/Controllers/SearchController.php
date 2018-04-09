@@ -6,6 +6,8 @@ use App\Models\Game;
 use App\Models\Band;
 use App\Models\Album;
 use App\Models\Genre;
+use App\Models\Helpers\DatatypeHelper;
+use App\Models\Helpers\SectionsHelper;
 use App\Models\Person;
 use App\Models\Company;
 use App\Models\Helpers;
@@ -128,7 +130,7 @@ class SearchController extends Controller {
 
 		$limit = 3;
 
-		$presearch_query =  Input::get('term');
+		$presearch_query =  urldecode(Input::get('term'));
 		$search_query =  $this->prepare_query($presearch_query);
 
 		if(!empty($search_query)) {
@@ -420,7 +422,7 @@ class SearchController extends Controller {
 	public function years(Request $request, $section) {
 
 		$sub_section = 'years';
-		$title = Helpers::get_section_name($section);
+		$title = SectionsHelper::getSectionName($section);
 		$subtitle = 'Года';
 
 		$sort = 'year';
@@ -453,7 +455,7 @@ class SearchController extends Controller {
 
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -464,38 +466,42 @@ class SearchController extends Controller {
 				//->remember(60)
 				->get()
 			;
-			$result = '['.Helpers::object2js_array($persons).']';
+			$result = '['.DatatypeHelper::objectToJsArray($persons).']';
 		}
 
 		echo $result;
 	}
 
-	public function company_name()
-	{
+	public function company_name() {
+
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(urldecode(Input::get('term')));
+
+		//echo $query;
 
 		$result = '';
 
-		if(!empty($query))
-		{
+		if(!empty($query)) {
+
 			$companies = Company::where('name', 'like', '%'.$query.'%')
 				->limit($limit)
 				//->remember(60)
 				->get()
 			;
-			$result = '['.Helpers::object2js_array($companies).']';
+			$result = '['.DatatypeHelper::objectToJsArray($companies).']';
+
 		}
 
 		echo $result;
+
 	}
 
 	public function collection_name()
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -506,7 +512,7 @@ class SearchController extends Controller {
 				//->remember(60)
 				->get()
 			;
-			$result = '['.Helpers::object2js_array($collections).']';
+			$result = '['.DatatypeHelper::objectToJsArray($collections).']';
 		}
 
 		echo $result;
@@ -516,7 +522,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -527,7 +533,7 @@ class SearchController extends Controller {
 				//->remember(60)
 				->get()
 			;
-			$result = '['.Helpers::object2js_array($platforms).']';
+			$result = '['.DatatypeHelper::objectToJsArray($platforms).']';
 		}
 
 		echo $result;
@@ -538,7 +544,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -549,7 +555,7 @@ class SearchController extends Controller {
 				//->remember(60)
 				->get()
 			;
-			$result = '['.Helpers::object2js_array($countries).']';
+			$result = '['.DatatypeHelper::objectToJsArray($countries).']';
 		}
 
 		echo $result;
@@ -559,7 +565,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -570,7 +576,7 @@ class SearchController extends Controller {
 				->limit($limit)
 				//->remember(60)
 				->get();
-			$result = '['.Helpers::object2js_array($books).']';
+			$result = '['.DatatypeHelper::objectToJsArray($books).']';
 		}
 
 		echo $result;
@@ -579,7 +585,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -590,7 +596,7 @@ class SearchController extends Controller {
 				->limit($limit)
 				//->remember(60)
 				->get();
-			$result = '['.Helpers::object2js_array($genres).']';
+			$result = '['.DatatypeHelper::objectToJsArray($genres).']';
 		}
 
 		echo $result;
@@ -600,7 +606,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -610,7 +616,7 @@ class SearchController extends Controller {
 				->limit($limit)
 				//->remember(60)
 				->get();
-			$result = '['.Helpers::object2js_array($films).']';
+			$result = '['.DatatypeHelper::objectToJsArray($films).']';
 		}
 
 		echo $result;
@@ -619,7 +625,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -630,7 +636,7 @@ class SearchController extends Controller {
 				->limit($limit)
 				//->remember(60)
 				->get();
-			$result = '['.Helpers::object2js_array($genres).']';
+			$result = '['.DatatypeHelper::objectToJsArray($genres).']';
 		}
 
 		echo $result;
@@ -640,7 +646,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -650,7 +656,7 @@ class SearchController extends Controller {
 				->limit($limit)
 				//->remember(60)
 				->get();
-			$result = '['.Helpers::object2js_array($games).']';
+			$result = '['.DatatypeHelper::objectToJsArray($games).']';
 		}
 
 		echo $result;
@@ -659,7 +665,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -670,7 +676,7 @@ class SearchController extends Controller {
 				->limit($limit)
 				//->remember(60)
 				->get();
-			$result = '['.Helpers::object2js_array($genres).']';
+			$result = '['.DatatypeHelper::objectToJsArray($genres).']';
 		}
 
 		echo $result;
@@ -680,7 +686,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -690,7 +696,7 @@ class SearchController extends Controller {
 				->limit($limit)
 				//->remember(60)
 				->get();
-			$result = '['.Helpers::object2js_array($albums).']';
+			$result = '['.DatatypeHelper::objectToJsArray($albums).']';
 		}
 
 		echo $result;
@@ -699,7 +705,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -709,7 +715,7 @@ class SearchController extends Controller {
 				->limit($limit)
 				//->remember(60)
 				->get();
-			$result = '['.Helpers::object2js_array($bands).']';
+			$result = '['.DatatypeHelper::objectToJsArray($bands).']';
 		}
 
 		echo $result;
@@ -718,7 +724,7 @@ class SearchController extends Controller {
 	{
 		$limit = $this->small_limit;
 
-		$query = Input::get('term');
+		$query = urldecode(Input::get('term'));
 
 		$result = '';
 
@@ -729,7 +735,7 @@ class SearchController extends Controller {
 				->limit($limit)
 				//->remember(60)
 				->get();
-			$result = '['.Helpers::object2js_array($genres).']';
+			$result = '['.DatatypeHelper::objectToJsArray($genres).']';
 		}
 
 		echo $result;

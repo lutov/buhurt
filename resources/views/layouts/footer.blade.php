@@ -1,38 +1,42 @@
 
 		</main> <!-- #main -->
 
-		<footer class="footer container-fluid text-muted font-small blue pt-4 mt-4">
+		<footer class="footer text-muted font-small blue">
 
-			<nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
+			<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
 
 				<div class="collapse navbar-collapse" id="navbarCollapse">
 
 					<ul class="navbar-nav mr-auto">
 
 						<li class="nav-item">
-							<a class="nav-link" href="/about/">О сайте (FAQ)</a>
+							<a class="nav-link" href="/about/">О&nbsp;сайте</a>
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link" href="https://vk.com/free_buhurt" target="_blank">Группа ВК</a>
+							<a class="nav-link" href="https://vk.com/free_buhurt" target="_blank">ВК</a>
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link" href="mailto:request@buhurt.ru">Жалобы и предложения</a>
+							<a class="nav-link" href="mailto:request@buhurt.ru">Обратная&nbsp;связь</a>
 						</li>
 
 						<li class="nav-item">
-							<a class="nav-link" href="/icons">Авторы иконок</a>
+							<a class="nav-link" href="/icons">Иконки</a>
 						</li>
 
 						@if (RolesHelper::isAdmin($request))
 							<li class="nav-item">
-								<a class="nav-link" href="/admin/add/">Пополнение базы</a>
+								<a class="nav-link" href="/admin/add/">База</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="https://github.com/lutov/buhurt_database/" target="_blank">Базы на GitHub</a>
+								<a class="nav-link" href="https://github.com/lutov/buhurt_database/" target="_blank">GitHub</a>
 							</li>
 						@endif
+
+					</ul>
+
+					<ul class="navbar-nav mr-auto d-none d-xl-flex">
 
 						<li>{!! DummyHelper::getStats($request) !!}</li>
 

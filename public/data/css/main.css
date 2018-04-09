@@ -5,6 +5,24 @@
 
 }
 
+.card-img-box {
+    position: relative;
+    width: 100%;		/* desired width */
+    overflow: hidden;
+}
+.card-img-box:before {
+    content: "";
+    display: block;
+    padding-top: 145%; 	/* initial ratio of 1:1*/
+}
+.card-img-box .card-img-top {
+    position:  absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
 .ui-autocomplete {
     position: absolute;
     z-index: 99999 !important;
