@@ -48,6 +48,7 @@ class GamesController extends Controller {
 				->where('user_id', '=', $user_id)
 				//->remember(10)
 				->pluck('element_id')
+				->toArray()
 			;
 
 			$not_wanted = Wanted::select('element_id')
@@ -56,6 +57,7 @@ class GamesController extends Controller {
 				->where('user_id', '=', $user_id)
 				//->remember(10)
 				->pluck('element_id')
+				->toArray()
 			;
 
 			$elements = Game::orderBy($sort, $sort_direction)
@@ -84,8 +86,8 @@ class GamesController extends Controller {
 			'section' => $section,
 			'ru_section' => $ru_section,
 			'sort_options' => $sort_options,
-			'wanted' => $wanted->toArray(),
-			'not_wanted' => $not_wanted->toArray(),
+			'wanted' => $wanted,
+			'not_wanted' => $not_wanted,
 		));
     }
 

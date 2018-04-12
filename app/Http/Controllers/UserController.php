@@ -636,13 +636,13 @@ class UserController extends Controller {
 			$fileName = $id.'.jpg';
 			if (Input::hasFile('avatar')) {
 				//Input::file('cover')->move($path, $fileName);
-				$full_path = $path.'/'.$fileName;
+				$full_path = $path.$fileName;
 				//die($full_path);
-				$resize = ResizeCrop::resize(Input::file('avatar')->getRealPath(), $full_path, 200, 0);
+				$real_path = Input::file('avatar')->getRealPath();
+				//die($real_path);
+				$resize = ResizeCrop::resize($real_path, $full_path, 200, 0);
 			}
-		}
-		else
-		{
+		} else {
 
 		}
 		return Redirect::back();

@@ -48,6 +48,7 @@ class BooksController extends Controller {
 				->where('wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				->pluck('element_id')
+				->toArray()
 			;
 
 			$not_wanted = Wanted::select('element_id')
@@ -55,6 +56,7 @@ class BooksController extends Controller {
 				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				->pluck('element_id')
+				->toArray()
 			;
 
 			$elements = Book::orderBy($sort, $sort_direction)
@@ -81,8 +83,8 @@ class BooksController extends Controller {
 			'section' => $section,
 			'ru_section' => $ru_section,
 			'sort_options' => $sort_options,
-			'wanted' => $wanted->toArray(),
-			'not_wanted' => $not_wanted->toArray(),
+			'wanted' => $wanted,
+			'not_wanted' => $not_wanted,
 		));
     }
 	
