@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Helpers\SectionsHelper;
+use App\Models\Rate;
+use App\Models\Wanted;
 use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
@@ -15,6 +17,7 @@ use App\Models\Poster;
 
 use App\Models\Helpers\DebugHelper;
 use App\Models\Helpers\UserHelper;
+use NotWanted;
 
 class RecommendationsController extends Controller {
 
@@ -45,6 +48,8 @@ class RecommendationsController extends Controller {
 		$elements = new Collection();
 
 		$input = $request->all();
+
+		$minutes = 60 * 24;
 
     	if(count($input)) {
 
@@ -97,10 +102,57 @@ Array
     		$min_rate = $exploded_rate[0];
     		$max_rate = $exploded_rate[1];
 
+    		$exploded_year = explode(';', $input['years']);
+    		$min_year = $exploded_year[0];
+    		$max_year = $exploded_year[1];
+
 			$principle = array();
 
 			$limit = $input['recommendations'];
 
+			$exclude = array();
+
+			$var_name = 'rated_'.$type.'_'.Auth::user()->id;
+			$rated = Cache::remember($var_name, $minutes, function () use ($type) {
+
+				$rated = Rate::where('user_id', '=', Auth::user()->id)
+					->where('element_type', '=', $type)
+					->pluck('element_id')
+					->toArray()
+				;
+
+				return $rated;
+
+			});
+			$exclude = array_merge($exclude, $rated);
+
+			if(isset($input['include_wanted'])) {
+				if (1 !== $input['include_wanted']) {
+
+					$wanted = Wanted::where('user_id', '=', Auth::user()->id)
+						->where('element_type', '=', $type)
+						->pluck('element_id')
+						->toArray()
+					;
+					$exclude = array_merge($exclude, $wanted);
+
+				}
+			}
+
+			if(isset($input['include_not_wanted'])) {
+				if (1 !== $input['include_not_wanted']) {
+
+					$not_wanted = NotWanted::where('user_id', '=', Auth::user()->id)
+						->where('element_type', '=', $type)
+						->pluck('element_id')
+						->toArray()
+					;
+					$exclude = array_merge($exclude, $not_wanted);
+
+				}
+			}
+
+			$genres = array();
 			if('liked_genres' == $input['recommendation_principle']) {
 
 				$options = array(
@@ -110,32 +162,41 @@ Array
 					'total_gens' => $input['recommendations'],
 				);
 
-				$principle = UserHelper::getFavGenres($user_id, $type, $options);
+				$genres = UserHelper::getFavGenres($user_id, $type, $options);
 
 				//echo DebugHelper::dump($genres);
 
 			}
 
-			$elements = $object->with(array('rates' => function($query)
+			$elements = $object->select($section.'.*')
+				/*
+				->with(array('rates' => function($query) use($type)
 					{
 						$query
 							->where('user_id', '=', Auth::user()->id)
-							->where('element_type', '=', 'Book')
+							->where('element_type', '=', $type)
 						;
 					})
 				)
-				->whereIn('id', $principle)
+				*/
+				->leftJoin('elements_genres', $section.'.id', '=', 'elements_genres.element_id')
+				->where('element_type', '=', $type)
+				->whereIn('elements_genres.genre_id', $genres)
+				->whereBetween('year', array($min_year, $max_year))
+				->whereNotIn($section.'.id', $exclude)
+				//->whereIn('id', $principle)
+				->inRandomOrder()
 				->limit($limit)
+				//->toSql()
 				->get()
 			;
+			//die($elements);
 
 		}
 
 		$forms = array();
 
-		$minutes = 60 * 24;
-
-		$forms['largest_publishers'] = Cache::remember('largest_publishers4', $minutes, function () {
+		$forms['largest_publishers'] = Cache::remember('largest_publishers', $minutes, function () {
 
 			$largest_publishers_query = 'select companies.id as company_id, companies.name as company_name, count(publishers_books.id) as published_books
 				from publishers_books left join companies on company_id = companies.id
@@ -148,7 +209,7 @@ Array
 
 		});
 
-		$forms['cinema_countries'] = Cache::remember('cinema_countries4', $minutes, function () {
+		$forms['cinema_countries'] = Cache::remember('cinema_countries', $minutes, function () {
 
 			$cinema_countries_query = 'select countries.id as country_id, countries.name as country_name, count(countries_films.id) as shot_films
 				from countries_films left join countries on country_id = countries.id
@@ -161,7 +222,7 @@ Array
 
 		});
 
-		$forms['top_platforms'] = Cache::remember('top_platforms4', $minutes, function () {
+		$forms['top_platforms'] = Cache::remember('top_platforms', $minutes, function () {
 
 			$top_platforms_query = 'select platforms.id as platform_id, platforms.name as platform_name, count(platforms_games.id) as developed_games
 				from platforms_games left join platforms on platform_id = platforms.id

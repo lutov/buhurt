@@ -25,24 +25,40 @@ class UserHelper {
 	 */
 	public static function getFavGenres(int $user_id = 0, string $type = '', array $options = array(), bool $debug = false) {
 
-		$fav_elems = Rate::where('user_id', '=', $user_id)
-			->whereBetween('rate', [$options['min_rate'], $options['max_rate']])
-			->where('element_type', '=', $type)
-			->limit($options['total_rates'])
-			//->toSql()
-			->pluck('element_id')
-		;
+		$minutes = 60 * 24;
+
+		$var_name = 'fav_elems_'.$type.'_'.$user_id;
+		$fav_elems = Cache::remember($var_name, $minutes, function () use ($user_id, $options, $type) {
+
+			$fav_elems = Rate::where('user_id', '=', $user_id)
+				->whereBetween('rate', [$options['min_rate'], $options['max_rate']])
+				->where('element_type', '=', $type)
+				->limit($options['total_rates'])
+				//->toSql()
+				->pluck('element_id')
+			;
+
+			return $fav_elems;
+
+		});
 
 		if($debug) {echo DebugHelper::dump($fav_elems);}
 
-		$fav_genres = ElementGenre::select(DB::raw('genre_id, count(`element_id`) as el_count'))
-			->where('element_type', '=', $type)
-			->whereIn('element_id', $fav_elems)
-			->groupBy('genre_id')
-			->orderBy('el_count', 'desc')
-			->limit($options['total_gens'])
-			->pluck('genre_id')
-		;
+		$var_name = 'fav_genres_'.$type.'_'.$user_id;
+		$fav_genres = Cache::remember($var_name, $minutes, function () use ($fav_elems, $options, $type) {
+
+			$fav_genres = ElementGenre::select(DB::raw('genre_id, count(`element_id`) as el_count'))
+				->where('element_type', '=', $type)
+				->whereIn('element_id', $fav_elems)
+				->groupBy('genre_id')
+				->orderBy('el_count', 'desc')
+				->limit($options['total_gens'])
+				->pluck('genre_id')
+			;
+
+			return $fav_genres;
+
+		});
 
 		return $fav_genres;
 
