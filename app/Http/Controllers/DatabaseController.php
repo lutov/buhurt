@@ -835,7 +835,8 @@ class DatabaseController extends Controller {
 
 				$name = Input::get('album_name');
 				//$alt_name = Input::get('game_alt_name');
-				$description = Input::get('album_description');
+				$tracks = Input::get('tracks');
+				$description = Input::get('album_description', ' ');
 				$bands = explode('; ', Input::get('album_band'));
 				$genres = explode('; ', Input::get('album_genre'));
 				$collections = explode('; ', Input::get('collections'));
@@ -864,11 +865,11 @@ class DatabaseController extends Controller {
 						->where('album_id', '=', $id)
 						->delete();
 
-					/*
-					DB::table('developers_games')
-						->where('game_id', '=', $id)
+					DB::table('tracks')
+						->where('album_id', '=', $id)
 						->delete();
 
+					/*
 					DB::table('publishers_games')
 						->where('game_id', '=', $id)
 						->delete();
@@ -889,20 +890,24 @@ class DatabaseController extends Controller {
 					'Nobr.super_nbsp' => 'off'
 				));
 				*/
-				$album->description = '';
+				$album->description = $description;
 				$album->year = $year;
 				$album->verified = 0; // пометка о необходимости модерации
 				$album->save();
 
 				// Tracks
-				$description = str_replace("\r", "", $description);
-				$tracks = explode("\n", $description);
+				//$description = str_replace("\r", "", $description);
+				//$tracks = explode("\n", $description);
 				foreach($tracks as $key => $track) {
-					$new_track = new Track;
-					$new_track->name = $track;
-					$new_track->order = $key+1;
-					$new_track->album_id = $album->id;
-					$new_track->save();
+
+					if(!empty($track)) {
+						$new_track = new Track;
+						$new_track->name = $track;
+						$new_track->order = $key + 1;
+						$new_track->album_id = $album->id;
+						$new_track->save();
+					}
+
 				}
 
 

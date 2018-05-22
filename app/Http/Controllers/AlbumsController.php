@@ -111,7 +111,8 @@ class AlbumsController extends Controller {
 		$album = Album::find($id);
 
 		if(count($album)) {
-			$tracks = $album->tracks;
+			
+			$tracks = $album->tracks()->orderBy('order')->get();
 			//$publishers = $album->publisher;
 			$bands = $album->bands()->orderBy('name')->get();
 			$genres = $album->genres; $genres = $genres->sortBy('name')->reverse();

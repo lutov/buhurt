@@ -224,6 +224,16 @@
 				{!! Form::hidden('section', $value = 'albums') !!}
 				<p>{!! Form::text('album_name', $value = Input::get('album_name', ''), $attributes = array('placeholder' => 'Название альбома', 'id' => 'album_name', 'class' => 'form-control w-100')) !!}</p>
                 <p>{!! Form::text('album_band', $value = Input::get('album_band', ''), $attributes = array('placeholder' => 'Авторы и исполнители', 'class' => 'form-control w-100', 'id' => 'album_band')) !!}</p>
+
+                <ol id="tracks">
+					<?php
+					    $tracks = '';
+					    for($i = 0; $i < 9; $i++) {$tracks .= '<li><input type="text" class="form-control w-100 mb-3" name="tracks[]" placeholder="Трек" /></li>';}
+					    echo $tracks;
+					?>
+                </ol>
+                <p><input type="button" class="btn btn-secondary" value="Добавить трек" onclick="add_track()"></p>
+
                 <p>{!! Form::textarea('album_description', $value = null, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'album_description')) !!}</p>
 				<p>{!! Form::text('album_genre', $value = Input::get('album_genre', ''), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'album_genre')) !!}</p>
 				<p>{!! Form::text('album_year', $value = Input::get('album_year', ''), $attributes = array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>

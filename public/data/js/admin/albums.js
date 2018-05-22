@@ -32,3 +32,12 @@ $(document).ready(function(){
     });
 
 });
+
+function add_track() {
+
+    var block = $('#tracks');
+    var element = '<li><input type="text" class="form-control w-100 mb-3" name="tracks[]" placeholder="Трек" value="" /></li>';
+
+    block.append(element);
+
+}
