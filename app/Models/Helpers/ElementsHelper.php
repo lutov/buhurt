@@ -740,6 +740,12 @@ class ElementsHelper {
 					$element_body .= '<li>'.DatatypeHelper::objectToJsArray($info['tracks'], '</li><li>', true).'</li>';
 					$element_body .= '</ol>';
 
+					$element_body .= '<div class="btn-group">';
+					$element_body .= DummyHelper::getExtLink('yandex_music', $element->name);
+					$element_body .= DummyHelper::getExtLink('google_play', $element->name);
+					//$element_body .= DummyHelper::getExtLink('discogs', $element->name);
+					$element_body .= '</div>';
+
 				}
 
 				if(('films' == $section) && RolesHelper::isAdmin($request)) {

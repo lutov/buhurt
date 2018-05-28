@@ -132,6 +132,14 @@ class DummyHelper {
 				$site_name = 'Фантлаб';
 				break;
 
+			case 'google_play': // https://play.google.com/store/search?q=евангелион&c=music
+				$protocol = 'https';
+				$url = 'play.google.com/store/search';
+				$query = 'c=music&q';
+				$target = '_blank';
+				$site_name = 'Google Play';
+				break;
+
 			default:
 				$protocol = 'http';
 				$url = $site;

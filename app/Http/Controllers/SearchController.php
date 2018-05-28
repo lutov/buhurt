@@ -88,10 +88,52 @@ class SearchController extends Controller {
 									
 									<p>
 									Быстро создать
-									<a href="/admin/q_add/books/?new_name='.urlencode($search).'">книгу</a>,
-									<a href="/admin/q_add/films/?new_name='.urlencode($search).'">фильм</a>,
-									<a href="/admin/q_add/games/?new_name='.urlencode($search).'">игру</a>,
-									<a href="/admin/q_add/albums/?new_name='.urlencode($search).'">альбом</a>
+									<ol>
+									
+										<li>
+											<a href="/admin/q_add/books/?new_name='.urlencode($search).'">Книгу</a>
+											<ul>
+											
+												<li>
+													<a href="/admin/q_add/books/?new_name='.urlencode($search).'&template=marvel_book">
+														Marvel Comics
+													</a>
+												</li>
+											
+												<li>
+													<a href="/admin/q_add/books/?new_name='.urlencode($search).'&template=dc_book">
+														DC Comics
+													</a>
+												</li>
+											
+												<li>
+													<a href="/admin/q_add/books/?new_name='.urlencode($search).'&template=image_book">
+														Image Comics
+													</a>
+												</li>
+											
+												<li>
+													<a href="/admin/q_add/books/?new_name='.urlencode($search).'&template=valiant_book">
+														Valiant Comics
+													</a>
+												</li>
+											
+											</ul>
+										</li>
+									
+										<li>
+											<a href="/admin/q_add/films/?new_name='.urlencode($search).'">Фильм</a>											
+										</li>
+									
+										<li>
+											<a href="/admin/q_add/games/?new_name='.urlencode($search).'">Игру</a>
+										</li>	
+									
+										<li>
+											<a href="/admin/q_add/albums/?new_name='.urlencode($search).'">Альбом</a>
+										</li>
+										
+									</ol>
 								';
 							} else {
 								$message .= ' Мы постараемся добавить произведение, которое вы искали, в ближайшее время.';

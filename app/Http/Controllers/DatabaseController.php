@@ -1064,13 +1064,45 @@ class DatabaseController extends Controller {
 	public function q_add(Request $request, $section = '') {
 		
 		if(RolesHelper::isAdmin($request)) {
+
 			$section_name = SectionsHelper::getSectionType($section);
+
 			$new = new $section_name;
+
 			$name = Input::get('new_name');
 			$new->name = urldecode($name);
+
+			$template = Input::get('template');
+			if(!empty($template)) {
+
+				switch ($template) {
+
+					case 'marvel_book':
+
+						break;
+
+					case 'dc_book':
+
+						break;
+
+					case 'marvel_film':
+
+						break;
+
+					case 'dc_film':
+
+						break;
+
+					default:
+
+				}
+
+			}
+
 			$new->cover = '';
 			$new->description = '';
 			$new->year = 0;
+
 			$new->save();
 			return Redirect::to('/'.$section.'/'.$new->id);
 		}

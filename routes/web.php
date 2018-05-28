@@ -28,6 +28,7 @@ Route::get('icons', array(
 Route::group(array('middleware' => 'admin'), function() {
 
 	Route::group(array('prefix' => 'admin'), function() {
+
 		Route::get('add', array('uses' => 'DatabaseController@add'));
 		Route::get('add/{section}', array('uses' => 'DatabaseController@add'));
 		Route::get('edit/{section}/{id}', array('uses' => 'DatabaseController@edit'));
