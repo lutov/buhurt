@@ -37,6 +37,7 @@ Route::group(array('middleware' => 'admin'), function() {
 
 		Route::any('transfer/persons/{id}', array('uses' => 'PersonsController@transfer'));
 		Route::any('transfer/companies/{id}', array('uses' => 'CompaniesController@transfer'));
+
 	});
 
 });
@@ -76,26 +77,22 @@ Route::any('{section}/{id}/relations', array('uses' => 'RelationsController@show
 Route::any('{section}/{id}/relations/add', array('uses' => 'RelationsController@add_relation'));
 
 // Years
-Route::group(array('prefix' => 'years'), function()
-{
+Route::group(array('prefix' => 'years'), function() {
 	Route::any('{section}/{year}', array('uses' => 'YearsController@show_item'))->where('year', '[0-9]+');
 });
 
 // genres
-Route::group(array('prefix' => 'genres'), function()
-{
+Route::group(array('prefix' => 'genres'), function() {
 	Route::any('{section}/{id}', array('uses' => 'GenresController@show_item'));
 });
 
 // platforms
-Route::group(array('prefix' => 'platforms'), function()
-{
+Route::group(array('prefix' => 'platforms'), function() {
 	Route::any('games/{id}', array('uses' => 'PlatformsController@show_item'));
 });
 
 // countries
-Route::group(array('prefix' => 'countries'), function()
-{
+Route::group(array('prefix' => 'countries'), function() {
 	Route::any('films/{id}', array('uses' => 'CountriesController@show_item'));
 });
 
@@ -112,8 +109,7 @@ Route::group(array('prefix' => 'countries'), function()
 	Route::any('films/countries/{id}', array('uses' => 'CountriesController@show_item'));
 	
 // collections
-Route::group(array('prefix' => 'collections'), function()
-{
+Route::group(array('prefix' => 'collections'), function() {
 	Route::any('{id}', array('uses' => 'CollectionsController@show_item'));
 });
 
@@ -140,8 +136,7 @@ Route::group(array('middleware' => 'auth'), function() {
 
 
 // Search
-Route::group(array('prefix' => 'search'), function()
-{
+Route::group(array('prefix' => 'search'), function() {
 	Route::get('', array('uses' => 'SearchController@everything'));
 
 	Route::get('json', array('uses' => 'SearchController@everything_json'));
@@ -165,8 +160,7 @@ Route::group(array('prefix' => 'search'), function()
 	Route::get('album_genre', array('uses' => 'SearchController@album_genre'));
 	Route::get('band_name', array('uses' => 'SearchController@band_name'));
 
-	Route::group(array('prefix' => 'advanced'), function()
-	{
+	Route::group(array('prefix' => 'advanced'), function() {
 		Route::get('', array('uses' => 'SearchController@advanced'));
 		Route::get('persons', array('uses' => 'SearchController@persons'));
 		Route::get('companies', array('uses' => 'SearchController@companies'));
@@ -181,8 +175,7 @@ Route::group(array('prefix' => 'search'), function()
 
 
 // User
-Route::group(array('prefix' => 'user'), function()
-{
+Route::group(array('prefix' => 'user'), function() {
 	Route::get('logout', array('uses' => 'UserController@logout'));
 
 	Route::group(array('middleware' => 'guest',), function() {
@@ -216,8 +209,7 @@ Route::group(array('prefix' => 'user'), function()
 Route::any('recommendations', array('uses' => 'RecommendationsController@gag'));
 
 // Comments
-Route::group(array('prefix' => 'comment'), function()
-{
+Route::group(array('prefix' => 'comment'), function() {
 	Route::post('add', array('uses' => 'CommentController@add'));
 	Route::post('edit', array('uses' => 'CommentController@edit'));
 	Route::post('delete', array('uses' => 'CommentController@delete'));
