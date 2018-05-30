@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Redirect;
@@ -11,33 +12,39 @@ class CompaniesController extends Controller {
 
 	private $prefix = 'companies';
 
-    public function show_all() {
+	public function show_all(Request $request) {
 
-		/*
-	    $persons = DB::table($this->prefix)->paginate(27);
-		$photos = array();
-		$default_photo = 0;
-		foreach($persons as $person)
-		{
-			$file_path = $_SERVER['DOCUMENT_ROOT'].'data/img/covers/'.$this->prefix.'/'.$person->id.'.jpg';
-			//echo $file_path.'<br/>';
-			if(file_exists($file_path))
-			{
-				$photos[$person->id] = $person->id;
-			}
-			else
-			{
-				$covers[$person->id] = $default_photo;
-			}
-		}
+		$section = $this->prefix;
+		$get_section = Section::where('alt_name', '=', $section)->first();
+		$ru_section = $get_section->name;
+		$type = $get_section->type;
 
-        return View::make($this->prefix.'.index', array(
-			'persons' => $persons,
-			'photos' => $photos
+		$sort = Input::get('sort', $section.'.created_at');
+		$sort_direction = Input::get('sort_direction', 'desc');
+		$limit = 28;
+
+		$sort_options = array(
+			$section.'.created_at' => 'Время добавления',
+			$section.'.name' => 'Название',
+			$section.'.alt_name' => 'Оригинальное название',
+			$section.'.year' => 'Год'
+		);
+
+		$elements = Company::orderBy($sort, $sort_direction)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.index', array(
+			'request' => $request,
+			'elements' => $elements,
+			'section' => $section,
+			'ru_section' => $ru_section,
+			//'sort_options' => $sort_options,
+			//'wanted' => $wanted,
+			//'not_wanted' => $not_wanted,
 		));
-		*/
-		return Redirect::home()->with('message', 'Полный список компаний в разработке');
-    }
+
+	}
 
 	/*
     public function show_collections()
@@ -51,8 +58,10 @@ class CompaniesController extends Controller {
     }
 	*/
 	
-    public function show_item(Request $request, $id)
-    {
+    public function show_item(Request $request, $id) {
+
+    	$section = 'companies';
+
 		$company = Company::find($id);
 
 		if(isset($company->id)) {
@@ -78,8 +87,9 @@ class CompaniesController extends Controller {
 
 			return View::make($this->prefix . '.item', array(
 				'request' => $request,
-				'company' => $company,
-				'company_logo' => $logo,
+				'section' => $section,
+				'element' => $company,
+				'cover' => $logo,
 				'books_published' => $books_published,
 				'games_developed' => $games_developed,
 				'games_published' => $games_published,

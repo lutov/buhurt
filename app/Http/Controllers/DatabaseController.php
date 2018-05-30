@@ -120,6 +120,20 @@ class DatabaseController extends Controller {
 				$countries = array();
 				break;
 
+			case 'persons':
+				$element = Person::find($id);
+				$genres = array();
+				$platforms = array();
+				$countries = array();
+				break;
+
+			case 'companies':
+				$element = Company::find($id);
+				$genres = array();
+				$platforms = array();
+				$countries = array();
+				break;
+
 			default:
 				$element = array();
 				$genres = array();
@@ -141,7 +155,7 @@ class DatabaseController extends Controller {
 			$element_cover = $default_cover;
 		}
 
-		return View::make('database.edit', array(
+		return View::make('database.edit.'.$section, array(
 			'request' => $request,
 			'section' => $section,
 			'element' => $element,
@@ -196,6 +210,22 @@ class DatabaseController extends Controller {
 					'cover' => array('image', 'max:100')
 				)
 			);
+		} elseif('persons' == $section) {
+			$validator = Validator::make(
+				$_POST,
+				array(
+					'name' => array('required', 'min:1'),
+					'cover' => array('image', 'max:100')
+				)
+			);
+		}  elseif('companies' == $section) {
+			$validator = Validator::make(
+				$_POST,
+				array(
+					'name' => array('required', 'min:1'),
+					'cover' => array('image', 'max:100')
+				)
+			);
 		} else {
 			$validator = new Validator();
 		}
@@ -225,6 +255,14 @@ class DatabaseController extends Controller {
 			} elseif('albums' == $section) {
 
 				return $this->saveAlbum();
+
+			} elseif('persons' == $section) {
+
+				return $this->savePerson();
+
+			} elseif('companies' == $section) {
+
+				return $this->saveCompany();
 
 			} else {
 
@@ -516,7 +554,7 @@ class DatabaseController extends Controller {
 
 		$name = Input::get('game_name');
 		$alt_name = Input::get('game_alt_name');
-		$description = Input::get('game_description');
+		$description = Input::get('game_description', '');
 		$platforms = explode('; ', Input::get('game_platform'));
 		$genres = explode('; ', Input::get('game_genre'));
 		$collections = explode('; ', Input::get('collections'));
@@ -740,17 +778,97 @@ class DatabaseController extends Controller {
 	}
 
 	/**
-	 * @param string $description
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	private function savePerson() {
+
+		$type = 'Person';
+		$section = 'persons';
+
+		$name = Input::get('name', '');
+		$description = Input::get('description', ' ');
+
+		// general
+		$action = Input::get('action', '');
+		if('edit' == $action) {
+			$id = Input::get('element_id');
+			$element = $type::find($id);
+		} else {
+			$element = new $type();
+		}
+		$element->name = $name;
+		$element->description = $this->prepareDescription($description);
+		$element->save();
+
+		$this->setCover($section, $element->id);
+
+		if('edit' != $action) {
+			// uploader
+			$this->setUploader($type, $element->id);
+		}
+
+		//print_r($book);
+		return $this->returnSuccess($section, $element->id);
+
+	}
+
+	/**
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	private function saveCompany() {
+
+		$type = 'Company';
+		$section = 'companies';
+
+		$name = Input::get('name', '');
+		$description = Input::get('description', ' ');
+
+		// general
+		$action = Input::get('action', '');
+		if('edit' == $action) {
+			$id = Input::get('element_id');
+			$element = $type::find($id);
+		} else {
+			$element = new $type();
+		}
+		$element->name = $name;
+		$element->description = $this->prepareDescription($description);
+		$element->save();
+
+		$this->setCover($section, $element->id);
+
+		if('edit' != $action) {
+			// uploader
+			$this->setUploader($type, $element->id);
+		}
+
+		//print_r($book);
+		return $this->returnSuccess($section, $element->id);
+
+	}
+
+	/**
+	 * @param $description
 	 * @return string
 	 */
-	private function prepareDescription(string $description = '') {
+	private function prepareDescription($description) {
 
-		return EMTypograph::fast_apply($description, array(
-			'Text.paragraphs' => 'off',
-			'Text.breakline' => 'off',
-			'OptAlign.all' => 'off',
-			'Nobr.super_nbsp' => 'off'
-		));
+		//die(print_r($description));
+
+		if(!empty($description)) {
+
+			return EMTypograph::fast_apply($description, array(
+				'Text.paragraphs' => 'off',
+				'Text.breakline' => 'off',
+				'OptAlign.all' => 'off',
+				'Nobr.super_nbsp' => 'off'
+			));
+
+		} else {
+
+			return ' ';
+
+		}
 
 	}
 
