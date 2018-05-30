@@ -641,7 +641,7 @@ class DatabaseController extends Controller {
 		$name = Input::get('album_name');
 		//$alt_name = Input::get('game_alt_name');
 		$tracks = Input::get('tracks');
-		$description = Input::get('album_description', ' ');
+		$description = '';//Input::get('album_description', ' ');
 		$bands = explode('; ', Input::get('album_band'));
 		$genres = explode('; ', Input::get('album_genre'));
 		$collections = explode('; ', Input::get('collections'));
