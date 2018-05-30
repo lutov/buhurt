@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Helpers\RolesHelper;
+use App\Models\Section;
 use DB;
 use Illuminate\Http\Request;
 use View;
@@ -16,40 +17,49 @@ class PersonsController extends Controller {
 
     public function show_all(Request $request) {
 
-	    $persons = DB::table($this->prefix)->paginate(27);
-		$photos = array();
-		$default_photo = 0;
-		foreach($persons as $person)
-		{
-			$file_path = $_SERVER['DOCUMENT_ROOT'].'data/img/covers/'.$this->prefix.'/'.$person->id.'.jpg';
-			//echo $file_path.'<br/>';
-			if(file_exists($file_path))
-			{
-				$photos[$person->id] = $person->id;
-			}
-			else
-			{
-				$covers[$person->id] = $default_photo;
-			}
-		}
+		$section = $this->prefix;
+		$get_section = Section::where('alt_name', '=', $section)->first();
+		$ru_section = $get_section->name;
+		$type = $get_section->type;
 
-        return View::make($this->prefix.'.index', array(
-			'persons' => $persons,
-			'photos' => $photos
+		$sort = Input::get('sort', $section.'.created_at');
+		$sort_direction = Input::get('sort_direction', 'desc');
+		$limit = 28;
+
+		$sort_options = array(
+			$section.'.created_at' => 'Время добавления',
+			$section.'.name' => 'Название',
+			$section.'.alt_name' => 'Оригинальное название',
+			$section.'.year' => 'Год'
+		);
+
+		$elements = Person::orderBy($sort, $sort_direction)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.index', array(
+			'request' => $request,
+			'elements' => $elements,
+			'section' => $section,
+			'ru_section' => $ru_section,
+			//'sort_options' => $sort_options,
+			//'wanted' => $wanted,
+			//'not_wanted' => $not_wanted,
 		));
+
     }
 	
-    public function show_collections()
-    {
+    public function show_collections() {
         return View::make($this->prefix.'.collections');
     }
 	
-    public function show_collection()
-    {
+    public function show_collection() {
         return View::make($this->prefix.'.collection');
     }
 	
     public function show_item(Request $request, $id) {
+
+    	$section = 'persons';
 
 		$person = Person::find($id);
 
@@ -146,10 +156,13 @@ class PersonsController extends Controller {
 				'year' => 'Год'
 			);
 
+			$comments = array();
+
 			return View::make($this->prefix . '.item', array(
 				'request' => $request,
-				'person' => $person,
-				'photo' => $photo,
+				'section' => $section,
+				'element' => $person,
+				'cover' => $photo,
 				'books' => $books,
 				'directions' => $directions,
 				'actions' => $actions,
@@ -159,6 +172,7 @@ class PersonsController extends Controller {
 				'all_books' => $all_books,
 				'all_genres' => $all_genres,
 				'top_genres' => $top_genres,
+				'comments' => $comments,
 			));
 		}
 		else

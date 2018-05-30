@@ -13,6 +13,8 @@ class Company extends Eloquent  {
 	 */
 	protected $table = 'companies';
 
+	protected $morphClass = 'Company';
+
 	/**
 	 * Record remains in the database, but marked with a special label
 	 *

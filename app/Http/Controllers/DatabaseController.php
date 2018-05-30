@@ -290,7 +290,7 @@ class DatabaseController extends Controller {
 				} else {
 					$new_writer = new Person();
 					$new_writer->name = $writer;
-					$new_writer->bio = '';
+					$new_writer->description = '';
 					$new_writer->save();
 
 					$new_writer->books()->save($book);
@@ -411,7 +411,7 @@ class DatabaseController extends Controller {
 				} else {
 					$new_director = new Person();
 					$new_director->name = $director;
-					$new_director->bio = '';
+					$new_director->description = '';
 					$new_director->save();
 
 					$new_director->directions()->save($film);
@@ -428,7 +428,7 @@ class DatabaseController extends Controller {
 				} else {
 					$new_screenwriter = new Person();
 					$new_screenwriter->name = $screenwriter;
-					$new_screenwriter->bio = '';
+					$new_screenwriter->description = '';
 					$new_screenwriter->save();
 
 					$new_screenwriter->screenplays()->save($film);
@@ -445,7 +445,7 @@ class DatabaseController extends Controller {
 				} else {
 					$new_producer = new Person();
 					$new_producer->name = $producer;
-					$new_producer->bio = '';
+					$new_producer->description = '';
 					$new_producer->save();
 
 					$new_producer->productions()->save($film);
@@ -462,7 +462,7 @@ class DatabaseController extends Controller {
 				} else {
 					$new_actor = new Person();
 					$new_actor->name = $actor;
-					$new_actor->bio = '';
+					$new_actor->description = '';
 					$new_actor->save();
 
 					$new_actor->actions()->save($film);

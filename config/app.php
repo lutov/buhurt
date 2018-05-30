@@ -256,7 +256,9 @@ return [
 		'Film' => App\Models\Film::class,
 		'Game' => App\Models\Game::class,
 		'Album' => App\Models\Album::class,
-		
+		'Person' => App\Models\Person::class,
+		'Company' => App\Models\Company::class,
+
     ],
 
 ];

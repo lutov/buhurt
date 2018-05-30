@@ -475,13 +475,19 @@ class ElementsHelper {
 		$element_title .= '<div class="row mt-3">';
 			$element_title .= '<div class="col-md-12">';
 
-			if(Auth::check()) {
+			if(isset($info['rate'])) {
 
-				$element_title .= '<div><input class="main_rating" name="val" value="'.$info['rate'].'" type="text"></div>';
+				if (Auth::check()) {
+
+					$element_title .= '<div><input class="main_rating" name="val" value="' . $info['rate'] . '" type="text"></div>';
+
+				} else {
+
+					$element_title .= DummyHelper::regToRate();
+
+				}
 
 			} else {
-
-				$element_title .= DummyHelper::regToRate();
 
 			}
 
@@ -527,7 +533,7 @@ class ElementsHelper {
 
 				}
 
-				if(count($info['genres'])) {
+				if(isset($info['genres']) && count($info['genres'])) {
 
 					$element_title .= DatatypeHelper::collectionToString(
 						$info['genres'],
@@ -663,7 +669,7 @@ class ElementsHelper {
 
 						$element_body .= '<div class="btn-group">';
 
-						if (RolesHelper::isAdmin($request)) {
+						if(RolesHelper::isAdmin($request)) {
 
 							$class = 'btn btn-sm btn-outline-success';
 							$href = '/admin/edit/' . $section . '/' . $element->id;
@@ -673,7 +679,7 @@ class ElementsHelper {
 
 						}
 
-						if (1 === $info['wanted']) {
+						if((isset($info['wanted'])) && (1 === $info['wanted'])) {
 							$class = 'btn btn-sm btn-success';
 							$handler = 'onclick="unlike(\'' . $section . '\', \'' . $element->id . '\')"';
 						} else {
@@ -684,7 +690,7 @@ class ElementsHelper {
 						$element_body .= '&#10084;';
 						$element_body .= '</button>';
 
-						if (1 === $info['not_wanted']) {
+						if((isset($info['not_wanted'])) && (1 === $info['not_wanted'])) {
 							$class = 'btn btn-sm btn-danger';
 							$handler = 'onclick="undislike(\'' . $section . '\', \'' . $element->id . '\')"';
 						} else {
@@ -732,6 +738,12 @@ class ElementsHelper {
 					);
 					$element_body .= '</p>';
 
+				}
+
+				if(isset($info['top_genres']) && count($info['top_genres'])) {
+					$element_body .= '<p>Жанры: ';
+					$element_body .= DatatypeHelper::arrayToString($info['top_genres'], ', ', '/genres/books/');
+					$element_body .= '</p>';
 				}
 
 				if(isset($info['tracks']) && count($info['tracks'])) {
@@ -784,7 +796,7 @@ class ElementsHelper {
 		$element_footer .= '<div class="row mt-3">';
 			$element_footer .= '<div class="col-md-12">';
 
-			if(count($info['collections'])) {
+			if(isset($info['collections']) && count($info['collections'])) {
 				$element_footer .= '<p>';
 				$element_footer .= 'Коллекции: ';
 				$element_footer .= DatatypeHelper::collectionToString(
@@ -798,7 +810,7 @@ class ElementsHelper {
 				$element_footer .= '</p>';
 			}
 
-			if(0 < $info['relations']) {
+			if((isset($info['relations'])) && (0 < $info['relations'])) {
 				$element_footer .= '<p>';
 					$element_footer .= '<a href="/'.$section.'/'.$element->id.'/relations/">';
 						$element_footer .= 'Связи ';
@@ -818,7 +830,7 @@ class ElementsHelper {
 
 		}
 
-        if(count($info['similar'])) {
+        if(isset($info['similar']) && count($info['similar'])) {
 
 			$element_footer .= '<h3>Похожие</h3>';
 			$element_footer .= ElementsHelper::getElements($request, $info['similar'], $section, $options);

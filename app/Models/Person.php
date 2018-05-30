@@ -13,6 +13,8 @@ class Person extends Eloquent {
 	 */
 	protected $table = 'persons';
 
+	protected $morphClass = 'Person';
+
 	/**
 	 * Record remains in the database, but marked with a special label
 	 *

@@ -1,12 +1,12 @@
 @extends('layouts.default')
 
-@section('title'){!! $person->name !!}@stop
+@section('title'){!! $element->name !!}@stop
 
 @section('subtitle')@stop
 
 @section('content')
 
-	<section class="text-center">
+	<section class="text-center mb-5">
 		<h1 class="pt-5">@yield('title')</h1>
 		<h2 class="pb-3">@yield('subtitle')</h2>
 		<ul class="list-inline">
@@ -21,21 +21,25 @@
 		</ul>
 	</section>
 
-	<div class="row mt-5 align-top">
+	<div itemscope itemtype="http://schema.org/Person">
 
-		<div class="col-md-3">
+		<?php
+		$info = array(
+			//'rate' => $rate,
+			//'wanted' => $wanted,
+			//'not_wanted' => $not_wanted,
+			//'genres' => $genres,
+			'top_genres' => $top_genres,
+			'cover' => $cover,
+			//'similar' => $similar,
+			//'collections' => $collections,
+			//'relations' => $relations,
+			//'writers' => $writers,
+			//'publishers' => $publishers,
+		);
+		?>
 
-			@if(0 !== $photo) <img src="/data/img/covers/persons/{!! $photo !!}.jpg" alt="{!! $person->name !!}" class="img-fluid" /> @endif
-
-		</div>
-
-		<div class="col-md-9">
-
-			@if(!empty($person->bio)) <p>{!! nl2br($person->bio) !!}</p> @endif
-
-			@if(count($books))<p>Жанры: {!! DatatypeHelper::arrayToString($top_genres, ', ', '/genres/books/') !!}</p>@endif
-
-		</div>
+		{!! ElementsHelper::getCardBody($request, $section, $element, $info) !!}
 
 	</div>
 
@@ -122,7 +126,7 @@
 	@if(RolesHelper::isAdmin($request))
 
 		<div id="transfer" class="form-group">
-		{!! Form::open(array('action' => array('PersonsController@transfer', $person->id), 'class' => 'transfer', 'method' => 'POST', 'files' => false)) !!}
+		{!! Form::open(array('action' => array('PersonsController@transfer', $element->id), 'class' => 'transfer', 'method' => 'POST', 'files' => false)) !!}
 		<p>{!! Form::text('recipient_id', $value = '', $attributes = array(
 			'placeholder' => 'Преемник',
 			'id' => 'recipient',
