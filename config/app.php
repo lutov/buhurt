@@ -258,6 +258,8 @@ return [
 		'Album' => App\Models\Album::class,
 		'Person' => App\Models\Person::class,
 		'Company' => App\Models\Company::class,
+		'Collection' => App\Models\Collection::class,
+		'Band' => App\Models\Band::class,
 
     ],
 

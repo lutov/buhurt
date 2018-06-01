@@ -64,7 +64,10 @@
                         <div class="btn-group">
                             {!! DummyHelper::getExtLink('kinopoisk', $element->name); !!}
                             {!! DummyHelper::getExtLink('wiki', $element->name); !!}
+                        </div>
+                        <div class="btn-group mt-3">
                             {!! DummyHelper::getExtLink('yandex', $element->name); !!}
+                            {!! DummyHelper::getExtLink('yandex_images', $element->name); !!}
                         </div>
                     </div>
                 </div>

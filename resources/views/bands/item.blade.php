@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title'){!! $band->name !!}@stop
+@section('title'){!! $element->name !!}@stop
 
 @section('subtitle')@stop
 
@@ -11,19 +11,15 @@
 		<h2 class="mb-3">@yield('subtitle')</h2>
 	</section>
 
-	<div class="row mt-5 align-top">
+	<div itemscope itemtype="http://schema.org/MusicGroup" class="mt-5">
 
-		<div class="col-md-3">
+		<?php
+		$info = array(
+			'cover' => $cover,
+		);
+		?>
 
-			@if(0 !== $photo) <img src="/data/img/covers/bands/{!! $photo !!}.jpg" alt="{!! $band->name !!}" class="" /> @endif
-
-		</div>
-
-		<div class="col-md-9">
-
-			@if(!empty($band->bio)) <p>{!! nl2br($band->bio) !!}</p> @endif
-
-		</div>
+		{!! ElementsHelper::getCardBody($request, $section, $element, $info) !!}
 
 	</div>
 

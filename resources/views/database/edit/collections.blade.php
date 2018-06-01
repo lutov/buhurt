@@ -33,11 +33,11 @@
 
             <div class="col-md-9">
 
-                {!! Form::open(array('action' => 'DatabaseController@save', 'class' => 'add_person', 'method' => 'POST', 'files' => true)) !!}
+                {!! Form::open(array('action' => 'DatabaseController@save', 'class' => 'add_company', 'method' => 'POST', 'files' => true)) !!}
                 {!! Form::hidden('action', $value = 'edit') !!}
-                {!! Form::hidden('section', $value = 'persons') !!}
+                {!! Form::hidden('section', $value = 'collections') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
-                <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Имя', 'id' => 'game_name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название', 'id' => 'game_name', 'class' => 'form-control w-100')) !!}</p>
                 <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'game_description')) !!}</p>
                 <p><b>Обложка</b> {!! Form::file('cover'); !!}</p>
                 {!! Form::submit('Сохранить', $attributes = array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
@@ -66,7 +66,7 @@
 
         </div>
 
-        <!--script type="text/javascript" src="/data/js/admin/persons.js"></script-->
+        <!--script type="text/javascript" src="/data/js/admin/companies.js"></script-->
 
     @else
         {!! DummyHelper::regToAdd() !!}

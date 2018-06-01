@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Section;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -13,20 +14,60 @@ use App\Models\Game;
 
 class CollectionsController extends Controller {
 
-    public function show_all() {
+	private $prefix = 'collections';
 
-		/*
-	    $genres = DB::table($this->prefix);
-        return View::make('books.genres', array(
-			'books' => $genres
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function show_all(Request $request) {
+
+		$section = $this->prefix;
+
+		$get_section = Section::where('alt_name', '=', $section)->first();
+		$ru_section = $get_section->name;
+		$type = $get_section->type;
+
+		$sort = Input::get('sort', $section.'.name');
+		$sort_direction = Input::get('sort_direction', 'asc');
+		$limit = 28;
+
+		$sort_options = array(
+			$section.'.created_at' => 'Время добавления',
+			$section.'.name' => 'Название',
+			$section.'.alt_name' => 'Оригинальное название',
+			$section.'.year' => 'Год'
+		);
+
+		$elements = Collection::orderBy($sort, $sort_direction)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.index', array(
+			'request' => $request,
+			'elements' => $elements,
+			'section' => $section,
+			'ru_section' => $ru_section,
 		));
-		*/
 
-    }
-	
+	}
+
+	/**
+	 * @param Request $request
+	 * @param $id
+	 * @return \Illuminate\Contracts\View\View
+	 */
     public function show_item(Request $request, $id) {
 
+		$section = $this->prefix;
+
 		$collection = Collection::find($id);
+
+		$cover = 0;
+		$file_path = public_path() . '/data/img/covers/'.$section.'/'.$id.'.jpg';
+		if (file_exists($file_path)) {
+			$cover = $id;
+		}
 
 		$sort_direction = 'asc';
 		$limit = 28;
@@ -66,7 +107,9 @@ class CollectionsController extends Controller {
 			'books' => $books,
 			'films' => $films,
 			'games' => $games,
-			'collection' => $collection
+			'section' => $section,
+			'element' => $collection,
+			'cover' => $cover,
 		));
     }
 	

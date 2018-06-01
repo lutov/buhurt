@@ -84,6 +84,9 @@
                             {!! DummyHelper::getExtLink('yandex_music', $element->name); !!}
                             {!! DummyHelper::getExtLink('discogs', $element->name); !!}
                         </div>
+                        <div class="btn-group mt-3">
+                            {!! DummyHelper::getExtLink('yandex_images', $element->name); !!}
+                        </div>
                     </div>
                 </div>
 

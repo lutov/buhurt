@@ -1,52 +1,26 @@
 @extends('layouts.default')
 
-@section('title')
-	Книги
-@stop
+@section('title'){{$ru_section}}@stop
 
-@section('subtitle')
-
-@stop
+@section('subtitle')@stop
 
 @section('content')
 
-  	<h1>@yield('title')</h1>
-    <h2>@yield('subtitle')</h2>
+    <section class="text-center">
+        <h1 class="pt-5">@yield('title')</h1>
+        <h2 class="pb-3">@yield('subtitle')</h2>
+    </section>
 
-    <ul class="books">
-        <?php
+	<?php
+	$options = array(
+		'header' => true,
+		'footer' => true,
+		'paginate' => true,
+		//'wanted' => $wanted,
+		//'not_wanted' => $not_wanted,
+	);
+	?>
 
-            //echo '<pre>'.print_r($books, true).'</pre>';
-
-            $books_list = '';
-			$i = 0;
-
-            foreach($books as $book)
-            {
-            	$books_list .= '<li';
-            	if(0 == ($i%3))
-            	{
-            		$books_list .= ' class="wide_book"';
-            	}
-				$books_list .= '>';
-				$books_list .= '<a href="/base/books/'.$book->id.'">';
-                    $books_list .= '<p class="book_name">';
-                    	$books_list .= '<strong>'.preg_replace('/ \(.+\)?/i', '', $book->name).'</strong>';
-	                    //$books_list .= ', ';
-                    	//$books_list .= '('.$book->year.')';
-                   	$books_list .= '</p>';
-                    $books_list .= '<img src="/data/img/covers/books/'.$covers[$book->id].'.jpg" alt="'.$book->name.' ('.$book->year.')" />';
-                    $books_list .= '<p class="book_annotation_short">'.Helpers::words_limit($book->annotation, 35).'</p>';
-                $books_list .= '</a>';
-                $books_list .= '</li>';
-                $i++;
-            }
-
-            echo $books_list;
-
-        ?>
-    </ul>
-
-    <?php echo $books->links(); ?>
+    {!! ElementsHelper::getElements($request, $elements, $section, $options) !!}
 
 @stop

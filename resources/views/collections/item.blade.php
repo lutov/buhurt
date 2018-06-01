@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title'){!! $collection->name !!}@stop
+@section('title'){!! $element->name !!}@stop
 
 @section('subtitle')@stop
 
@@ -18,19 +18,15 @@
 		</ul>
 	</section>
 
-	<div class="row mt-5 align-top">
+	<div itemscope itemtype="http://schema.org/CollectionPage">
 
-		<div class="col-md-3">
+		<?php
+		$info = array(
+			'cover' => $cover,
+		);
+		?>
 
-			@if(!empty($cover)) <img src="/data/img/collections/{!! $section !!}/{!! $cover !!}.jpg" alt="{!! $collection->name !!}" class="img-fluid" /> @endif
-
-		</div>
-
-		<div class="col-md-9">
-
-			@if(!empty($collection->description)) <p>{!! nl2br($collection->description) !!}</p> @endif
-
-		</div>
+		{!! ElementsHelper::getCardBody($request, $section, $element, $info) !!}
 
 	</div>
 

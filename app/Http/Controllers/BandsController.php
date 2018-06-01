@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Section;
 use DB;
 use Illuminate\Http\Request;
 use View;
@@ -11,31 +12,41 @@ class BandsController extends Controller {
 
 	private $prefix = 'bands';
 
-    public function show_all() {
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function show_all(Request $request) {
 
-	    $bands = DB::table($this->prefix)->paginate(27);
-		$photos = array();
-		$default_photo = 0;
-		foreach($bands as $band)
-		{
-			$file_path = $_SERVER['DOCUMENT_ROOT'].'data/img/covers/'.$this->prefix.'/'.$band->id.'.jpg';
-			//echo $file_path.'<br/>';
-			if(file_exists($file_path))
-			{
-				$photos[$band->id] = $band->id;
-			}
-			else
-			{
-				$covers[$band->id] = $default_photo;
-			}
-		}
+		$section = $this->prefix;
 
-        return View::make($this->prefix.'.index', array(
-			'bands' => $bands,
-			'photos' => $photos
+		$get_section = Section::where('alt_name', '=', $section)->first();
+		$ru_section = $get_section->name;
+		$type = $get_section->type;
+
+		$sort = Input::get('sort', $section.'.created_at');
+		$sort_direction = Input::get('sort_direction', 'desc');
+		$limit = 28;
+
+		$sort_options = array(
+			$section.'.created_at' => 'Время добавления',
+			$section.'.name' => 'Название',
+			$section.'.alt_name' => 'Оригинальное название',
+			$section.'.year' => 'Год'
+		);
+
+		$elements = Band::orderBy($sort, $sort_direction)
+			->paginate($limit)
+		;
+
+		return View::make($this->prefix.'.index', array(
+			'request' => $request,
+			'elements' => $elements,
+			'section' => $section,
+			'ru_section' => $ru_section,
 		));
 
-    }
+	}
 	
     public function show_collections() {
 
@@ -50,6 +61,8 @@ class BandsController extends Controller {
     }
 	
     public function show_item(Request $request, $id) {
+
+		$section = $this->prefix;
 
 		$band = Band::find($id);
 
@@ -78,8 +91,9 @@ class BandsController extends Controller {
 
 			return View::make($this->prefix . '.item', array(
 				'request' => $request,
-				'band' => $band,
-				'photo' => $photo,
+				'section' => $section,
+				'element' => $band,
+				'cover' => $photo,
 				'albums' => $albums,
 				'members' => $members,
 				//'actions' => $actions,

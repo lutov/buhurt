@@ -1,18 +1,26 @@
 @extends('layouts.default')
 
-@section('title')
-	Группы
-@stop
+@section('title'){{$ru_section}}@stop
 
-@section('subtitle')
-
-@stop
+@section('subtitle')@stop
 
 @section('content')
 
-  	<h1>@yield('title')</h1>
-    <h2>@yield('subtitle')</h2>
+	<section class="text-center">
+		<h1 class="pt-5">@yield('title')</h1>
+		<h2 class="pb-3">@yield('subtitle')</h2>
+	</section>
 
-    {!! Helpers::get_elements($bands, $section, $sort_options, true, true) !!}
+	<?php
+	$options = array(
+		'header' => true,
+		'footer' => true,
+		'paginate' => true,
+		//'wanted' => $wanted,
+		//'not_wanted' => $not_wanted,
+	);
+	?>
+
+	{!! ElementsHelper::getElements($request, $elements, $section, $options) !!}
 
 @stop

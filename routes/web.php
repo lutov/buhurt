@@ -95,21 +95,10 @@ Route::group(array('prefix' => 'platforms'), function() {
 Route::group(array('prefix' => 'countries'), function() {
 	Route::any('films/{id}', array('uses' => 'CountriesController@show_item'));
 });
-
-	// Years
-	Route::any('{section}/years/{year}', array('uses' => 'YearsController@show_item'))->where('year', '[0-9]+');
-
-	// genres
-	Route::any('{section}/genres/{id}', array('uses' => 'GenresController@show_item'));
-
-	// platforms
-	Route::any('games/platforms/{id}', array('uses' => 'PlatformsController@show_item'));
-
-	// countries
-	Route::any('films/countries/{id}', array('uses' => 'CountriesController@show_item'));
 	
 // collections
 Route::group(array('prefix' => 'collections'), function() {
+	Route::any('/', array('uses' => 'CollectionsController@show_all'));
 	Route::any('{id}', array('uses' => 'CollectionsController@show_item'));
 });
 

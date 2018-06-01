@@ -13,6 +13,8 @@ class Collection extends Eloquent {
 	 */
 	protected $table = 'collections';
 
+	protected $morphClass = 'Collection';
+
 	/**
 	 * Record remains in the database, but marked with a special label
 	 *

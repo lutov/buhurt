@@ -13,6 +13,8 @@ class Band extends Eloquent {
 	 */
 	protected $table = 'bands';
 
+	protected $morphClass = 'Band';
+
 	/**
 	 * Record remains in the database, but marked with a special label
 	 *

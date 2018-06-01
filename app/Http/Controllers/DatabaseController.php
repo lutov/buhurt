@@ -134,6 +134,20 @@ class DatabaseController extends Controller {
 				$countries = array();
 				break;
 
+			case 'collections':
+				$element = Collection::find($id);
+				$genres = array();
+				$platforms = array();
+				$countries = array();
+				break;
+
+			case 'bands':
+				$element = Band::find($id);
+				$genres = array();
+				$platforms = array();
+				$countries = array();
+				break;
+
 			default:
 				$element = array();
 				$genres = array();
@@ -226,6 +240,22 @@ class DatabaseController extends Controller {
 					'cover' => array('image', 'max:100')
 				)
 			);
+		}  elseif('collections' == $section) {
+			$validator = Validator::make(
+				$_POST,
+				array(
+					'name' => array('required', 'min:1'),
+					'cover' => array('image', 'max:100')
+				)
+			);
+		}  elseif('bands' == $section) {
+			$validator = Validator::make(
+				$_POST,
+				array(
+					'name' => array('required', 'min:1'),
+					'cover' => array('image', 'max:100')
+				)
+			);
 		} else {
 			$validator = new Validator();
 		}
@@ -263,6 +293,14 @@ class DatabaseController extends Controller {
 			} elseif('companies' == $section) {
 
 				return $this->saveCompany();
+
+			} elseif('collections' == $section) {
+
+				return $this->saveCollection();
+
+			} elseif('bands' == $section) {
+
+				return $this->saveBand();
 
 			} else {
 
@@ -371,7 +409,7 @@ class DatabaseController extends Controller {
 			$this->setUploader($type, $book->id);
 		}
 
-		return $this->returnSuccess();
+		return $this->returnSuccess($section, $book->id);
 
 	}
 
@@ -819,6 +857,76 @@ class DatabaseController extends Controller {
 
 		$type = 'Company';
 		$section = 'companies';
+
+		$name = Input::get('name', '');
+		$description = Input::get('description', ' ');
+
+		// general
+		$action = Input::get('action', '');
+		if('edit' == $action) {
+			$id = Input::get('element_id');
+			$element = $type::find($id);
+		} else {
+			$element = new $type();
+		}
+		$element->name = $name;
+		$element->description = $this->prepareDescription($description);
+		$element->save();
+
+		$this->setCover($section, $element->id);
+
+		if('edit' != $action) {
+			// uploader
+			$this->setUploader($type, $element->id);
+		}
+
+		//print_r($book);
+		return $this->returnSuccess($section, $element->id);
+
+	}
+
+	/**
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	private function saveCollection() {
+
+		$type = 'Collection';
+		$section = 'collections';
+
+		$name = Input::get('name', '');
+		$description = Input::get('description', ' ');
+
+		// general
+		$action = Input::get('action', '');
+		if('edit' == $action) {
+			$id = Input::get('element_id');
+			$element = $type::find($id);
+		} else {
+			$element = new $type();
+		}
+		$element->name = $name;
+		$element->description = $this->prepareDescription($description);
+		$element->save();
+
+		$this->setCover($section, $element->id);
+
+		if('edit' != $action) {
+			// uploader
+			$this->setUploader($type, $element->id);
+		}
+
+		//print_r($book);
+		return $this->returnSuccess($section, $element->id);
+
+	}
+
+	/**
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	private function saveBand() {
+
+		$type = 'Band';
+		$section = 'bands';
 
 		$name = Input::get('name', '');
 		$description = Input::get('description', ' ');
