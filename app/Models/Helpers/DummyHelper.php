@@ -212,9 +212,15 @@ class DummyHelper {
 
 		if(RolesHelper::isAdmin($request)) {
 
+			$stats .= '<li class="nav-item"><a class="nav-link" href="/users">';
+			$stats .= TextHelper::number($stats_array['users'], array('пользователь', 'пользователя', 'пользователей'));
+			$stats .= '</a></li>';
+
 			$stats .= '<li class="nav-item"><a class="nav-link disabled" href="#">';
-			$stats .= TextHelper::number($stats_array['users'], array('пользователь', 'пользователя', 'пользователей')).', ';
-			$stats .= TextHelper::number($stats_array['rates'], array('оценка', 'оценки', 'оценок')).', ';
+			$stats .= TextHelper::number($stats_array['rates'], array('оценка', 'оценки', 'оценок'));
+			$stats .= '</a></li>';
+
+			$stats .= '<li class="nav-item"><a class="nav-link disabled" href="#">';
 			$stats .= TextHelper::number($stats_array['comments'], array('комментарий', 'комментария', 'комментариев'));
 			$stats .= '</a></li>';
 

@@ -258,7 +258,7 @@ class FilmsController extends Controller {
 
 		$section_type = 'Film';
 		$relations = ElementRelation::where('to_id', '=', $id)
-			->where('element_type', '=', $section_type)
+			->where('to_type', '=', $section_type)
 			->count()
 		;
 

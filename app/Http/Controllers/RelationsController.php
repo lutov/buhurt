@@ -2,6 +2,7 @@
 
 use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
+use App\Models\Section;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -18,8 +19,7 @@ use App\Models\ElementRelation;
 
 class RelationsController extends Controller {
 
-    public function show_all()
-    {
+    public function show_all() {
 		/*
 	    $genres = DB::table($this->prefix);
         return View::make('books.genres', array(
@@ -32,23 +32,32 @@ class RelationsController extends Controller {
 
 		$books = $films = $games = [];
 		
-		$relation_list = Relation::all();
-		$relation = array();
-		foreach($relation_list as $key => $value) {
-			$relation[$value->id] = $value->name;
+		$relations = Relation::all();
+		$relation_list = array();
+		foreach($relations as $key => $value) {
+			$relation_list[$value->id] = $value->name;
+		}
+
+		$sections = Section::all();
+		$section_list = array();
+		foreach($sections as $key => $value) {
+			$section_list[$value->alt_name] = $value->name;
 		}
 		
 		$section_name = SectionsHelper::getObjectBy($section);
 		$section_type = SectionsHelper::getSectionType($section);
 		$element = $section_name::find($id);
 		
-		$relations = ElementRelation::with($section)
-			->with('relation')
+		$relations = ElementRelation::with('relation')
 			->where('to_id', '=', $id)
-			->where('element_type', '=', $section_type)
+			//->where('element_type', '=', $section_type)
+			->where('to_type', '=', $section_type)
 			//->orderBy($section.'.year')
+			//->toSql()
 			->get()
 		;
+
+		//echo $relations;
 
 		$sort_direction = 'asc';
 		$limit = 28;
@@ -60,7 +69,8 @@ class RelationsController extends Controller {
 			'books' => $books,
 			'films' => $films,
 			'games' => $games,
-			'relation' => $relation,
+			'relation_list' => $relation_list,
+			'section_list' => $section_list,
 			'relations' => $relations
 		));
     }
@@ -86,12 +96,15 @@ class RelationsController extends Controller {
 			
 			$relation_id = Input::get('relation');
 			$relation_name = $relation_list[$relation_id];
+
+			$relation_section = Input::get('section');
+			$relation_type = SectionsHelper::getSectionType($relation_section);
 			
 			//print_r($relations);
 			
 			foreach($relations as $key => $value) {
 				
-				$this->set_relation($id, $key, $relations, $relation_id, $relation_name, $section_type, $relation_list);
+				$this->set_relation($id, $key, $section_type, $relations, $relation_id, $relation_name, $relation_type, $relation_list);
 				
 			}
 			
@@ -104,8 +117,27 @@ class RelationsController extends Controller {
 		}
 		
 	}
-	
-	private function set_relation($id, $key, $relations, $relation_id, $relation_name, $section_type, $relation_list) {
+
+	/**
+	 * @param int $id
+	 * @param int $key
+	 * @param string $section_type
+	 * @param array $relations
+	 * @param int $relation_id
+	 * @param string $relation_name
+	 * @param string $relation_type
+	 * @param array $relation_list
+	 */
+	private function set_relation(
+		int $id = 0,
+		int $key = 0,
+		string $section_type = '',
+		array $relations = array(),
+		int $relation_id = 0,
+		string $relation_name = '',
+		string $relation_type = '',
+		array $relation_list = array()
+	) {
 
 		$value = $relations[$key];
 		
@@ -116,7 +148,7 @@ class RelationsController extends Controller {
 				// sequel itself
 				$element_relation = new ElementRelation();
 					
-				$element_relation->element_type = $section_type;
+				$element_relation->element_type = $relation_type;
 				$element_relation->to_type = $section_type;
 						
 				$element_relation->to_id = $id;
@@ -129,7 +161,7 @@ class RelationsController extends Controller {
 				$element_relation = new ElementRelation();
 					
 				$element_relation->element_type = $section_type;
-				$element_relation->to_type = $section_type;
+				$element_relation->to_type = $relation_type;
 						
 				$element_relation->to_id = $value;
 				$element_relation->element_id = $id;
@@ -144,7 +176,7 @@ class RelationsController extends Controller {
 				// prequel itself
 				$element_relation = new ElementRelation();
 					
-				$element_relation->element_type = $section_type;
+				$element_relation->element_type = $relation_type;
 				$element_relation->to_type = $section_type;
 						
 				$element_relation->to_id = $id;
@@ -157,7 +189,7 @@ class RelationsController extends Controller {
 				$element_relation = new ElementRelation();
 					
 				$element_relation->element_type = $section_type;
-				$element_relation->to_type = $section_type;
+				$element_relation->to_type = $relation_type;
 						
 				$element_relation->to_id = $value;
 				$element_relation->element_id = $id;
@@ -172,7 +204,7 @@ class RelationsController extends Controller {
 				// relation itself
 				$element_relation = new ElementRelation();
 					
-				$element_relation->element_type = $section_type;
+				$element_relation->element_type = $relation_type;
 				$element_relation->to_type = $section_type;
 						
 				$element_relation->to_id = $id;
@@ -185,7 +217,7 @@ class RelationsController extends Controller {
 				$element_relation = new ElementRelation();
 					
 				$element_relation->element_type = $section_type;
-				$element_relation->to_type = $section_type;
+				$element_relation->to_type = $relation_type;
 						
 				$element_relation->to_id = $value;
 				$element_relation->element_id = $id;

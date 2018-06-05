@@ -165,6 +165,8 @@ Route::group(array('prefix' => 'search'), function() {
 
 // User
 Route::group(array('prefix' => 'user'), function() {
+	Route::get('/', function() {return Redirect::to('/users');});
+
 	Route::get('logout', array('uses' => 'UserController@logout'));
 
 	Route::group(array('middleware' => 'guest',), function() {
@@ -177,6 +179,7 @@ Route::group(array('prefix' => 'user'), function() {
 
 	});
 
+	Route::get('{id}/', function($id) {return Redirect::to('/user/'.$id.'/profile');});
 	Route::get('{id}/profile', array('uses' => 'UserController@view'));
 	Route::any('{id}/rates/{section}', array('uses' => 'UserController@rates'));
 	Route::any('{id}/rates/{section}/export', array('uses' => 'UserController@rates_export'));
@@ -194,6 +197,7 @@ Route::group(array('prefix' => 'user'), function() {
 
 	Route::any('{id}/recommendations', array('uses' => 'RecommendationsController@get'));
 });
+Route::get('users/', array('uses' => 'UserController@list'));
 
 Route::any('recommendations', array('uses' => 'RecommendationsController@gag'));
 

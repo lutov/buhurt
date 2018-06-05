@@ -30,12 +30,20 @@
 			@if(!empty($relations))
 			<?php
 
+				//echo DebugHelper::dump($relations, true);
 
 				foreach($relations as $rel_elem) {
 
+					//echo DebugHelper::dump($rel_elem->element_type, true);
+
+					$relation_type = $rel_elem->element_type;
+					$relation_section = SectionsHelper::getSectionBy($relation_type);
+
+					$relation = $rel_elem->$relation_section[0];
+
 					$options['add_text'] = $rel_elem->relation->name;
 
-					echo ElementsHelper::getElement($request, $rel_elem->$section[0], $section, $options);
+					echo ElementsHelper::getElement($request, $relation, $relation_section, $options);
 
 				}
 			?>
@@ -55,21 +63,29 @@
 		
 			{!! Form::open(array('action' => array('RelationsController@add_relation', $section, $element->id), 'class' => 'add_relation', 'method' => 'POST', 'files' => true)) !!}
 
-				<p>{!! Form::text('relations', $value = '', $attributes = array(
-					'placeholder' => 'Cвязанные произведения',
-					'id' => 'relations',
-					'class' => 'form-control w-100'
-				)) !!}</p>
-
-				<p>
-				{!! Form::select('relation', $relation, null, $attributes = array(
-					'class' => 'form-control w-25'
-				)) !!}
-				</p>
-
-				<p>
-				{!! Form::submit('Сохранить', $attributes = array('id' => 'relation_save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
-				</p>
+				<div class="form-row">
+					<div class="col">
+					{!! Form::text('relations', $value = '', $attributes = array(
+						'placeholder' => 'Cвязанные произведения',
+						'id' => 'relations',
+						'class' => 'form-control'
+					)) !!}
+					</div>
+					<div class="col">
+					{!! Form::select('section', $section_list, $section, $attributes = array(
+    					'class' => 'form-control',
+    					'autocomplete' => 'off',
+					)) !!}
+					</div>
+					<div class="col">
+						{!! Form::select('relation', $relation_list, null, $attributes = array(
+    						'class' => 'form-control'
+						)) !!}
+					</div>
+					<div class="col">
+						{!! Form::submit('Сохранить', $attributes = array('id' => 'relation_save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
+					</div>
+				</div>
 
 			{!! Form::close() !!}
 

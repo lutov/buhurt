@@ -106,8 +106,8 @@ class GamesController extends Controller {
 	 * @param $id
 	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
 	 */
-    public function show_item(Request $request, $id)
-	{
+    public function show_item(Request $request, $id) {
+
 		$game = Game::find($id);
 
 		if(count($game)) {
@@ -190,7 +190,7 @@ class GamesController extends Controller {
 			
 			$section_type = 'Game';
 			$relations = ElementRelation::where('to_id', '=', $id)
-				->where('element_type', '=', $section_type)
+				->where('to_type', '=', $section_type)
 				->count()
 			;
 

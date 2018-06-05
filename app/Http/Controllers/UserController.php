@@ -1,8 +1,10 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
 use DB;
 use Illuminate\Http\Request;
+use stdClass;
 use URL;
 use Auth;
 use View;
@@ -24,6 +26,8 @@ use App\Models\OptionUser;
 use App\Models\Achievement;
 
 class UserController extends Controller {
+
+	private $prefix = 'users';
 
 	/**
 	 * @param Request $request
@@ -925,5 +929,50 @@ class UserController extends Controller {
 			return Redirect::to('/')->with('message', 'Нет&nbsp;прав&nbsp;доступа');
 
 		}
+	}
+
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 */
+	public function list(Request $request) {
+
+		if(RolesHelper::isAdmin($request)) {
+
+			$section = $this->prefix;
+			$ru_section = 'Пользователи';
+
+			$sort = Input::get('sort', $section . '.created_at');
+			$sort_direction = Input::get('sort_direction', 'desc');
+			$limit = 28;
+
+			$elements = User::select('id', 'username as name')
+				->orderBy($sort, $sort_direction)
+				->paginate($limit);
+
+			/*
+			$elements = array();
+			foreach($users as $key => $user) {
+
+				$elements[$user->id] = new stdClass();
+				$elements[$user->id]->id = $user->id;
+				$elements[$user->id]->name = $user->username;
+
+			}
+			*/
+
+			return View::make('user.list', array(
+				'request' => $request,
+				'elements' => $elements,
+				'section' => 'user',
+				'ru_section' => $ru_section,
+			));
+
+		} else {
+
+			return Redirect::to('/');
+
+		}
+
 	}
 }
