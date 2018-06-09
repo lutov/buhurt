@@ -21,7 +21,7 @@
 
         <div class="col-md-12" style="column-count: 10;">
 
-            {!! ElementsHelper::getList($request, $elements, $section, $sub_section, $options)!!}
+            {!! ElementsHelper::getList($request, $elements, $sub_section, $section, $options)!!}
 
         </div>
 

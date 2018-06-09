@@ -311,7 +311,10 @@ class ElementsHelper {
 
 			if('' != $element->name) {
 				$elements_list .= '<li>';
-				$elements_list .= '<a href="/' . $section . '/';
+				$elements_list .= '<a href="/';
+				if (!empty($section)) {
+					$elements_list .= $section . '/';
+				}
 				if (!empty($subsection)) {
 					$elements_list .= $subsection . '/';
 				}
