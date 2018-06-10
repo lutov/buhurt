@@ -207,3 +207,8 @@ Route::group(array('prefix' => 'comment'), function() {
 	Route::post('edit', array('uses' => 'CommentController@edit'));
 	Route::post('delete', array('uses' => 'CommentController@delete'));
 });
+
+// Events
+Route::group(array('prefix' => 'events'), function() {
+	Route::get('/', array('uses' => 'EventsController@getList'));
+});
