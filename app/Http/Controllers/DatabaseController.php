@@ -548,18 +548,7 @@ class DatabaseController extends Controller {
 
 		// countries
 		if('' != $countries[0]) {
-			foreach ($countries as $country) {
-				$existing_country = Country::where('name', '=', $country)->first();
-				if (isset($existing_country->name)) {
-					$existing_country->films()->save($film);
-				} else {
-					$new_country = new Country();
-					$new_country->name = $country;
-					$new_country->save();
-
-					$new_country->films()->save($film);
-				}
-			}
+			$this->setCountries($countries, $film);
 		}
 
 		// genres
@@ -1102,6 +1091,29 @@ class DatabaseController extends Controller {
 	}
 
 	/**
+	 * @param array $countries
+	 * @param Film $film
+	 */
+	private function setCountries(array $countries = array(), Film $film) {
+
+		foreach ($countries as $country) {
+
+			$existing_country = Country::where('name', '=', $country)->first();
+			if (isset($existing_country->name)) {
+				$existing_country->films()->save($film);
+			} else {
+				$new_country = new Country();
+				$new_country->name = $country;
+				$new_country->save();
+
+				$new_country->films()->save($film);
+			}
+
+		}
+
+	}
+
+	/**
 	 * @param string $section
 	 * @param int $element_id
 	 * @return \Illuminate\Http\RedirectResponse
@@ -1222,6 +1234,17 @@ class DatabaseController extends Controller {
 						$collections = array('Marvel Comics');
 						$this->setGenres($genres, $type, $element_id);
 						$this->setCollections($collections, $type, $element_id);
+						break;
+
+					case 'anime':
+						$type = 'Film';
+						$section = 'films';
+						$genres = array('Аниме', 'Мультфильмы');
+						$countries = array('Япония');
+						//$collections = array('Marvel Comics');
+						$this->setGenres($genres, $type, $element_id);
+						$this->setCountries($countries, $new);
+						//$this->setCollections($collections, $type, $element_id);
 						break;
 
 					case 'dc_film':

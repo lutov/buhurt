@@ -127,13 +127,19 @@ class SearchController extends Controller {
 											<ul>
 											
 												<li>
-													<a href="/admin/q_add/books/?new_name='.urlencode($search).'&template=marvel_film">
+													<a href="/admin/q_add/films/?new_name='.urlencode($search).'&template=anime">
+														Аниме
+													</a>
+												</li>
+											
+												<li>
+													<a href="/admin/q_add/films/?new_name='.urlencode($search).'&template=marvel_film">
 														Marvel Comics
 													</a>
 												</li>
 											
 												<li>
-													<a href="/admin/q_add/books/?new_name='.urlencode($search).'&template=dc_film">
+													<a href="/admin/q_add/films/?new_name='.urlencode($search).'&template=dc_film">
 														DC Comics
 													</a>
 												</li>
