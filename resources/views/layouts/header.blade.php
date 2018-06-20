@@ -68,6 +68,9 @@
 								<div class="dropdown-menu" aria-labelledby="dropdown01">
 
 									<a class="dropdown-item" href="{!! URL::action('UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
+									@if (RolesHelper::isAdmin($request))
+										<a class="dropdown-item" href="/events">Лента</a>
+									@endif
 									<a class="dropdown-item" href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a>
 									<a class="dropdown-item" href="/search/advanced">Расширенный поиск</a>
 									@if (RolesHelper::isAdmin($request))

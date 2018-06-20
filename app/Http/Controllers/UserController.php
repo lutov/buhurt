@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
 use DB;
@@ -145,12 +146,19 @@ class UserController extends Controller {
 
 		$email = 'Здравствуйте, '.$user->username."\n\nТеперь Вы может пользоваться всеми возможностями системы: ставить оценки, комментировать произведения, зарабатывать достижения и настраивать свой профиль.";
 
-		Mail::raw($email, function($message) use ($user)
-		{
+		Mail::raw($email, function($message) use ($user) {
 			$message->from('robot@buhurt.ru', 'Бугурт');
 
 			$message->to($user->email)->subject('Вы зарегистрировались в системе «Бугурт»');
 		});
+
+		$event = new Event();
+		$event->event_type = 'New';
+		$event->element_type = 'User';
+		$event->element_id = $user_id;
+		$event->user_id = $user_id;
+		$event->name = $user_name.' зарегистрирован';
+		$event->save();
 
 		return Redirect::to('/')->with('message', 'Добро&nbsp;пожаловать');
 	}

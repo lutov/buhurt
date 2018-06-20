@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Event;
 use Auth;
 use Input;
 use Redirect;
@@ -70,6 +71,14 @@ class RatesController extends Controller {
 				// Сохранение оценки
 				$user->rates()->save($rate);
 			}
+
+			$event = new Event();
+			$event->event_type = 'Rate';
+			$event->element_type = $type;
+			$event->element_id = $id;
+			$event->user_id = $user->id;
+			$event->name = $user->username.' оценивает '.$element->name.' на '.$rate_val;
+			$event->save();
 
 			// success
 			echo '{"msg_type": "rate", "message": "Оценка&nbsp;сохранена", "status":"OK"}';

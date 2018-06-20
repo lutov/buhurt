@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Event;
 use App\Models\Film;
 use App\Models\Game;
 use App\Models\Band;
@@ -80,6 +81,16 @@ class SearchController extends Controller {
 							$not_found->user_id = $user_id;
 							$not_found->search = $search;
 							$not_found->save();
+
+							$type = "NotFound";
+							$event = new Event();
+							$event->event_type = 'Search';
+							$event->element_type = $type;
+							$event->element_id = 1;
+							$event->user_id = $user_id;
+							$event->name = 'Не найдено «'.$search.'»';
+							$event->text = $search;
+							$event->save();
 
 							$message = 'Кажется, по этому запросу ничего не найдено.';
 							if (Helpers::is_admin()) {

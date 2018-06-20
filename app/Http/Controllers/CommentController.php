@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Helpers\CommentsHelper;
 use App\Models\Helpers\SectionsHelper;
 use Input;
@@ -46,6 +47,16 @@ class CommentController extends Controller {
 
 			$message = 'Комментарий сохранён';
 			$result = '{"message":"'.$message.'", "comment_text":"'.$new_comment.'"}';
+
+			$element = $type::find($element);
+			$event = new Event();
+			$event->event_type = 'Comment';
+			$event->element_type = $type;
+			$event->element_id = $element->id;
+			$event->user_id = Auth::user()->id;
+			$event->name = Auth::user()->username.' комментирует '.$element->name;
+			$event->text = $text;
+			$event->save();
 
 		}
 
