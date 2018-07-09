@@ -95,11 +95,9 @@ class CompaniesController extends Controller {
 				'games_published' => $games_published,
 				'sort_options' => $sort_options
 			));
-		}
-		else
-		{
+		} else {
 			// нет такой буквы
-			return Redirect::home()->with('message', 'Нет такой компании');
+			return Redirect::to('/companies')->with('message', 'Нет такой компании');
 		}
     }
 	
