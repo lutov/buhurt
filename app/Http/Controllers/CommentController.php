@@ -54,7 +54,7 @@ class CommentController extends Controller {
 			$event->element_type = $type;
 			$event->element_id = $element->id;
 			$event->user_id = Auth::user()->id;
-			$event->name = Auth::user()->username.' комментирует '.$element->name;
+			$event->name = $element->name; //Auth::user()->username.' комментирует '.$element->name;
 			$event->text = $text;
 			$event->save();
 

@@ -15,7 +15,7 @@
 
 		<div class="col-md-12">
 
-			{!! ElementsHelper::getList($request, $elements, $section, '')!!}
+			{!! ElementsHelper::getEvents($request, $elements, $section, '')!!}
 
 		</div>
 

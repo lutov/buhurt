@@ -88,7 +88,7 @@ class SearchController extends Controller {
 							$event->element_type = $type;
 							$event->element_id = 1;
 							$event->user_id = $user_id;
-							$event->name = 'Не найдено «'.$search.'»';
+							$event->name = 'Не найдено'; //«'.$search.'»';
 							$event->text = $search;
 							$event->save();
 

@@ -77,7 +77,8 @@ class RatesController extends Controller {
 			$event->element_type = $type;
 			$event->element_id = $id;
 			$event->user_id = $user->id;
-			$event->name = $user->username.' оценивает '.$element->name.' на '.$rate_val;
+			$event->name = $element->name; //$user->username.' оценивает '.$element->name.' на '.$rate_val;
+			$event->text = $rate_val;
 			$event->save();
 
 			// success

@@ -157,7 +157,8 @@ class UserController extends Controller {
 		$event->element_type = 'User';
 		$event->element_id = $user_id;
 		$event->user_id = $user_id;
-		$event->name = $user_name.' зарегистрирован';
+		$event->name = $user_name; //.' зарегистрирован';
+		$event->text = 'Зарегистрирован';
 		$event->save();
 
 		return Redirect::to('/')->with('message', 'Добро&nbsp;пожаловать');
