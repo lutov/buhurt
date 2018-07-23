@@ -67,6 +67,54 @@ class UserHelper {
 	/**
 	 * @param int $user_id
 	 * @param string $type
+	 * @param array $options
+	 * @param bool $debug
+	 * @return \Illuminate\Support\Collection
+	 */
+	public static function getTopGenres(int $user_id = 0, string $type = '', array $options = array(), bool $debug = false) {
+
+		$minutes = 60 * 24;
+
+		$var_name = 'all_rates_'.$type.'_'.$user_id;
+		$all_rates = Cache::remember($var_name, $minutes, function () use ($user_id, $options, $type) {
+
+			$all_rates = Rate::where('user_id', '=', $user_id)
+				//->whereBetween('rate', [$options['min_rate'], $options['max_rate']])
+				->where('element_type', '=', $type)
+				//->limit($options['total_rates'])
+				//->toSql()
+				->pluck('element_id')
+			;
+
+			return $all_rates;
+
+		});
+
+		if($debug) {echo DebugHelper::dump($all_rates);}
+
+		$var_name = 'top_genres_'.$type.'_'.$user_id;
+		$top_genres = Cache::remember($var_name, $minutes, function () use ($all_rates, $options, $type) {
+
+			$top_genres = ElementGenre::select(DB::raw('genre_id, count(`element_id`) as el_count'))
+				->where('element_type', '=', $type)
+				->whereIn('element_id', $all_rates)
+				->groupBy('genre_id')
+				->orderBy('el_count', 'desc')
+				->limit($options['total_gens'])
+				->pluck('genre_id')
+			;
+
+			return $top_genres;
+
+		});
+
+		return $top_genres;
+
+	}
+
+	/**
+	 * @param int $user_id
+	 * @param string $type
 	 * @return mixed
 	 */
 	public static function getFavGenresNames(int $user_id = 0, string $type = '') {

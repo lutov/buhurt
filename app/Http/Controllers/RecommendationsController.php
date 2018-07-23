@@ -166,6 +166,27 @@ Array
 
 				//echo DebugHelper::dump($genres);
 
+			} elseif('faved_genres' == $input['recommendation_principle']) {
+
+				$options = array(
+					//'total_rates' => ($input['recommendations'] * 10),
+					//'min_rate' => $min_rate,
+					//'max_rate' => $max_rate,
+					'total_gens' => $input['recommendations'],
+				);
+
+				$genres = UserHelper::getTopGenres($user_id, $type, $options);
+
+				//echo DebugHelper::dump($genres);
+
+			} elseif('more_of_the_same' == $input['recommendation_principle']) {
+
+
+
+			} elseif('similar_users' == $input['recommendation_principle']) {
+
+
+
 			}
 
 			$elements = $object->select($section.'.*')
