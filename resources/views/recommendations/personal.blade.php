@@ -62,18 +62,16 @@
 
         $(document).ready(function() {
 
-            var today = new Date();
-            var year = today.getFullYear();
             var years_interval = $('#years_interval');
             years_interval.ionRangeSlider({
                 min: 1890,
-                max: year,
+                max: {!! $options['years']['max'] !!},
 				step: 10,
 				type: 'double',
                 prettify_enabled: false,
                 grid: true,
-                from: 2000,
-				to: year
+                from: {!! $options['years']['from'] !!},
+				to: {!! $options['years']['to'] !!}
             });
 
             var rates_interval = $('#rates_interval');
@@ -85,8 +83,8 @@
                 prettify_enabled: false,
                 grid: true,
                 grid_snap: true,
-                from: 7,
-				to: 10
+                from: {!! $options['rates']['from'] !!},
+				to: {!! $options['rates']['to'] !!}
             });
 
             var rec_num_interval = $('#rec_num_interval');
@@ -97,10 +95,10 @@
                 prettify_enabled: false,
                 grid: true,
                 grid_snap: true,
-                from: 15
+                from: {!! $options['limit'] !!}
             });
 
-            toggle_section('films', true);
+            toggle_section('{!! $section !!}', true);
 
         } );
 
@@ -113,9 +111,9 @@
 		<li class="nav-item">
 			<a class="nav-link active" data-toggle="tab" href="#filter-1" role="tab">Общие настройки</a>
 		</li>
-		<li class="nav-item">
+		<!--li class="nav-item">
 			<a class="nav-link" data-toggle="tab" href="#filter-2" role="tab">Тип рекомендаций</a>
-		</li>
+		</li-->
 		<li class="nav-item">
 			<a class="nav-link" data-toggle="tab" href="#filter-3" role="tab">Точные настройки</a>
 		</li>
@@ -132,57 +130,91 @@
 
 				<legend class="col-form-legend">Раздел</legend>
 				<div class="custom-control custom-radio custom-control-inline" onclick="toggle_section('books', $('#element_type_books').prop('checked'));">
-					<input type="radio" id="element_type_books" name="element_type" value="books" class="custom-control-input" autocomplete="off">
+					<input type="radio" id="element_type_books" name="element_type" value="books" class="custom-control-input" autocomplete="off" @if('books' == $section) checked @endif>
 					<label class="custom-control-label" for="element_type_books">Книги</label>
 				</div>
 				<div class="custom-control custom-radio custom-control-inline" onclick="toggle_section('films', $('#element_type_films').prop('checked'));">
-					<input type="radio" id="element_type_films" name="element_type" value="films" class="custom-control-input" autocomplete="off" checked>
+					<input type="radio" id="element_type_films" name="element_type" value="films" class="custom-control-input" autocomplete="off" @if('films' == $section) checked @endif>
 					<label class="custom-control-label" for="element_type_films">Фильмы</label>
 				</div>
 				<div class="custom-control custom-radio custom-control-inline" onclick="toggle_section('games', $('#element_type_games').prop('checked'));">
-					<input type="radio" id="element_type_games" name="element_type" value="games" class="custom-control-input" autocomplete="off">
+					<input type="radio" id="element_type_games" name="element_type" value="games" class="custom-control-input" autocomplete="off" @if('games' == $section) checked @endif>
 					<label class="custom-control-label" for="element_type_games">Игры</label>
 				</div>
 
-				<legend class="col-form-legend mt-4">Рейтинги</legend>
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="ratings_high" name="ratings" value="high" class="custom-control-input" autocomplete="off">
-					<label class="custom-control-label" for="ratings_high">Высокие</label>
-				</div>
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="ratings_any" name="ratings" value="any" class="custom-control-input" autocomplete="off" checked>
-					<label class="custom-control-label" for="ratings_any">Любые</label>
-				</div>
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="ratings_low" name="ratings" value="low" class="custom-control-input" autocomplete="off">
-					<label class="custom-control-label" for="ratings_low">Низкие</label>
+				<div class="mt-4">
+					<button class="btn btn-outline-secondary" type="button" data-toggle="collapse" data-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails">
+						Подробнее
+					</button>
 				</div>
 
-				<legend class="col-form-legend mt-4">Количество оценок</legend>
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="rates_count_high" name="rates_count" value="high" class="custom-control-input" autocomplete="off">
-					<label class="custom-control-label" for="rates_count_high">Много</label>
-				</div>
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="rates_count_any" name="rates_count" value="any" class="custom-control-input" autocomplete="off" checked>
-					<label class="custom-control-label" for="rates_count_any">Все равно</label>
-				</div>
-				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="rates_count_low" name="rates_count" value="low" class="custom-control-input" autocomplete="off">
-					<label class="custom-control-label" for="rates_count_low">Мало</label>
-				</div>
+				<div class="collapse" id="collapseDetails">
 
-				<legend class="col-form-legend mt-4">Годы выпуска</legend>
-				<div><input name="years" id="years_interval"></div>
+					<!--legend class="col-form-legend mt-4">Рейтинги</legend>
+					<div class="custom-control custom-radio custom-control-inline">
+						<input type="radio" id="ratings_high" name="ratings" value="high" class="custom-control-input" autocomplete="off">
+						<label class="custom-control-label" for="ratings_high">Высокие</label>
+					</div>
+					<div class="custom-control custom-radio custom-control-inline">
+						<input type="radio" id="ratings_any" name="ratings" value="any" class="custom-control-input" autocomplete="off" checked>
+						<label class="custom-control-label" for="ratings_any">Любые</label>
+					</div>
+					<div class="custom-control custom-radio custom-control-inline">
+						<input type="radio" id="ratings_low" name="ratings" value="low" class="custom-control-input" autocomplete="off">
+						<label class="custom-control-label" for="ratings_low">Низкие</label>
+					</div>
 
-				<legend class="col-form-legend mt-4">Исключения</legend>
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" name="include_wanted" value="1" id="include_wanted">
-					<label class="custom-control-label" for="include_wanted">Включать произведения из списка желаемого</label>
-				</div>
-				<div class="custom-control custom-checkbox">
-					<input type="checkbox" class="custom-control-input" name="include_not_wanted" value="1" id="include_not_wanted">
-					<label class="custom-control-label" for="include_not_wanted">Включать произведения из списка нежелаемого</label>
+					<legend class="col-form-legend mt-4">Количество оценок</legend>
+					<div class="custom-control custom-radio custom-control-inline">
+						<input type="radio" id="rates_count_high" name="rates_count" value="high" class="custom-control-input" autocomplete="off">
+						<label class="custom-control-label" for="rates_count_high">Много</label>
+					</div>
+					<div class="custom-control custom-radio custom-control-inline">
+						<input type="radio" id="rates_count_any" name="rates_count" value="any" class="custom-control-input" autocomplete="off" checked>
+						<label class="custom-control-label" for="rates_count_any">Все равно</label>
+					</div>
+					<div class="custom-control custom-radio custom-control-inline">
+						<input type="radio" id="rates_count_low" name="rates_count" value="low" class="custom-control-input" autocomplete="off">
+						<label class="custom-control-label" for="rates_count_low">Мало</label>
+					</div-->
+
+					<legend class="col-form-legend mt-4">Принцип рекомендации</legend>
+					<div class="custom-control custom-radio">
+						<input type="radio" id="liked_genres" name="recommendation_principle" value="liked_genres" class="custom-control-input" autocomplete="off" @if('liked_genres' == $principle) checked @endif>
+						<label class="custom-control-label" for="liked_genres">В жанрах, которые я хорошо оцениваю</label>
+					</div>
+					<div class="custom-control custom-radio">
+						<input type="radio" id="faved_genres" name="recommendation_principle" value="faved_genres" class="custom-control-input" autocomplete="off" @if('faved_genres' == $principle) checked @endif>
+						<label class="custom-control-label" for="faved_genres">В жанрах, которые я часто оцениваю</label>
+					</div>
+					<!--div class="custom-control custom-radio">
+						<input type="radio" id="more_of_the_same" name="recommendation_principle" value="more_of_the_same" class="custom-control-input" autocomplete="off">
+						<label class="custom-control-label" for="more_of_the_same">Еще не оцененные произведения высоко оцененных авторов</label>
+					</div>
+					<div class="custom-control custom-radio">
+						<input type="radio" id="similar_users" name="recommendation_principle" value="similar_users" class="custom-control-input" autocomplete="off">
+						<label class="custom-control-label" for="similar_users">Понравившееся пользователям с похожими оценками</label>
+					</div-->
+
+					<legend class="col-form-legend mt-4">Релевантные оценки</legend>
+					<div><input name="rates" id="rates_interval"></div>
+
+					<legend class="col-form-legend mt-4">Годы выпуска</legend>
+					<div><input name="years" id="years_interval"></div>
+
+					<legend class="col-form-legend mt-4">Количество рекомендаций</legend>
+					<div><input name="recommendations" id="rec_num_interval"></div>
+
+					<legend class="col-form-legend mt-4">Исключения</legend>
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" name="include_wanted" value="1" id="include_wanted" @if($options['include_wanted']) checked @endif>
+						<label class="custom-control-label" for="include_wanted">Включать произведения из списка желаемого</label>
+					</div>
+					<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" name="include_not_wanted" value="1" id="include_not_wanted" @if($options['include_not_wanted']) checked @endif>
+						<label class="custom-control-label" for="include_not_wanted">Включать произведения из списка нежелаемого</label>
+					</div>
+
 				</div>
 
 			</fieldset>
@@ -191,38 +223,17 @@
 
 		</div>
 
-		<div class="tab-pane" id="filter-2" role="tabpanel">
+		<!--div class="tab-pane" id="filter-2" role="tabpanel">
 
 			<div class="form-row">
 
 				<fieldset class="col-md-12">
 
-					<legend class="col-form-legend">Принцип рекомендации</legend>
-					<div class="custom-control custom-radio">
-						<input type="radio" id="liked_genres" name="recommendation_principle" value="liked_genres" class="custom-control-input" autocomplete="off" checked>
-						<label class="custom-control-label" for="liked_genres">В жанрах, которые я хорошо оцениваю</label>
-					</div>
-					<div class="custom-control custom-radio">
-						<input type="radio" id="faved_genres" name="recommendation_principle" value="faved_genres" class="custom-control-input" autocomplete="off">
-						<label class="custom-control-label" for="faved_genres">В жанрах, которые я часто оцениваю</label>
-					</div>
-					<div class="custom-control custom-radio">
-						<input type="radio" id="more_of_the_same" name="recommendation_principle" value="more_of_the_same" class="custom-control-input" autocomplete="off">
-						<label class="custom-control-label" for="more_of_the_same">Еще не оцененные произведения высоко оцененных авторов</label>
-					</div>
-					<div class="custom-control custom-radio">
-						<input type="radio" id="similar_users" name="recommendation_principle" value="similar_users" class="custom-control-input" autocomplete="off">
-						<label class="custom-control-label" for="similar_users">Понравившееся пользователям с похожими оценками</label>
-					</div>
-
-					<legend class="col-form-legend mt-4">Релевантные оценки</legend>
-					<div><input name="rates" id="rates_interval"></div>
-
 				</fieldset>
 
 			</div>
 
-		</div>
+		</div-->
 
 		<div class="tab-pane" id="filter-3" role="tabpanel">
 
@@ -286,11 +297,6 @@
 					echo $top_platforms;
 					?>
 
-				</fieldset>
-
-				<fieldset class="col-md-12 mt-4">
-					<legend class="col-form-legend">Количество рекомендаций</legend>
-					<div><input name="recommendations" id="rec_num_interval"></div>
 				</fieldset>
 
 			</div>

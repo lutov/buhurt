@@ -58,6 +58,20 @@ class DummyHelper {
 	}
 
 	/**
+	 * @return string
+	 */
+	public static function regToRecommend() {
+
+		return '<small class="text-muted">
+			<a href="/user/register">Зарегистрируйтесь</a>
+			или
+			<a href="/user/login">войдите</a>,
+			чтобы получать персональные рекомендации
+		</small>';
+
+	}
+
+	/**
 	 * @param $site
 	 * @param $name
 	 * @return string
@@ -74,6 +88,14 @@ class DummyHelper {
 				$query = 'first=yes&kp_query';
 				$target = '_blank';
 				$site_name = 'Кинопоиск';
+				break;
+
+			case 'worldart': // http://www.world-art.ru/search.php?public_search=Denpa&global_sector=all
+				$protocol = 'http';
+				$url = 'www.world-art.ru/search.php';
+				$query = 'global_sector=all&public_search';
+				$target = '_blank';
+				$site_name = 'World Art';
 				break;
 
 			case 'wiki': // https://ru.wikipedia.org/w/index.php?search=евангелинон
@@ -227,6 +249,26 @@ class DummyHelper {
 		}
 
 		return $stats;
+
+	}
+
+	/**
+	 * @param Request $request
+	 * @param string $input_var
+	 * @param string $session_var
+	 * @param string $default_val
+	 * @return array|string
+	 */
+	public static function inputOrSession(Request $request, string $input_var = '', string $session_var = '', string $default_val = '') {
+
+		return $request->input($input_var, function() use ($request, $session_var, $default_val) {
+			$tmp_var = $request->session()->get($session_var, function() use ($request, $session_var, $default_val) {
+				$tmp_var = $default_val;
+				$request->session()->put($session_var, $tmp_var);
+				return $tmp_var;
+			});
+			return $tmp_var;
+		});
 
 	}
 

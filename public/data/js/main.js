@@ -115,15 +115,13 @@ function scroll_to (elem) {
     $('html, body').animate({ scrollTop: $(elem).offset().top }, 500);
 }
 
-function show_comment_form()
-{
+function show_comment_form() {
     var comment_form = $('#comment_form');
     comment_form.show(600);
     scroll_to(comment_form);
 }
 
-function comment_add(section, element)
-{
+function comment_add(section, element) {
     var path = '';
     var comment = $('#comment').val();
     //console.log(comment);
@@ -243,33 +241,42 @@ function bind_genres(block_id, field_id)
 /**
  * @param data
  */
-function show_popup(data)
-{
-    var popup = $('#popup');
-    var message = data.message;
-    var delay = 1500;
-    if('achievement' == data.msg_type)
-    {
-        var images = '';
-        for(var i in data.msg_img) {
+function show_popup(data) {
+
+    //console.log(data);
+
+    var modal_block = $('#modal_block');
+    var modal_title = $('#modal_title');
+    var modal_content = $('#modal_content');
+    var input_message = data.message;
+    var delay = 3000;
+
+    var title = data.title;
+    modal_title.html(title);
+
+    var output_message = '';
+    if('achievement' === data.type) {
+
+        var image_block = '';
+
+        image_block += '<div class="modal_images">';
+        for(var i in data.images) {
             if (!data.msg_img.hasOwnProperty(i)) continue;
-            images += '<img src="/data/img/achievements/'+data.msg_img[i]+'.png" alt="">&nbsp;';
+            image_block += '<img src="/data/img/achievements/'+data.images[i]+'.png" alt="" class="img-fluid">&nbsp;';
         }
-        message = images+'<p>'+message+'</p>';
+        image_block += '</div>';
 
-        popup.html(message);
-        popup.show( "drop", {direction: "down" }, "slow", function() {
-            popup.delay(delay).hide("drop", { direction: "down" }, "slow");
-        });
-    }
-    else
-    {
-        //console.log(data.status);
-        popup.html(message);
-        popup.show( "drop", {direction: "down" }, "slow", function() {
-            popup.delay(delay).hide("drop", { direction: "down" }, "slow");
-        });
+        output_message += image_block;
+
     }
 
-    //popup.delay(6000).html('');
+    output_message += '<div class="modal_text">'+input_message+'</div>';
+
+    modal_content.html(output_message);
+    modal_block.modal();
+    modal_block.on('shown.bs.modal', function (e) {
+        // do something...
+        setTimeout(function() { modal_block.modal('hide'); }, delay);
+    })
+
 }

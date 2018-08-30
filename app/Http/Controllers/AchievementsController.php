@@ -10,43 +10,48 @@ class AchievementsController extends Controller {
 
 	public function check() {
 
-		$result = '{"msg_type":"message", "message":"Проверка&nbsp;достижений", "msg_img":[]}';
+		$result = array(
+			"type" => "message",
+			"title" => "Достижения",
+			"message" => "Проверка&nbsp;достижений",
+			"images" => array(),
+		);
 
         $need_update = Cache::get('need_update', true);
 
-		if(Auth::check() && $need_update)
-		{
+		if(Auth::check() && $need_update) {
 			$id = Auth::user()->id;
 			$obtained = DB::table('achievements_users')->where('user_id', '=', $id)->pluck('achievement_id'); //->remember(60)
 			$achievements = Achievement::whereNotIn('id', $obtained)->get(); // ->remember(60)
 			$new = array();
 
-			foreach($achievements as $key => $achievement)
-			{
+			foreach($achievements as $key => $achievement) {
 				$alt_name = $achievement->alt_name;
 				$check = $this->$alt_name($id);
 				//echo $check."\n";
-				if($check)
-				{
+				if($check) {
 					$new[] = $achievement->id;
-				}
-				else
-				{
+				} else {
 					//echo $alt_name.' does not obtained'."\n";
 				}
 			}
 
-			if(0 != count($new))
-			{
-				// тут сделать добавление ачивок
-				foreach($new as $key => $value)
-				{
+			if(0 != count($new)) {
+
+				foreach($new as $key => $value) {
 					$new_achievement = new AchievementUser();
 					$new_achievement->user_id = $id;
 					$new_achievement->achievement_id = $value;
 					$new_achievement->save();
 				}
-				$result = '{"msg_type":"achievement", "message":"Новое&nbsp;достижение", "msg_img":['.implode(', ', $new).']}';
+
+				$result = array(
+					"type" => "achievement",
+					"title" => "Достижения",
+					"message" => "Новое&nbsp;достижение",
+					"images" => $new,
+				);
+
 			}
 
             $minutes = 10;
@@ -58,6 +63,7 @@ class AchievementsController extends Controller {
 		//$result = $achievements;
 		//return print_r($result, true);
 		return $result;
+
 	}
 
 	private function chain_of_events($user_id) {

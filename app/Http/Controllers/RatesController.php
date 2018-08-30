@@ -82,7 +82,15 @@ class RatesController extends Controller {
 			$event->save();
 
 			// success
-			echo '{"msg_type": "rate", "message": "Оценка&nbsp;сохранена", "status":"OK"}';
+			$result = array(
+				"type" => "rate",
+				"title" => "Оценка",
+				"message" => "Оценка&nbsp;сохранена",
+				"images" => array(),
+				"status" => "OK",
+			);
+			//echo '{"msg_type": "rate", "message": "Оценка&nbsp;сохранена", "status":"OK"}';
+			echo json_encode($result);
 		}
     }
 

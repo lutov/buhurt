@@ -68,9 +68,7 @@
 								<div class="dropdown-menu" aria-labelledby="dropdown01">
 
 									<a class="dropdown-item" href="{!! URL::action('UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
-									@if (RolesHelper::isAdmin($request))
-										<a class="dropdown-item" href="/events">Лента</a>
-									@endif
+									<a class="dropdown-item" href="/events">Лента</a>
 									<a class="dropdown-item" href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a>
 									<a class="dropdown-item" href="/search/advanced">Расширенный поиск</a>
 									@if (RolesHelper::isAdmin($request))
@@ -90,6 +88,7 @@
 								</a>
 								<div class="dropdown-menu" aria-labelledby="dropdown01">
 
+									<a class="dropdown-item" href="/recommendations/">Рекомендации</a>
 									<a class="dropdown-item" href="/user/login/">Войти</a>
 									<a class="dropdown-item" href="/user/register/">Зарегистрироваться</a>
 
@@ -118,34 +117,34 @@
 			</nav>
 
 			<script>
-				$(document).ready(function(){
+				$(document).ready(function() {
 
-					$('#search').autocomplete({
-						source: "{!! URL::action('SearchController@everything_json') !!}", // url-адрес
-						minLength: 3, // минимальное количество для совершения запроса
+                    $('#search').autocomplete({
+                        source: "{!! URL::action('SearchController@everything_json') !!}", // url-адрес
+                        minLength: 3, // минимальное количество для совершения запроса
                         delay: 500,
-                        select: function( event, ui ) {
+                        select: function (event, ui) {
                             $('#search').val(ui.item.value);
                             $('#search_form').submit();
                         }
-					});
+                    });
 
-                    @if(Auth::check())
+					@if(Auth::check())
 
                     $('.fast_rating').rating({
 
-						//fx: 'full',
+                        //fx: 'full',
                         //url: '/rates/rate',
 
-						language: 'ru',
-						theme: 'krajee-uni',
+                        language: 'ru',
+                        theme: 'krajee-uni',
                         size: 'xs',
                         emptyStar: '&#9734;',
                         filledStar: '&#9733;',
                         clearButton: '&#10006;',
-						min: 0,
-						max: 10,
-						step: 1.0,
+                        min: 0,
+                        max: 10,
+                        step: 1.0,
                         stars: '10',
                         animate: false,
                         showCaption: false,
@@ -153,33 +152,33 @@
                         //defaultCaption: 'Нет оценки',
                         clearCaption: 'Нет оценки',
                         starCaptions: {
-						    1: 'Очень плохо',
-						    2: 'Плохо',
-						    3: 'Посредственно',
-						    4: 'Ниже среднего',
-						    5: 'Средне',
-						    6: 'Выше среднего',
-						    7: 'Неплохо',
-						    8: 'Хорошо',
-						    9: 'Отлично',
-						    10: 'Великолепно'
-						},
-                        starCaptionClasses: function(val) {
-						    //console.log(val);
+                            1: 'Очень плохо',
+                            2: 'Плохо',
+                            3: 'Посредственно',
+                            4: 'Ниже среднего',
+                            5: 'Средне',
+                            6: 'Выше среднего',
+                            7: 'Неплохо',
+                            8: 'Хорошо',
+                            9: 'Отлично',
+                            10: 'Великолепно'
+                        },
+                        starCaptionClasses: function (val) {
+                            //console.log(val);
                             if (val === null) {
                                 return 'badge badge-default';
                             } else if (val <= 3) {
                                 return 'badge badge-danger';
                             } else if (val <= 5) {
                                 return 'badge badge-warning';
-                            }  else if (val <= 7) {
+                            } else if (val <= 7) {
                                 return 'badge badge-primary';
                             } else {
                                 return 'badge badge-success';
                             }
                         }
 
-						/*
+                        /*
                         callback: function(responce){
                             //this.vote_success.fadeOut(2000);
 
@@ -193,21 +192,25 @@
                         */
                     });
 
-                    @endif
+					@endif
 
-                    <?php
-                        $message = Session::get('message');
-                    ?>
+					<?php
 
-                    @if(isset($message))
-                        @if(!empty($message))
-                            var popup_message = JSON.parse('{"msg_type":"message", "message":"{{$message}}", "msg_img":""}');
-                            //console.log(popup_message);
-                            show_popup(popup_message);
-                        @endif
-                    @else
-                        //console.log('No message');
-                    @endif
+					$message = Session::get('message');
+
+					$output_message = '';
+					if (isset($message) && !empty($message)) {
+
+						$output_message .= 'var popup_message = {type:"message", title: "Сообщение", message:"'.$message.'", images:[]};';
+						//$output_message .= 'console.log(popup_message);';
+						$output_message .= 'show_popup(popup_message);';
+
+					} else {
+						//console.log('No message');
+					}
+					echo $output_message;
+
+					?>
 					
 				});
 

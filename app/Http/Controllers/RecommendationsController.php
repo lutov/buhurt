@@ -1,23 +1,17 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\DummyHelper;
 use App\Models\Helpers\SectionsHelper;
 use App\Models\Rate;
 use App\Models\Wanted;
+use App\Models\NotWanted;
 use Cache;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Redirect;
-
-use App\Models\Helpers;
-use App\Models\Poster;
-
-use App\Models\Helpers\DebugHelper;
 use App\Models\Helpers\UserHelper;
-use NotWanted;
 
 class RecommendationsController extends Controller {
 
@@ -27,27 +21,28 @@ class RecommendationsController extends Controller {
 	 */
     public function get(Request $request) {
 
-		/**
-		 * Array (
-			[element_type] => films
-			[ratings] => any
-			[rates_count] => any
-			[years] => 2000 - 2018
-			[include_wanted] => 1
-			[include_not_wanted] => 1
-			[recommendation_principle] => liked_genres
-			[rates] => 7 - 10
-			[checkbox-31] => on
-			[checkbox-21] => on
-			[checkbox-1] => on
-			[recommendations] => 15
-		 * )
-		 */
-
-		$section = '';
 		$elements = new Collection();
 
 		$input = $request->all();
+
+		$section = DummyHelper::inputOrSession($request, 'element_type', 'section', 'films');
+
+		$principle = DummyHelper::inputOrSession($request, 'recommendation_principle', 'principle', 'liked_genres');
+
+		$rates = DummyHelper::inputOrSession($request, 'rates', 'rates', '7;10');
+		$exploded_rate = explode(';', $rates);
+		$min_rate = $exploded_rate[0];
+		$max_rate = $exploded_rate[1];
+
+		$years = DummyHelper::inputOrSession($request, 'years', 'years', '2000;'.date('Y'));
+		$exploded_year = explode(';', $years);
+		$min_year = $exploded_year[0];
+		$max_year = $exploded_year[1];
+
+		$limit = DummyHelper::inputOrSession($request, 'recommendations', 'limit', '15');
+
+		$include_wanted = DummyHelper::inputOrSession($request, 'include_wanted', 'include_wanted', 0);
+		$include_not_wanted = DummyHelper::inputOrSession($request, 'include_not_wanted', 'include_not_wanted', 0);
 
 		$minutes = 60 * 24;
 
@@ -94,21 +89,8 @@ Array
 
     		$user_id = Auth::user()->id;
 
-    		$section = $input['element_type'];
     		$type = SectionsHelper::getSectionType($section);
     		$object = SectionsHelper::getObjectBy($section);
-
-    		$exploded_rate = explode(';', $input['rates']);
-    		$min_rate = $exploded_rate[0];
-    		$max_rate = $exploded_rate[1];
-
-    		$exploded_year = explode(';', $input['years']);
-    		$min_year = $exploded_year[0];
-    		$max_year = $exploded_year[1];
-
-			$principle = array();
-
-			$limit = $input['recommendations'];
 
 			$exclude = array();
 
@@ -126,64 +108,60 @@ Array
 			});
 			$exclude = array_merge($exclude, $rated);
 
-			if(isset($input['include_wanted'])) {
-				if (1 !== $input['include_wanted']) {
+			if (1 !== $include_wanted) {
 
-					$wanted = Wanted::where('user_id', '=', Auth::user()->id)
-						->where('element_type', '=', $type)
-						->pluck('element_id')
-						->toArray()
-					;
-					$exclude = array_merge($exclude, $wanted);
+				$wanted = Wanted::where('user_id', '=', Auth::user()->id)
+					->where('element_type', '=', $type)
+					->pluck('element_id')
+					->toArray()
+				;
+				$exclude = array_merge($exclude, $wanted);
 
-				}
 			}
 
-			if(isset($input['include_not_wanted'])) {
-				if (1 !== $input['include_not_wanted']) {
+			if (1 !== $include_not_wanted) {
 
-					$not_wanted = NotWanted::where('user_id', '=', Auth::user()->id)
-						->where('element_type', '=', $type)
-						->pluck('element_id')
-						->toArray()
-					;
-					$exclude = array_merge($exclude, $not_wanted);
+				$not_wanted = NotWanted::where('user_id', '=', Auth::user()->id)
+					->where('element_type', '=', $type)
+					->pluck('element_id')
+					->toArray()
+				;
+				$exclude = array_merge($exclude, $not_wanted);
 
-				}
 			}
 
 			$genres = array();
-			if('liked_genres' == $input['recommendation_principle']) {
+			if('liked_genres' == $principle) {
 
 				$options = array(
-					'total_rates' => ($input['recommendations'] * 10),
+					'total_rates' => ($limit * 10),
 					'min_rate' => $min_rate,
 					'max_rate' => $max_rate,
-					'total_gens' => $input['recommendations'],
+					'total_gens' => $limit,
 				);
 
 				$genres = UserHelper::getFavGenres($user_id, $type, $options);
 
 				//echo DebugHelper::dump($genres);
 
-			} elseif('faved_genres' == $input['recommendation_principle']) {
+			} elseif('faved_genres' == $principle) {
 
 				$options = array(
 					//'total_rates' => ($input['recommendations'] * 10),
 					//'min_rate' => $min_rate,
 					//'max_rate' => $max_rate,
-					'total_gens' => $input['recommendations'],
+					'total_gens' => $limit,
 				);
 
 				$genres = UserHelper::getTopGenres($user_id, $type, $options);
 
 				//echo DebugHelper::dump($genres);
 
-			} elseif('more_of_the_same' == $input['recommendation_principle']) {
+			} elseif('more_of_the_same' == $principle) {
 
 
 
-			} elseif('similar_users' == $input['recommendation_principle']) {
+			} elseif('similar_users' == $principle) {
 
 
 
@@ -259,19 +237,69 @@ Array
 		return View::make('recommendations.personal', array(
 			'request' => $request,
 			'section' => $section,
+			'principle' => $principle,
+			'options' => array(
+				'rates' => array(
+					'from' => $min_rate,
+					'to' => $max_rate,
+				),
+				'years' => array(
+					'from' => $min_year,
+					'to' => $max_year,
+					'max' => date('Y'),
+				),
+				'limit' => $limit,
+				'include_wanted' => $include_wanted,
+				'include_not_wanted' => $include_not_wanted,
+			),
 			'elements' => $elements,
 			'forms' => $forms,
 		));
     }
 
 	/**
-	 * @return mixed
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\View
 	 */
-    public function gag() {
+    public function gag(Request $request) {
+
+		$input = $request->all();
 
     	$elements = new Collection();
 
+		$section = DummyHelper::inputOrSession($request, 'element_type', 'section', 'films');
+
+		$years = DummyHelper::inputOrSession($request, 'years', 'years', '2000;'.date('Y'));
+		$exploded_year = explode(';', $years);
+		$min_year = $exploded_year[0];
+		$max_year = $exploded_year[1];
+
+		$limit = DummyHelper::inputOrSession($request, 'recommendations', 'limit', '15');
+
+		if(count($input)) {
+
+			$object = SectionsHelper::getObjectBy($section);
+
+			$elements = $object->select($section . '.*')
+				->whereBetween('year', array($min_year, $max_year))
+				->inRandomOrder()
+				->limit($limit)
+				//->toSql()
+				->get();
+
+		}
+
 		return View::make('recommendations.gag', array(
+			'request' => $request,
+			'section' => $section,
+			'options' => array(
+				'years' => array(
+					'from' => $min_year,
+					'to' => $max_year,
+					'max' => date('Y'),
+				),
+				'limit' => $limit,
+			),
 			'elements' => $elements,
 		));
     }

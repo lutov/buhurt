@@ -76,7 +76,7 @@ $(document).ready(function() {
         $.post('/achievements', {}, function(data) {
 
             //console.log(data);
-            show_popup(data);
+            //show_popup(data);
 
         }, 'json');
 
