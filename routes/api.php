@@ -19,13 +19,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 
+/* SEARCH */
 Route::get('search', array('uses' => 'SearchController@get_list_json'));
 
+/* RANDOM */
 Route::get('random/{section}', 	array('uses' => 'RandomController@get_json'));
 
+/* ELEMENTS */
 Route::get('books/{id}', array('uses' => 'BooksController@getJson'))->where('id', '[0-9]+');
 Route::get('films/{id}', array('uses' => 'FilmsController@getJson'))->where('id', '[0-9]+');
 Route::get('games/{id}', array('uses' => 'GamesController@getJson'))->where('id', '[0-9]+');
 Route::get('albums/{id}', array('uses' => 'AlbumsController@getJson'))->where('id', '[0-9]+');
 
+/* POSTERS */
 Route::any('poster', array('uses' => 'PosterController@search'));

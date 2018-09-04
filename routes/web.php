@@ -201,6 +201,24 @@ Route::get('users/', array('uses' => 'UserController@list'));
 
 Route::any('recommendations', array('uses' => 'RecommendationsController@gag'));
 
+/* LISTS */
+Route::group(array('prefix' => 'lists'), function() {
+
+	/* LISTS LIST */
+	Route::any('get_lists', array('uses' => 'ListsController@getLists'));
+
+	/* LIST */
+	Route::any('add_list', array('uses' => 'ListsController@addList'));
+	Route::any('edit_list', array('uses' => 'ListsController@editList'));
+	Route::any('remove_list', array('uses' => 'ListsController@removeList'));
+	Route::any('get_list', array('uses' => 'ListsController@getList'));
+
+	/* LIST ELEMENT */
+	Route::any('add_to_lists', array('uses' => 'ListsController@addToList'));
+	Route::any('remove_from_lists', array('uses' => 'ListsController@removeFromList'));
+
+});
+
 // Comments
 Route::group(array('prefix' => 'comment'), function() {
 	Route::post('add', array('uses' => 'CommentController@add'));

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\DebugHelper;
 use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
 use DB;
@@ -348,7 +349,11 @@ class DatabaseController extends Controller {
 				->where('book_id', '=', $id)
 				->delete();
 		} else {
+
 			$book = new Book();
+			$fill_id = $this->getMissingId($section);
+			if($fill_id) {$book->id = $fill_id;}
+
 		}
 		$book->name = $name;
 		$book->alt_name = $alt_name;
@@ -468,7 +473,11 @@ class DatabaseController extends Controller {
 				->where('film_id', '=', $id)
 				->delete();
 		} else {
+
 			$film = new Film();
+			$fill_id = $this->getMissingId($section);
+			if($fill_id) {$film->id = $fill_id;}
+
 		}
 		$film->name = $name;
 		$film->alt_name = $alt_name;
@@ -617,7 +626,11 @@ class DatabaseController extends Controller {
 				->where('game_id', '=', $id)
 				->delete();
 		} else {
+
 			$game = new Game();
+			$fill_id = $this->getMissingId($section);
+			if($fill_id) {$game->id = $fill_id;}
+
 		}
 		$game->name = $name;
 		$game->alt_name = $alt_name;
@@ -744,7 +757,11 @@ class DatabaseController extends Controller {
 				->delete();
 			*/
 		} else {
+
 			$album = new Album();
+			$fill_id = $this->getMissingId($section);
+			if($fill_id) {$album->id = $fill_id;}
+
 		}
 		$album->name = $name;
 		//$album->alt_name = $alt_name;
@@ -821,7 +838,11 @@ class DatabaseController extends Controller {
 			$id = Input::get('element_id');
 			$element = $type::find($id);
 		} else {
+
 			$element = new $type();
+			$fill_id = $this->getMissingId($section);
+			if($fill_id) {$element->id = $fill_id;}
+
 		}
 		$element->name = $name;
 		$element->description = $this->prepareDescription($description);
@@ -856,7 +877,11 @@ class DatabaseController extends Controller {
 			$id = Input::get('element_id');
 			$element = $type::find($id);
 		} else {
+
 			$element = new $type();
+			$fill_id = $this->getMissingId($section);
+			if($fill_id) {$element->id = $fill_id;}
+
 		}
 		$element->name = $name;
 		$element->description = $this->prepareDescription($description);
@@ -891,7 +916,11 @@ class DatabaseController extends Controller {
 			$id = Input::get('element_id');
 			$element = $type::find($id);
 		} else {
+
 			$element = new $type();
+			$fill_id = $this->getMissingId($section);
+			if($fill_id) {$element->id = $fill_id;}
+
 		}
 		$element->name = $name;
 		$element->description = $this->prepareDescription($description);
@@ -926,7 +955,11 @@ class DatabaseController extends Controller {
 			$id = Input::get('element_id');
 			$element = $type::find($id);
 		} else {
+
 			$element = new $type();
+			$fill_id = $this->getMissingId($section);
+			if($fill_id) {$element->id = $fill_id;}
+
 		}
 		$element->name = $name;
 		$element->description = $this->prepareDescription($description);
@@ -1174,6 +1207,8 @@ class DatabaseController extends Controller {
 			$section_name = SectionsHelper::getSectionType($section);
 
 			$new = new $section_name;
+			$fill_id = $this->getMissingId($section);
+			if($fill_id) {$new->id = $fill_id;}
 
 			$name = Input::get('new_name');
 			$new->name = urldecode($name);
@@ -1268,4 +1303,31 @@ class DatabaseController extends Controller {
 		return false;
 
 	}
+
+	/**
+	 * @param string $section
+	 * @return int
+	 */
+	private function getMissingId(string $section = '') {
+
+		$missing_id = 0;
+
+		$query = "SELECT (`".$section."`.`id`+1) as `empty_id`
+		FROM `".$section."`
+		WHERE (
+			SELECT 1 FROM `".$section."` as `st` WHERE `st`.`id` = (`".$section."`.`id` + 1)
+		) IS NULL
+		ORDER BY `".$section."`.`id`
+		LIMIT 1";
+
+		$result = DB::select($query)[0]->empty_id;
+
+		//echo DebugHelper::dump($result, 1); die();
+
+		if(!empty($result)) {$missing_id = $result;}
+
+		return $missing_id;
+
+	}
+
 }

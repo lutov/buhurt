@@ -112,4 +112,35 @@ class TextHelper {
 
 	}
 
+	/**
+	 * @param $query
+	 * @return mixed
+	 */
+	public static function prepareQuery($query) {
+
+		$replace_from = [
+			'/-/',
+			'/–/',
+			'/—/',
+			'/\'/',
+			'/, /',
+			'/ & /',
+			'/  /',
+			'/ % /'
+		];
+		$replace_to = [
+			'%',
+			'%',
+			'%',
+			'%',
+			'%',
+			'%',
+			' ',
+			'%'
+		];
+		$query = preg_replace($replace_from, $replace_to, $query);
+		return $query;
+
+	}
+
 }

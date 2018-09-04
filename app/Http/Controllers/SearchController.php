@@ -9,6 +9,7 @@ use App\Models\Album;
 use App\Models\Genre;
 use App\Models\Helpers\DatatypeHelper;
 use App\Models\Helpers\SectionsHelper;
+use App\Models\Helpers\TextHelper;
 use App\Models\Person;
 use App\Models\Company;
 use App\Models\Helpers;
@@ -38,7 +39,7 @@ class SearchController extends Controller {
 	public function everything(Request $request) {
 
 		$presearch_query =  Input::get('query');
-		$search_query =  $this->prepare_query($presearch_query);
+		$search_query =  TextHelper::prepareQuery($presearch_query);
 		$order = 'name';
 
 		if(!empty($search_query)) {
@@ -208,7 +209,7 @@ class SearchController extends Controller {
 		$limit = 3;
 
 		$presearch_query =  urldecode(Input::get('term'));
-		$search_query =  $this->prepare_query($presearch_query);
+		$search_query =  TextHelper::prepareQuery($presearch_query);
 
 		if(!empty($search_query)) {
 
@@ -818,32 +819,13 @@ class SearchController extends Controller {
 		echo $result;
 	}
 
-	private function prepare_query($query)
-	{
-		$replace_from = [
-			'/-/',
-			'/–/',
-			'/—/',
-			'/\'/',
-			'/, /',
-			'/ & /',
-			'/  /',
-			'/ % /'
-		];
-		$replace_to = [
-			'%',
-			'%',
-			'%',
-			'%',
-			'%',
-			'%',
-			' ',
-			'%'
-		];
-		$query = preg_replace($replace_from, $replace_to, $query);
-		return $query;
-	}
-
+	/**
+	 * @param Request $request
+	 * @param $search_query
+	 * @param $order
+	 * @param $presearch_query
+	 * @return bool|\Illuminate\Contracts\View\View
+	 */
 	private function main_search(Request $request, $search_query, $order, $presearch_query) {
 
 		$persons = Person::where('name', 'like', '%' . $search_query . '%')->orderBy($order)->get(); //->remember(5)
@@ -920,7 +902,7 @@ class SearchController extends Controller {
 		$limit = 3;
 
 		$presearch_query = urldecode(Input::get('query'));
-		$search_query =  $this->prepare_query($presearch_query);
+		$search_query =  TextHelper::prepareQuery($presearch_query);
 
 		if(!empty($search_query)) {
 
