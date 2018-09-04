@@ -123,7 +123,7 @@ class CompaniesController extends Controller {
 		DB::table('publishers_games')->where('company_id', '=', $id)->update(array('company_id' => $recipient_id));
 		DB::table('publishers_books')->where('company_id', '=', $id)->update(array('company_id' => $recipient_id));
 
-		DB::table('companies')->where('id', '=', $id)->update(array('name' => ''));
+		DB::table('companies')->where('id', '=', $id)->delete();//->update(array('name' => ''));
 
 		return Redirect::to('/'.$this->prefix.'/'.$recipient_id);
 

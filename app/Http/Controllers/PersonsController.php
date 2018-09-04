@@ -174,11 +174,9 @@ class PersonsController extends Controller {
 				'top_genres' => $top_genres,
 				'comments' => $comments,
 			));
-		}
-		else
-		{
+		} else {
 			// нет такой буквы
-			return Redirect::home()->with('message', 'Нет такой персоны');
+			return Redirect::to('/persons')->with('message', 'Нет такой персоны');
 		}
     }
 	
@@ -207,7 +205,7 @@ class PersonsController extends Controller {
 		DB::table('writers_genres')->where('person_id', '=', $id)->update(array('person_id' => $recipient_id));
 		DB::table('actors_films')->where('person_id', '=', $id)->update(array('person_id' => $recipient_id));
 
-		DB::table('persons')->where('id', '=', $id)->update(array('name' => ''));
+		DB::table('persons')->where('id', '=', $id)->delete();//update(array('name' => ''));
 
 		return Redirect::to('/'.$this->prefix.'/'.$recipient_id);
 
