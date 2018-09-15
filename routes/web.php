@@ -41,6 +41,7 @@ Route::group(array('middleware' => 'admin'), function() {
 	});
 
 });
+Route::get('q_add/{section}', array('uses' => 'DatabaseController@q_add'));
 
 	// No "base"
 	Route::any('books', array('uses' => 'BooksController@show_all'));
@@ -68,8 +69,6 @@ Route::group(array('middleware' => 'admin'), function() {
 	Route::group(array('middleware' => 'admin'), function() {
 		Route::get('drugs', array('uses' => 'DrugsController@show_all'));
 			Route::any('drugs/{id}', array('uses' => 'DrugsController@show_item'))->where('id', '[0-9]+');
-			
-		Route::get('admin/q_add/{section}', array('uses' => 'DatabaseController@q_add'));
 	});
 	
 // Relations

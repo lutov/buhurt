@@ -8,6 +8,8 @@ use App\Models\Band;
 use App\Models\Album;
 use App\Models\Genre;
 use App\Models\Helpers\DatatypeHelper;
+use App\Models\Helpers\DummyHelper;
+use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
 use App\Models\Helpers\TextHelper;
 use App\Models\Person;
@@ -70,109 +72,49 @@ class SearchController extends Controller {
 
 						if(!$search_result2en) {
 
-							//$message = 'Кажется, по этому запросу ничего не найдено. <a href="/admin/add/">Добавить элемент</a>?';
-							$not_found = new NotFound();
+							$message = 'По запросу «'.TextHelper::getCleanName($search_query).'» ничего не найдено.';
 
-							$user_id = 1;
-							if (Auth::check()) {
-								$user_id = Auth::user()->id;
-							}
-							$search = $search_query;
+							if (RolesHelper::isAdmin($request)) {
 
-							$not_found->user_id = $user_id;
-							$not_found->search = $search;
-							$not_found->save();
+								$message .= '<p><a href="/admin/add/">Добавить элемент</a>?</p>';
 
-							$type = "NotFound";
-							$event = new Event();
-							$event->event_type = 'Search';
-							$event->element_type = $type;
-							$event->element_id = 1;
-							$event->user_id = $user_id;
-							$event->name = 'Не найдено'; //«'.$search.'»';
-							$event->text = $search;
-							$event->save();
+								$message .= DummyHelper::getQuickAddLinks($search_query);
 
-							$message = 'Кажется, по этому запросу ничего не найдено.';
-							if (Helpers::is_admin()) {
-								$message .= ' 
-									<a href="/admin/add/">Добавить элемент</a>?</p>
-									
-									<p>
-									Быстро создать
-									<ol>
-									
-										<li>
-											<a href="/admin/q_add/books/?new_name='.urlencode($search).'">Книгу</a>
-											<ul>
-											
-												<li>
-													<a href="/admin/q_add/books/?new_name='.urlencode($search).'&template=marvel_book">
-														Marvel Comics
-													</a>
-												</li>
-											
-												<li>
-													<a href="/admin/q_add/books/?new_name='.urlencode($search).'&template=dc_book">
-														DC Comics
-													</a>
-												</li>
-											
-												<li>
-													<a href="/admin/q_add/books/?new_name='.urlencode($search).'&template=image_book">
-														Image Comics
-													</a>
-												</li>
-											
-												<li>
-													<a href="/admin/q_add/books/?new_name='.urlencode($search).'&template=valiant_book">
-														Valiant Comics
-													</a>
-												</li>
-											
-											</ul>
-										</li>
-									
-										<li>
-											<a href="/admin/q_add/films/?new_name='.urlencode($search).'">Фильм</a>
-											
-											<ul>
-											
-												<li>
-													<a href="/admin/q_add/films/?new_name='.urlencode($search).'&template=anime">
-														Аниме
-													</a>
-												</li>
-											
-												<li>
-													<a href="/admin/q_add/films/?new_name='.urlencode($search).'&template=marvel_film">
-														Marvel Comics
-													</a>
-												</li>
-											
-												<li>
-													<a href="/admin/q_add/films/?new_name='.urlencode($search).'&template=dc_film">
-														DC Comics
-													</a>
-												</li>
-											
-											</ul>
-																					
-																																									
-										</li>
-									
-										<li>
-											<a href="/admin/q_add/games/?new_name='.urlencode($search).'">Игру</a>
-										</li>	
-									
-										<li>
-											<a href="/admin/q_add/albums/?new_name='.urlencode($search).'">Альбом</a>
-										</li>
-										
-									</ol>
-								';
 							} else {
-								$message .= ' Мы постараемся добавить произведение, которое вы искали, в ближайшее время.';
+
+								$not_found = new NotFound();
+
+								$user_id = 1;
+								if (Auth::check()) {
+									$user_id = Auth::user()->id;
+								}
+
+								$not_found->user_id = $user_id;
+								$not_found->search = $search_query;
+								$not_found->save();
+
+								$type = "NotFound";
+								$event = new Event();
+								$event->event_type = 'Search';
+								$event->element_type = $type;
+								$event->element_id = 1;
+								$event->user_id = $user_id;
+								$event->name = 'Не найдено'; //«'.$search.'»';
+								$event->text = $search_query;
+								$event->save();
+
+								if(Auth::check()) {
+
+									$message .= DummyHelper::getQuickAddLinks($search_query);
+
+								} else {
+
+									$message .= '</p>Мы постараемся добавить произведение, которое вы искали, в ближайшее время.</p>';
+
+									$message .= DummyHelper::regToAdd();
+
+								}
+
 							}
 
 							return View::make($this->prefix . '.error', array(

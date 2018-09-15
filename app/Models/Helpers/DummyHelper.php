@@ -272,4 +272,90 @@ class DummyHelper {
 
 	}
 
+	/**
+	 * @param string $search
+	 * @return string
+	 */
+	public static function getQuickAddLinks(string $search = '') {
+
+		$output_string = '';
+
+		$output_string .= '<h3>Добавить произведение</h3>';
+
+		$output_string .= '<ol>';
+
+			$output_string .= '<li>';
+
+				$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'">Книгу</a>';
+				$output_string .= '<ul>';
+
+					$output_string .= '<li>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=marvel_book">';
+					$output_string .= 'Marvel Comics';
+					$output_string .= '</a>';
+					$output_string .= '</li>';
+
+					$output_string .= '<li>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=dc_book">';
+					$output_string .= 'DC Comics';
+					$output_string .= '</a>';
+					$output_string .= '</li>';
+
+					$output_string .= '<li>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=image_book">';
+					$output_string .= 'Image Comics';
+					$output_string .= '</a>';
+					$output_string .= '</li>';
+
+					$output_string .= '<li>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=valiant_book">';
+					$output_string .= 'Valiant Comics';
+					$output_string .= '</a>';
+					$output_string .= '</li>';
+
+				$output_string .= '</ul>';
+
+			$output_string .= '</li>';
+
+			$output_string .= '<li>';
+
+				$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'">Фильм</a>';
+				$output_string .= '<ul>';
+
+					$output_string .= '<li>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=anime">';
+					$output_string .= 'Аниме';
+					$output_string .= '</a>';
+					$output_string .= '</li>';
+
+					$output_string .= '<li>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=marvel_film">';
+					$output_string .= 'Marvel Comics';
+					$output_string .= '</a>';
+					$output_string .= '</li>';
+
+					$output_string .= '<li>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=dc_film">';
+					$output_string .= 'DC Comics';
+					$output_string .= '</a>';
+					$output_string .= '</li>';
+
+				$output_string .= '</ul>';
+
+			$output_string .= '</li>';
+
+			$output_string .= '<li>';
+			$output_string .= '<a href="/q_add/games/?new_name='.urlencode($search).'">Игру</a>';
+			$output_string .= '</li>';
+
+			$output_string .= '<li>';
+			$output_string .= '<a href="/q_add/albums/?new_name='.urlencode($search).'">Альбом</a>';
+			$output_string .= '</li>';
+
+		$output_string .= '</ol>';
+
+		return $output_string;
+
+	}
+
 }

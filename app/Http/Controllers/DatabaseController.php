@@ -3,6 +3,7 @@
 use App\Models\Helpers\DebugHelper;
 use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
+use App\Models\Helpers\TextHelper;
 use DB;
 use Auth;
 use Illuminate\Http\Request;
@@ -183,9 +184,10 @@ class DatabaseController extends Controller {
 	}
 
 	/**
+	 * @param Request $request
 	 * @return $this|\Illuminate\Http\RedirectResponse
 	 */
-	public function save() {
+	public function save(Request $request) {
 
 		//die('<pre>'.print_r($_POST, true));
 
@@ -273,19 +275,19 @@ class DatabaseController extends Controller {
 
 			if('books' == $section) {
 
-				return $this->saveBook();
+				return $this->saveBook($request);
 
 			} elseif('films' == $section) {
 
-				return $this->saveFilm();
+				return $this->saveFilm($request);
 
 			} elseif('games' == $section) {
 
-				return $this->saveGame();
+				return $this->saveGame($request);
 
 			} elseif('albums' == $section) {
 
-				return $this->saveAlbum();
+				return $this->saveAlbum($request);
 
 			} elseif('persons' == $section) {
 
@@ -311,7 +313,7 @@ class DatabaseController extends Controller {
 		}
 	}
 
-	private function saveBook() {
+	private function saveBook(Request $request) {
 
 		$type = 'Book';
 		$section = 'books';
@@ -359,7 +361,13 @@ class DatabaseController extends Controller {
 		$book->alt_name = $alt_name;
 		$book->description = $this->prepareDescription($description);
 		$book->year = $year;
-		$book->verified = 0; // пометка о необходимости модерации
+
+		if(RolesHelper::isAdmin($request)) {
+			$book->verified = 1;
+		} else {
+			$book->verified = 0;
+		}
+
 		$book->save();
 
 		// writers
@@ -418,7 +426,7 @@ class DatabaseController extends Controller {
 
 	}
 
-	private function saveFilm() {
+	private function saveFilm(Request $request) {
 
 		$type = 'Film';
 		$section = 'films';
@@ -484,7 +492,13 @@ class DatabaseController extends Controller {
 		$film->description = $this->prepareDescription($description);
 		$film->year = $year;
 		$film->length = $length;
-		$film->verified = 0; // пометка о необходимости модерации
+
+		if(RolesHelper::isAdmin($request)) {
+			$film->verified = 1;
+		} else {
+			$film->verified = 0;
+		}
+
 		$film->save();
 
 		// director
@@ -583,7 +597,7 @@ class DatabaseController extends Controller {
 
 	}
 
-	private function saveGame() {
+	private function saveGame(Request $request) {
 
 		$type = 'Game';
 		$section = 'games';
@@ -636,7 +650,13 @@ class DatabaseController extends Controller {
 		$game->alt_name = $alt_name;
 		$game->description = $this->prepareDescription($description);
 		$game->year = $year;
-		$game->verified = 0; // пометка о необходимости модерации
+
+		if(RolesHelper::isAdmin($request)) {
+			$game->verified = 1;
+		} else {
+			$game->verified = 0;
+		}
+
 		$game->save();
 
 		// platforms
@@ -711,7 +731,7 @@ class DatabaseController extends Controller {
 
 	}
 
-	private function saveAlbum() {
+	private function saveAlbum(Request $request) {
 
 		$type = 'Album';
 		$section = 'albums';
@@ -767,7 +787,13 @@ class DatabaseController extends Controller {
 		//$album->alt_name = $alt_name;
 		$album->description = $this->prepareDescription($description);
 		$album->year = $year;
-		$album->verified = 0; // пометка о необходимости модерации
+
+		if(RolesHelper::isAdmin($request)) {
+			$album->verified = 1;
+		} else {
+			$album->verified = 0;
+		}
+
 		$album->save();
 
 		// Tracks
@@ -1201,21 +1227,28 @@ class DatabaseController extends Controller {
 	 * @return bool|\Illuminate\Http\RedirectResponse
 	 */
 	public function q_add(Request $request, $section = '') {
+
+		$name = Input::get('new_name', '');
 		
-		if(RolesHelper::isAdmin($request)) {
+		if(!empty($name)) {
 
-			$section_name = SectionsHelper::getSectionType($section);
+			$type = SectionsHelper::getSectionType($section);
 
-			$new = new $section_name;
+			$new = new $type;
 			$fill_id = $this->getMissingId($section);
 			if($fill_id) {$new->id = $fill_id;}
 
-			$name = Input::get('new_name');
-			$new->name = urldecode($name);
+			$new->name = TextHelper::getCleanName(urldecode($name));
 
 			$new->cover = '';
 			$new->description = '';
 			$new->year = 0;
+
+			if(RolesHelper::isAdmin($request)) {
+				$new->verified = 1;
+			} else {
+				$new->verified = 0;
+			}
 
 			$new->save();
 
@@ -1227,8 +1260,6 @@ class DatabaseController extends Controller {
 				switch ($template) {
 
 					case 'marvel_book':
-						$type = 'Book';
-						$section = 'books';
 						$genres = array('Комиксы и манга', 'Фантастика и фэнтези');
 						$collections = array('Marvel Comics');
 						$this->setGenres($genres, $type, $element_id);
@@ -1236,8 +1267,6 @@ class DatabaseController extends Controller {
 						break;
 
 					case 'dc_book':
-						$type = 'Book';
-						$section = 'books';
 						$genres = array('Комиксы и манга', 'Фантастика и фэнтези');
 						$collections = array('DC Comics');
 						$this->setGenres($genres, $type, $element_id);
@@ -1245,8 +1274,6 @@ class DatabaseController extends Controller {
 						break;
 
 					case 'image_book':
-						$type = 'Book';
-						$section = 'books';
 						$genres = array('Комиксы и манга', 'Фантастика и фэнтези');
 						$collections = array('Image Comics');
 						$this->setGenres($genres, $type, $element_id);
@@ -1254,8 +1281,6 @@ class DatabaseController extends Controller {
 						break;
 
 					case 'valiant_book':
-						$type = 'Book';
-						$section = 'books';
 						$genres = array('Комиксы и манга', 'Фантастика и фэнтези');
 						$collections = array('Valiant Comics');
 						$this->setGenres($genres, $type, $element_id);
@@ -1263,8 +1288,6 @@ class DatabaseController extends Controller {
 						break;
 
 					case 'marvel_film':
-						$type = 'Film';
-						$section = 'films';
 						$genres = array('Фантастика');
 						$collections = array('Marvel Comics');
 						$this->setGenres($genres, $type, $element_id);
@@ -1272,8 +1295,6 @@ class DatabaseController extends Controller {
 						break;
 
 					case 'anime':
-						$type = 'Film';
-						$section = 'films';
 						$genres = array('Аниме', 'Мультфильмы');
 						$countries = array('Япония');
 						//$collections = array('Marvel Comics');
@@ -1283,8 +1304,6 @@ class DatabaseController extends Controller {
 						break;
 
 					case 'dc_film':
-						$type = 'Film';
-						$section = 'films';
 						$genres = array('Фантастика');
 						$collections = array('DC Comics');
 						$this->setGenres($genres, $type, $element_id);
@@ -1296,6 +1315,8 @@ class DatabaseController extends Controller {
 				}
 
 			}
+
+			$this->setUploader($type, $element_id);
 
 			return Redirect::to('/'.$section.'/'.$new->id);
 		}
