@@ -60,7 +60,8 @@ class GamesController extends Controller {
 				->toArray()
 			;
 
-			$elements = Game::orderBy($sort, $sort_direction)
+			$elements = Game::where('verified', '=', 1)
+				->whereNotIn('id', $not_wanted)
 				->with(array('rates' => function($query)
 					{
 						$query
@@ -69,13 +70,12 @@ class GamesController extends Controller {
 						;
 					})
 				)
-				->whereNotIn('id', $not_wanted)
+				->orderBy($sort, $sort_direction)
 				->paginate($limit)
 			;
-		}
-		else
-		{
-			$elements = Game::orderBy($sort, $sort_direction)
+		} else {
+			$elements = Game::where('verified', '=', 1)
+				->orderBy($sort, $sort_direction)
 				->paginate($limit)
 			;
 		}

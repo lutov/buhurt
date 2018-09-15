@@ -73,8 +73,7 @@ class HomeController extends Controller {
 				;
 			});
 
-			$wanted_films = Cache::remember('wanted_films_mainpage_auth'.$user_id, $minutes, function() use ($user_id)
-			{
+			$wanted_films = Cache::remember('wanted_films_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
 				return Wanted::select('element_id')
 					->where('element_type', '=', 'Film')
 					->where('wanted', '=', 1)
@@ -83,8 +82,7 @@ class HomeController extends Controller {
 					->pluck('element_id')
 				;
 			});
-			$not_wanted_films = Cache::remember('not_wanted_films_mainpage_auth'.$user_id, $minutes, function() use ($user_id)
-			{
+			$not_wanted_films = Cache::remember('not_wanted_films_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
 				return Wanted::select('element_id')
 					->where('element_type', '=', 'Film')
 					->where('not_wanted', '=', 1)
@@ -94,8 +92,7 @@ class HomeController extends Controller {
 				;
 			});
 
-			$wanted_games = Cache::remember('wanted_games_mainpage_auth'.$user_id, $minutes, function() use ($user_id)
-			{
+			$wanted_games = Cache::remember('wanted_games_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
 				return Wanted::select('element_id')
 					->where('element_type', '=', 'Game')
 					->where('wanted', '=', 1)
@@ -104,8 +101,7 @@ class HomeController extends Controller {
 					->pluck('element_id')
 				;
 			});
-			$not_wanted_games = Cache::remember('not_wanted_games_mainpage_auth'.$user_id, $minutes, function() use ($user_id)
-			{
+			$not_wanted_games = Cache::remember('not_wanted_games_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
 				return Wanted::select('element_id')
 					->where('element_type', '=', 'Game')
 					->where('not_wanted', '=', 1)
@@ -115,8 +111,7 @@ class HomeController extends Controller {
 				;
 			});
 
-			$wanted_albums = Cache::remember('not_wanted_albums_mainpage_auth'.$user_id, $minutes, function() use ($user_id)
-			{
+			$wanted_albums = Cache::remember('not_wanted_albums_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
 				return Wanted::select('element_id')
 					->where('element_type', '=', 'Album')
 					->where('wanted', '=', 1)
@@ -125,8 +120,7 @@ class HomeController extends Controller {
 					->pluck('element_id')
 				;
 			});
-			$not_wanted_albums = Cache::remember('not_wanted_albums_mainpage_auth'.$user_id, $minutes, function() use ($user_id)
-			{
+			$not_wanted_albums = Cache::remember('not_wanted_albums_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
 				return Wanted::select('element_id')
 					->where('element_type', '=', 'Album')
 					->where('not_wanted', '=', 1)
@@ -149,17 +143,15 @@ class HomeController extends Controller {
 				'albums' => $not_wanted_albums->toArray(),
 			);
 
-			$books = Cache::remember('books_mainpage_auth'.$user_id, $minutes, function() use ($user_id, $not_wanted_books, $order_by, $limit)
-			{
-				return Book::with(array('rates' => function($query) use($user_id)
-						{
-							$query
-								->where('user_id', '=', $user_id)
-								->where('element_type', '=', 'Book')
-							;
-						})
-					)
+			$books = Cache::remember('books_mainpage_auth'.$user_id, $minutes, function() use ($user_id, $not_wanted_books, $order_by, $limit) {
+				return Book::where('verified', '=', 1)
 					->whereNotIn('books.id', $not_wanted_books)
+					->with(array('rates' => function($query) use($user_id) {
+						$query
+							->where('user_id', '=', $user_id)
+							->where('element_type', '=', 'Book')
+						;
+					}))
 					->orderBy($order_by, 'desc')
 					->limit($limit)
 					//->remember(10)
@@ -168,13 +160,14 @@ class HomeController extends Controller {
 			});
 
 			$films = Cache::remember('films_mainpage_auth'.$user_id, $minutes, function() use ($user_id, $not_wanted_films, $order_by, $limit) {
-				return Film::with(array('rates' => function ($query) use ($user_id) {
+				return Film::where('verified', '=', 1)
+					->whereNotIn('films.id', $not_wanted_films)
+					->with(array('rates' => function ($query) use ($user_id) {
 						$query
 							->where('user_id', '=', $user_id)
-							->where('element_type', '=', 'Film');
-						})
-					)
-					->whereNotIn('films.id', $not_wanted_films)
+							->where('element_type', '=', 'Film')
+						;
+					}))
 					->orderBy($order_by, 'desc')
 					->limit($limit)
 					//->remember(10)
@@ -183,14 +176,14 @@ class HomeController extends Controller {
 			});
 
 			$games = Cache::remember('games_mainpage_auth'.$user_id, $minutes, function() use ($user_id, $not_wanted_games, $order_by, $limit) {
-				return Game::with(array('rates' => function($query) use($user_id) {
+				return Game::where('verified', '=', 1)
+					->whereNotIn('games.id', $not_wanted_games)
+					->with(array('rates' => function($query) use($user_id) {
 						$query
 							->where('user_id', '=', $user_id)
 							->where('element_type', '=', 'Game')
 						;
-					})
-				)
-					->whereNotIn('games.id', $not_wanted_games)
+					}))
 					->orderBy($order_by, 'desc')
 					->limit($limit)
 					//->remember(10)
@@ -199,14 +192,14 @@ class HomeController extends Controller {
 			});
 
 			$albums = Cache::remember('albums_mainpage_auth'.$user_id, $minutes, function() use ($user_id, $not_wanted_albums, $order_by, $limit) {
-				return Album::with(array('rates' => function($query) use($user_id) {
+				return Album::where('verified', '=', 1)
+					->whereNotIn('albums.id', $not_wanted_albums)
+					->with(array('rates' => function($query) use($user_id) {
 						$query
 							->where('user_id', '=', $user_id)
 							->where('element_type', '=', 'Album')
 						;
-					})
-				)
-					->whereNotIn('albums.id', $not_wanted_albums)
+					}))
 					->orderBy($order_by, 'desc')
 					->limit($limit)
 					//->remember(10)
@@ -219,28 +212,32 @@ class HomeController extends Controller {
 			//$news = News::orderBy('created_at', 'desc')->limit($limit)->get();
 
 			$books = Cache::remember('books_mainpage_unauth', $minutes, function() use ($limit, $order_by) {
-				return Book::orderBy($order_by, 'desc')
+				return Book::where('verified', '=', 1)
+					->orderBy($order_by, 'desc')
 					->limit($limit)
 					//->remember(10)
 					->get()
 				;
 			});
 			$films = Cache::remember('films_mainpage_unauth', $minutes, function() use ($limit, $order_by) {
-				return Film::orderBy($order_by, 'desc')
+				return Film::where('verified', '=', 1)
+					->orderBy($order_by, 'desc')
 					->limit($limit)
 					//->remember(10)
 					->get()
 				;
 			});
 			$games = Cache::remember('games_mainpage_unauth', $minutes, function() use ($limit, $order_by) {
-				return Game::orderBy($order_by, 'desc')
+				return Game::where('verified', '=', 1)
+					->orderBy($order_by, 'desc')
 					->limit($limit)
 					//->remember(10)
 					->get()
 				;
 			});
 			$albums = Cache::remember('albums_mainpage_unauth', $minutes, function() use ($limit, $order_by) {
-				return Album::orderBy($order_by, 'desc')
+				return Album::where('verified', '=', 1)
+					->orderBy($order_by, 'desc')
 					->limit($limit)
 					//->remember(10)
 					->get()

@@ -59,7 +59,8 @@ class BooksController extends Controller {
 				->toArray()
 			;
 
-			$elements = Book::orderBy($sort, $sort_direction)
+			$elements = Book::where('verified', '=', 1)
+				->whereNotIn('id', $not_wanted)
 				->with(array('rates' => function($query)
 					{
 						$query
@@ -68,11 +69,13 @@ class BooksController extends Controller {
 						;
 					})
 				)
-				->whereNotIn('id', $not_wanted)
+				->orderBy($sort, $sort_direction)
 				->paginate($limit)
 			;
 		} else {
-			$elements = Book::orderBy($sort, $sort_direction)
+
+			$elements = Book::where('verified', '=', 1)
+				->orderBy($sort, $sort_direction)
 				->paginate($limit)
 			;
 		}

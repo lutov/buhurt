@@ -61,7 +61,8 @@ class FilmsController extends Controller {
 				->toArray()
 			;
 
-			$elements = Film::orderBy($sort, $sort_direction)
+			$elements = Film::where('verified', '=', 1)
+				->whereNotIn('id', $not_wanted)
 				->with(array('rates' => function($query)
 					{
 						$query
@@ -70,13 +71,12 @@ class FilmsController extends Controller {
 						;
 					})
 				)
-				->whereNotIn('id', $not_wanted)
+				->orderBy($sort, $sort_direction)
 				->paginate($limit)
 			;
-		}
-		else
-		{
-			$elements = Film::orderBy($sort, $sort_direction)
+		} else {
+			$elements = Film::where('verified', '=', 1)
+				->orderBy($sort, $sort_direction)
 				->paginate($limit)
 			;
 		}

@@ -154,7 +154,7 @@ class TextHelper {
 
 		// return preg_replace('![^\w\d\s]*!', '', $name);
 		// return preg_replace("/[^a-zA-ZА-Яа-я0-9\s]/", "", $name);
-		return substr(preg_replace("/[^a-zA-Zа-яА-Я0-9\.,\s\(\)-:]/", "", $name), 0, 255);
+		return substr(preg_replace("/[^a-zA-Zа-яА-Я0-9\.,\s\(\)-:]/u", "", $name), 0, 255);
 
 	}
 

@@ -60,7 +60,8 @@ class AlbumsController extends Controller {
 				->toArray()
 			;
 
-			$elements = Album::orderBy($sort, $sort_direction)
+			$elements = Album::where('verified', '=', 1)
+				->whereNotIn('id', $not_wanted)
 				->with(array('rates' => function($query)
 					{
 						$query
@@ -69,13 +70,12 @@ class AlbumsController extends Controller {
 						;
 					})
 				)
-				->whereNotIn('id', $not_wanted)
+				->orderBy($sort, $sort_direction)
 				->paginate($limit)
 			;
-		}
-		else
-		{
-			$elements = Album::orderBy($sort, $sort_direction)
+		} else {
+			$elements = Album::where('verified', '=', 1)
+				->orderBy($sort, $sort_direction)
 				->paginate($limit)
 			;
 		}

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\Helpers\DebugHelper;
 use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
@@ -1245,7 +1246,7 @@ class DatabaseController extends Controller {
 			$new->year = 0;
 
 			if(RolesHelper::isAdmin($request)) {
-				$new->verified = 1;
+				$new->verified = 0;//1;
 			} else {
 				$new->verified = 0;
 			}
@@ -1317,6 +1318,16 @@ class DatabaseController extends Controller {
 			}
 
 			$this->setUploader($type, $element_id);
+
+			$user_id = Auth::user()->id;
+			$event = new Event();
+			$event->event_type = 'UserAdd';
+			$event->element_type = $type;
+			$event->element_id = $element_id;
+			$event->user_id = $user_id;
+			$event->name = $name;
+			$event->text = 'Добавлено произведение'; //«'.$search.'»';
+			$event->save();
 
 			return Redirect::to('/'.$section.'/'.$new->id);
 		}
