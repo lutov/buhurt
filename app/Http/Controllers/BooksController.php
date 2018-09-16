@@ -2,6 +2,7 @@
 
 use App\Models\Helpers\ElementsHelper;
 use Auth;
+use DB;
 use Illuminate\Http\Request;
 use Input;
 use View;
@@ -294,5 +295,43 @@ class BooksController extends Controller {
     {
         return View::make($this->prefix.'.author');
     }
+
+	/**
+	 * @param int $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function transfer(int $id = 0) {
+
+		$section = $this->prefix;
+		$type = 'Book';
+
+		$recipient_id = Input::get('recipient_id');
+
+		$element_rate = DB::table('rates')
+			->where('element_type', '=', $type)
+			->where('element_id', '=', $recipient_id)
+			->get()
+			->toArray()
+		;
+
+		//echo Helpers\DebugHelper::dump($element_rate); die();
+
+		if(!isset($element_rate[0]->id)) {
+
+			DB::table('rates')
+				->where('element_type', '=', $type)
+				->where('element_id', '=', $id)
+				->update(array('element_id' => $recipient_id))
+			;
+
+		}
+		//DB::table('publishers_games')->where('company_id', '=', $id)->update(array('company_id' => $recipient_id));
+		//DB::table('publishers_books')->where('company_id', '=', $id)->update(array('company_id' => $recipient_id));
+
+		DB::table($section)->where('id', '=', $id)->delete();//->update(array('name' => ''));
+
+		return Redirect::to('/'.$this->prefix.'/'.$recipient_id);
+
+	}
 	
 }

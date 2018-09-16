@@ -64,6 +64,41 @@
 
             </div>
 
+            <div class="card mt-3">
+
+                <div id="transfer" class="card-body text-center">
+
+                    {!! Form::open(array(
+                        'action' => array(
+                            'CompaniesController@transfer', $element->id),
+                            'class' => 'transfer',
+                            'method' => 'POST',
+                            'files' => false
+                        )
+                    ) !!}
+
+                    <div>
+                        {!! Form::text('recipient_id', $value = '', $attributes = array(
+                            'placeholder' => 'Преемник',
+                            'id' => 'recipient',
+                            'class' => 'form-control'
+                        )) !!}
+                    </div>
+
+                    <div class="btn-group mt-3">
+                        {!! Form::submit('Перенести', $attributes = array(
+                            'id' => 'do_transfer',
+                            'type' => 'button',
+                            'class' => 'btn btn-sm btn-outline-primary'
+                        )) !!}
+                    </div>
+
+                    {!! Form::close() !!}
+
+                </div>
+
+            </div>
+
         </div>
 
         <!--script type="text/javascript" src="/data/js/admin/companies.js"></script-->

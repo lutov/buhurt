@@ -16,7 +16,7 @@
 			@if(count($directions))<li class="list-inline-item"><a href="#director">Режиссёр</a></li>@endif
 			@if(count($productions))<li class="list-inline-item"><a href="#producer">Продюссер</a></li>@endif
 			@if(count($actions))<li class="list-inline-item"><a href="#actor">Актёр</a></li>@endif
-			@if(RolesHelper::isAdmin($request))<li class="list-inline-item"><a href="#transfer">Преемник</a></li>@endif
+			<?//@if(RolesHelper::isAdmin($request))<li class="list-inline-item"><a href="#transfer">Преемник</a></li>@endif?>
 
 		</ul>
 	</section>
@@ -122,26 +122,5 @@
 		</div>
 
     @endif
-
-	@if(RolesHelper::isAdmin($request))
-
-		<div id="transfer" class="form-group">
-		{!! Form::open(array('action' => array('PersonsController@transfer', $element->id), 'class' => 'transfer', 'method' => 'POST', 'files' => false)) !!}
-		<p>{!! Form::text('recipient_id', $value = '', $attributes = array(
-			'placeholder' => 'Преемник',
-			'id' => 'recipient',
-			'class' => 'form-control'
-		)) !!}</p>
-		<p>
-			{!! Form::submit('Перенести', $attributes = array(
-				'id' => 'do_transfer',
-				'type' => 'button',
-				'class' => 'btn btn-secondary'
-			)) !!}
-		</p>
-		{!! Form::close() !!}
-		</div>
-
-	@endif
 
 @stop

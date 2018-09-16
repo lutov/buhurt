@@ -497,10 +497,13 @@ class ElementsHelper {
 
 			}
 
-			if(!empty($rating)) {
+			$rating = ElementsHelper::countRating($element);
+
+			if(!empty($rating['count'])) {
 
 				$element_title .= '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
 				$element_title .= 'Средняя оценка: <b itemprop="ratingValue">'.$rating['average'].'</b>';
+				$element_title .= ', ';
 				$element_title .= TextHelper::number($rating['count'], array('голос', 'голоса', 'голосов'));
 				$element_title .= '</div>';
 

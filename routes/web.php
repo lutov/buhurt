@@ -38,6 +38,11 @@ Route::group(array('middleware' => 'admin'), function() {
 		Route::any('transfer/persons/{id}', array('uses' => 'PersonsController@transfer'));
 		Route::any('transfer/companies/{id}', array('uses' => 'CompaniesController@transfer'));
 
+		Route::any('transfer/albums/{id}', array('uses' => 'AlbumsController@transfer'));
+		Route::any('transfer/books/{id}', array('uses' => 'BooksController@transfer'));
+		Route::any('transfer/films/{id}', array('uses' => 'FilmsController@transfer'));
+		Route::any('transfer/games/{id}', array('uses' => 'GamesController@transfer'));
+
 	});
 
 });
