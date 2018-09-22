@@ -170,6 +170,14 @@ class ElementsHelper {
 						$elements_list .= '</button>';
 					}
 
+					if (RolesHelper::isAdmin($request)) {
+						$class = 'btn btn-sm btn-outline-success';
+						$handler = 'onclick="lists(\'' . $section . '\', \'' . $element->id . '\')"';
+						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Добавить в список">';
+						$elements_list .= '📒';
+						$elements_list .= '</button>';
+					}
+
 					if (isset($options['not_wanted'])) {
 						if (in_array($element->id, $options['not_wanted'])) {
 							$class = 'btn btn-sm btn-danger';

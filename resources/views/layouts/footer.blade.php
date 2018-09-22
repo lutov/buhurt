@@ -3,7 +3,7 @@
 
 		<footer class="footer text-muted font-small blue">
 
-			<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+			<nav class="navbar navbar-expand-sm navbar-light bg-light">
 
 				<div class="collapse navbar-collapse" id="navbarCollapse">
 

@@ -31,7 +31,7 @@
 
     	<header>
 
-			<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+			<nav class="navbar navbar-expand-md navbar-light bg-light border-bottom shadow fixed-top">
 
 				<a class="navbar-brand" href="/">
 					<!--img src="/data/img/design/logo.svg" alt="Бугурт" title="«Бугурт» — свободная система оценок" width="30" height="30" /-->
@@ -47,23 +47,23 @@
 					<ul class="navbar-nav mr-auto">
 
 						<li class="nav-item">
-							<a class="nav-link" href="/books/">Книги</a>
+							<a class="nav-link" href="/books/">📚 Книги</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/films/">Фильмы</a>
+							<a class="nav-link" href="/films/">&#127909; Фильмы</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/games/">Игры</a>
+							<a class="nav-link" href="/games/">&#127918; Игры</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/albums/">Альбомы</a>
+							<a class="nav-link" href="/albums/">&#127911; Альбомы</a>
 						</li>
 
 						@if (Auth::check())
 
 							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									{!! Auth::user()->username !!}
+									👤 {!! Auth::user()->username !!}
 								</a>
 								<div class="dropdown-menu" aria-labelledby="dropdown01">
 
@@ -104,12 +104,12 @@
                         'query',
                         $value = Input::get('query', ''),
                         $attributes = array(
-                            'placeholder' => 'Искать',
+                            'placeholder' => 'Поиск',
                             'class' => 'form-control mr-sm-2',
                             'id' => 'search'
                         )
                     ) !!}
-					<!--button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button-->
+					<button class="btn btn-outline-primary my-2 my-sm-0" type="submit">🔎</button>
 					{!! Form::close() !!}
 
 				</div>

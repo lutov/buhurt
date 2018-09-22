@@ -219,7 +219,7 @@ class ListsController extends Controller {
 
 		}
 
-		return View::make('lists.add_to_list', array('element_list' => $element));
+		return View::make('lists.add_to_list', array('element' => $element));
 
 	}
 
@@ -248,7 +248,7 @@ class ListsController extends Controller {
 
 		}
 
-		return View::make('lists.remove_list', array('element_list' => $element));
+		return View::make('lists.remove_list', array('element' => $element));
 
 	}
 

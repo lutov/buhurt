@@ -111,6 +111,97 @@ function undislike(section, id) {
 
 }
 
+function add_to_list(section, id, list_id) {
+
+    var path = '/lists/add_to_lists/';
+    $.post(
+        path,
+        {element_data: {
+            element_id: id,
+            element_type: section
+        },
+        list_id: list_id},
+        function (post_data) {
+            console.log(post_data);
+        });
+
+}
+
+function remove_from_list(section, id, list_id) {
+
+    var path = '/lists/remove_from_lists/';
+    $.post(
+        path,
+        {element_data: {
+            element_id: id,
+            element_type: section
+        },
+        list_id: list_id},
+        function (post_data) {
+            console.log(post_data);
+        });
+
+}
+
+function toggle_list(section, id, box) {
+
+    var check = $(box);
+
+    //console.log(box.val());
+
+    if(check.prop('checked')) {
+
+        add_to_list(section, id, check.val());
+
+    } else {
+
+        remove_from_list(section, id, check.val());
+
+    }
+
+}
+
+function lists(section, id) {
+
+    var path = '/lists/get_lists/';
+    $.post(
+        path,
+        {},
+        function(get_data) {
+
+            //console.log(get_data);
+
+            var lists = '<form method="POST">';
+
+            jQuery.each(get_data.data, function(key, value) {
+
+                var handler = 'onclick="toggle_list(\''+section+'\', '+id+', this)"';
+
+                lists += '<div>';
+                lists += '<input type="checkbox" name="list" id="list_'+value.id+'" value="'+value.id+'" '+handler+'>';
+                lists += '&nbsp;';
+                lists += '<label for="list_'+value.id+'">';
+                lists += value.name;
+                lists += '</label>';
+                lists += '</div>';
+
+            });
+
+            lists += '</form>';
+
+            var data = {
+                title: 'Добавить в список',
+                message: lists,
+                leave: true
+            };
+
+            show_popup(data);
+
+        }
+    );
+
+}
+
 function scroll_to (elem) {
     $('html, body').animate({ scrollTop: $(elem).offset().top }, 500);
 }
@@ -126,12 +217,12 @@ function comment_add(section, element) {
     var comment = $('#comment').val();
     //console.log(comment);
 
-    if('' != comment)
+    if('' !== comment)
     {
         var id_field = $('#comment_id');
         var id = id_field.val();
         //console.log(id);
-        if('' == id) {
+        if('' === id) {
 
             path = '/comment/add';
             $.post(
@@ -225,7 +316,7 @@ function bind_genres(block_id, field_id)
         $(this).click(function () {
             var genre = $('#'+field_id);
             //console.log(genre);
-            if('' == genre.val())
+            if('' === genre.val())
             {
                 genre.val($(this).html());
             }
@@ -274,9 +365,14 @@ function show_popup(data) {
 
     modal_content.html(output_message);
     modal_block.modal();
-    modal_block.on('shown.bs.modal', function (e) {
-        // do something...
-        setTimeout(function() { modal_block.modal('hide'); }, delay);
-    })
+
+    if(!data.leave) {
+        modal_block.on('shown.bs.modal', function (e) {
+            // do something...
+            setTimeout(function () {
+                modal_block.modal('hide');
+            }, delay);
+        })
+    }
 
 }

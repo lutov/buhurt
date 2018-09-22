@@ -54,21 +54,30 @@ class DatatypeHelper {
 		$string = '';
 		$number = count($object);
 		$i = 1;
-		foreach ($object as $property)
-		{
-			if (!$no_link) {$string .= '<a href="'.$path.$property->$type->id.'"';
-				if($itemprop) {
-					$string .= ' itemprop="'.$itemprop.'" ';
+		foreach ($object as $property) {
+			
+			if(is_object($property) && is_object($property->$type)) {
+			
+				//echo DebugHelper::dump($property->$type->id, 1); die();
+				
+				if (!$no_link) {
+					
+					$string .= '<a href="'.$path.$property->$type->id.'"';
+					if($itemprop) {
+						$string .= ' itemprop="'.$itemprop.'" ';
+					}
+					$string .= '>';
 				}
-				$string .= '>';
+				$string .= $property->$type->name;
+				if (!$no_link) {$string .= '</a>';}
+				if ($i < $number)
+				{
+					$string .= $delimiter;
+				}
+				$i++;
+			
 			}
-			$string .= $property->$type->name;
-			if (!$no_link) {$string .= '</a>';}
-			if ($i < $number)
-			{
-				$string .= $delimiter;
-			}
-			$i++;
+			
 		}
 		return $string;
 	}
