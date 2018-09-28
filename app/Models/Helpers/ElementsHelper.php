@@ -739,9 +739,9 @@ class ElementsHelper {
 
 			$element_body .= '</div>';
 
-			$element_body .= '<div itemprop="description" class="col-md-9">';
+			$element_body .= '<div itemprop="description" class="col-md-9 border rounded p-3">';
 
-				$element_body .= '<p>'.nl2br($element->description).'</p>';
+				if(!empty($element->description)) {$element_body .= '<p>'.nl2br($element->description).'</p>';}
 
 				if(isset($info['actors']) && count($info['actors'])) {
 

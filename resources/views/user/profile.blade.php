@@ -34,11 +34,15 @@
 
 		<div class="col-md-3">
 
-			<img src="/data/img/avatars/{!! $avatar !!}.jpg" alt="{!! $user->username !!}" class="img-fluid" />
+			<div class="card">
+
+			<img src="/data/img/avatars/{!! $avatar !!}.jpg" alt="{!! $user->username !!}" class="card-img-top" />
+
+			</div>
 
 		</div>
 
-		<div class="col-md-9">
+		<div class="col-md-9 border rounded p-3">
 
 			<p>Зарегистрирован {!! LocalizedCarbon::instance($user->created_at)->diffForHumans() !!}</p>
 
@@ -110,7 +114,7 @@
 
 		<div class="row mt-5">
 
-			<div class="col-md-12">
+			<div class="col-md-12 border rounded p-3">
 
 				@if(count($fav_gens_books))<p>Книги: {!! DatatypeHelper::arrayToString($fav_gens_books, ', ', '/genres/books/'); !!}</p>@endif
 				@if(count($fav_gens_films))<p>Фильмы: {!! DatatypeHelper::arrayToString($fav_gens_films, ', ', '/genres/films/'); !!}</p>@endif
@@ -166,7 +170,7 @@
 
 		<div class="row mt-5 align-top">
 
-			<div class="col-md-12">
+			<div class="col-md-12 border rounded p-3">
 
 				<h3 class="mb-3">Аватар</h3>
 
@@ -195,7 +199,7 @@
 
 		<div class="row mt-5 align-top">
 
-			<div class="col-md-12 align-top">
+			<div class="col-md-12 align-top border rounded p-3">
 
 				<h3 class="mb-3">Безопасность</h3>
 				<p>
@@ -210,7 +214,7 @@
 
 		<div class="row mt-5 align-top">
 
-			<div class="col-md-12 align-top">
+			<div class="col-md-12 align-top border rounded p-3">
 
 				<h3  class="mb-3">Комментарии</h3>
 				{!! Form::open(array('url' => 'user/'.$user->id.'/options', 'class' => 'options', 'method' => 'POST')) !!}

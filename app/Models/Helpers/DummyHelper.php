@@ -125,7 +125,7 @@ class DummyHelper {
 			case 'yandex_images': // https://yandex.ru/images/search?text=евангелион
 				$protocol = 'https';
 				$url = 'yandex.ru/images/search';
-				$query = 'text';
+				$query = 'iorient=vertical&text';
 				$target = '_blank';
 				$site_name = 'Яндекс.Картинки';
 				break;
