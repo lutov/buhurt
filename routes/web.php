@@ -234,3 +234,5 @@ Route::group(array('prefix' => 'comment'), function() {
 Route::group(array('prefix' => 'events'), function() {
 	Route::get('/', array('uses' => 'EventsController@getList'));
 });
+
+Route::any('demo', array('uses' => 'DemoController@index'));
