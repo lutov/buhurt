@@ -35,6 +35,10 @@ class DemoController extends Controller {
 
 		if(Helpers::is_admin()) {
 
+			set_time_limit(0);
+
+			echo ini_get('max_execution_time'); die();
+
 			//echo $book->name;
 			//echo 'yes';
 
@@ -112,18 +116,49 @@ class DemoController extends Controller {
 			DebugHelper::dumpToFile($debug_array, 'top_platforms');
 			*/
 
-			$platforms_file = 'top_platforms 2018-09-30 16-25-04.log';
+			//$platforms_file = 'top_platforms 2018-09-30 16-25-04.log';
 
-			$platforms = unserialize(file_get_contents($basic_path.'/'.$platforms_file));
+			//$platforms = unserialize(file_get_contents($basic_path.'/'.$platforms_file));
 
 			//$debug_string = DebugHelper::dump($platforms, true);
 			//echo $debug_string;
 
+			$platforms = array(
+				array('id' => 1, 'alias' => 'pc'),
+			);
+
+			$games_by_platforms_url = 'Games/ByPlatformID';
+
+			$games = array();
+
 			foreach($platforms as $platform) {
 
-				
+				$games = array();
+
+				$params['id'] = $platform['id'];
+
+				//$platform_games = DebugHelper::makeRequest($basic_url.$games_by_platforms_url, $params);
+
+				//$games[$platform['alias']] = $platform_games;
+
+				$games = $this->getPage($basic_url.$games_by_platforms_url, $platform, $params, $games);
+
+				$debug_array = serialize($games);
+
+				$games_platforms_file = DebugHelper::dumpToFile($debug_array, 'games_by_platforms');
 
 			}
+
+			//$debug_array = serialize($games);
+
+			//$games_platforms_file = DebugHelper::dumpToFile($debug_array, 'games_by_platforms');
+
+			//echo count($games);
+
+			//$games_platforms = unserialize(file_get_contents($games_platforms_file));
+
+			//$debug_string = DebugHelper::dump($games_platforms, true);
+			//echo $debug_string;
 
 		} else {
 
@@ -132,6 +167,24 @@ class DemoController extends Controller {
 		}
     }
 
+	/**
+	 * @param string $url
+	 * @param array $platform
+	 * @param array $params
+	 * @param array $games
+	 * @return array
+	 */
+    private function getPage(string $url, array $platform, array $params, array $games) {
+
+		$platform_games = DebugHelper::makeRequest($url, $params);
+
+		$games[$platform['alias']][] = $platform_games;
+
+		if(!empty($platform_games->pages->next)) {$games = $this->getPage($platform_games->pages->next, $platform, $params, $games);}
+
+		return $games;
+
+	}
 
 	public function moderator() {
 

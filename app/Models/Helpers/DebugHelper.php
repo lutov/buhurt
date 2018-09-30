@@ -33,6 +33,7 @@ class DebugHelper {
 	/**
 	 * @param string $debug_text
 	 * @param string $file_name
+	 * @return string
 	 */
 	public static function dumpToFile(string $debug_text = '', string $file_name = 'debug') {
 
@@ -42,6 +43,8 @@ class DebugHelper {
 		$log_path = $file_path.'/'.$file_name.date(' Y-m-d H-i-s').'.log';
 
 		file_put_contents($log_path, $debug_text);
+
+		return $log_path;
 
 	}
 
