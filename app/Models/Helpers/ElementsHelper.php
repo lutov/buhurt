@@ -90,7 +90,7 @@ class ElementsHelper {
 
 			$link = '/' . $section . '/' . $element->id;
 
-			$elements_list .= '<div class="col-md-3">';
+			$elements_list .= '<div class="col-lg-3 col-md-4 col-sm-6 col-6">';
 			$elements_list .= '<div class="card mb-4 box-shadow">';
 
 			$elements_list .= '<div class="card-img-box">';
