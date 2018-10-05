@@ -102,10 +102,24 @@ class RelationsController extends Controller {
 			
 			//print_r($relations);
 			
-			foreach($relations as $key => $value) {
-				
-				$this->set_relation($id, $key, $section_type, $relations, $relation_id, $relation_name, $relation_type, $relation_list);
-				
+			$input_data = array(
+				'element' => array(
+					'id' => $id,
+					'type' => $section_type,
+				),
+				'relation' => array(
+					'id' => $relation_id,
+					'name' => $relation_name,
+					'type' => $relation_type,
+					'list' => $relation_list,
+				),
+				'relations' => $relations,
+			);
+
+			while(1 < count($input_data['relations'])) {
+
+				$input_data = $this->setRelations($input_data);
+
 			}
 			
 			return Redirect::to('/'.$section.'/'.$id.'/relations')->with('message', 'Связи установлены');
@@ -128,7 +142,7 @@ class RelationsController extends Controller {
 	 * @param string $relation_type
 	 * @param array $relation_list
 	 */
-	private function set_relation(
+	private function setRelation(
 		int $id = 0,
 		int $key = 0,
 		string $section_type = '',
@@ -229,6 +243,37 @@ class RelationsController extends Controller {
 
 		}
 		
+	}
+
+	/**
+	 * @param array $input_data
+	 * @return array
+	 */
+	private function setRelations(array $input_data = array()) {
+
+		$id = $input_data['element']['id'];
+		$type = $input_data['element']['type'];
+
+		$relation_id = $input_data['relation']['id'];
+		$relation_name = $input_data['relation']['name'];
+		$relation_type = $input_data['relation']['type'];
+		$relation_list = $input_data['relation']['list'];
+
+		$relations = $input_data['relations'];
+
+		foreach($relations as $key => $value) {
+
+			$this->setRelation($id, $key, $type, $relations, $relation_id, $relation_name, $relation_type, $relation_list);
+
+		}
+
+		$output_data = $input_data;
+		$output_data['element']['id'] = $relations[0];
+		unset($relations[0]);
+		$output_data['relations'] = array_values($relations);
+
+		return $output_data;
+
 	}
 	
 }
