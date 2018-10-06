@@ -116,7 +116,7 @@ class RelationsController extends Controller {
 				'relations' => $relations,
 			);
 
-			while(1 < count($input_data['relations'])) {
+			while(0 < count($input_data['relations'])) {
 
 				$input_data = $this->setRelations($input_data);
 
