@@ -5,6 +5,8 @@ use App\Models\Helpers\RolesHelper;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
+use mysqli;
+use PDO;
 use View;
 use Input;
 use Redirect;
@@ -40,7 +42,7 @@ class DemoController extends Controller {
 
 	private $next_url = '';
 
-	private $next_file = 'next 2018-10-06 19-55-45.log';
+	private $next_file = 'next 2018-10-07 12-54-53.log';
 
 	public function __construct() {
 
@@ -88,15 +90,58 @@ class DemoController extends Controller {
 			//$genres = Helpers::get_fav_genres(1, 'Film');
 			//echo Helpers::array2string($genres, ', ', '/genres/films/');
 
-			//echo $this->getPageByPlatforms();
+			/*
+			$aContext = array(
+				'http' => array(
+					//'proxy' => 'tcp://195.123.217.74:889',
+					//'proxy' => 'tcp://jack-sparrow.redirectme.net:1080',
+					//'proxy' => 'tcp://95.216.55.138:6968',
+					//'proxy' => 'tcp://5.167.51.235:8080',
+					//'proxy' => 'tcp://119.2.88.61:4145',
+					//'proxy' => 'tcp://198.50.142.47:3128',
+					//'proxy' => 'tcp://37.61.224.231:8195',
+					'proxy' => 'tcp://51.38.234.95:8080',
+					'request_fulluri' => true,
+				),
+			);
+			$cxContext = stream_context_create($aContext);
+			*/
 
-			$games_file = 'games_by_platforms 2018-10-06 19-55-45.log';
+			//echo $this->getPageByPlatforms(); // $cxContext
 
-			$games = unserialize(file_get_contents($this->basic_path.'/'.$games_file));
+			/*
+			$a = 1;
+			$z = 27;
 
-			$debug_string .= DebugHelper::dump($games, 1);
+			for ($i = $a; $i <= $z; $i++) {
 
-			echo $debug_string;
+				$games_file = 'games ('.$i.').log';
+
+				$games = unserialize(file_get_contents($this->basic_path . '/' . $games_file));
+
+				//$debug_string .= DebugHelper::dump($games, 1);
+
+				//echo $debug_string;
+
+				foreach($games as $platform_name => $platform) {
+
+					foreach($platform[0]->data->games as $game) {
+
+						$game_title = addslashes($game->game_title);
+						if(!empty($game->release_date)) {$release_date = $game->release_date;} else {$release_date = date('Y-m-d');}
+
+						$query = "INSERT INTO `_gamesdb` (game_id, game_title, release_date, platform, platform_name, developers) VALUES (".$game->id.", '".$game_title."', '".$release_date."', ".$game->platform.", '".$platform_name."', '".serialize($game->developers)."')";
+
+						//echo $query."\n\n";
+
+						DB::insert($query);
+
+					}
+
+				}
+
+			}
+			*/
 
 		} else {
 
@@ -119,7 +164,7 @@ class DemoController extends Controller {
     	//echo $url."\n\n"; die();
 
 		//$platform_games = DebugHelper::makeRequest($url, $params, 1);
-		$platform_games = DebugHelper::getResult($url);
+		$platform_games = DebugHelper::getResult($url, 0); // , $params['proxy']
 
 		$games[$platform['alias']][] = $platform_games;
 
@@ -220,7 +265,7 @@ class DemoController extends Controller {
 	/**
 	 * @return string
 	 */
-	private function getPageByPlatforms() {
+	private function getPageByPlatforms() { // $proxy
 
 		$debug_string = '';
 
@@ -229,6 +274,7 @@ class DemoController extends Controller {
 		$games = $this->games;
 
 		$params = $this->params;
+		//$params['proxy'] = $proxy;
 
 		foreach($this->platforms as $platform) {
 
@@ -257,7 +303,7 @@ class DemoController extends Controller {
 
 			//$games_platforms_file = DebugHelper::dumpToFile($debug_array, 'games_by_platforms');
 
-			//die(DebugHelper::dump($games, 1));
+			echo DebugHelper::dump($games, 1); //die();
 
 		}
 

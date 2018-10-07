@@ -51,15 +51,15 @@ class DebugHelper {
 	/**
 	 * @param string $url
 	 * @param bool $debug
-	 * @return array
+	 * @return array|mixed
 	 */
-	public static function getResult($url = '', $debug = false) {
+	public static function getResult(string $url = '', bool $debug = false) { // , $proxy = false
 
 		$result = array();
 
 		if(!empty($url)) {
 
-			$json_result = file_get_contents($url);
+			$json_result = file_get_contents($url); // , false, $proxy
 			if($debug) {
 				$result['debug']['url'] = $url;
 				$result['debug']['result'] = $json_result;
