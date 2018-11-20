@@ -221,7 +221,7 @@ class BooksController extends Controller {
 
 		} else {
 
-			return Redirect::to('/base/books');
+			return Redirect::to('/books');
 
 		}
     }

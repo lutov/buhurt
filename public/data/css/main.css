@@ -5,6 +5,17 @@
 
 }
 
+.rating-container {
+    display: flex;
+}
+.rating-container .rating-stars {
+    order: 1;
+}
+.rating-container .clear-rating {
+    order: 2;
+    font-size: inherit;
+}
+
 .card-img-box {
     position: relative;
     width: 100%;		/* desired width */

@@ -48,6 +48,10 @@ Route::group(array('middleware' => 'admin'), function() {
 });
 Route::get('q_add/{section}', array('uses' => 'DatabaseController@q_add'));
 
+	// Base
+	Route::any('base/{section}/', function($section) {return Redirect::to('/'.$section.'/');});
+	Route::any('base/{section}/{id}/', function($section, $id) {return Redirect::to('/'.$section.'/'.$id.'/');});
+
 	// No "base"
 	Route::any('books', array('uses' => 'BooksController@show_all'));
 		Route::get('books/{id}', array('uses' => 'BooksController@show_item'))->where('id', '[0-9]+'); // только числа
@@ -111,8 +115,8 @@ Route::group(array('prefix' => 'collections'), function() {
 Route::group(array('middleware' => 'auth'), function() {
 	// Rates
 	Route::group(array('prefix' => 'rates'), function () {
-		Route::any('rate/{section}/{id}', array('uses' => 'RatesController@rate'));
-		Route::get('unrate/{section}/{id}', array('uses' => 'RatesController@unrate'));
+		Route::post('rate/{section}/{id}', array('uses' => 'RatesController@rate'));
+		Route::post('unrate/{section}/{id}', array('uses' => 'RatesController@unrate'));
 	});
 
 	// Wanted & Unwanted

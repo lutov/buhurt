@@ -94,7 +94,10 @@ class RatesController extends Controller {
 		}
     }
 
-
+	/**
+	 * @param $section
+	 * @param $id
+	 */
 	public function unrate($section, $id) {
 
 		if('books' == $section) {
@@ -121,17 +124,39 @@ class RatesController extends Controller {
 			$exists = $element->rates()->where('user_id', '=', $user->id)->first();
 			//die(print_r($exists, true));
 			if(isset($exists->id)) {
+
 				$rate = Rate::find($exists->id);
 				$rate->delete();
 				//$rate->rate = $rate_val;
 				//$rate->save();
+
+				// success
+				$result = array(
+					"type" => "rate",
+					"title" => "Оценка",
+					"message" => "Оценка&nbsp;удалена",
+					"images" => array(),
+					"status" => "OK",
+				);
+				echo json_encode($result);
+
 			} else {
-				//
+
+				// fail
+				$result = array(
+					"type" => "rate",
+					"title" => "Оценка",
+					"message" => "Оценка&nbsp;не найдена",
+					"images" => array(),
+					"status" => "OK",
+				);
+				echo json_encode($result);
 			}
 
 		}
 
-		return Redirect::back()->with('message', 'Оценка удалена');
+		//return Redirect::back()->with('message', 'Оценка удалена');
+
 	}
 	
 }

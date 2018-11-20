@@ -12,16 +12,17 @@ $(document).ready(function() {
         //size: 'xs',
         emptyStar: '&#9734;',
         filledStar: '&#9733;',
-        clearButton: '&#10008;',
+        clearButton: '⊝',
         min: 0,
         max: 10,
         step: 1.0,
         stars: '10',
         animate: false,
         showCaption: false,
-        showClear: false,
+        showClear: true,
         //defaultCaption: 'Нет оценки',
         clearCaption: 'Нет оценки',
+        clearButtonTitle: 'Удалить оценку',
         starCaptions: {
             1: 'Очень плохо',
             2: 'Плохо',
@@ -77,6 +78,28 @@ $(document).ready(function() {
 
             //console.log(data);
             //show_popup(data);
+
+        }, 'json');
+
+    });
+
+    main_rating.on('rating:clear', function(event) {
+
+        // console.log("rating:clear");
+        // console.log(caption);
+
+        var path = '/rates/unrate/';
+
+        path += element_section.val();
+        path += '/';
+        path += element_id.val();
+
+        var params = {};
+
+        $.post(path, params, function(data) {
+
+            //console.log(data);
+            show_popup(data);
 
         }, 'json');
 
