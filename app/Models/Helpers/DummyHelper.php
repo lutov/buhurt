@@ -225,7 +225,7 @@ class DummyHelper {
 			return $stats_array;
 		});
 
-		$stats .= '<li class="nav-item"><a class="nav-link disabled" href="#">';
+		$stats .= '<li class="nav"><a class="nav-link disabled" href="#">';
 		$stats .= TextHelper::number($stats_array['books'], array('книга', 'книги', 'книг')).', ';
 		$stats .= TextHelper::number($stats_array['films'], array('фильм', 'фильма', 'фильмов')).', ';
 		$stats .= TextHelper::number($stats_array['games'], array('игра', 'игры', 'игр')).', ';
@@ -234,15 +234,15 @@ class DummyHelper {
 
 		if(RolesHelper::isAdmin($request)) {
 
-			$stats .= '<li class="nav-item"><a class="nav-link" href="/users">';
+			$stats .= '<li class="nav"><a class="nav-link" href="/users">';
 			$stats .= TextHelper::number($stats_array['users'], array('пользователь', 'пользователя', 'пользователей'));
 			$stats .= '</a></li>';
 
-			$stats .= '<li class="nav-item"><a class="nav-link disabled" href="#">';
+			$stats .= '<li class="nav"><a class="nav-link disabled" href="#">';
 			$stats .= TextHelper::number($stats_array['rates'], array('оценка', 'оценки', 'оценок'));
 			$stats .= '</a></li>';
 
-			$stats .= '<li class="nav-item"><a class="nav-link disabled" href="#">';
+			$stats .= '<li class="nav"><a class="nav-link disabled" href="#">';
 			$stats .= TextHelper::number($stats_array['comments'], array('комментарий', 'комментария', 'комментариев'));
 			$stats .= '</a></li>';
 
@@ -282,77 +282,269 @@ class DummyHelper {
 
 		$output_string .= '<h3>Добавить произведение</h3>';
 
-		$output_string .= '<ol>';
+		$output_string .= '<ul class="list-group list-group-flush" style="display: flex; justify-content: space-between; flex-wrap: wrap; flex-direction: row;">';
 
-			$output_string .= '<li>';
+			$output_string .= '<li class="list-group-item" style="flex-grow: 1;">';
 
-				$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'">Книгу</a>';
-				$output_string .= '<ul>';
+				$output_string .= '<h4><a href="/q_add/books/?new_name='.urlencode($search).'">Книгу</a></h4>';
+				$output_string .= '<ul class="">';
 
-					$output_string .= '<li>';
-					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=marvel_book">';
-					$output_string .= 'Marvel Comics';
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=fiction_book">';
+					$output_string .= 'Фантастика и фэнтези';
 					$output_string .= '</a>';
-					$output_string .= '</li>';
+					$output_string .= '</h5></li>';
 
-					$output_string .= '<li>';
-					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=dc_book">';
-					$output_string .= 'DC Comics';
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=action_book">';
+					$output_string .= 'Детективы и боевики';
 					$output_string .= '</a>';
-					$output_string .= '</li>';
+					$output_string .= '</h5></li>';
 
-					$output_string .= '<li>';
-					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=image_book">';
-					$output_string .= 'Image Comics';
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=adventure_book">';
+					$output_string .= 'Приключения<br>и исторический роман';
 					$output_string .= '</a>';
-					$output_string .= '</li>';
+					$output_string .= '</h5></li>';
 
-					$output_string .= '<li>';
-					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=valiant_book">';
-					$output_string .= 'Valiant Comics';
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=lovestory_book">';
+					$output_string .= 'Любовный роман';
 					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=novel_book">';
+					$output_string .= 'Современная проза';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=nonfiction_book">';
+					$output_string .= 'Публицистика<br>и нон-фикшен';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=poetry_book">';
+					$output_string .= 'Поэзия';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class="">';
+					$output_string .= '<h5><a href="/q_add/books/?new_name='.urlencode($search).'&template=comic_book">Комиксы и манга</a></h5>';
+					$output_string .= '<ul class="">';
+
+						$output_string .= '<li class=""><h6>';
+						$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=marvel_book">';
+						$output_string .= 'Marvel Comics';
+						$output_string .= '</a>';
+						$output_string .= '</h6></li class="">';
+
+						$output_string .= '<li class=""><h6>';
+						$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=dc_book">';
+						$output_string .= 'DC Comics';
+						$output_string .= '</a>';
+						$output_string .= '</h6></li>';
+
+						$output_string .= '<li class=""><h6>';
+						$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=image_book">';
+						$output_string .= 'Image Comics';
+						$output_string .= '</a>';
+						$output_string .= '</h6></li>';
+
+						$output_string .= '<li class=""><h6>';
+						$output_string .= '<a href="/q_add/books/?new_name='.urlencode($search).'&template=valiant_book">';
+						$output_string .= 'Valiant Comics';
+						$output_string .= '</a>';
+						$output_string .= '</h6></li>';
+
+					$output_string .= '</ul>';
 					$output_string .= '</li>';
 
 				$output_string .= '</ul>';
 
 			$output_string .= '</li>';
 
-			$output_string .= '<li>';
+			$output_string .= '<li class="list-group-item" style="flex-grow: 1;">';
 
-				$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'">Фильм</a>';
-				$output_string .= '<ul>';
+				$output_string .= '<h4><a href="/q_add/films/?new_name='.urlencode($search).'">Фильм</a></h4>';
+				$output_string .= '<ul class="">';
 
-					$output_string .= '<li>';
-					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=anime">';
-					$output_string .= 'Аниме';
-					$output_string .= '</a>';
+					$output_string .= '<li class="">';
+					$output_string .= '<h5><a href="/q_add/films/?new_name='.urlencode($search).'&template=fiction_film">';
+					$output_string .= 'Фантастика';
+					$output_string .= '</a></h5>';
+					$output_string .= '<ul class="">';
+
+						$output_string .= '<li class=""><h6>';
+						$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=marvel_film">';
+						$output_string .= 'Marvel Comics';
+						$output_string .= '</a>';
+						$output_string .= '</h6></li>';
+
+						$output_string .= '<li class=""><h6>';
+						$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=dc_film">';
+						$output_string .= 'DC Comics';
+						$output_string .= '</a>';
+						$output_string .= '</h6></li>';
+
+					$output_string .= '</ul>';
 					$output_string .= '</li>';
 
-					$output_string .= '<li>';
-					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=marvel_film">';
-					$output_string .= 'Marvel Comics';
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=fantasy_film">';
+					$output_string .= 'Фэнтези';
 					$output_string .= '</a>';
-					$output_string .= '</li>';
+					$output_string .= '</h5></li>';
 
-					$output_string .= '<li>';
-					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=dc_film">';
-					$output_string .= 'DC Comics';
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=drama_film">';
+					$output_string .= 'Драмы';
 					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=melodrama_film">';
+					$output_string .= 'Мелодрамы';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=comedy_film">';
+					$output_string .= 'Комедии';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=family_film">';
+					$output_string .= 'Семейные';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=adventure_film">';
+					$output_string .= 'Приключения';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=detective_film">';
+					$output_string .= 'Детективы';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=action_film">';
+					$output_string .= 'Боевики';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=thriller_film">';
+					$output_string .= 'Триллеры';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=horror_film">';
+					$output_string .= 'Ужасы';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=series_film">';
+					$output_string .= 'Сериалы';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class="">';
+					$output_string .= '<h5><a href="/q_add/films/?new_name='.urlencode($search).'&template=animated_film">';
+					$output_string .= 'Мультфильмы';
+					$output_string .= '</a></h5>';
+					$output_string .= '<ul class="">';
+
+						$output_string .= '<li class=""><h6>';
+						$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=anime">';
+						$output_string .= 'Аниме';
+						$output_string .= '</a>';
+						$output_string .= '</h6></li>';
+
+					$output_string .= '</ul>';
 					$output_string .= '</li>';
 
 				$output_string .= '</ul>';
-
 			$output_string .= '</li>';
 
-			$output_string .= '<li>';
-			$output_string .= '<a href="/q_add/games/?new_name='.urlencode($search).'">Игру</a>';
+			$output_string .= '<li class="list-group-item" style="flex-grow: 1;">';
+			$output_string .= '<h4><a href="/q_add/games/?new_name='.urlencode($search).'">Игру</a></h4>';
+				$output_string .= '<ul class="">';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/games/?new_name='.urlencode($search).'&template=action_game">';
+					$output_string .= 'Экшен';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/games/?new_name='.urlencode($search).'&template=roleplay_game">';
+					$output_string .= 'Ролевые игры';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/games/?new_name='.urlencode($search).'&template=strategy_game">';
+					$output_string .= 'Стратегии';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/games/?new_name='.urlencode($search).'&template=quest_game">';
+					$output_string .= 'Приключения';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/games/?new_name='.urlencode($search).'&template=arcade_game">';
+					$output_string .= 'Аркады';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+				$output_string .= '</ul>';
 			$output_string .= '</li>';
 
-			$output_string .= '<li>';
-			$output_string .= '<a href="/q_add/albums/?new_name='.urlencode($search).'">Альбом</a>';
+			$output_string .= '<li class="list-group-item" style="flex-grow: 1;">';
+			$output_string .= '<h4><a href="/q_add/albums/?new_name='.urlencode($search).'">Альбом</a></h4>';
+				$output_string .= '<ul class="">';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/albums/?new_name='.urlencode($search).'&template=rock_album">';
+					$output_string .= 'Рок';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/albums/?new_name='.urlencode($search).'&template=rap_album">';
+					$output_string .= 'Рэп';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/albums/?new_name='.urlencode($search).'&template=pop_album">';
+					$output_string .= 'Поп-музыка';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+					$output_string .= '<li class=""><h5>';
+					$output_string .= '<a href="/q_add/albums/?new_name='.urlencode($search).'&template=electronic_album">';
+					$output_string .= 'Электроника';
+					$output_string .= '</a>';
+					$output_string .= '</h5></li>';
+
+				$output_string .= '</ul>';
 			$output_string .= '</li>';
 
-		$output_string .= '</ol>';
+		$output_string .= '</ul>';
 
 		return $output_string;
 

@@ -1260,6 +1260,46 @@ class DatabaseController extends Controller {
 
 				switch ($template) {
 
+					case 'fiction_book':
+						$genres = array('Фантастика и фэнтези');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'action_book':
+						$genres = array('Детективы и боевики');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'adventure_book':
+						$genres = array('Приключения и исторический роман');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'lovestory_book':
+						$genres = array('Любовный роман');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'novel_book':
+						$genres = array('Современная проза');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'nonfiction_book':
+						$genres = array('Публицистика и нон-фикшн');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'poetry_book':
+						$genres = array('Поэзия');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'comic_book':
+						$genres = array('Комиксы и манга');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
 					case 'marvel_book':
 						$genres = array('Комиксы и манга', 'Фантастика и фэнтези');
 						$collections = array('Marvel Comics');
@@ -1288,11 +1328,83 @@ class DatabaseController extends Controller {
 						$this->setCollections($collections, $type, $element_id);
 						break;
 
+					case 'fiction_film':
+						$genres = array('Фантастика');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
 					case 'marvel_film':
 						$genres = array('Фантастика');
 						$collections = array('Marvel Comics');
 						$this->setGenres($genres, $type, $element_id);
 						$this->setCollections($collections, $type, $element_id);
+						break;
+
+					case 'dc_film':
+						$genres = array('Фантастика');
+						$collections = array('DC Comics');
+						$this->setGenres($genres, $type, $element_id);
+						$this->setCollections($collections, $type, $element_id);
+						break;
+
+					case 'fantasy_film':
+						$genres = array('Фэнтези');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'drama_film':
+						$genres = array('Драмы');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'melodrama_film':
+						$genres = array('Мелодрамы');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'comedy_film':
+						$genres = array('Комедии');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'family_film':
+						$genres = array('Семейные');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'adventure_film':
+						$genres = array('Приключения');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'detective_film':
+						$genres = array('Детективы');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'action_film':
+						$genres = array('Боевики');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'thriller_film':
+						$genres = array('Триллеры');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'horror_film':
+						$genres = array('Ужасы');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'series_film':
+						$genres = array('Сериалы');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'animated_film':
+						$genres = array('Мультфильмы');
+						$this->setGenres($genres, $type, $element_id);
 						break;
 
 					case 'anime':
@@ -1304,11 +1416,49 @@ class DatabaseController extends Controller {
 						//$this->setCollections($collections, $type, $element_id);
 						break;
 
-					case 'dc_film':
-						$genres = array('Фантастика');
-						$collections = array('DC Comics');
+					case 'action_game':
+						$genres = array('Экшен');
 						$this->setGenres($genres, $type, $element_id);
-						$this->setCollections($collections, $type, $element_id);
+						break;
+
+					case 'roleplay_game':
+						$genres = array('Ролевые игры');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'strategy_game':
+						$genres = array('Стратегии');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'quest_game':
+						$genres = array('Приключения');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'arcade_game':
+						$genres = array('Аркады');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'rock_album':
+						$genres = array('Rock');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'rap_album':
+						$genres = array('Rap');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'pop_album':
+						$genres = array('Pop');
+						$this->setGenres($genres, $type, $element_id);
+						break;
+
+					case 'electronic_album':
+						$genres = array('Electronic');
+						$this->setGenres($genres, $type, $element_id);
 						break;
 
 					default:

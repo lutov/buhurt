@@ -770,30 +770,32 @@ class SearchController extends Controller {
 	 */
 	private function main_search(Request $request, $search_query, $order, $presearch_query) {
 
-		$persons = Person::where('name', 'like', '%' . $search_query . '%')->orderBy($order)->get(); //->remember(5)
+		$limit = 100;
+
+		$persons = Person::where('name', 'like', '%' . $search_query . '%')->orderBy($order)->limit($limit)->get(); //->remember(5)
 		$books = Book::where(function($query) use ($search_query)
 		{
 			$query
 				->where('name', 'like', '%' . $search_query . '%')
 				->orWhere('alt_name', 'like', '%' . $search_query . '%')
 			;
-		})->orderBy($order)->get(); //->remember(5)
+		})->orderBy($order)->limit($limit)->get(); //->remember(5)
 		$films = Film::where(function($query) use ($search_query)
 		{
 			$query
 				->where('name', 'like', '%' . $search_query . '%')
 				->orWhere('alt_name', 'like', '%' . $search_query . '%')
 			;
-		})->orderBy($order)->get(); //->remember(5)
+		})->orderBy($order)->limit($limit)->get(); //->remember(5)
 		//echo '<pre>'.print_r($films, true).'</pre>';
-		//$films = Film::where('name', 'like', '%' . $search_query . '%')->get();
+		//$films = Film::where('name', 'like', '%' . $search_query . '%')->limit($limit)->get();
 		$games = Game::where(function($query) use ($search_query)
 		{
 			$query
 				->where('name', 'like', '%' . $search_query . '%')
 				->orWhere('alt_name', 'like', '%' . $search_query . '%')
 			;
-		})->orderBy($order)->get(); //->remember(5)
+		})->orderBy($order)->limit($limit)->get(); //->remember(5)
 		//echo '<pre>'.print_r($games, true).'</pre>';
 		$albums = Album::where(function($query) use ($search_query)
 		{
@@ -801,7 +803,7 @@ class SearchController extends Controller {
 				->where('name', 'like', '%' . $search_query . '%')
 				//->orWhere('alt_name', 'like', '%' . $search_query . '%')
 			;
-		})->orderBy($order)->get(); //->remember(5)
+		})->orderBy($order)->limit($limit)->get(); //->remember(5)
 		//echo '<pre>'.print_r($games, true).'</pre>';
 		$bands = Band::where(function($query) use ($search_query)
 		{
@@ -809,7 +811,7 @@ class SearchController extends Controller {
 				->where('name', 'like', '%' . $search_query . '%')
 				//->orWhere('alt_name', 'like', '%' . $search_query . '%')
 			;
-		})->orderBy($order)->get(); //->remember(5)
+		})->orderBy($order)->limit($limit)->get(); //->remember(5)
 		//echo '<pre>'.print_r($games, true).'</pre>';
 
 		if(!count($persons) && !count($books) && !count($films) && !count($games) && !count($albums) && !count($bands)) {
