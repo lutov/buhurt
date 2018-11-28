@@ -233,7 +233,7 @@ class GamesController extends Controller {
 	 * @param $id
 	 * @return \Illuminate\Contracts\View\View
 	 */
-	public function get_json($id) {
+	public function getJson($id) {
 
 		$section = $this->prefix;
 

@@ -81,8 +81,10 @@ Route::get('q_add/{section}', array('uses' => 'DatabaseController@q_add'));
 	});
 	
 // Relations
-Route::any('{section}/{id}/relations', array('uses' => 'RelationsController@show_item'));
-Route::any('{section}/{id}/relations/add', array('uses' => 'RelationsController@add_relation'));
+Route::any('{section}/{id}/relations', array('uses' => 'RelationsController@getRelations'));
+Route::any('{section}/{id}/relations/add', array('uses' => 'RelationsController@addRelation'));
+Route::any('{section}/{id}/relations/edit', array('uses' => 'RelationsController@editRelation'));
+Route::any('{section}/{id}/relations/delete', array('uses' => 'RelationsController@deleteRelation'));
 
 // Years
 Route::group(array('prefix' => 'years'), function() {

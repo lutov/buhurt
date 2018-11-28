@@ -1,19 +1,13 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\DebugHelper;
 use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
 use App\Models\Section;
-use Auth;
-use DB;
 use Illuminate\Http\Request;
 use View;
 use Input;
 use Redirect;
-use App\Models\Book;
-use App\Models\Film;
-use App\Models\Game;
-use App\Models\Album;
-use App\Models\Helpers;
 use App\Models\Relation;
 use App\Models\ElementRelation;
 
@@ -28,7 +22,7 @@ class RelationsController extends Controller {
 		*/
     }
 	
-    public function show_item(Request $request, $section, $id) {
+    public function getRelations(Request $request, $section, $id) {
 
 		$books = $films = $games = [];
 		
@@ -57,6 +51,12 @@ class RelationsController extends Controller {
 			->get()
 		;
 
+		$relations_simple = ElementRelation::where('to_id', '=', $id)
+			->where('to_type', '=', $section_type)
+			->get()
+			->toArray()
+		;
+
 		//echo $relations;
 
 		$sort_direction = 'asc';
@@ -71,11 +71,12 @@ class RelationsController extends Controller {
 			'games' => $games,
 			'relation_list' => $relation_list,
 			'section_list' => $section_list,
-			'relations' => $relations
+			'relations' => $relations,
+			'relations_simple' => $relations_simple,
 		));
     }
 	
-    public function add_relation(Request $request, $section, $id) {
+    public function addRelation(Request $request, $section, $id) {
 
 		if(RolesHelper::isAdmin($request)) {
 			
@@ -130,6 +131,62 @@ class RelationsController extends Controller {
 			
 		}
 		
+	}
+
+
+	/**
+	 * @param Request $request
+	 * @param $section
+	 * @param $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function editRelation(Request $request, $section, $id) {
+
+		if(RolesHelper::isAdmin($request)) {
+
+			$relation_id = Input::get('relation_id');
+			$element_id = Input::get('element_id');
+			$element_type = SectionsHelper::getSectionType(Input::get('element_section'));
+			$relation_type = Input::get('relation_type');
+
+			$relation = ElementRelation::find($relation_id);
+			$relation->element_id = $element_id;
+			$relation->element_type = $element_type;
+			$relation->relation_id = $relation_type;
+			$relation->save();
+
+			return Redirect::to('/'.$section.'/'.$id.'/relations')->with('message', 'Связь изменена');
+
+		} else {
+
+			return Redirect::to('/'.$section.'/'.$id.'/relations')->with('message', 'Нет доступа к разделу');
+
+		}
+
+	}
+
+	/**
+	 * @param Request $request
+	 * @param $section
+	 * @param $id
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	public function deleteRelation(Request $request, $section, $id) {
+
+		if(RolesHelper::isAdmin($request)) {
+
+			$relation_id = Input::get('relation_id');
+
+			$relation = ElementRelation::find($relation_id)->delete();
+
+			return Redirect::to('/'.$section.'/'.$id.'/relations')->with('message', 'Связь удалена');
+
+		} else {
+
+			return Redirect::to('/'.$section.'/'.$id.'/relations')->with('message', 'Нет доступа к разделу');
+
+		}
+
 	}
 
 	/**
