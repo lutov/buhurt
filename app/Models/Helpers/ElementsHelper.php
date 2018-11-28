@@ -8,6 +8,7 @@
 
 namespace App\Models\Helpers;
 
+use App\Models\ElementGenre;
 use App\Models\Event;
 use App\Models\User;
 use DB;
@@ -1032,6 +1033,35 @@ class ElementsHelper {
 		}
 
 		return $elements_list;
+
+	}
+
+	/**
+	 * @param int $id
+	 * @param string $section
+	 * @param string $type
+	 * @return bool
+	 */
+	public static function deleteElement(int $id = 0, string $section = '', string $type = '') {
+
+		Rate::where('element_id', '=', $id)
+			->where('element_type', '=', $type)
+			->delete()
+		;
+
+		ElementGenre::where('element_id', '=', $id)
+			->where('element_type', '=', $type)
+			->delete()
+		;
+
+		$file = __DIR__.'/../../../public/data/img/covers/'.$section.'/'.$id.'.jpg';
+		if (file_exists($file)) {
+			unlink($file);
+		} else {
+			// File not found.
+		}
+
+		return true;
 
 	}
 

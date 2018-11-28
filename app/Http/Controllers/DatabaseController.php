@@ -5,6 +5,8 @@ use App\Models\Helpers\DebugHelper;
 use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
 use App\Models\Helpers\TextHelper;
+use App\Models\Helpers\ElementsHelper;
+use App\Models\Rate;
 use DB;
 use Auth;
 use Illuminate\Http\Request;
@@ -22,7 +24,6 @@ use App\Models\Album;
 use App\Models\Genre;
 use App\Models\Track;
 use App\Models\Person;
-use App\Models\Helpers;
 use App\Models\Country;
 use App\Models\Company;
 use App\Models\Uploader;
@@ -1213,8 +1214,14 @@ class DatabaseController extends Controller {
 	public function delete(Request $request, $section, $id)	{
 
 		if(RolesHelper::isAdmin($request)) {
+
+			//die(__DIR__);
+
 			$section_name = SectionsHelper::getSectionType($section);
 			$section_name::find($id)->delete();
+
+			ElementsHelper::deleteElement($id, $section, $section_name);
+
 			return Redirect::to('/'.$section);
 		}
 

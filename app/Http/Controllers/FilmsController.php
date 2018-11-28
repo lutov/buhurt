@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\ElementsHelper;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -321,10 +322,8 @@ class FilmsController extends Controller {
 			;
 
 		}
-		//DB::table('publishers_games')->where('company_id', '=', $id)->update(array('company_id' => $recipient_id));
-		//DB::table('publishers_books')->where('company_id', '=', $id)->update(array('company_id' => $recipient_id));
 
-		DB::table($section)->where('id', '=', $id)->delete();//->update(array('name' => ''));
+		ElementsHelper::deleteElement($id, $section, $type);
 
 		return Redirect::to('/'.$this->prefix.'/'.$recipient_id);
 
