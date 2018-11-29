@@ -1061,6 +1061,8 @@ class ElementsHelper {
 			// File not found.
 		}
 
+		$type::find($id)->delete();
+
 		return true;
 
 	}

@@ -1218,7 +1218,6 @@ class DatabaseController extends Controller {
 			//die(__DIR__);
 
 			$section_name = SectionsHelper::getSectionType($section);
-			$section_name::find($id)->delete();
 
 			ElementsHelper::deleteElement($id, $section, $section_name);
 
