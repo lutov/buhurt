@@ -37,7 +37,7 @@
 
 	</div>
 
-	{!! ElementsHelper::getCardComments($comments, $section, $element->id) !!}
+	{!! ElementsHelper::getCardComments($request, $comments, $section, $element->id) !!}
 
 	{!! ElementsHelper::getCardScripts($section, $element->id) !!}
 			

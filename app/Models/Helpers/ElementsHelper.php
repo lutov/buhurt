@@ -860,12 +860,13 @@ class ElementsHelper {
 	}
 
 	/**
+	 * @param Request $request
 	 * @param $comments
 	 * @param string $section
 	 * @param int $element_id
 	 * @return string
 	 */
-	public static function getCardComments($comments, string $section = '', int $element_id = 0) {
+	public static function getCardComments(Request $request, $comments, string $section = '', int $element_id = 0) {
 
 		$element_comments = '';
 
@@ -875,11 +876,11 @@ class ElementsHelper {
 
 			$element_comments .= '<div class="col-md-12">';
 
-				$element_comments .= CommentsHelper::showCommentForm($section, $element_id);
+				$element_comments .= CommentsHelper::showCommentForm($request, $section, $element_id);
 
 				$element_comments .= '<div itemscope itemtype="http://schema.org/UserComments" class="comments">';
 
-				$element_comments .= CommentsHelper::showComments($comments);
+				$element_comments .= CommentsHelper::showComments($request, $comments);
 
 				$element_comments .= '</div>';
 

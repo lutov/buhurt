@@ -103,11 +103,17 @@ class FilmsController extends Controller {
     {
         return View::make($this->prefix.'.collection');
     }
-	
-    public function show_item(Request $request, $id)
-	{
+
+	/**
+	 * @param Request $request
+	 * @param $id
+	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 */
+    public function show_item(Request $request, $id) {
+
 		$film = Film::find($id);
 		if (count($film)) {
+
 			$screenwriters = $film->screenwriters;
 			$producers = $film->producers;
 			$directors = $film->directors;
@@ -115,6 +121,7 @@ class FilmsController extends Controller {
 			$countries = $film->countries;
 			$actors = $film->actors;
 			$collections = $film->collections;
+			$similar = array();
 
 			//die('<pre>'.print_r($countries[0]->country, true).'</pre>');
 			//die('<pre>'.print_r($producers, true).'</pre>');
@@ -221,8 +228,8 @@ class FilmsController extends Controller {
 				'relations' => $relations,
 				'similar' => collect($similar)
 			));
-		}
-		else {
+
+		} else {
 			return Redirect::to('/base/films');
 		}
 	}

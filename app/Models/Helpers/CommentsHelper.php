@@ -9,6 +9,7 @@
 namespace App\Models\Helpers;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 use Auth;
 use Form;
 use LocalizedCarbon;
@@ -36,11 +37,12 @@ class CommentsHelper {
 	}
 
 	/**
+	 * @param Request $request
 	 * @param $comment
 	 * @param bool $no_br
 	 * @return string
 	 */
-	public static function render($comment, $no_br = false) {
+	public static function render(Request $request, $comment, $no_br = false) {
 
 		$user_id = $comment->user_id;
 		$user = User::find($user_id);
@@ -52,6 +54,13 @@ class CommentsHelper {
 			->toArray();
 
 		$is_my_private = in_array(1, $user_options);
+
+		$type = new $comment->element_type;
+		$object = $type->find($comment->element_id);
+		$rate = $object->rates()->where('user_id', '=', $user_id)->first();
+		if (isset($rate->rate)) {
+			$user_rate = $rate->rate;
+		} else {$user_rate = false;}
 
 		$comments_text = '';
 
@@ -98,6 +107,13 @@ class CommentsHelper {
 
 					$comments_text .= '<p class="p-3 bg-white border" id="comment_' . $comment->id . '_text">'.nl2br($comment->comment).'</p>';
 
+					if($user_rate) { // RolesHelper::isAdmin($request)
+
+						$comments_text .= '<p class="">Оценка: '.$user_rate.'</p>'; //DebugHelper::dump($comment)
+						//$comments_text .= '<p class="">'.DebugHelper::dump($comment).'</p>';
+
+					}
+
 				$comments_text .= '</div>';
 
 			$comments_text .= '</div>';
@@ -116,11 +132,12 @@ class CommentsHelper {
 
 
 	/**
-	 * @param $section
-	 * @param $element_id
+	 * @param Request $request
+	 * @param string $section
+	 * @param int $element_id
 	 * @return string
 	 */
-	public static function showCommentForm (string $section = '', int $element_id = 0) {
+	public static function showCommentForm (Request $request, string $section = '', int $element_id = 0) {
 
 		if(Auth::check()) {
 
@@ -165,10 +182,11 @@ class CommentsHelper {
 	}
 
 	/**
+	 * @param Request $request
 	 * @param $comments
 	 * @return string
 	 */
-	public static function showComments($comments) {
+	public static function showComments(Request $request, $comments) {
 
 		//echo '<pre>'.print_r($comments, true).'</pre>';
 
@@ -176,7 +194,7 @@ class CommentsHelper {
 
 		foreach($comments as $key => $comment) {
 
-			$comments_list .= CommentsHelper::render($comment);
+			$comments_list .= CommentsHelper::render($request, $comment);
 
 		}
 
