@@ -17,10 +17,11 @@ use LocalizedCarbon;
 class CommentsHelper {
 
 	/**
+	 * @param Request $request
 	 * @param $comments
 	 * @return string
 	 */
-	public static function get($comments) {
+	public static function get(Request $request, $comments) {
 
 		//echo '<pre>'.print_r($comments, true).'</pre>';
 
@@ -28,7 +29,7 @@ class CommentsHelper {
 
 		foreach($comments as $key => $comment) {
 
-			$comments_list .= CommentsHelper::render($comment);
+			$comments_list .= CommentsHelper::render($request, $comment);
 
 		}
 

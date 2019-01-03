@@ -3,6 +3,7 @@
 use App\Models\Event;
 use App\Models\Helpers\CommentsHelper;
 use App\Models\Helpers\SectionsHelper;
+use Illuminate\Http\Request;
 use Input;
 use Auth;
 use EMTypograph;
@@ -16,9 +17,10 @@ class CommentController extends Controller {
 	protected $prefix = 'comments';
 
 	/**
+	 * @param Request $request
 	 * @return string
 	 */
-	public function add() {
+	public function add(Request $request) {
 
 		$text =  Input::get('comment');
 		$section =  Input::get('section');
@@ -43,7 +45,7 @@ class CommentController extends Controller {
 			$comment->comment = $text;
 			$comment->save();
 			
-			$new_comment = CommentsHelper::render($comment, true);
+			$new_comment = CommentsHelper::render($request, $comment, true);
 
 			$message = 'Комментарий сохранён';
 			$result = '{"message":"'.$message.'", "comment_text":"'.$new_comment.'"}';
@@ -64,9 +66,10 @@ class CommentController extends Controller {
     }
 
 	/**
+	 * @param Request $request
 	 * @return string
 	 */
-	public function edit() {
+	public function edit(Request $request) {
 
 		$text =  Input::get('comment');
 		$section =  Input::get('section');
@@ -93,7 +96,7 @@ class CommentController extends Controller {
 			$comment->comment = $text;
 			$comment->save();
 
-			$new_comment = CommentsHelper::render($comment, true);
+			$new_comment = CommentsHelper::render($request, $comment, true);
 
 			$message = 'Комментарий сохранён';
 			$result = '{"message":"'.$message.'", "comment_text":"'.$new_comment.'"}';
