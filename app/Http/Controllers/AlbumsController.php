@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Helpers\ElementsHelper;
+use App\Models\Helpers\TextHelper;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -8,7 +9,6 @@ use Input;
 use View;
 use Redirect;
 use App\Models\Section;
-use App\Models\Helpers;
 use App\Models\Album;
 use App\Models\Wanted;
 use App\Models\ElementRelation;
@@ -26,8 +26,8 @@ class AlbumsController extends Controller {
 		$ru_section = $get_section->name;
 		$type = $get_section->type;
 
-		$sort = Input::get('sort', $section.'.created_at');
-		$sort_direction = Input::get('sort_direction', 'desc');
+		$sort = Input::get('sort', 'created_at');
+		$order = Input::get('order', 'desc');
 		$limit = 28;
 
 		$sort_options = array(
@@ -36,6 +36,9 @@ class AlbumsController extends Controller {
 			//$section.'.alt_name' => 'Оригинальное название',
 			$section.'.year' => 'Год'
 		);
+
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
 
 		$wanted = array();
 		$not_wanted = array();
@@ -72,24 +75,33 @@ class AlbumsController extends Controller {
 						;
 					})
 				)
-				->orderBy($sort, $sort_direction)
+				->orderBy($sort, $order)
 				->paginate($limit)
 			;
 		} else {
 			$elements = Album::where('verified', '=', 1)
-				->orderBy($sort, $sort_direction)
+				->orderBy($sort, $order)
 				->paginate($limit)
 			;
 		}
+
+		$options = array(
+			'header' => true,
+			'footer' => true,
+			'paginate' => true,
+			'wanted' => $wanted,
+			'not_wanted' => $not_wanted,
+			'sort_list' => $sort_options,
+			'sort' => $sort,
+			'order' => $order,
+		);
 
 		return View::make($this->prefix.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,
-			'sort_options' => $sort_options,
-			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
+			'options' => $options,
 		));
     }
 
@@ -189,7 +201,7 @@ class AlbumsController extends Controller {
 
 			$section = $this->prefix;
 
-			$rating = Helpers::count_rating($album);
+			$rating = ElementsHelper::countRating($album);
 			
 			$section_type = 'Album';
 			$relations = ElementRelation::where('to_id', '=', $id)
@@ -203,7 +215,7 @@ class AlbumsController extends Controller {
 
 			$similar = array();
 			for($i = 0; $i < $sim_limit; $i++) {
-				$similar[] = Helpers::get_similar($sim_options);
+				$similar[] = ElementsHelper::getSimilar($sim_options);
 			}
 
 			return View::make($this->prefix . '.item', array(

@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Helpers\ElementsHelper;
+use App\Models\Helpers\TextHelper;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -9,7 +10,6 @@ use View;
 use Redirect;
 use App\Models\Section;
 use App\Models\Book;
-use App\Models\Helpers;
 use App\Models\Wanted;
 use App\Models\ElementRelation;
 
@@ -24,18 +24,21 @@ class BooksController extends Controller {
 		$ru_section = $get_section->name;
 		$type = $get_section->type;
 
-		$sort = Input::get('sort', $section.'.created_at');
-		$sort_direction = Input::get('sort_direction', 'desc');
+		$sort = Input::get('sort', 'created_at');
+		$order = Input::get('order', 'desc');
 		$limit = 28;
 
 		$sort_options = array(
-			$section.'.created_at' => 'Время добавления',
-			$section.'.name' => 'Название',
-			$section.'.alt_name' => 'Оригинальное название',
-			$section.'.year' => 'Год'
+			'created_at' => 'Время добавления',
+			'name' => 'Название',
+			'alt_name' => 'Оригинальное название',
+			'year' => 'Год'
 		);
 
-	    //$books = Book::orderBy($sort, $sort_direction)->paginate($limit);
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
+
+	    //$books = Book::orderBy($sort, $order)->paginate($limit);
 
 		$wanted = array();
 		$not_wanted = array();
@@ -70,25 +73,34 @@ class BooksController extends Controller {
 						;
 					})
 				)
-				->orderBy($sort, $sort_direction)
+				->orderBy($sort, $order)
 				->paginate($limit)
 			;
 		} else {
 
 			$elements = Book::where('verified', '=', 1)
-				->orderBy($sort, $sort_direction)
+				->orderBy($sort, $order)
 				->paginate($limit)
 			;
 		}
+
+		$options = array(
+			'header' => true,
+			'footer' => true,
+			'paginate' => true,
+			'wanted' => $wanted,
+			'not_wanted' => $not_wanted,
+			'sort_list' => $sort_options,
+			'sort' => $sort,
+			'order' => $order,
+		);
 
         return View::make($this->prefix.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,
-			'sort_options' => $sort_options,
-			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
+			'options' => $options,
 		));
     }
 	

@@ -245,6 +245,15 @@ class HomeController extends Controller {
 			});
 		}
 
+		$options = array(
+			'header' => false,
+			'paginate' => false,
+			'footer' => false,
+			'sort_list' => array(),
+			'sort' => 'created_at',
+			'order' => 'asc',
+		);
+
 		return View::make('index', array(
 			'request' => $request,
 			'books' => $books,
@@ -253,6 +262,7 @@ class HomeController extends Controller {
 			'albums' => $albums,
 			'wanted' => $wanted,
 			'not_wanted' => $not_wanted,
+			'options' => $options,
 		));
 	}
 

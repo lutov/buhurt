@@ -40,7 +40,7 @@ class ElementsHelper {
 	/**
 	 * @return array
 	 */
-	public static function get_sort_direction() {
+	public static function getSortDirection() {
 
 		$sort_direction = array(
 			'asc' => 'А→Я',
@@ -52,14 +52,47 @@ class ElementsHelper {
 	}
 
 	/**
+	 * @param array $sort_options
+	 * @param string $default_sort
+	 * @param string $default_order
 	 * @return string
 	 */
-	public static function getHeader() {
+	public static function getHeader(array $sort_options = array(), $default_sort = 'name', $default_order = 'asc') {
+
+		$sort = Input::get('sort', $default_sort);
+		$order = Input::get('order', $default_order);
 
 		$elements_list = '';
 
+		if(!empty($sort_options)) {
+
+			$sort_direction = ElementsHelper::getSortDirection();
+
+			$elements_list .= '<noindex><!--noindex-->';
+
+			$elements_list .= Form::open(array('class' => 'sort', 'method' => 'GET'));
+
+			$elements_list .= '<div class="input-group input-group-sm mb-3">';
+
+			//$elements_list .= Form::hidden('view', Input::get('view', 'plates'));
+			$elements_list .= Form::select('sort', $sort_options, $sort, array('class' => 'custom-select'));
+			$elements_list .= Form::select('order', $sort_direction, $order, array('class' => 'custom-select'));
+
+			$elements_list .= Form::hidden('page', Input::get('page', 1));
+
+			$elements_list .= '<div class="input-group-append">';
+			$elements_list .= Form::submit('Сортировать', array('class' => 'btn btn-outline-secondary'));
+			$elements_list .= '</div>';
+
+			$elements_list .= Form::close();
+
+			$elements_list .= '</div>';
+
+			$elements_list .= '<!--/noindex--></noindex>';
+
+		}
+
 		$elements_list .= '<div class="album">';
-		//$elements_list .= '<div class="container">';
 		$elements_list .= '<div class="row">';
 
 		return $elements_list;
@@ -274,10 +307,13 @@ class ElementsHelper {
 				'header' => true,
 				'footer' => true,
 				'paginate' => true,
+				'sort_list' => array(),
+				'sort' => 'name',
+				'order' => 'asc'
 			);
 		}
 
-		if($options['header']) {$elements_list .= ElementsHelper::getHeader();}
+		if($options['header']) {$elements_list .= ElementsHelper::getHeader($options['sort_list'], $options['sort'], $options['order']);}
 
 		foreach ($elements as $element) {
 
@@ -289,7 +325,13 @@ class ElementsHelper {
 
 		if ($options['paginate']) {
 
-			$elements_list .= $elements->render();
+			$elements_list .= $elements->appends(
+				array(
+					//'view' => Input::get('view', 'plates'),
+					'sort' => Input::get('sort', $options['sort']),
+					'order' => Input::get('order', $options['order']),
+				)
+			)->render();
 
 		}
 
@@ -405,6 +447,8 @@ class ElementsHelper {
 
 			if (!empty($element)) {
 				$result = ElementsHelper::getElement($request, $element, $section);
+			} else {
+				$result = ElementsHelper::getRecommend($request, $section);
 			}
 		}
 
@@ -807,6 +851,9 @@ class ElementsHelper {
 			'header' => true,
 			'paginate' => false,
 			'footer' => true,
+			'sort_list' => array(),
+			'sort' => 'name',
+			'order' => 'asc',
 		);
 
 		$element_footer = '';

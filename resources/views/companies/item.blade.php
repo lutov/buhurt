@@ -50,7 +50,7 @@
 		<div class="row mt-5">
 
 			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $books_published, 'books') !!}
+				{!! ElementsHelper::getElements($request, $books_published, 'books', $options) !!}
 			</div>
 
 		</div>
@@ -66,7 +66,7 @@
 		<div class="row mt-5">
 
 			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $games_developed, 'games') !!}
+				{!! ElementsHelper::getElements($request, $games_developed, 'games', $options) !!}
 			</div>
 
 		</div>
@@ -82,7 +82,7 @@
 		<div class="row mt-5">
 
 			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $games_published, 'games') !!}
+				{!! ElementsHelper::getElements($request, $games_published, 'games', $options) !!}
 			</div>
 
 		</div>

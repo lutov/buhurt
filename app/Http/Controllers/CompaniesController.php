@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\TextHelper;
 use App\Models\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,15 +20,15 @@ class CompaniesController extends Controller {
 		$ru_section = $get_section->name;
 		$type = $get_section->type;
 
-		$sort = Input::get('sort', $section.'.created_at');
-		$sort_direction = Input::get('sort_direction', 'desc');
+		$sort = Input::get('sort', 'created_at');
+		$sort_direction = Input::get('sort', 'desc');
 		$limit = 28;
 
 		$sort_options = array(
-			$section.'.created_at' => 'Время добавления',
-			$section.'.name' => 'Название',
-			$section.'.alt_name' => 'Оригинальное название',
-			$section.'.year' => 'Год'
+			'created_at' => 'Время добавления',
+			'name' => 'Название',
+			'alt_name' => 'Оригинальное название',
+			'year' => 'Год'
 		);
 
 		$elements = Company::orderBy($sort, $sort_direction)
@@ -39,7 +40,7 @@ class CompaniesController extends Controller {
 			'elements' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,
-			//'sort_options' => $sort_options,
+			'sort_options' => $sort_options,
 			//'wanted' => $wanted,
 			//'not_wanted' => $not_wanted,
 		));
@@ -71,18 +72,29 @@ class CompaniesController extends Controller {
 				$logo = $id;
 			}
 
-			$sort = Input::get('sort', 'created_at');
-			$sort_direction = Input::get('sort_direction', 'desc');
-			$limit = 28;
-
-			$books_published = $company->books_published()->orderBy('created_at', $sort_direction)->paginate($limit); //->remember(60)
-			$games_developed = $company->games_developed()->orderBy('created_at', $sort_direction)->paginate($limit); //->remember(60)
-			$games_published = $company->games_published()->orderBy('created_at', $sort_direction)->paginate($limit); //->remember(60)
-
+			$sort = Input::get('sort', 'name');
+			$order = Input::get('order', 'asc');
 			$sort_options = array(
 				'created_at' => 'Время добавления',
 				'name' => 'Название',
 				'year' => 'Год'
+			);
+			$limit = 28;
+
+			$sort = TextHelper::checkSort($sort);
+			$order = TextHelper::checkOrder($order);
+
+			$books_published = $company->books_published()->orderBy($sort, $order)->paginate($limit);
+			$games_developed = $company->games_developed()->orderBy($sort, $order)->paginate($limit);
+			$games_published = $company->games_published()->orderBy($sort, $order)->paginate($limit);
+
+			$options = array(
+				'header' => true,
+				'footer' => true,
+				'paginate' => true,
+				'sort_list' => $sort_options,
+				'sort' => $sort,
+				'order' => $order,
 			);
 
 			return View::make($this->prefix . '.item', array(
@@ -93,7 +105,7 @@ class CompaniesController extends Controller {
 				'books_published' => $books_published,
 				'games_developed' => $games_developed,
 				'games_published' => $games_published,
-				'sort_options' => $sort_options
+				'options' => $options,
 			));
 		} else {
 			// нет такой буквы

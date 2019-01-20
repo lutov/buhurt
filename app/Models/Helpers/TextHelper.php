@@ -158,4 +158,32 @@ class TextHelper {
 
 	}
 
+	/**
+	 * @param string $sort
+	 * @return string
+	 */
+	public static function checkSort(string $sort) {
+
+		$default = 'name';
+
+		$allowed = array('name', 'alt_name', 'created_at', 'updated_at', 'year', 'rate', 'rate.created_at');
+
+		if(in_array($sort, $allowed)) {return $sort;} else {return $default;}
+
+	}
+
+	/**
+	 * @param string $order
+	 * @return string
+	 */
+	public static function checkOrder(string $order) {
+
+		$default = 'asc';
+
+		$allowed = array('asc', 'desc');
+
+		if(in_array($order, $allowed)) {return $order;} else {return $default;}
+
+	}
+
 }
