@@ -820,6 +820,15 @@ class SearchController extends Controller {
 
 		} else {
 
+			$options = array(
+				'header' => true,
+				'paginate' => false,
+				'footer' => true,
+				'sort_list' => array(),
+				'sort' => 'name',
+				'order' => 'asc',
+			);
+
 			return View::make($this->prefix . '.index', array(
 				'request' => $request,
 				'query' => $presearch_query,
@@ -828,7 +837,8 @@ class SearchController extends Controller {
 				'films' => $films,
 				'games' => $games,
 				'albums' => $albums,
-				'bands' => $bands
+				'bands' => $bands,
+				'options' => $options,
 			));
 
 		}

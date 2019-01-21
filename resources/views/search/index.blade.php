@@ -21,14 +21,6 @@
 		</ul>
 	</section>
 
-	<?php
-	$options = array(
-		'header' => true,
-		'paginate' => false,
-		'footer' => true,
-	);
-	?>
-
   	@if(count($persons))
 
 		<section class="text-center mt-5">
