@@ -325,13 +325,21 @@ class ElementsHelper {
 
 		if ($options['paginate']) {
 
-			$elements_list .= $elements->appends(
-				array(
-					//'view' => Input::get('view', 'plates'),
-					'sort' => Input::get('sort', $options['sort']),
-					'order' => Input::get('order', $options['order']),
-				)
-			)->render();
+			if(!empty(Input::get('sort'))) {
+
+				$elements_list .= '<noindex><!--noindex-->';
+				$elements_list .= $elements->appends(
+					array(
+						//'view' => Input::get('view', 'plates'),
+						'sort' => Input::get('sort', $options['sort']),
+						'order' => Input::get('order', $options['order']),
+					)
+				)->render();
+				$elements_list .= '<!--/noindex--></noindex>';
+
+			} else {
+				$elements_list .= $elements->render();
+			}
 
 		}
 

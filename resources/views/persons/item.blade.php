@@ -25,17 +25,8 @@
 
 		<?php
 		$info = array(
-			//'rate' => $rate,
-			//'wanted' => $wanted,
-			//'not_wanted' => $not_wanted,
-			//'genres' => $genres,
 			'top_genres' => $top_genres,
 			'cover' => $cover,
-			//'similar' => $similar,
-			//'collections' => $collections,
-			//'relations' => $relations,
-			//'writers' => $writers,
-			//'publishers' => $publishers,
 		);
 		?>
 
@@ -52,7 +43,7 @@
 		<div class="row mt-5">
 
 			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $books, 'books') !!}
+				{!! ElementsHelper::getElements($request, $books, 'books', $options) !!}
 			</div>
 
 		</div>
@@ -68,7 +59,7 @@
 		<div class="row mt-5">
 
 			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $screenplays, 'films') !!}
+				{!! ElementsHelper::getElements($request, $screenplays, 'films', $options) !!}
 			</div>
 
 		</div>
@@ -84,7 +75,7 @@
 		<div class="row mt-5">
 
 			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $directions, 'films') !!}
+				{!! ElementsHelper::getElements($request, $directions, 'films', $options) !!}
 			</div>
 
 		</div>
@@ -100,7 +91,7 @@
 		<div class="row mt-5">
 
 			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $productions, 'films') !!}
+				{!! ElementsHelper::getElements($request, $productions, 'films', $options) !!}
 			</div>
 
 		</div>
@@ -116,7 +107,7 @@
 		<div class="row mt-5">
 
 			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $actions, 'films') !!}
+				{!! ElementsHelper::getElements($request, $actions, 'films', $options) !!}
 			</div>
 
 		</div>

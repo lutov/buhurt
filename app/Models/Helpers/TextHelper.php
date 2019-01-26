@@ -166,7 +166,19 @@ class TextHelper {
 
 		$default = 'name';
 
-		$allowed = array('name', 'alt_name', 'created_at', 'updated_at', 'year', 'rate', 'rate.created_at');
+		$allowed = array(
+			'name',
+			'alt_name',
+			'created_at',
+			'updated_at',
+			'year',
+			'rates.rate',
+			'rates.created_at',
+			'albums.created_at',
+			'books.created_at',
+			'games.created_at',
+			'films.created_at',
+		);
 
 		if(in_array($sort, $allowed)) {return $sort;} else {return $default;}
 

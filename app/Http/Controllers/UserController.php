@@ -3,6 +3,7 @@
 use App\Models\Event;
 use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
+use App\Models\Helpers\TextHelper;
 use DB;
 use Illuminate\Http\Request;
 use stdClass;
@@ -395,8 +396,11 @@ class UserController extends Controller {
 			$type = SectionsHelper::getSectionType($section);
 
 			$sort = Input::get('sort', 'rates.created_at');
-			$sort_direction = Input::get('sort_direction', 'desc');
+			$order = Input::get('order', 'desc');
 			$limit = 28;
+
+			$sort = TextHelper::checkSort($sort);
+			$order = TextHelper::checkOrder($order);
 
 			$sort_options = array(
 				'rates.created_at' => 'Время выставления оценки',
@@ -419,18 +423,28 @@ class UserController extends Controller {
 						;
 					})
 				)
-				->orderBy($sort, $sort_direction)
+				->orderBy($sort, $order)
 				->paginate($limit)
 			;
+
+			$options = array(
+				'header' => true,
+				'footer' => true,
+				'paginate' => true,
+				'sort_list' => $sort_options,
+				'sort' => $sort,
+				'order' => $order,
+			);
 
 			return View::make('user.rates.index', array(
 				'request' => $request,
 				'user' => $user,
 				'section' => $section,
 				'section_name' => $section_name,
-				'sort_options' => $sort_options,
+				'options' => $options,
 				'elements' => $elements
 			));
+
 		} else {
 
 			return Redirect::to('/');
@@ -449,7 +463,7 @@ class UserController extends Controller {
 			$type = SectionsHelper::getSectionType($section);
 
 			$sort = Input::get('sort', 'rates.created_at');
-			$sort_direction = Input::get('sort_direction', 'desc');
+			$order = Input::get('order', 'desc');
 
 			$elements = $type::select($section.'.*')
 				->leftJoin('rates', $section.'.id', '=', 'rates.element_id')
@@ -463,7 +477,7 @@ class UserController extends Controller {
 						;
 					})
 				)
-				->orderBy($sort, $sort_direction)
+				->orderBy($sort, $order)
 				->get()
 			;
 
@@ -520,7 +534,7 @@ class UserController extends Controller {
 			$type = $get_section->type;
 
 			$sort = Input::get('sort', $section.'.created_at');
-			$sort_direction = Input::get('sort_direction', 'desc');
+			$order = Input::get('order', 'desc');
 			$limit = 28;
 
 			$sort_options = array(
@@ -539,7 +553,7 @@ class UserController extends Controller {
 				->pluck('element_id')
 			;
 
-			$elements = $type::orderBy($sort, $sort_direction)
+			$elements = $type::orderBy($sort, $order)
 				->with(array('rates' => function($query) use($user_id, $section, $type)
 					{
 						$query
@@ -591,7 +605,7 @@ class UserController extends Controller {
 			$type = $get_section->type;
 
 			$sort = Input::get('sort', $section.'.created_at');
-			$sort_direction = Input::get('sort_direction', 'desc');
+			$order = Input::get('order', 'desc');
 			$limit = 28;
 
 			$sort_options = array(
@@ -610,7 +624,7 @@ class UserController extends Controller {
 				->pluck('element_id')
 			;
 
-			$elements = $type::orderBy($sort, $sort_direction)
+			$elements = $type::orderBy($sort, $order)
 				->with(array('rates' => function($query) use($user_id, $section, $type)
 					{
 						$query
@@ -951,12 +965,12 @@ class UserController extends Controller {
 			$section = $this->prefix;
 			$ru_section = 'Пользователи';
 
-			$sort = Input::get('sort', $section . '.created_at');
-			$sort_direction = Input::get('sort_direction', 'desc');
+			$sort = Input::get('sort', 'created_at');
+			$order = Input::get('order', 'desc');
 			$limit = 28;
 
 			$elements = User::select('id', 'username as name')
-				->orderBy($sort, $sort_direction)
+				->orderBy($sort, $order)
 				->paginate($limit);
 
 			/*

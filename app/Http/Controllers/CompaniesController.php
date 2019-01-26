@@ -20,29 +20,37 @@ class CompaniesController extends Controller {
 		$ru_section = $get_section->name;
 		$type = $get_section->type;
 
-		$sort = Input::get('sort', 'created_at');
-		$sort_direction = Input::get('sort', 'desc');
+		$sort = Input::get('sort', 'name');
+		$order = Input::get('order', 'asc');
 		$limit = 28;
+
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
 
 		$sort_options = array(
 			'created_at' => 'Время добавления',
 			'name' => 'Название',
-			'alt_name' => 'Оригинальное название',
-			'year' => 'Год'
 		);
 
-		$elements = Company::orderBy($sort, $sort_direction)
+		$elements = Company::orderBy($sort, $order)
 			->paginate($limit)
 		;
+
+		$options = array(
+			'header' => true,
+			'footer' => true,
+			'paginate' => true,
+			'sort_list' => $sort_options,
+			'sort' => $sort,
+			'order' => $order,
+		);
 
 		return View::make($this->prefix.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,
-			'sort_options' => $sort_options,
-			//'wanted' => $wanted,
-			//'not_wanted' => $not_wanted,
+			'options' => $options,
 		));
 
 	}

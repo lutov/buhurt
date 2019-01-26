@@ -23,7 +23,7 @@
     <div class="row mt-5">
 
         <div class="col-md-12">
-            {!! ElementsHelper::getElements($request, $elements, $section) !!}
+            {!! ElementsHelper::getElements($request, $elements, $section, $options) !!}
         </div>
 
     </div>

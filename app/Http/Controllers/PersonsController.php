@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Helpers\RolesHelper;
+use App\Models\Helpers\TextHelper;
 use App\Models\Section;
 use DB;
 use Illuminate\Http\Request;
@@ -9,7 +10,6 @@ use Input;
 use Config;
 use Redirect;
 use App\Models\Person;
-use App\Models\Helpers;
 
 class PersonsController extends Controller {
 
@@ -22,29 +22,37 @@ class PersonsController extends Controller {
 		$ru_section = $get_section->name;
 		$type = $get_section->type;
 
-		$sort = Input::get('sort', $section.'.created_at');
-		$sort_direction = Input::get('sort_direction', 'desc');
+		$sort = Input::get('sort', 'name');
+		$order = Input::get('order', 'asc');
 		$limit = 28;
 
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
+
 		$sort_options = array(
-			$section.'.created_at' => 'Время добавления',
-			$section.'.name' => 'Название',
-			$section.'.alt_name' => 'Оригинальное название',
-			$section.'.year' => 'Год'
+			'created_at' => 'Время добавления',
+			'name' => 'Имя',
 		);
 
-		$elements = Person::orderBy($sort, $sort_direction)
+		$elements = Person::orderBy($sort, $order)
 			->paginate($limit)
 		;
+
+		$options = array(
+			'header' => true,
+			'footer' => true,
+			'paginate' => true,
+			'sort_list' => $sort_options,
+			'sort' => $sort,
+			'order' => $order,
+		);
 
 		return View::make($this->prefix.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,
-			//'sort_options' => $sort_options,
-			//'wanted' => $wanted,
-			//'not_wanted' => $not_wanted,
+			'options' => $options,
 		));
 
     }
@@ -140,15 +148,18 @@ class PersonsController extends Controller {
 				
 			}			
 
-			$sort = Input::get('sort', 'created_at');
-			$sort_direction = Input::get('sort_direction', 'desc');
+			$sort = Input::get('sort', 'name');
+			$order = Input::get('order', 'asc');
 			$limit = 28;
 
-			$books = $person->books()->orderBy('created_at', $sort_direction)->paginate($limit); //->remember(60)
-			$directions = $person->directions()->orderBy('created_at', $sort_direction)->paginate($limit); //->remember(60)
-			$screenplays = $person->screenplays()->orderBy('created_at', $sort_direction)->paginate($limit); //->remember(60)
-			$productions = $person->productions()->orderBy('created_at', $sort_direction)->paginate($limit); //->remember(60)
-			$actions = $person->actions()->orderBy('created_at', $sort_direction)->paginate($limit); //->remember(60)
+			$sort = TextHelper::checkSort($sort);
+			$order = TextHelper::checkOrder($order);
+
+			$books = $person->books()->orderBy($sort, $order)->paginate($limit);
+			$directions = $person->directions()->orderBy($sort, $order)->paginate($limit);
+			$screenplays = $person->screenplays()->orderBy($sort, $order)->paginate($limit);
+			$productions = $person->productions()->orderBy($sort, $order)->paginate($limit);
+			$actions = $person->actions()->orderBy($sort, $order)->paginate($limit);
 
 			$sort_options = array(
 				'created_at' => 'Время добавления',
@@ -157,6 +168,15 @@ class PersonsController extends Controller {
 			);
 
 			$comments = array();
+
+			$options = array(
+				'header' => true,
+				'footer' => true,
+				'paginate' => true,
+				'sort_list' => $sort_options,
+				'sort' => $sort,
+				'order' => $order,
+			);
 
 			return View::make($this->prefix . '.item', array(
 				'request' => $request,
@@ -173,6 +193,7 @@ class PersonsController extends Controller {
 				'all_genres' => $all_genres,
 				'top_genres' => $top_genres,
 				'comments' => $comments,
+				'options' => $options,
 			));
 		} else {
 			// нет такой буквы
