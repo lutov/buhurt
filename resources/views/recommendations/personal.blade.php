@@ -317,6 +317,9 @@
 				'header' => true,
 				'paginate' => false,
 				'footer' => true,
+				'sort_list' => array(),
+				'sort' => false,
+				'order' => false,
 			); ?>
 			{!! ElementsHelper::getElements($request, $elements, $section, $options) !!}
 
