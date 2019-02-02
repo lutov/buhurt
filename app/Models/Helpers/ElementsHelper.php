@@ -493,6 +493,8 @@ class ElementsHelper {
 			$sim_elem = $options['type']::find($rand_id);
 		}
 
+		if(empty($sim_elem)) {$sim_elem = ElementsHelper::getSimilar($options);}
+
 		return $sim_elem;
 
 	}
