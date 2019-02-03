@@ -1,20 +1,40 @@
-
-.fast_rating_block .rating-xs {
-
-    font-size: 1.1em !important;
-
-}
-
+/* RATING */
 .rating-container {
     display: flex;
+    align-items: baseline;
 }
 .rating-container .rating-stars {
     order: 1;
 }
 .rating-container .clear-rating {
     order: 2;
-    font-size: inherit;
 }
+
+.rating-container .star {
+    font-size: 1em;
+    margin: 0 .1em 0 0;
+}
+
+.rating-container .clear-rating {
+    font-size: 1em;
+}
+
+.fast_rating_block .rating-xs {
+    font-size: 1.1em !important;
+}
+
+@media (max-width: 576px) {
+
+    .rating-container .star {
+        font-size: .5em;
+    }
+
+    .rating-container .clear-rating {
+        font-size: .5em;
+    }
+
+}
+/* RATING */
 
 .card-img-box {
     position: relative;

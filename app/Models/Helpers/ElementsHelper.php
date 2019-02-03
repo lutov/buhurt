@@ -534,14 +534,14 @@ class ElementsHelper {
 
 				if(!empty($element->alt_name)) {
 
-					$element_title .= '<div class="h3" itemprop="alternativeHeadline">'.$element->alt_name.'</div>';
+					$element_title .= '<div class="h4 d-none d-md-block" itemprop="alternativeHeadline">'.$element->alt_name.'</div>';
 
 				}
 
 			$element_title .= '</div>';
 		$element_title .= '</div>';
 
-		$element_title .= '<div class="row mt-3">';
+		$element_title .= '<div class="row mt-3 d-md-block">';
 			$element_title .= '<div class="col-md-12">';
 
 			if(isset($info['rate'])) {
