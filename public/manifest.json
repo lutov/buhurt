@@ -3,12 +3,12 @@
   "name": "Buhurt",
   "icons": [
     {
-      "src": "/img/design/pwa/icons-192.png",
+      "src": "/data/img/design/pwa/icons-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/img/design/pwa/icons-512.png",
+      "src": "/data/img/design/pwa/icons-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
