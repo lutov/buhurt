@@ -131,7 +131,7 @@ class ElementsHelper {
 
 			$elements_list .= '<a href="'.$link.'">';
 
-			$elements_list .= '<img class="card-img-top" src="/data/img/covers/' . $section . '/' . $element_cover . '.jpg" alt="' . $element->name . ' (' . $element->year . ')" />';
+			$elements_list .= '<img class="card-img-top" src="/data/img/covers/'.$section.'/'.$element_cover.'.jpg" alt="'.$element->name.'" />';
 
 			$elements_list .= '</a>';
 

@@ -6,6 +6,7 @@ use App\Models\Helpers\RolesHelper;
 use App\Models\Helpers\SectionsHelper;
 use App\Models\Helpers\TextHelper;
 use App\Models\Helpers\ElementsHelper;
+use App\Models\Meme;
 use App\Models\Rate;
 use DB;
 use Auth;
@@ -120,6 +121,13 @@ class DatabaseController extends Controller {
 			case 'albums':
 				$element = Album::find($id);
 				$genres = Genre::where('element_type', '=', 'Album')->orderBy('name')->get(); //->remember(60)
+				$platforms = array();
+				$countries = array();
+				break;
+
+			case 'memes':
+				$element = Meme::find($id);
+				$genres = Genre::where('element_type', '=', 'Meme')->orderBy('name')->get(); //->remember(60)
 				$platforms = array();
 				$countries = array();
 				break;

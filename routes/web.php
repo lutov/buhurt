@@ -75,10 +75,8 @@ Route::get('q_add/{section}', array('uses' => 'DatabaseController@q_add'));
 	Route::get('companies', array('uses' => 'CompaniesController@show_all'));
 		Route::any('companies/{id}', array('uses' => 'CompaniesController@show_item'))->where('id', '[0-9]+');
 
-	Route::group(array('middleware' => 'admin'), function() {
-		Route::get('drugs', array('uses' => 'DrugsController@show_all'));
-			Route::any('drugs/{id}', array('uses' => 'DrugsController@show_item'))->where('id', '[0-9]+');
-	});
+	Route::get('memes', array('uses' => 'MemesController@list'));
+	Route::any('memes/{id}', array('uses' => 'MemesController@item'))->where('id', '[0-9]+');
 	
 // Relations
 Route::any('{section}/{id}/relations', array('uses' => 'RelationsController@getRelations'));
