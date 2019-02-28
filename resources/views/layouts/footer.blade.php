@@ -7,7 +7,7 @@
 
 				<div class="collapse navbar-collapse" id="navbarCollapse">
 
-					🔞
+					<span title="Сайт предназначен исключительно для совершеннолетних">🔞</span>
 
 					<ul class="navbar-nav mr-auto">
 
@@ -46,7 +46,7 @@
 
 				</div>
 
-				<div>© <!--a href="/user/1/profile"-->В. О. Шевченко<!--/a-->, 2014—{{date('Y')}}</div>
+				<div>2014—{{date('Y')}}</div>
 
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>

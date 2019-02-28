@@ -34,7 +34,7 @@
 	</div>
 
 	<section class="text-center mt-5">
-		<h2 id="section">Последние обновления</h2>
+		<h2 id="section">Обновления</h2>
 	</section>
 
 	<div class="row mt-5">
