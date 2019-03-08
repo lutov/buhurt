@@ -102,7 +102,9 @@
 
 		</div>
 
+		@if (!Auth::check())
 		{!! DummyHelper::regToRecommend() !!}
+		@endif
 
 		<div><input type="submit" class="btn btn-primary mt-4" value="Случайный список"></div>
 

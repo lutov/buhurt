@@ -71,11 +71,8 @@
 
 									<a class="dropdown-item" href="{!! URL::action('UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
 									<a class="dropdown-item" href="/events">Лента</a>
+									<a class="dropdown-item" href="/recommendations/">Случайный список</a>
 									<a class="dropdown-item" href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a>
-									<a class="dropdown-item" href="/search/advanced">Расширенный поиск</a>
-									@if (RolesHelper::isAdmin($request))
-									<a class="dropdown-item" href="/books/random">Случайная книга</a>
-									@endif
 
 									<a class="dropdown-item" href="/user/logout/">Выйти</a>
 
@@ -122,7 +119,7 @@
 				$(document).ready(function() {
 
                     $('#search').autocomplete({
-                        source: "{!! URL::action('SearchController@everything_json') !!}", // url-адрес
+                        source: "{!! URL::action('SearchController@everythingJson') !!}", // url-адрес
                         minLength: 3, // минимальное количество для совершения запроса
                         delay: 500,
                         select: function (event, ui) {
@@ -180,18 +177,6 @@
                             }
                         }
 
-                        /*
-                        callback: function(responce){
-                            //this.vote_success.fadeOut(2000);
-
-                            $.post('/achievements', {}, function(data) {
-                                //console.log(data);
-
-                                show_popup(data);
-
-                            }, 'json');
-                        }
-                        */
                     });
 
 					@endif

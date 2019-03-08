@@ -60,7 +60,7 @@ class TextHelper {
 	 * @param $string
 	 * @return mixed
 	 */
-	public static function switch2en($string) {
+	public static function cyrToLat($string) {
 
 		$search = array(
 			"й","ц","у","к","е","н","г","ш","щ","з","х","ъ",
@@ -82,7 +82,7 @@ class TextHelper {
 	 * @param $string
 	 * @return mixed
 	 */
-	public static function switch2ru($string) {
+	public static function latToCyr($string) {
 
 		$search = array(
 			"q","w","e","r","t","y","u","i","o","p","[","]",

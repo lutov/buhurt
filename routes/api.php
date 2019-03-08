@@ -20,10 +20,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 */
 
 /* SEARCH */
-Route::get('search', array('uses' => 'SearchController@get_list_json'));
+Route::get('search', array('uses' => 'SearchController@getJson'));
 
 /* RANDOM */
-Route::get('random/{section}', 	array('uses' => 'RandomController@get_json'));
+Route::get('random/{section}', 	array('uses' => 'RandomController@getJson'));
 
 /* ELEMENTS */
 Route::get('books/{id}', array('uses' => 'BooksController@getJson'))->where('id', '[0-9]+');

@@ -136,40 +136,28 @@ Route::group(array('middleware' => 'auth'), function() {
 Route::group(array('prefix' => 'search'), function() {
 	Route::get('', array('uses' => 'SearchController@everything'));
 
-	Route::get('json', array('uses' => 'SearchController@everything_json'));
+	Route::get('json', array('uses' => 'SearchController@everythingJson'));
 
-	Route::get('person_name', array('uses' => 'SearchController@person_name'));
-	Route::get('company_name', array('uses' => 'SearchController@company_name'));
-	Route::get('country_name', array('uses' => 'SearchController@country_name'));
-	Route::get('collection_name', array('uses' => 'SearchController@collection_name'));
-	Route::get('platform_name', array('uses' => 'SearchController@platform_name'));
+	Route::get('person_name', array('uses' => 'TipsController@person_name'));
+	Route::get('company_name', array('uses' => 'TipsController@company_name'));
+	Route::get('country_name', array('uses' => 'TipsController@country_name'));
+	Route::get('collection_name', array('uses' => 'TipsController@collection_name'));
+	Route::get('platform_name', array('uses' => 'TipsController@platform_name'));
 
-	Route::get('book_name', array('uses' => 'SearchController@book_name'));
-	Route::get('book_genre', array('uses' => 'SearchController@book_genre'));
+	Route::get('book_name', array('uses' => 'TipsController@book_name'));
+	Route::get('book_genre', array('uses' => 'TipsController@book_genre'));
 
-	Route::get('film_name', array('uses' => 'SearchController@film_name'));
-	Route::get('film_genre', array('uses' => 'SearchController@film_genre'));
+	Route::get('film_name', array('uses' => 'TipsController@film_name'));
+	Route::get('film_genre', array('uses' => 'TipsController@film_genre'));
 
-	Route::get('game_name', array('uses' => 'SearchController@game_name'));
-	Route::get('game_genre', array('uses' => 'SearchController@game_genre'));
+	Route::get('game_name', array('uses' => 'TipsController@game_name'));
+	Route::get('game_genre', array('uses' => 'TipsController@game_genre'));
 
-	Route::get('album_name', array('uses' => 'SearchController@album_name'));
-	Route::get('album_genre', array('uses' => 'SearchController@album_genre'));
-	Route::get('band_name', array('uses' => 'SearchController@band_name'));
+	Route::get('album_name', array('uses' => 'TipsController@album_name'));
+	Route::get('album_genre', array('uses' => 'TipsController@album_genre'));
+	Route::get('band_name', array('uses' => 'TipsController@band_name'));
 
-	Route::group(array('prefix' => 'advanced'), function() {
-		Route::get('', array('uses' => 'SearchController@advanced'));
-		Route::get('persons', array('uses' => 'SearchController@persons'));
-		Route::get('companies', array('uses' => 'SearchController@companies'));
-		Route::get('bands', array('uses' => 'SearchController@bands'));
-		Route::get('collections', array('uses' => 'SearchController@collections'));
-		Route::get('{section}/genres', array('uses' => 'SearchController@genres'));
-		Route::get('countries', array('uses' => 'SearchController@countries'));
-		Route::get('platforms', array('uses' => 'SearchController@platforms'));
-		Route::get('{section}/years', array('uses' => 'SearchController@years'));
-	});
 });
-
 
 // User
 Route::group(array('prefix' => 'user'), function() {

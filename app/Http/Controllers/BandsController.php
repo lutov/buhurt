@@ -1,10 +1,11 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\TextHelper;
 use App\Models\Section;
 use DB;
 use Illuminate\Http\Request;
-use View;
-use Input;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\View;
 use Redirect;
 use App\Models\Band;
 
@@ -24,26 +25,37 @@ class BandsController extends Controller {
 		$ru_section = $get_section->name;
 		$type = $get_section->type;
 
-		$sort = Input::get('sort', $section.'.created_at');
-		$sort_direction = Input::get('sort_direction', 'desc');
+		$sort = Input::get('sort', 'created_at');
+		$order = Input::get('order', 'desc');
 		$limit = 28;
 
 		$sort_options = array(
-			$section.'.created_at' => 'Время добавления',
-			$section.'.name' => 'Название',
-			$section.'.alt_name' => 'Оригинальное название',
-			$section.'.year' => 'Год'
+			'created_at' => 'Время добавления',
+			'name' => 'Название',
 		);
 
-		$elements = Band::orderBy($sort, $sort_direction)
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
+
+		$elements = Band::orderBy($sort, $order)
 			->paginate($limit)
 		;
+
+		$options = array(
+			'header' => true,
+			'footer' => true,
+			'paginate' => true,
+			'sort_list' => $sort_options,
+			'sort' => $sort,
+			'order' => $order,
+		);
 
 		return View::make($this->prefix.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,
+			'options' => $options,
 		));
 
 	}

@@ -172,8 +172,8 @@ return [
 		GrahamCampbell\Exceptions\ExceptionsServiceProvider::class,
 		Greggilbert\Recaptcha\RecaptchaServiceProvider::class,
 		Laravelrus\LocalizedCarbon\LocalizedCarbonServiceProvider::class,
-		SleepingOwl\Admin\Providers\SleepingOwlServiceProvider::class,
 		//Illuminate\Html\HtmlServiceProvider::class,
+		Collective\Html\HtmlServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -235,6 +235,8 @@ return [
 		
 		//'Form'      => Illuminate\Html\FormFacade::class,
 		//'Html'      => Illuminate\Html\HtmlFacade::class,
+		'Form' => Collective\Html\FormFacade::class,
+		'Html' => Collective\Html\HtmlFacade::class,
 		'Recaptcha' => Greggilbert\Recaptcha\Facades\Recaptcha::class,
 		'LocalizedCarbon'   => Laravelrus\LocalizedCarbon\LocalizedCarbon::class,
         'DiffFormatter'     => Laravelrus\LocalizedCarbon\DiffFactoryFacade::class,
