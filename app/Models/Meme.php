@@ -26,9 +26,7 @@ class Meme extends Eloquent  {
 	 * Отношение с жанрами
 	 */
 	public function genres() {
-
 		return $this->morphMany('App\Models\ElementGenre', 'element');
-
 	}
 
 	/**

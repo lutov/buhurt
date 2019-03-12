@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\TextHelper;
 use App\Models\Section;
 use Auth;
 use DB;
@@ -20,7 +21,7 @@ class CollectionsController extends Controller {
 	 * @param Request $request
 	 * @return \Illuminate\Contracts\View\View
 	 */
-	public function show_all(Request $request) {
+	public function list(Request $request) {
 
 		$section = $this->prefix;
 
@@ -28,26 +29,41 @@ class CollectionsController extends Controller {
 		$ru_section = $get_section->name;
 		$type = $get_section->type;
 
-		$sort = Input::get('sort', $section.'.name');
-		$sort_direction = Input::get('sort_direction', 'asc');
+		$sort = Input::get('sort', 'name');
+		$order = Input::get('order', 'asc');
 		$limit = 28;
 
 		$sort_options = array(
-			$section.'.created_at' => 'Время добавления',
-			$section.'.name' => 'Название',
-			$section.'.alt_name' => 'Оригинальное название',
-			$section.'.year' => 'Год'
+			'name' => 'Название',
 		);
 
-		$elements = Collection::orderBy($sort, $sort_direction)
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
+
+		$elements = Collection::orderBy($sort, $order)
 			->paginate($limit)
 		;
+
+		$wanted = array();
+		$not_wanted = array();
+
+		$options = array(
+			'header' => true,
+			'footer' => true,
+			'paginate' => true,
+			'wanted' => $wanted,
+			'not_wanted' => $not_wanted,
+			'sort_list' => $sort_options,
+			'sort' => $sort,
+			'order' => $order,
+		);
 
 		return View::make($this->prefix.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,
+			'options' => $options,
 		));
 
 	}
@@ -57,7 +73,7 @@ class CollectionsController extends Controller {
 	 * @param $id
 	 * @return \Illuminate\Contracts\View\View
 	 */
-    public function show_item(Request $request, $id) {
+    public function item(Request $request, $id) {
 
 		$section = $this->prefix;
 

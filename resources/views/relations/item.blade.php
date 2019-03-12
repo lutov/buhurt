@@ -34,10 +34,12 @@
 
 				foreach($relations as $rel_elem) {
 
-					//echo DebugHelper::dump($rel_elem->element_type, true);
+					//echo DebugHelper::dump($rel_elem->element_type, true); die();
 
 					$relation_type = $rel_elem->element_type;
 					$relation_section = SectionsHelper::getSectionBy($relation_type);
+
+					//echo DebugHelper::dump($relation_type, true); die();
 
 					$relation = $rel_elem->$relation_section[0];
 

@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Helpers\DatatypeHelper;
+use App\Models\Helpers\SectionsHelper;
 use Auth;
 use Input;
 use Redirect;
@@ -28,26 +30,8 @@ class RatesController extends Controller {
 
 		$rate_val = Input::get('rate_val', 0);
 
-		//$section = Section::where('alt_name', '=', $section)->first()->type;
-
-		//die($section);
-
-		if('books' == $section) {
-			$element = Book::find($id);
-			$type = 'Book';
-		} elseif('films' == $section) {
-			$element = Film::find($id);
-			$type = 'Film';
-		} elseif('games' == $section) {
-			$element = Game::find($id);
-			$type = 'Game';
-		} elseif('albums' == $section) {
-			$element = Album::find($id);
-			$type = 'Album';
-		} else {
-			$element = array();
-			$type = '';
-		}
+		$type = SectionsHelper::getSectionType($section);
+		$element = $type::find($id);
 
 		//die(print_r($element, true));
 
@@ -97,6 +81,7 @@ class RatesController extends Controller {
 	/**
 	 * @param $section
 	 * @param $id
+	 * @throws \Exception
 	 */
 	public function unrate($section, $id) {
 

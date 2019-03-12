@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\TextHelper;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -12,26 +13,62 @@ use App\Models\Country;
 
 class CountriesController extends Controller {
 
-	private $prefix = 'films';
+	private $prefix = 'countries';
 
-    public function show_all() {
+    public function list(Request $request) {
 
-	    $genres = DB::table($this->prefix);
-        return View::make('books.genres', array(
-			'books' => $genres
+		$section = $this->prefix;
+		$get_section = Section::where('alt_name', '=', $section)->first();
+		$ru_section = $get_section->name;
+		$type = $get_section->type;
+
+		$sort = Input::get('sort', 'name');
+		$order = Input::get('order', 'asc');
+		$limit = 28;
+
+		$sort_options = array(
+			'name' => 'Название',
+		);
+
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
+
+		$wanted = array();
+		$not_wanted = array();
+
+		if(Auth::check()) {
+
+			$user_id = Auth::user()->id;
+
+			$elements = Country::orderBy($sort, $order)
+				->paginate($limit)
+			;
+
+		} else {
+
+			$elements = Country::orderBy($sort, $order)
+				->paginate($limit)
+			;
+		}
+
+		$options = array(
+			'header' => true,
+			'footer' => true,
+			'paginate' => true,
+			'wanted' => $wanted,
+			'not_wanted' => $not_wanted,
+			'sort_list' => $sort_options,
+			'sort' => $sort,
+			'order' => $order,
+		);
+
+		return View::make($this->prefix.'.index', array(
+			'request' => $request,
+			'elements' => $elements,
+			'section' => $section,
+			'ru_section' => $ru_section,
+			'options' => $options,
 		));
-
-    }
-	
-    public function show_collections() {
-
-        return View::make($this->prefix.'.collections');
-
-    }
-	
-    public function show_collection() {
-
-        return View::make($this->prefix.'.collection');
 
     }
 
@@ -40,25 +77,31 @@ class CountriesController extends Controller {
 	 * @param $id
 	 * @return \Illuminate\Contracts\View\View
 	 */
-    public function show_item(Request $request, $id) {
+    public function item(Request $request, $id) {
 
-		$section = $this->prefix;
+		$section = 'films'; //$this->prefix;
 		$get_section = Section::where('alt_name', '=', $section)->first();
 		$ru_section = $get_section->name;
 		$type = $get_section->type;
 
-		$sort = Input::get('sort', $section.'.created_at');
-		$sort_direction = Input::get('sort_direction', 'desc');
+		$sort = Input::get('sort', 'created_at');
+		$order = Input::get('order', 'desc');
 		$limit = 28;
 
 		$sort_options = array(
-			$section.'.created_at' => 'Время добавления',
-			$section.'.name' => 'Название',
-			$section.'.alt_name' => 'Оригинальное название',
-			$section.'.year' => 'Год'
+			'created_at' => 'Время добавления',
+			'name' => 'Название',
+			'alt_name' => 'Оригинальное название',
+			'year' => 'Год'
 		);
 
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
+
 		$country = Country::find($id);
+
+		$wanted = array();
+		$not_wanted = array();
 
 		if(Auth::check()) {
 
@@ -71,7 +114,7 @@ class CountriesController extends Controller {
 				->pluck('element_id')
 			;
 
-			$elements = $country->$section()->orderBy($sort, $sort_direction)
+			$elements = $country->$section()->orderBy($sort, $order)
 				->with(array('rates' => function($query) use($user_id, $section, $type)
 					{
 						$query
@@ -86,30 +129,31 @@ class CountriesController extends Controller {
 
 		} else {
 
-			$elements = $country->$section()->orderBy($sort, $sort_direction)
+			$elements = $country->$section()->orderBy($sort, $order)
 				->paginate($limit)
 			;
 
 		}
 
-        return View::make('films.country', array(
+		$options = array(
+			'header' => true,
+			'footer' => true,
+			'paginate' => true,
+			//'wanted' => $wanted,
+			//'not_wanted' => $not_wanted,
+			'sort_list' => $sort_options,
+			'sort' => $sort,
+			'order' => $order,
+		);
+
+        return View::make($this->prefix.'.item', array(
 			'request' => $request,
 			'country' => $country,
 			'films' => $elements,
 			'section' => $section,
 			'ru_section' => $ru_section,
-			'sort_options' => $sort_options
+			'options' => $options
 		));
-    }
-	
-    public function show_authors()
-    {
-        return View::make($this->prefix.'.authors');
-    }	
-	
-    public function show_author()
-    {
-        return View::make($this->prefix.'.author');
     }
 	
 }

@@ -62,6 +62,12 @@ class DatabaseController extends Controller {
 				$countries = array();
 				break;
 
+			case 'memes':
+				$genres = Genre::where('element_type', '=', 'Meme')->orderBy('name')->get(); //->remember(60)
+				$platforms = array();
+				$countries = array();
+				break;
+
 			default:
 				$section = 'films';
 				$genres = Genre::where('element_type', '=', 'Film')->orderBy('name')->get(); //->remember(60)
@@ -237,6 +243,14 @@ class DatabaseController extends Controller {
 					'cover' => array('image', 'max:100')
 				)
 			);
+		} elseif('memes' == $section) {
+			$validator = Validator::make(
+				$_POST,
+				array(
+					'name' => array('required', 'min:1'),
+					'cover' => array('image', 'max:100')
+				)
+			);
 		} elseif('persons' == $section) {
 			$validator = Validator::make(
 				$_POST,
@@ -245,7 +259,7 @@ class DatabaseController extends Controller {
 					'cover' => array('image', 'max:100')
 				)
 			);
-		}  elseif('companies' == $section) {
+		} elseif('companies' == $section) {
 			$validator = Validator::make(
 				$_POST,
 				array(
@@ -253,7 +267,7 @@ class DatabaseController extends Controller {
 					'cover' => array('image', 'max:100')
 				)
 			);
-		}  elseif('collections' == $section) {
+		} elseif('collections' == $section) {
 			$validator = Validator::make(
 				$_POST,
 				array(
@@ -261,7 +275,7 @@ class DatabaseController extends Controller {
 					'cover' => array('image', 'max:100')
 				)
 			);
-		}  elseif('bands' == $section) {
+		} elseif('bands' == $section) {
 			$validator = Validator::make(
 				$_POST,
 				array(
@@ -298,6 +312,10 @@ class DatabaseController extends Controller {
 			} elseif('albums' == $section) {
 
 				return $this->saveAlbum($request);
+
+			} elseif('memes' == $section) {
+
+				return $this->saveMeme($request);
 
 			} elseif('persons' == $section) {
 
@@ -883,6 +901,77 @@ class DatabaseController extends Controller {
 		$element->name = $name;
 		$element->description = $this->prepareDescription($description);
 		$element->save();
+
+		$this->setCover($section, $element->id);
+
+		if('edit' != $action) {
+			// uploader
+			$this->setUploader($type, $element->id);
+		}
+
+		//print_r($book);
+		return $this->returnSuccess($section, $element->id);
+
+	}
+
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
+	private function saveMeme(Request $request) {
+
+		$type = 'Meme';
+		$section = 'memes';
+
+		$name = Input::get('name', '');
+		$alt_name = Input::get('alt_name', '');
+		$description = Input::get('description', ' ');
+		$genres = explode('; ', Input::get('genre'));
+		$collections = explode('; ', Input::get('collections'));
+		$year = Input::get('year', 0);
+
+		// general
+		$action = Input::get('action', '');
+		if('edit' == $action) {
+
+			$id = Input::get('element_id');
+			$element = $type::find($id);
+
+			DB::table('elements_genres')
+				->where('element_type', '=', $type)
+				->where('element_id', '=', $id)
+				->delete()
+			;
+
+		} else {
+
+			$element = new $type();
+			$fill_id = $this->getMissingId($section);
+			if($fill_id) {$element->id = $fill_id;}
+
+		}
+		$element->name = $name;
+		$element->alt_name = $alt_name;
+		$element->description = $this->prepareDescription($description);
+		$element->year = $year;
+
+		if(RolesHelper::isAdmin($request)) {
+			$element->verified = 1;
+		} else {
+			$element->verified = 0;
+		}
+
+		$element->save();
+
+		// genres
+		if('' != $genres[0]) {
+			$this->setGenres($genres, $type, $element->id);
+		}
+
+		// collections
+		if('' != $collections[0]) {
+			$this->setCollections($collections, $type, $element->id);
+		}
 
 		$this->setCover($section, $element->id);
 

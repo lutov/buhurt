@@ -31,10 +31,10 @@ class MemesController extends Controller {
 		$limit = 28;
 
 		$sort_options = array(
-			$section.'.created_at' => 'Время добавления',
-			$section.'.name' => 'Название',
-			$section.'.alt_name' => 'Оригинальное название',
-			$section.'.year' => 'Год'
+			'created_at' => 'Время добавления',
+			'name' => 'Название',
+			'alt_name' => 'Оригинальное название',
+			'year' => 'Год'
 		);
 
 		$sort = TextHelper::checkSort($sort);

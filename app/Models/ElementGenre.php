@@ -14,8 +14,7 @@ class ElementGenre extends Model  {
 	/**
 	 * Отношение с
 	 */
-	public function genre()
-	{
+	public function genre() {
 		return $this->belongsTo('App\Models\Genre');
 	}
 
@@ -23,8 +22,7 @@ class ElementGenre extends Model  {
 	/**
 	 * Отношение с
 	 */
-	public function books()
-	{
+	public function books() {
 		return $this->belongsToMany('App\Models\Book', 'elements_genres', 'genre_id', 'element_id');
 	}
 

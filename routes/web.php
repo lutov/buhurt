@@ -86,28 +86,36 @@ Route::any('{section}/{id}/relations/delete', array('uses' => 'RelationsControll
 
 // Years
 Route::group(array('prefix' => 'years'), function() {
-	Route::any('{section}/{year}', array('uses' => 'YearsController@show_item'))->where('year', '[0-9]+');
+	Route::any('/', array('uses' => 'YearsController@sections'));
+	Route::any('{section}', array('uses' => 'YearsController@list'));
+	Route::any('{section}/{year}', array('uses' => 'YearsController@item'))->where('year', '[0-9]+');
 });
 
 // genres
 Route::group(array('prefix' => 'genres'), function() {
+	Route::any('/', array('uses' => 'GenresController@sections'));
+	Route::any('{section}', array('uses' => 'GenresController@list'));
 	Route::any('{section}/{id}', array('uses' => 'GenresController@show_item'));
 });
 
 // platforms
 Route::group(array('prefix' => 'platforms'), function() {
-	Route::any('games/{id}', array('uses' => 'PlatformsController@show_item'));
+	Route::any('/', array('uses' => 'PlatformsController@list'));
+	Route::any('{id}', array('uses' => 'PlatformsController@item'));
+	Route::any('games/{id}', function($id) {return Redirect::to('/platforms/'.$id.'/');});
 });
 
 // countries
 Route::group(array('prefix' => 'countries'), function() {
-	Route::any('films/{id}', array('uses' => 'CountriesController@show_item'));
+	Route::any('/', array('uses' => 'CountriesController@list'));
+	Route::any('{id}', array('uses' => 'CountriesController@item'));
+	Route::any('films/{id}', function($id) {return Redirect::to('/countries/'.$id.'/');});
 });
 	
 // collections
 Route::group(array('prefix' => 'collections'), function() {
-	Route::any('/', array('uses' => 'CollectionsController@show_all'));
-	Route::any('{id}', array('uses' => 'CollectionsController@show_item'));
+	Route::any('/', array('uses' => 'CollectionsController@list'));
+	Route::any('{id}', array('uses' => 'CollectionsController@item'));
 });
 
 
@@ -134,6 +142,7 @@ Route::group(array('middleware' => 'auth'), function() {
 
 // Search
 Route::group(array('prefix' => 'search'), function() {
+
 	Route::get('', array('uses' => 'SearchController@everything'));
 
 	Route::get('json', array('uses' => 'SearchController@everythingJson'));
@@ -156,6 +165,9 @@ Route::group(array('prefix' => 'search'), function() {
 	Route::get('album_name', array('uses' => 'TipsController@album_name'));
 	Route::get('album_genre', array('uses' => 'TipsController@album_genre'));
 	Route::get('band_name', array('uses' => 'TipsController@band_name'));
+
+	Route::get('meme_name', array('uses' => 'TipsController@meme_name'));
+	Route::get('meme_genre', array('uses' => 'TipsController@meme_genre'));
 
 });
 

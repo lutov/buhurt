@@ -12,14 +12,14 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
+    public function boot() {
         //
 		Relation::morphMap([
 			'Book' => 'App\Models\Book',
 			'Film' => 'App\Models\Film',
 			'Game' => 'App\Models\Game',
 			'Album' => 'App\Models\Album',
+			'Meme' => 'App\Models\Meme',
 		]);
     }
 

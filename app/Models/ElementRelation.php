@@ -20,6 +20,9 @@ class ElementRelation extends Eloquent {
 	public function albums() {
 		return $this->hasMany('App\Models\Album', 'id', 'element_id');
 	}
+	public function memes() {
+		return $this->hasMany('App\Models\Meme', 'id', 'element_id');
+	}
 
 	public function relation() {
 		return $this->belongsTo('App\Models\Relation');

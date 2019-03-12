@@ -64,11 +64,13 @@ class SearchController extends Controller {
 
 							// TODO: Add suggestions
 							//echo $search_query;
+							/*
 							$query_words = explode(' ', $search_query);
 							foreach($query_words as $query) {
 								$word_result = $this->mainSearch($request, $query, $order, $search_query);
 								if($word_result) {return $word_result;}
 							}
+							*/
 
 							$message = 'По запросу «'.TextHelper::getCleanName($search_query).'» ничего не найдено.';
 
@@ -76,7 +78,7 @@ class SearchController extends Controller {
 
 								$message .= '<p><a href="/admin/add/">Добавить элемент</a>?</p>';
 
-								$message .= DummyHelper::getQuickAddLinks($search_query);
+								$message .= DummyHelper::getQuickAddLinks($search_query, $request);
 
 							} else {
 
@@ -103,7 +105,7 @@ class SearchController extends Controller {
 
 								if(Auth::check()) {
 
-									$message .= DummyHelper::getQuickAddLinks($search_query);
+									$message .= DummyHelper::getQuickAddLinks($search_query, $request);
 
 								} else {
 

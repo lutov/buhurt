@@ -49,17 +49,43 @@
 					<ul class="navbar-nav mr-auto">
 
 						<li class="nav-item">
-							<a class="nav-link" href="/books/">📚 Книги</a>
+							<a class="nav-link" href="/books/">📖 Книги</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/films/">&#127909; Фильмы</a>
+							<a class="nav-link" href="/films/">🎞 Фильмы</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/games/">&#127918; Игры</a>
+							<a class="nav-link" href="/games/">🎮 Игры</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/albums/">&#127911; Альбомы</a>
+							<a class="nav-link" href="/albums/">🎧 Альбомы</a>
 						</li>
+
+						@if (RolesHelper::isAdmin($request))
+
+							<li class="nav-item">
+								<a class="nav-link" href="/memes/">🤔 Мемы</a>
+							</li>
+
+							<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="#" id="add_sections" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									🗄 Картотека
+								</a>
+								<div class="dropdown-menu" aria-labelledby="add_sections">
+
+									<a class="dropdown-item" href="/persons/">Люди</a>
+									<a class="dropdown-item" href="/bands/">Группы</a>
+									<a class="dropdown-item" href="/companies/">Компании</a>
+									<a class="dropdown-item" href="/countries/">Страны</a>
+									<a class="dropdown-item" href="/platforms/">Платформы</a>
+									<a class="dropdown-item" href="/genres/">Жанры</a>
+									<a class="dropdown-item" href="/years/">Календарь</a>
+									<a class="dropdown-item" href="/collections/">Коллекции</a>
+
+								</div>
+							</li>
+
+						@endif
 
 						@if (Auth::check())
 

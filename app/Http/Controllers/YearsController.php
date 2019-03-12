@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\SectionsHelper;
+use App\Models\Helpers\TextHelper;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -16,33 +18,55 @@ use App\Models\Wanted;
 
 class YearsController extends Controller {
 
-	//private $prefix = 'persons';
+	/**
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function sections(Request $request) {
 
-    public function show_all() {
-
-	    $persons = DB::table($this->prefix)->paginate(27);
-		$photos = array();
-		$default_photo = 0;
-		foreach($persons as $person)
-		{
-			$file_path = $_SERVER['DOCUMENT_ROOT'].'data/img/covers/'.$this->prefix.'/'.$person->id.'.jpg';
-			//echo $file_path.'<br/>';
-			if(file_exists($file_path))
-			{
-				$photos[$person->id] = $person->id;
-			}
-			else
-			{
-				$covers[$person->id] = $default_photo;
-			}
-		}
-
-        return View::make($this->prefix.'.index', array(
-			'persons' => $persons,
-			'photos' => $photos
+		return View::make('years.index', array(
+			'title' => 'Календарь',
+			'subtitle' => 'Разделы',
+			'request' => $request,
 		));
 
-    }
+	}
+
+	/**
+	 * @param Request $request
+	 * @param string $section
+	 * @return mixed
+	 */
+	public function list(Request $request, string $section) {
+
+		$sub_section = 'years';
+		$title = 'Календарь';
+		$subtitle = SectionsHelper::getSectionName($section);
+
+		$sort = 'year';
+		$order = 'desc';
+		//$limit = $this->normal_limit;
+
+		$elements = DB::table($section)
+			//->select('year')
+			->selectRaw('`year` as `id`, `year` as `name`')
+			->distinct()
+			->orderBy($sort, $order)
+			//->remember(60)
+			->get()
+			//->paginate($limit)
+		;
+
+		return View::make('years.list', array(
+			'request' => $request,
+			'title' => $title,
+			'subtitle' => $subtitle,
+			'sub_section' => $sub_section,
+			'section' => $section,
+			'elements' => $elements
+		));
+
+	}
 
 	/**
 	 * @param Request $request
@@ -50,26 +74,29 @@ class YearsController extends Controller {
 	 * @param $year
 	 * @return \Illuminate\Contracts\View\View
 	 */
-    public function show_item(Request $request, $section, $year) {
+    public function item(Request $request, $section, $year) {
 
 		//$get_section = Section::where('alt_name', '=', $section)->first();
 		$ru_section = Helpers::get_section_name($section);
 		$type = Helpers::get_section_type($section);
 		//die($type);
 
-		$sort = Input::get('sort', $section.'.created_at');
-		$sort_direction = Input::get('sort_direction', 'desc');
+		$sort = Input::get('sort', 'created_at');
+		$order = Input::get('order', 'desc');
 		$limit = 28;
 
 		$sort_options = array(
-			$section.'.created_at' => 'Время добавления',
-			$section.'.name' => 'Название',
-			$section.'.alt_name' => 'Оригинальное название',
-			$section.'.year' => 'Год'
+			'created_at' => 'Время добавления',
+			'name' => 'Название',
+			'alt_name' => 'Оригинальное название',
+			'year' => 'Год'
 		);
 
-		if(Auth::check())
-		{
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
+
+		if(Auth::check()) {
+
 			$user_id = Auth::user()->id;
 			$not_wanted = Wanted::select('element_id')
 				->where('element_type', '=', $type)
@@ -80,7 +107,7 @@ class YearsController extends Controller {
 			;
 
 			//die($section);
-			$elements = $type::orderBy($sort, $sort_direction)
+			$elements = $type::orderBy($sort, $order)
 				->with(array('rates' => function($query) use($user_id, $section, $type)
 					{
 						$query
@@ -96,22 +123,40 @@ class YearsController extends Controller {
 			;
 			//die($elements);
 		} else {
-			$elements = $type::orderBy($sort, $sort_direction)
+			$elements = $type::orderBy($sort, $order)
 				->where('year', '=', $year)
 				->paginate($limit)
 			;
 		}
 
 		if(!empty($elements)) {
+
+			$options = array(
+				'header' => true,
+				'footer' => true,
+				'paginate' => true,
+				//'wanted' => $wanted,
+				//'not_wanted' => $not_wanted,
+				'sort_list' => $sort_options,
+				'sort' => $sort,
+				'order' => $order,
+			);
+
 			return View::make('years.item', array(
 				'request' => $request,
 				'year' => $year,
 				'elements' => $elements,
 				'section' => $section,
 				'ru_section' => $ru_section,
-				'sort_options' => $sort_options
+				'options' => $options
 			));
+
+		} else {
+
+			return Redirect::to('/years/');
+
 		}
+
     }
 	
 }

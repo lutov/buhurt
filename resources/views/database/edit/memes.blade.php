@@ -37,11 +37,11 @@
                 {!! Form::hidden('action', $value = 'edit') !!}
                 {!! Form::hidden('section', $value = 'memes') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
-                <p>{!! Form::text('meme_name', $value = $element->name, $attributes = array('placeholder' => 'Название альбома', 'id' => 'meme_name', 'class' => 'form-control w-100')) !!}</p>
-
-                <p>{!! Form::textarea('meme_description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'meme_description')) !!}</p>
-                <p>{!! Form::text('meme_genre', $value = DatatypeHelper::collectionToString($element->genres, 'genre', '; ', '', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'meme_genre')) !!}</p>
-                <p>{!! Form::text('meme_year', $value = $element->year, $attributes = array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
+                <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название мема', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('alt_name', $value = $element->alt_name, $attributes = array('placeholder' => 'Альтернативное название мема', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'description')) !!}</p>
+                <p>{!! Form::text('genre', $value = DatatypeHelper::collectionToString($element->genres, 'genre', '; ', '', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genre')) !!}</p>
+                <p>{!! Form::text('year', $value = $element->year, $attributes = array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
                 <p>{!! Form::text('collections', $value = DatatypeHelper::collectionToString($element->collections, 'collection', '; ', '', true), $attributes = array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
                 <p><b>Обложка</b> {!! Form::file('cover'); !!}</p>
                 {!! Form::submit('Сохранить', $attributes = array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
@@ -68,10 +68,10 @@
 
                 <div class="card mt-3">
                     <div class="card-header" data-toggle="collapse" data-target="#memes_genres_container" aria-expanded="false" aria-controls="memes_genres_container">
-                        Жанры музыки
+                        Жанры мемов
                     </div>
                     <div class="collapse" id="memes_genres_container">
-                        {!! DatatypeHelper::objectToList($genres, 'memes_genres') !!}
+                        {!! DatatypeHelper::objectToList($genres, 'genres') !!}
                     </div>
                 </div>
 

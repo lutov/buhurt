@@ -24,7 +24,7 @@ class RelationsController extends Controller {
 	
     public function getRelations(Request $request, $section, $id) {
 
-		$books = $films = $games = [];
+		$books = $films = $games = $memes = [];
 		
 		$relations = Relation::all();
 		$relation_list = array();
@@ -69,6 +69,7 @@ class RelationsController extends Controller {
 			'books' => $books,
 			'films' => $films,
 			'games' => $games,
+			'memes' => $memes,
 			'relation_list' => $relation_list,
 			'section_list' => $section_list,
 			'relations' => $relations,

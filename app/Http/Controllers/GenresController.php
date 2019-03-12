@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Helpers\SectionsHelper;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
@@ -12,16 +13,51 @@ use App\Models\Genre;
 
 class GenresController extends Controller {
 
-    public function show_all() {
+	/**
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function sections(Request $request) {
 
-		/*
-	    $genres = DB::table($this->prefix);
-        return View::make('books.genres', array(
-			'books' => $genres
+		return View::make('genres.index', array(
+			'title' => 'Жанры',
+			'subtitle' => 'Разделы',
+			'request' => $request,
 		));
-		*/
 
-    }
+	}
+
+	/**
+	 * @param Request $request
+	 * @param $section
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function list(Request $request, $section) {
+
+		$sub_section = 'genres';
+		$title = 'Жанры';
+		$subtitle = SectionsHelper::getSectionName($section);
+		$type = SectionsHelper::getSectionType($section);
+
+		$sort = 'name';
+		$order = 'asc';
+		$limit = 28;
+
+		$elements = Genre::where('element_type', '=', $type)
+			->orderBy($sort, $order)
+			->paginate($limit)
+		;
+
+		return View::make('genres.list', array(
+			'request' => $request,
+			'title' => $title,
+			'subtitle' => $subtitle,
+			'sub_section' => $sub_section,
+			'section' => $section,
+			'elements' => $elements
+		));
+
+	}
 
 	/**
 	 * @param Request $request

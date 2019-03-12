@@ -17,6 +17,7 @@ use App\Models\Country;
 use App\Models\Film;
 use App\Models\Game;
 use App\Models\Genre;
+use App\Models\Meme;
 use App\Models\Person;
 use App\Models\Platform;
 use Illuminate\Support\Facades\Input;
@@ -124,6 +125,11 @@ class TipsController extends Controller {
 		$this->getName($model);
 	}
 
+	public function meme_name() {
+		$model = new Meme();
+		$this->getName($model);
+	}
+
 	public function band_name() {
 		$model = new Band();
 		$this->getName($model);
@@ -148,6 +154,11 @@ class TipsController extends Controller {
 
 	public function album_genre() {
 		$type = 'Album';
+		$this->getGenre($type);
+	}
+
+	public function meme_genre() {
+		$type = 'Meme';
 		$this->getGenre($type);
 	}
 	/* GENRES */

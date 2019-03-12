@@ -599,7 +599,7 @@ class ElementsHelper {
 					$element_title .= DatatypeHelper::arrayToString(
 						$info['countries'],
 						', ',
-						'/countries/'.$section.'/'
+						'/countries/'
 					);
 					$element_title .= '. ';
 
