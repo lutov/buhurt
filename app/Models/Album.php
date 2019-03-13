@@ -1,10 +1,9 @@
 <?php namespace App\Models;
 
+use App\Models\Helpers\SectionsHelper;
 use Eloquent;
-//use SleepingOwl\Models\SleepingOwlModel;
 
 class Album extends Eloquent  {
-//class Album extends SleepingOwlModel  {
 
 	/**
 	 * The database table used by the model.
@@ -25,41 +24,52 @@ class Album extends Eloquent  {
 	protected $fillable = array('name', 'description', 'year', 'verified');
 
 	/**
-	 * Отношение с жанрами
+	 * @return string
 	 */
-	public function genres()
-	{
+	public function section() {
+
+		return SectionsHelper::getSection($this->table);
+
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function genres() {
+
 		return $this->morphMany('App\Models\ElementGenre', 'element');
+
 	}
 
-
 	/**
-	 * Отношение с коллекциями
+	 * @return mixed
 	 */
-	public function collections()
-	{
+	public function collections() {
+
 		return $this->morphMany('App\Models\ElementCollection', 'element');
+
 	}
 
-
 	/**
-	 * Отношение с оценками
+	 * @return mixed
 	 */
-	public function rates()
-	{
+	public function rates() {
+
 		return $this->morphMany('App\Models\Rate', 'element');
+
 	}
 
 	/**
-	 * Отношение с комментариями
+	 * @return mixed
 	 */
-	public function comments()
-	{
+	public function comments() {
+
 		return $this->morphMany('App\Models\Comment', 'element');
+
 	}
 
 	/**
-	 * Отношение с желаемым
+	 * @return mixed
 	 */
 	public function wanted() {
 
@@ -67,9 +77,8 @@ class Album extends Eloquent  {
 
 	}
 
-
 	/**
-	 * Отношение с нежелаемым
+	 * @return mixed
 	 */
 	public function not_wanted() {
 
@@ -78,7 +87,7 @@ class Album extends Eloquent  {
 	}
 
 	/**
-	 * Отношение с
+	 * @return mixed
 	 */
 	public function bands() {
 
@@ -86,6 +95,9 @@ class Album extends Eloquent  {
 
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function tracks() {
 
 		return $this->hasMany('App\Models\Track');

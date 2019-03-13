@@ -104,7 +104,7 @@ class FilmsController extends Controller {
 	 * @param $id
 	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
 	 */
-    public function show_item(Request $request, $id) {
+    public function item(Request $request, $id) {
 
 		$film = Film::find($id);
 		if (count($film)) {
@@ -185,7 +185,7 @@ class FilmsController extends Controller {
 				$cover = $id;
 			}
 
-			$section = $this->prefix;
+			$section = SectionsHelper::getSection($this->prefix);
 
 			$rating = ElementsHelper::countRating($film);
 			

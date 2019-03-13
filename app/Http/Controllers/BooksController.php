@@ -113,10 +113,6 @@ class BooksController extends Controller {
 			$genres = $book->genres; $genres = $genres->sortBy('name');
 			$collections = $book->collections;
 
-			//if(isset($genres[0])) {$genres = $genres[0]->genre()->get();}
-
-			//die('<pre>'.print_r($genres, true).'</pre>');
-
 			if(Auth::check()) {
 
 				$user = Auth::user();
@@ -181,7 +177,7 @@ class BooksController extends Controller {
 				$cover = $id;
 			}
 
-			$section = $this->prefix;
+			$section = SectionsHelper::getSection($this->prefix);
 
 			$rating = ElementsHelper::countRating($book);
 			

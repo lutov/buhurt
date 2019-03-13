@@ -183,7 +183,7 @@ class MemesController extends Controller {
 				$cover = $id;
 			}
 
-			$section = $this->prefix;
+			$section = SectionsHelper::getSection($this->prefix);
 
 			$rating = ElementsHelper::countRating($meme);
 			

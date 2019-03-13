@@ -1,10 +1,9 @@
 <?php namespace App\Models;
 
+use App\Models\Helpers\SectionsHelper;
 use Eloquent;
-//use SleepingOwl\Models\SleepingOwlModel;
 
 class Game extends Eloquent  {
-//class Game extends SleepingOwlModel  {
 
 	/**
 	 * The database table used by the model.
@@ -25,41 +24,52 @@ class Game extends Eloquent  {
 	protected $fillable = array('name', 'alt_name', 'description', 'year', 'verified');
 
 	/**
-	 * Отношение с жанрами
+	 * @return string
 	 */
-	public function genres()
-	{
+	public function section() {
+
+		return SectionsHelper::getSection($this->table);
+
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function genres() {
+
 		return $this->morphMany('App\Models\ElementGenre', 'element');
+
 	}
 
-
 	/**
-	 * Отношение с коллекциями
+	 * @return mixed
 	 */
-	public function collections()
-	{
+	public function collections() {
+
 		return $this->morphMany('App\Models\ElementCollection', 'element');
+
 	}
 
-
 	/**
-	 * Отношение с оценками
+	 * @return mixed
 	 */
-	public function rates()
-	{
+	public function rates() {
+
 		return $this->morphMany('App\Models\Rate', 'element');
+
 	}
 
 	/**
-	 * Отношение с комментариями
+	 * @return mixed
 	 */
-	public function comments()
-	{
+	public function comments() {
+
 		return $this->morphMany('App\Models\Comment', 'element');
+
 	}
 
 	/**
-	 * Отношение с желаемым
+	 * @return mixed
 	 */
 	public function wanted() {
 
@@ -67,9 +77,8 @@ class Game extends Eloquent  {
 
 	}
 
-
 	/**
-	 * Отношение с нежелаемым
+	 * @return mixed
 	 */
 	public function not_wanted() {
 
@@ -78,27 +87,30 @@ class Game extends Eloquent  {
 	}
 
 	/**
-	 * Отношение с
+	 * @return mixed
 	 */
-	public function platforms()
-	{
+	public function platforms() {
+
 		return $this->belongsToMany('App\Models\Platform', 'platforms_games', 'game_id', 'platform_id');
+
 	}
 
 	/**
-	 * Отношение с
+	 * @return mixed
 	 */
-	public function developer()
-	{
+	public function developer() {
+
 		return $this->belongsToMany('App\Models\Company', 'developers_games', 'game_id', 'company_id');
+
 	}
 
 	/**
-	 * Отношение с
+	 * @return mixed
 	 */
-	public function publisher()
-	{
+	public function publisher() {
+
 		return $this->belongsToMany('App\Models\Company', 'publishers_games', 'game_id', 'company_id');
+
 	}
 
 }

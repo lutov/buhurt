@@ -9,6 +9,10 @@
 
 @section('content')
 
+	<section class="text-center mt-5 mb-3">
+		{!! Breadcrumbs::render('element', $element) !!}
+	</section>
+
 	<div itemscope itemtype="http://schema.org/MusicAlbum">
 
 		<?php // move it to controller obviously
@@ -26,16 +30,16 @@
 		);
 		?>
 
-		{!! ElementsHelper::getCardHeader($request, $section, $element, $info) !!}
+		{!! ElementsHelper::getCardHeader($request, $section->alt_name, $element, $info) !!}
 
-		{!! ElementsHelper::getCardBody($request, $section, $element, $info) !!}
+		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $info) !!}
 
-		{!! ElementsHelper::getCardFooter($request, $section, $element, $info) !!}
+		{!! ElementsHelper::getCardFooter($request, $section->alt_name, $element, $info) !!}
 
 	</div>
 
-	{!! ElementsHelper::getCardComments($request, $comments, $section, $element->id) !!}
+	{!! ElementsHelper::getCardComments($request, $comments, $section->alt_name, $element->id) !!}
 
-	{!! ElementsHelper::getCardScripts($section, $element->id) !!}
+	{!! ElementsHelper::getCardScripts($section->alt_name, $element->id) !!}
 
 @stop

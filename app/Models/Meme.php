@@ -1,5 +1,6 @@
 <?php namespace App\Models;
 
+use App\Models\Helpers\SectionsHelper;
 use Eloquent;
 
 class Meme extends Eloquent  {
@@ -23,14 +24,25 @@ class Meme extends Eloquent  {
 	protected $fillable = array('name', 'alt_name', 'description', 'year', 'verified');
 
 	/**
-	 * Отношение с жанрами
+	 * @return mixed
 	 */
-	public function genres() {
-		return $this->morphMany('App\Models\ElementGenre', 'element');
+	public function section() {
+
+		return SectionsHelper::getSection($this->table);
+
 	}
 
 	/**
-	 * Отношение с коллекциями
+	 * @return mixed
+	 */
+	public function genres() {
+
+		return $this->morphMany('App\Models\ElementGenre', 'element');
+
+	}
+
+	/**
+	 * @return mixed
 	 */
 	public function collections() {
 
@@ -38,9 +50,8 @@ class Meme extends Eloquent  {
 
 	}
 
-
 	/**
-	 * Отношение с оценками
+	 * @return mixed
 	 */
 	public function rates() {
 
@@ -49,7 +60,7 @@ class Meme extends Eloquent  {
 	}
 
 	/**
-	 * Отношение с комментариями
+	 * @return mixed
 	 */
 	public function comments() {
 
@@ -58,7 +69,7 @@ class Meme extends Eloquent  {
 	}
 
 	/**
-	 * Отношение с желаемым
+	 * @return mixed
 	 */
 	public function wanted() {
 
@@ -66,9 +77,8 @@ class Meme extends Eloquent  {
 
 	}
 
-
 	/**
-	 * Отношение с нежелаемым
+	 * @return mixed
 	 */
 	public function not_wanted() {
 

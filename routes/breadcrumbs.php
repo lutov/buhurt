@@ -29,6 +29,8 @@ Breadcrumbs::register('section', function($breadcrumbs, $section) {
 });
 
 Breadcrumbs::register('element', function($breadcrumbs, $element) {
-	$breadcrumbs->parent($element->section);
-	$breadcrumbs->push($element->name, route($element->section, $element->id));
+	$section = $element->section();
+	$breadcrumbs->parent('home');
+	$breadcrumbs->push($section->name, route($section->alt_name, $section->id));
+	$breadcrumbs->push($element->name, route($section->type, $element->id));
 });

@@ -1,10 +1,9 @@
 <?php namespace App\Models;
 
+use App\Models\Helpers\SectionsHelper;
 use Eloquent;
-//use SleepingOwl\Models\SleepingOwlModel;
 
 class Book extends Eloquent  {
-//class Book extends SleepingOwlModel  {
 
 	/**
 	 * The database table used by the model.
@@ -24,63 +23,71 @@ class Book extends Eloquent  {
 
 	protected $fillable = array('name', 'alt_name', 'description', 'year', 'verified');
 
+	/**
+	 * @return string
+	 */
+	public function section() {
+
+		return SectionsHelper::getSection($this->table);
+
+	}
 
 	/**
-	 * Отношение с комментариями
+	 * @return mixed
 	 */
-	public function comments()
-	{
+	public function comments() {
+
 		return $this->morphMany('App\Models\Comment', 'element');
+
 	}
 
-
 	/**
-	 * Отношение с оценками
+	 * @return mixed
 	 */
-	public function rates()
-	{
+	public function rates() {
+
 		return $this->morphMany('App\Models\Rate', 'element');
+
 	}
 
-
 	/**
-	 * Отношение с писателями
+	 * @return mixed
 	 */
-	public function writers()
-	{
+	public function writers() {
+
 		return $this->belongsToMany('App\Models\Person', 'writers_books', 'book_id', 'person_id');
+
 	}
 
-
 	/**
-	 * Отношение с писателями
+	 * @return mixed
 	 */
-	public function publishers()
-	{
+	public function publishers() {
+
 		return $this->belongsToMany('App\Models\Company', 'publishers_books', 'book_id', 'company_id');
+
 	}
 
-
 	/**
-	 * Отношение с жанрами
+	 * @return mixed
 	 */
-	public function genres()
-	{
+	public function genres() {
+
 		return $this->morphMany('App\Models\ElementGenre', 'element');
+
 	}
 
-
 	/**
-	 * Отношение с коллекциями
+	 * @return mixed
 	 */
-	public function collections()
-	{
+	public function collections() {
+
 		return $this->morphMany('App\Models\ElementCollection', 'element');
+
 	}
 
-
 	/**
-	 * Отношение с желаемым
+	 * @return mixed
 	 */
 	public function wanted() {
 
@@ -89,7 +96,7 @@ class Book extends Eloquent  {
 	}
 
 	/**
-	 * Отношение с желаемым
+	 * @return mixed
 	 */
 	public function not_wanted() {
 
