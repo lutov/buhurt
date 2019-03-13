@@ -1,15 +1,17 @@
 @extends('layouts.default')
 
-@section('title')Авторы иконок@stop
+@section('title')Иконки@stop
 
 @section('subtitle')@stop
 
 @section('content')
 
-	<section class="text-center">
-		<h1 class="pt-5">@yield('title')</h1>
-		<h2 class="pb-3">@yield('subtitle')</h2>
-		<p>Все иконки взяты с сайта <a href="http://thenounproject.com/">http://thenounproject.com/</a>. Авторы указаны на картинках.</p>
+	<section class="text-center mt-5">
+
+		{!! Breadcrumbs::render('icons') !!}
+		<h1 class="">@yield('title')</h1>
+		<p>Иконки достижений предоставлены <a href="http://thenounproject.com/">http://thenounproject.com/</a></p>
+
 	</section>
 
 	<div class="row mt-5">

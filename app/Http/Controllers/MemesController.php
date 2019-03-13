@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Helpers\ElementsHelper;
+use App\Models\Helpers\SectionsHelper;
 use App\Models\Helpers\TextHelper;
 use Auth;
 use DB;
@@ -8,7 +9,6 @@ use Illuminate\Http\Request;
 use Input;
 use View;
 use Redirect;
-use App\Models\Section;
 use App\Models\Meme;
 use App\Models\Wanted;
 use App\Models\ElementRelation;
@@ -17,17 +17,12 @@ class MemesController extends Controller {
 
 	private $prefix = 'memes';
 
-	private $limit = 28;
-
     public function list(Request $request) {
 
-		$section = $this->prefix;
-		$get_section = Section::where('alt_name', '=', $section)->first();
-		$ru_section = $get_section->name;
-		$type = $get_section->type;
+		$section = SectionsHelper::getSection($this->prefix);
 
-		$sort = Input::get('sort', 'created_at');
-		$order = Input::get('order', 'desc');
+		$sort = $request->get('sort', 'created_at');
+		$order = $request->get('order', 'desc');
 		$limit = 28;
 
 		$sort_options = array(
@@ -48,7 +43,7 @@ class MemesController extends Controller {
 			$user_id = Auth::user()->id;
 
 			$wanted = Wanted::select('element_id')
-				->where('element_type', '=', $type)
+				->where('element_type', '=', $section->type)
 				->where('wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				//->remember(10)
@@ -57,7 +52,7 @@ class MemesController extends Controller {
 			;
 
 			$not_wanted = Wanted::select('element_id')
-				->where('element_type', '=', $type)
+				->where('element_type', '=', $section->type)
 				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				//->remember(10)
@@ -100,19 +95,8 @@ class MemesController extends Controller {
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
-			'ru_section' => $ru_section,
 			'options' => $options,
 		));
-    }
-
-    public function show_collections()
-    {
-        return View::make($this->prefix.'.collections');
-    }
-
-    public function show_collection()
-    {
-        return View::make($this->prefix.'.collection');
     }
 
 	/**

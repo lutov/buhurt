@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\Helpers\ElementsHelper;
+use App\Models\Helpers\SectionsHelper;
 use App\Models\Helpers\TextHelper;
 use Auth;
 use DB;
@@ -17,15 +18,12 @@ class BooksController extends Controller {
 
 	private $prefix = 'books';
 
-    public function show_all(Request $request) {
+    public function list(Request $request) {
 
-		$section = $this->prefix;
-		$get_section = Section::where('alt_name', '=', $section)->first();
-		$ru_section = $get_section->name;
-		$type = $get_section->type;
+		$section = SectionsHelper::getSection($this->prefix);
 
-		$sort = Input::get('sort', 'created_at');
-		$order = Input::get('order', 'desc');
+		$sort = $request->get('sort', 'created_at');
+		$order = $request->get('order', 'desc');
 		$limit = 28;
 
 		$sort_options = array(
@@ -38,8 +36,6 @@ class BooksController extends Controller {
 		$sort = TextHelper::checkSort($sort);
 		$order = TextHelper::checkOrder($order);
 
-	    //$books = Book::orderBy($sort, $order)->paginate($limit);
-
 		$wanted = array();
 		$not_wanted = array();
 
@@ -48,7 +44,7 @@ class BooksController extends Controller {
 			$user_id = Auth::user()->id;
 
 			$wanted = Wanted::select('element_id')
-				->where('element_type', '=', $type)
+				->where('element_type', '=', $section->type)
 				->where('wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				->pluck('element_id')
@@ -56,7 +52,7 @@ class BooksController extends Controller {
 			;
 
 			$not_wanted = Wanted::select('element_id')
-				->where('element_type', '=', $type)
+				->where('element_type', '=', $section->type)
 				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				->pluck('element_id')
@@ -99,22 +95,12 @@ class BooksController extends Controller {
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
-			'ru_section' => $ru_section,
 			'options' => $options,
 		));
+
     }
 	
-    public function show_collections()
-    {
-        return View::make($this->prefix.'.collections');
-    }
-	
-    public function show_collection()
-    {
-        return View::make($this->prefix.'.collection');
-    }
-	
-    public function show_item(Request $request, $id) {
+    public function item(Request $request, $id) {
 
 		$book = Book::find($id);
 
@@ -297,16 +283,6 @@ class BooksController extends Controller {
 		));
 
 	}
-	
-    public function show_authors()
-    {
-        return View::make($this->prefix.'.authors');
-    }	
-	
-    public function show_author()
-    {
-        return View::make($this->prefix.'.author');
-    }
 
 	/**
 	 * @param int $id

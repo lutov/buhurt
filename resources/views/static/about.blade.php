@@ -6,9 +6,12 @@
 
 @section('content')
 
-    <section class="text-center">
-        <h1 class="pt-5">@yield('title')</h1>
-        <h2 class="pb-3">@yield('subtitle')</h2>
+    <section class="text-center mt-5">
+
+        {!! Breadcrumbs::render('about') !!}
+        <h1 class="">@yield('title')</h1>
+        <h2 class="">@yield('subtitle')</h2>
+
     </section>
 
     <div class="row mt-5">

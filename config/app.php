@@ -174,6 +174,7 @@ return [
 		Laravelrus\LocalizedCarbon\LocalizedCarbonServiceProvider::class,
 		//Illuminate\Html\HtmlServiceProvider::class,
 		Collective\Html\HtmlServiceProvider::class,
+		DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -241,6 +242,7 @@ return [
 		'LocalizedCarbon'   => Laravelrus\LocalizedCarbon\LocalizedCarbon::class,
         'DiffFormatter'     => Laravelrus\LocalizedCarbon\DiffFactoryFacade::class,
 		'Input' => Illuminate\Support\Facades\Request::class,
+		'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
 
 		'Helpers' => App\Models\Helpers\UserHelper::class, // deprecated
 

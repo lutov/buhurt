@@ -14,6 +14,24 @@ use Cache;
 class SectionsHelper {
 
 	/**
+	 * @param string $section
+	 * @return Section
+	 */
+	public static function getSection(string $section) {
+
+		$minutes = 60;
+		$var_name = $section.'_model';
+		$result = Cache::remember($var_name, $minutes, function() use ($section) {
+
+			return Section::where('alt_name', '=', $section)->first();
+
+		});
+
+		return $result;
+
+	}
+
+	/**
 	 * @param $section
 	 * @return mixed
 	 */

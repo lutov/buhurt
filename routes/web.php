@@ -12,7 +12,10 @@
 */
 
 
-Route::get('/', 'HomeController@index');
+Route::get('/', array(
+	'as' => 'home',
+	'uses' => 'HomeController@index'
+));
 
 Route::get('about', array(
 	'as' => 'about',
@@ -23,6 +26,66 @@ Route::get('icons', array(
 	'as' => 'icons',
 	'uses' => 'HomeController@icons'
 ));
+
+// Base
+Route::any('base/{section}/', function($section) {return Redirect::to('/'.$section.'/');});
+Route::any('base/{section}/{id}/', function($section, $id) {return Redirect::to('/'.$section.'/'.$id.'/');});
+
+// No "base"
+Route::any('books', array(
+	'as' => 'books',
+	'uses' => 'BooksController@list'
+));
+Route::get('books/{id}', array(
+	'as' => 'Book',
+	'uses' => 'BooksController@item')
+)->where('id', '[0-9]+'); // только числа
+Route::get('books/random', 	array('uses' => 'RandomController@books'));
+
+Route::any('films', array(
+	'as' => 'films',
+	'uses' => 'FilmsController@list'
+));
+Route::get('films/{id}', array(
+	'as' => 'Film',
+	'uses' => 'FilmsController@item'
+))->where('id', '[0-9]+');
+
+Route::any('games', array(
+	'as' => 'games',
+	'uses' => 'GamesController@list'
+));
+Route::get('games/{id}', array(
+	'as' => 'Game',
+	'uses' => 'GamesController@item'
+))->where('id', '[0-9]+');
+
+Route::any('albums', array(
+	'as' => 'albums',
+	'uses' => 'AlbumsController@list'
+));
+Route::get('albums/{id}', array(
+	'as' => 'Album',
+	'uses' => 'AlbumsController@item'
+))->where('id', '[0-9]+');
+
+Route::get('memes', array(
+	'as' => 'memes',
+	'uses' => 'MemesController@list'
+));
+Route::any('memes/{id}', array(
+	'as' => 'Meme',
+	'uses' => 'MemesController@item'
+))->where('id', '[0-9]+');
+
+Route::get('persons', array('uses' => 'PersonsController@show_all'));
+Route::any('persons/{id}', array('uses' => 'PersonsController@show_item'))->where('id', '[0-9]+');
+
+Route::get('bands', array('uses' => 'BandsController@show_all'));
+Route::any('bands/{id}', array('uses' => 'BandsController@show_item'))->where('id', '[0-9]+');
+
+Route::get('companies', array('uses' => 'CompaniesController@show_all'));
+Route::any('companies/{id}', array('uses' => 'CompaniesController@show_item'))->where('id', '[0-9]+');
 
 //Admin
 Route::group(array('middleware' => 'admin'), function() {
@@ -47,36 +110,6 @@ Route::group(array('middleware' => 'admin'), function() {
 
 });
 Route::get('q_add/{section}', array('uses' => 'DatabaseController@q_add'));
-
-	// Base
-	Route::any('base/{section}/', function($section) {return Redirect::to('/'.$section.'/');});
-	Route::any('base/{section}/{id}/', function($section, $id) {return Redirect::to('/'.$section.'/'.$id.'/');});
-
-	// No "base"
-	Route::any('books', array('uses' => 'BooksController@show_all'));
-		Route::get('books/{id}', array('uses' => 'BooksController@show_item'))->where('id', '[0-9]+'); // только числа
-	Route::get('books/random', 	array('uses' => 'RandomController@books'));
-
-	Route::any('films', array('uses' => 'FilmsController@show_all'));
-		Route::get('films/{id}', array('uses' => 'FilmsController@show_item'))->where('id', '[0-9]+');
-
-	Route::any('games', array('uses' => 'GamesController@show_all'));
-		Route::get('games/{id}', array('uses' => 'GamesController@show_item'))->where('id', '[0-9]+');
-
-	Route::any('albums', array('uses' => 'AlbumsController@show_all'));
-		Route::get('albums/{id}', array('uses' => 'AlbumsController@show_item'))->where('id', '[0-9]+');
-
-	Route::get('persons', array('uses' => 'PersonsController@show_all'));
-		Route::any('persons/{id}', array('uses' => 'PersonsController@show_item'))->where('id', '[0-9]+');
-
-	Route::get('bands', array('uses' => 'BandsController@show_all'));
-		Route::any('bands/{id}', array('uses' => 'BandsController@show_item'))->where('id', '[0-9]+');
-
-	Route::get('companies', array('uses' => 'CompaniesController@show_all'));
-		Route::any('companies/{id}', array('uses' => 'CompaniesController@show_item'))->where('id', '[0-9]+');
-
-	Route::get('memes', array('uses' => 'MemesController@list'));
-	Route::any('memes/{id}', array('uses' => 'MemesController@item'))->where('id', '[0-9]+');
 	
 // Relations
 Route::any('{section}/{id}/relations', array('uses' => 'RelationsController@getRelations'));
