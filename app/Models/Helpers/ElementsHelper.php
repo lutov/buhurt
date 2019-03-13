@@ -703,7 +703,7 @@ class ElementsHelper {
 					$element_title .= 'Платформы: '.DatatypeHelper::arrayToString(
 						$info['game_platforms'],
 						', ',
-						'/platforms/'.$section.'/'
+						'/platforms/'
 					);
 					$element_title .= '</p>';
 

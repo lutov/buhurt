@@ -13,15 +13,17 @@
 
     <div class="row mt-5">
 
-        <div class="col-md-12" style="column-count: 10;">
+        <div class="col-md-12 text-center">
 
-            <ul>
-                <li><a href="/genres/books">Книги</a></li>
-                <li><a href="/genres/films">Фильмы</a></li>
-                <li><a href="/genres/games">Игры</a></li>
-                <li><a href="/genres/albums">Альбомы</a></li>
-                <li><a href="/genres/memes">Мемы</a></li>
-            </ul>
+            <div class="btn-group" role="group" aria-label="Sections">
+
+                <a role="button" class="btn btn-outline-primary" href="/genres/books">Книги</a>
+                <a role="button" class="btn btn-outline-primary" href="/genres/films">Фильмы</a>
+                <a role="button" class="btn btn-outline-primary" href="/genres/games">Игры</a>
+                <a role="button" class="btn btn-outline-primary" href="/genres/albums">Альбомы</a>
+                <a role="button" class="btn btn-outline-primary" href="/genres/memes">Мемы</a>
+
+            </div>
 
         </div>
 

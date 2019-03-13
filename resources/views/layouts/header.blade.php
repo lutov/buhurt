@@ -67,25 +67,25 @@
 								<a class="nav-link" href="/memes/">🤔 Мемы</a>
 							</li>
 
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" href="#" id="add_sections" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									🗄 Картотека
-								</a>
-								<div class="dropdown-menu" aria-labelledby="add_sections">
-
-									<a class="dropdown-item" href="/persons/">Люди</a>
-									<a class="dropdown-item" href="/bands/">Группы</a>
-									<a class="dropdown-item" href="/companies/">Компании</a>
-									<a class="dropdown-item" href="/countries/">Страны</a>
-									<a class="dropdown-item" href="/platforms/">Платформы</a>
-									<a class="dropdown-item" href="/genres/">Жанры</a>
-									<a class="dropdown-item" href="/years/">Календарь</a>
-									<a class="dropdown-item" href="/collections/">Коллекции</a>
-
-								</div>
-							</li>
-
 						@endif
+
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="add_sections" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								🗄 Картотека
+							</a>
+							<div class="dropdown-menu" aria-labelledby="add_sections">
+
+								<a class="dropdown-item" href="/persons/">Люди</a>
+								<a class="dropdown-item" href="/bands/">Группы</a>
+								<a class="dropdown-item" href="/companies/">Компании</a>
+								<a class="dropdown-item" href="/countries/">Страны</a>
+								<a class="dropdown-item" href="/platforms/">Платформы</a>
+								<a class="dropdown-item" href="/genres/">Жанры</a>
+								<a class="dropdown-item" href="/years/">Календарь</a>
+								<a class="dropdown-item" href="/collections/">Коллекции</a>
+
+							</div>
+						</li>
 
 						@if (Auth::check())
 
@@ -99,7 +99,7 @@
 									<a class="dropdown-item" href="/events">Лента</a>
 									<a class="dropdown-item" href="/recommendations/">Случайный список</a>
 									<a class="dropdown-item" href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a>
-
+									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="/user/logout/">Выйти</a>
 
 								</div>
@@ -114,6 +114,7 @@
 								<div class="dropdown-menu" aria-labelledby="dropdown01">
 
 									<a class="dropdown-item" href="/recommendations/">Рекомендации</a>
+									<div class="dropdown-divider"></div>
 									<a class="dropdown-item" href="/user/login/">Войти</a>
 									<a class="dropdown-item" href="/user/register/">Зарегистрироваться</a>
 

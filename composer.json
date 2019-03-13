@@ -7,6 +7,7 @@
     "require": {
         "php": ">=7.1",
         "barryvdh/laravel-debugbar": "^2.3",
+        "davejamesmiller/laravel-breadcrumbs": "3.x",
         "filp/whoops": "^2.1",
         "graham-campbell/exceptions": "^9.3",
         "greggilbert/recaptcha": "dev-master",
