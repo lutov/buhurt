@@ -33,7 +33,7 @@
 
             <div class="col-md-9">
 
-                {!! Form::open(array('action' => 'DatabaseController@save', 'class' => 'add_film', 'method' => 'POST', 'files' => true)) !!}
+                {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_film', 'method' => 'POST', 'files' => true)) !!}
                 {!! Form::hidden('action', $value = 'edit') !!}
                 {!! Form::hidden('section', $value = 'films') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
@@ -123,7 +123,7 @@
 
                         {!! Form::open(array(
                             'action' => array(
-                                'FilmsController@transfer', $element->id),
+                                'Data\FilmsController@transfer', $element->id),
                                 'class' => 'transfer',
                                 'method' => 'POST',
                                 'files' => false

@@ -200,6 +200,7 @@ return [
 
     'aliases' => [
 
+    	/* Core */
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
@@ -233,39 +234,38 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-		
-		//'Form'      => Illuminate\Html\FormFacade::class,
-		//'Html'      => Illuminate\Html\HtmlFacade::class,
+
+		/* Packages */
 		'Form' => Collective\Html\FormFacade::class,
 		'Html' => Collective\Html\HtmlFacade::class,
 		'Recaptcha' => Greggilbert\Recaptcha\Facades\Recaptcha::class,
-		'LocalizedCarbon'   => Laravelrus\LocalizedCarbon\LocalizedCarbon::class,
-        'DiffFormatter'     => Laravelrus\LocalizedCarbon\DiffFactoryFacade::class,
+		'LocalizedCarbon' => Laravelrus\LocalizedCarbon\LocalizedCarbon::class,
+        'DiffFormatter' => Laravelrus\LocalizedCarbon\DiffFactoryFacade::class,
 		'Input' => Illuminate\Support\Facades\Request::class,
 		'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
 
-		'Helpers' => App\Models\Helpers\UserHelper::class, // deprecated
+		/* Data */
+		'Book' => App\Models\Data\Book::class,
+		'Film' => App\Models\Data\Film::class,
+		'Game' => App\Models\Data\Game::class,
+		'Album' => App\Models\Data\Album::class,
+		'Meme' => App\Models\Data\Meme::class,
+		'Person' => App\Models\Data\Person::class,
+		'Company' => App\Models\Data\Company::class,
+		'Collection' => App\Models\Data\Collection::class,
+		'Band' => App\Models\Data\Band::class,
 
-		'AchievementsHelper' => App\Models\Helpers\AchievementsHelper::class,
-		'CommentsHelper' => App\Models\Helpers\CommentsHelper::class,
-		'DatatypeHelper' => App\Models\Helpers\DatatypeHelper::class,
-		'DebugHelper' => App\Models\Helpers\DebugHelper::class,
-		'DummyHelper' => App\Models\Helpers\DummyHelper::class,
-		'ElementsHelper' => App\Models\Helpers\ElementsHelper::class,
-		'RolesHelper' => App\Models\Helpers\RolesHelper::class,
-		'SectionsHelper' => App\Models\Helpers\SectionsHelper::class,
-		'TextHelper' => App\Models\Helpers\TextHelper::class,
-		'UserHelper' => App\Models\Helpers\UserHelper::class,
-
-		'Book' => App\Models\Book::class,
-		'Film' => App\Models\Film::class,
-		'Game' => App\Models\Game::class,
-		'Album' => App\Models\Album::class,
-		'Meme' => App\Models\Meme::class,
-		'Person' => App\Models\Person::class,
-		'Company' => App\Models\Company::class,
-		'Collection' => App\Models\Collection::class,
-		'Band' => App\Models\Band::class,
+		/* Helpers */
+		'AchievementsHelper' => App\Helpers\AchievementsHelper::class,
+		'CommentsHelper' => App\Helpers\CommentsHelper::class,
+		'DatatypeHelper' => App\Helpers\DatatypeHelper::class,
+		'DebugHelper' => App\Helpers\DebugHelper::class,
+		'DummyHelper' => App\Helpers\DummyHelper::class,
+		'ElementsHelper' => App\Helpers\ElementsHelper::class,
+		'RolesHelper' => App\Helpers\RolesHelper::class,
+		'SectionsHelper' => App\Helpers\SectionsHelper::class,
+		'TextHelper' => App\Helpers\TextHelper::class,
+		'UserHelper' => App\Helpers\UserHelper::class,
 
     ],
 

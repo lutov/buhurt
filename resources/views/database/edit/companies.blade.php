@@ -33,7 +33,7 @@
 
             <div class="col-md-9">
 
-                {!! Form::open(array('action' => 'DatabaseController@save', 'class' => 'add_company', 'method' => 'POST', 'files' => true)) !!}
+                {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_company', 'method' => 'POST', 'files' => true)) !!}
                 {!! Form::hidden('action', $value = 'edit') !!}
                 {!! Form::hidden('section', $value = 'companies') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
@@ -68,7 +68,7 @@
 
                         {!! Form::open(array(
                             'action' => array(
-                                'CompaniesController@transfer', $element->id),
+                                'Data\CompaniesController@transfer', $element->id),
                                 'class' => 'transfer',
                                 'method' => 'POST',
                                 'files' => false

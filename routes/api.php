@@ -20,16 +20,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 */
 
 /* SEARCH */
-Route::get('search', array('uses' => 'SearchController@getJson'));
+Route::get('search', array('uses' => 'Search\SearchController@getJson'));
 
 /* RANDOM */
-Route::get('random/{section}', 	array('uses' => 'RandomController@getJson'));
+Route::get('random/{section}', 	array('uses' => 'Search\RandomController@getJson'));
 
 /* ELEMENTS */
-Route::get('books/{id}', array('uses' => 'BooksController@getJson'))->where('id', '[0-9]+');
-Route::get('films/{id}', array('uses' => 'FilmsController@getJson'))->where('id', '[0-9]+');
-Route::get('games/{id}', array('uses' => 'GamesController@getJson'))->where('id', '[0-9]+');
-Route::get('albums/{id}', array('uses' => 'AlbumsController@getJson'))->where('id', '[0-9]+');
+Route::get('books/{id}', array('uses' => 'Data\BooksController@getJson'))->where('id', '[0-9]+');
+Route::get('films/{id}', array('uses' => 'Data\FilmsController@getJson'))->where('id', '[0-9]+');
+Route::get('games/{id}', array('uses' => 'Data\GamesController@getJson'))->where('id', '[0-9]+');
+Route::get('albums/{id}', array('uses' => 'Data\AlbumsController@getJson'))->where('id', '[0-9]+');
 
 /* POSTERS */
-Route::any('poster', array('uses' => 'PosterController@search'));
+Route::any('poster', array('uses' => 'Data\PosterController@search'));

@@ -33,7 +33,7 @@
 
             <div class="col-md-9">
 
-                {!! Form::open(array('action' => 'DatabaseController@save', 'class' => 'add_company', 'method' => 'POST', 'files' => true)) !!}
+                {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_company', 'method' => 'POST', 'files' => true)) !!}
                 {!! Form::hidden('action', $value = 'edit') !!}
                 {!! Form::hidden('section', $value = 'bands') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}

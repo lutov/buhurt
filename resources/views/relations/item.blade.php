@@ -23,7 +23,7 @@
 			);
 			?>
 
-			{!! ElementsHelper::getHeader(); !!}
+			{!! ElementsHelper::getHeader($request); !!}
 	
 			{!! ElementsHelper::getElement($request, $element, $section, $options) !!}
 
@@ -77,7 +77,7 @@
 
 			<div class="col-md-10">
 		
-			{!! Form::open(array('action' => array('RelationsController@addRelation', $section, $element->id), 'class' => 'add_relation', 'method' => 'POST', 'files' => true)) !!}
+			{!! Form::open(array('action' => array('Search\RelationsController@addRelation', $section, $element->id), 'class' => 'add_relation', 'method' => 'POST', 'files' => true)) !!}
 
 				<div class="form-row">
 					<div class="col">
@@ -122,7 +122,7 @@
 				$relations_edit_form .= '<div class="col-md-10">';
 
 				$relations_edit_form .= Form::open(array(
-					'action' => array('RelationsController@editRelation', $section, $element->id),
+					'action' => array('Search\RelationsController@editRelation', $section, $element->id),
 					'class' => 'edit_relation',
 					'method' =>'POST',
 					'files' => true
@@ -173,7 +173,7 @@
 
 				$relations_edit_form .= '<div class="col-md-2">';
 				$relations_edit_form .= Form::open(array(
-					'action' => array('RelationsController@deleteRelation', $section, $element->id),
+					'action' => array('Search\RelationsController@deleteRelation', $section, $element->id),
 					'class' => 'delete_relation',
 					'method' =>'POST',
 					'files' => true

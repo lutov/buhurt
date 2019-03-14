@@ -26,7 +26,7 @@
 
 		<div class="col-md-12">
 
-			{!! ElementsHelper::getHeader($options['sort_list']); !!}
+			{!! ElementsHelper::getHeader($request, $options['sort_list']); !!}
 			{!! ElementsHelper::getRecommend($request, 'books'); !!}
 			{!! ElementsHelper::getRecommend($request, 'films'); !!}
 			{!! ElementsHelper::getRecommend($request, 'games'); !!}
@@ -47,7 +47,7 @@
 
 		<div class="col-md-12">
 
-			{!! ElementsHelper::getHeader($options['sort_list']); !!}
+			{!! ElementsHelper::getHeader($request, $options['sort_list']); !!}
 
 			<?php $options['wanted'] = $wanted['books']; $options['not_wanted'] = $not_wanted['books']; ?>
 			{!! ElementsHelper::getElements($request, $books, 'books', $options) !!}

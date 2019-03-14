@@ -95,7 +95,7 @@
 								</a>
 								<div class="dropdown-menu" aria-labelledby="dropdown01">
 
-									<a class="dropdown-item" href="{!! URL::action('UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
+									<a class="dropdown-item" href="{!! URL::action('User\UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
 									<a class="dropdown-item" href="/events">Лента</a>
 									<a class="dropdown-item" href="/recommendations/">Случайный список</a>
 									<a class="dropdown-item" href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a>
@@ -125,7 +125,12 @@
 
 					</ul>
 
-					{!! Form::open(array('action' => 'SearchController@everything', 'class' => 'form-inline my-2 my-lg-0', 'id' => 'search_form', 'method' => 'GET')) !!}
+					{!! Form::open(array(
+						'action' => 'Search\SearchController@everything',
+						'class' => 'form-inline my-2 my-lg-0',
+						'id' => 'search_form',
+						'method' => 'GET'
+					)) !!}
 					{!! Form::text(
                         'query',
                         $value = Input::get('query', ''),
@@ -146,7 +151,7 @@
 				$(document).ready(function() {
 
                     $('#search').autocomplete({
-                        source: "{!! URL::action('SearchController@everythingJson') !!}", // url-адрес
+                        source: "{!! URL::action('Search\SearchController@everythingJson') !!}", // url-адрес
                         minLength: 3, // минимальное количество для совершения запроса
                         delay: 500,
                         select: function (event, ui) {

@@ -46,22 +46,22 @@
 
 			<p>Зарегистрирован {!! LocalizedCarbon::instance($user->created_at)->diffForHumans() !!}</p>
 
-			@if(!empty($city))<p>Предполагаемый город: {!! $city->name !!}</p>@endif
+			@if(!empty($city) && RolesHelper::isAdmin($request))<p>Предполагаемый город: {!! $city->name !!}</p>@endif
 
 			@if(0 != $books_rated || 0 != $films_rated || 0 != $games_rated)
 				<p>
 					Оценил
 					@if(0 != $books_rated)
-						<a href="{!! URL::action('UserController@rates', array($user->id, 'books')) !!}" >{!! TextHelper::number($books_rated, array('книгу', 'книги', 'книг')) !!}</a>,
+						<a href="{!! URL::action('User\UserController@rates', array($user->id, 'books')) !!}" >{!! TextHelper::number($books_rated, array('книгу', 'книги', 'книг')) !!}</a>,
 					@endif
 					@if(0 != $films_rated)
-						<a href="{!! URL::action('UserController@rates', array($user->id, 'films')) !!}" >{!! TextHelper::number($films_rated, array('фильм', 'фильма', 'фильмов')) !!}</a>,
+						<a href="{!! URL::action('User\UserController@rates', array($user->id, 'films')) !!}" >{!! TextHelper::number($films_rated, array('фильм', 'фильма', 'фильмов')) !!}</a>,
 					@endif
 					@if(0 != $games_rated)
-						<a href="{!! URL::action('UserController@rates', array($user->id, 'games')) !!}" >{!! TextHelper::number($games_rated, array('игру', 'игры', 'игр')) !!}</a>,
+						<a href="{!! URL::action('User\UserController@rates', array($user->id, 'games')) !!}" >{!! TextHelper::number($games_rated, array('игру', 'игры', 'игр')) !!}</a>,
 					@endif
 					@if(0 != $albums_rated)
-						<a href="{!! URL::action('UserController@rates', array($user->id, 'albums')) !!}" >{!! TextHelper::number($albums_rated, array('альбом', 'альбома', 'альбомов')) !!}</a>
+						<a href="{!! URL::action('User\UserController@rates', array($user->id, 'albums')) !!}" >{!! TextHelper::number($albums_rated, array('альбом', 'альбома', 'альбомов')) !!}</a>
 					@endif
 				</p>
 			@endif
@@ -70,16 +70,16 @@
 				<p>
 					Хочет
 					@if(0 != $books_wanted)
-						прочесть <a href="{!! URL::action('UserController@wanted', array($user->id, 'books')) !!}" >{!! TextHelper::number($books_wanted, array('книгу', 'книги', 'книг')) !!}</a>,
+						прочесть <a href="{!! URL::action('User\UserController@wanted', array($user->id, 'books')) !!}" >{!! TextHelper::number($books_wanted, array('книгу', 'книги', 'книг')) !!}</a>,
 					@endif
 					@if(0 != $films_wanted)
-						посмотреть <a href="{!! URL::action('UserController@wanted', array($user->id, 'films')) !!}" >{!! TextHelper::number($films_wanted, array('фильм', 'фильма', 'фильмов')) !!}</a>,
+						посмотреть <a href="{!! URL::action('User\UserController@wanted', array($user->id, 'films')) !!}" >{!! TextHelper::number($films_wanted, array('фильм', 'фильма', 'фильмов')) !!}</a>,
 					@endif
 					@if(0 != $games_wanted)
-						сыграть в <a href="{!! URL::action('UserController@wanted', array($user->id, 'games')) !!}" >{!! TextHelper::number($games_wanted, array('игру', 'игры', 'игр')) !!}</a>,
+						сыграть в <a href="{!! URL::action('User\UserController@wanted', array($user->id, 'games')) !!}" >{!! TextHelper::number($games_wanted, array('игру', 'игры', 'игр')) !!}</a>,
 					@endif
 					@if(0 != $albums_wanted)
-						слушать <a href="{!! URL::action('UserController@wanted', array($user->id, 'albums')) !!}" >{!! TextHelper::number($albums_wanted, array('альбом', 'альбома', 'альбомов')) !!}</a>
+						слушать <a href="{!! URL::action('User\UserController@wanted', array($user->id, 'albums')) !!}" >{!! TextHelper::number($albums_wanted, array('альбом', 'альбома', 'альбомов')) !!}</a>
 					@endif
 				</p>
 			@endif
@@ -89,16 +89,16 @@
 
 					Не хочет
 					@if(0 != $books_not_wanted)
-						читать <a href="{!! URL::action('UserController@not_wanted', array($user->id, 'books')) !!}" >{!! TextHelper::number($books_not_wanted, array('книгу', 'книги', 'книг')) !!}</a>,
+						читать <a href="{!! URL::action('User\UserController@not_wanted', array($user->id, 'books')) !!}" >{!! TextHelper::number($books_not_wanted, array('книгу', 'книги', 'книг')) !!}</a>,
 					@endif
 					@if(0 != $films_not_wanted)
-						смотреть <a href="{!! URL::action('UserController@not_wanted', array($user->id, 'films')) !!}" >{!! TextHelper::number($films_not_wanted, array('фильм', 'фильма', 'фильмов')) !!}</a>,
+						смотреть <a href="{!! URL::action('User\UserController@not_wanted', array($user->id, 'films')) !!}" >{!! TextHelper::number($films_not_wanted, array('фильм', 'фильма', 'фильмов')) !!}</a>,
 					@endif
 					@if(0 != $games_not_wanted)
-						играть в <a href="{!! URL::action('UserController@not_wanted', array($user->id, 'games')) !!}" >{!! TextHelper::number($games_not_wanted, array('игру', 'игры', 'игр')) !!}</a>,
+						играть в <a href="{!! URL::action('User\UserController@not_wanted', array($user->id, 'games')) !!}" >{!! TextHelper::number($games_not_wanted, array('игру', 'игры', 'игр')) !!}</a>,
 					@endif
 					@if(0 != $albums_not_wanted)
-						слушать <a href="{!! URL::action('UserController@not_wanted', array($user->id, 'albums')) !!}" >{!! TextHelper::number($albums_not_wanted, array('альбом', 'альбома', 'альбомов')) !!}</a>
+						слушать <a href="{!! URL::action('User\UserController@not_wanted', array($user->id, 'albums')) !!}" >{!! TextHelper::number($albums_not_wanted, array('альбом', 'альбома', 'альбомов')) !!}</a>
 					@endif
 				</p>
 			@endif
@@ -174,7 +174,7 @@
 
 				<h3 class="mb-3">Аватар</h3>
 
-				{!! Form::open(array('action' => 'UserController@avatar', 'class' => 'avatar', 'method' => 'POST', 'files' => true)) !!}
+				{!! Form::open(array('action' => 'User\UserController@avatar', 'class' => 'avatar', 'method' => 'POST', 'files' => true)) !!}
 
 				<div class="w-50">
 					<div class="custom-file">
@@ -203,7 +203,7 @@
 
 				<h3 class="mb-3">Безопасность</h3>
 				<p>
-					<a href="{!! URL::action('UserController@change_password') !!}" type="button" class="btn btn-secondary">
+					<a href="{!! URL::action('User\UserController@change_password') !!}" type="button" class="btn btn-secondary">
 						Сменить пароль
 					</a>
 				</p>

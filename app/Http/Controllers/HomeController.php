@@ -1,18 +1,16 @@
 <?php namespace App\Http\Controllers;
 
-use Auth;
+use App\Models\Data\Album;
+use App\Models\Data\Book;
+use App\Models\Data\Film;
+use App\Models\Data\Game;
+use App\Models\User\Achievement;
+use App\Models\User\User;
+use App\Models\User\Wanted;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-use Session;
-use View;
-use Cache;
-use App\Models\Helpers;
-use App\Models\Book;
-use App\Models\Film;
-use App\Models\Game;
-use App\Models\Album;
-use App\Models\Achievement;
-use App\Models\User;
-use App\Models\Wanted;
+use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller {
 
@@ -87,7 +85,6 @@ class HomeController extends Controller {
 					->where('element_type', '=', 'Film')
 					->where('not_wanted', '=', 1)
 					->where('user_id', '=', $user_id)
-					//->remember(10)
 					->pluck('element_id')
 				;
 			});
@@ -97,7 +94,6 @@ class HomeController extends Controller {
 					->where('element_type', '=', 'Game')
 					->where('wanted', '=', 1)
 					->where('user_id', '=', $user_id)
-					//->remember(10)
 					->pluck('element_id')
 				;
 			});
@@ -106,7 +102,6 @@ class HomeController extends Controller {
 					->where('element_type', '=', 'Game')
 					->where('not_wanted', '=', 1)
 					->where('user_id', '=', $user_id)
-					//->remember(10)
 					->pluck('element_id')
 				;
 			});
@@ -125,7 +120,6 @@ class HomeController extends Controller {
 					->where('element_type', '=', 'Album')
 					->where('not_wanted', '=', 1)
 					->where('user_id', '=', $user_id)
-					//->remember(10)
 					->pluck('element_id')
 				;
 			});
@@ -154,7 +148,6 @@ class HomeController extends Controller {
 					}))
 					->orderBy($order_by, 'desc')
 					->limit($limit)
-					//->remember(10)
 					->get()
 				;
 			});
@@ -170,7 +163,6 @@ class HomeController extends Controller {
 					}))
 					->orderBy($order_by, 'desc')
 					->limit($limit)
-					//->remember(10)
 					->get()
 				;
 			});
@@ -186,7 +178,6 @@ class HomeController extends Controller {
 					}))
 					->orderBy($order_by, 'desc')
 					->limit($limit)
-					//->remember(10)
 					->get()
 				;
 			});
@@ -202,20 +193,16 @@ class HomeController extends Controller {
 					}))
 					->orderBy($order_by, 'desc')
 					->limit($limit)
-					//->remember(10)
 					->get()
 				;
 			});
 
 		} else {
 
-			//$news = News::orderBy('created_at', 'desc')->limit($limit)->get();
-
 			$books = Cache::remember('books_mainpage_unauth', $minutes, function() use ($limit, $order_by) {
 				return Book::where('verified', '=', 1)
 					->orderBy($order_by, 'desc')
 					->limit($limit)
-					//->remember(10)
 					->get()
 				;
 			});
@@ -223,7 +210,6 @@ class HomeController extends Controller {
 				return Film::where('verified', '=', 1)
 					->orderBy($order_by, 'desc')
 					->limit($limit)
-					//->remember(10)
 					->get()
 				;
 			});
@@ -231,7 +217,6 @@ class HomeController extends Controller {
 				return Game::where('verified', '=', 1)
 					->orderBy($order_by, 'desc')
 					->limit($limit)
-					//->remember(10)
 					->get()
 				;
 			});
@@ -239,7 +224,6 @@ class HomeController extends Controller {
 				return Album::where('verified', '=', 1)
 					->orderBy($order_by, 'desc')
 					->limit($limit)
-					//->remember(10)
 					->get()
 				;
 			});

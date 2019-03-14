@@ -12,13 +12,13 @@
 	</section>
 
 	<section class="text-center mt-5">
-		<h2 id="section">{!! $ru_section !!}</h2>
+		<h2 id="section">{!! $section->name !!}</h2>
 	</section>
 
 	<div class="row mt-5">
 
 		<div class="col-md-12">
-			{!! ElementsHelper::getElements($request, $elements, $section) !!}
+			{!! ElementsHelper::getElements($request, $elements, $section->alt_name) !!}
 		</div>
 
 	</div>

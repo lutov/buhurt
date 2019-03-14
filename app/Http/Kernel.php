@@ -2,10 +2,11 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\TrimStrings;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
-class Kernel extends HttpKernel
-{
+class Kernel extends HttpKernel {
     /**
      * The application's global HTTP middleware stack.
      *
@@ -13,13 +14,12 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
-    protected $middleware = [
+    protected $middleware = array(
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
+        TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-		//\App\Http\Middleware\DebugModeMiddleware::class,
-    ];
+	);
 
     /**
      * The application's route middleware groups.
@@ -28,7 +28,7 @@ class Kernel extends HttpKernel
      */
     protected $middlewareGroups = [
         'web' => [
-            \App\Http\Middleware\EncryptCookies::class,
+            EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
@@ -57,8 +57,6 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-		
-		'moderator' => \App\Http\Middleware\ModeratorMiddleware::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
     ];
 }

@@ -2,22 +2,23 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\RolesHelper;
 use Closure;
-use Redirect;
-use App\Models\Helpers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
-class AdminMiddleware
-{
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle($request, Closure $next)
-    {
-		if(!Helpers::is_admin()) {
+class AdminMiddleware {
+
+	/**
+	 * Handle an incoming request.
+	 *
+	 * @param Request $request
+	 * @param  \Closure $next
+	 * @return mixed
+	 */
+    public function handle(Request $request, Closure $next) {
+
+		if(!RolesHelper::isAdmin($request)) {
 
 			return Redirect::to('/')->with('message', 'Доступ к данному разделу доступен только администратору');
 
@@ -25,5 +26,7 @@ class AdminMiddleware
 			//
 		}
         return $next($request);
+
     }
+
 }
