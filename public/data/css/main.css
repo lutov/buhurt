@@ -22,6 +22,9 @@
 .fast_rating_block .rating-xs {
     font-size: 1.1em !important;
 }
+.fast_rating_block .rating-container {
+    display: block;
+}
 
 @media (max-width: 576px) {
 
@@ -89,4 +92,9 @@
 
 .irs-from:after, .irs-to:after, .irs-single:after {
     border-top-color: #007bff;
+}
+
+.breadcrumb {
+    background: none;
+    padding: 0;
 }

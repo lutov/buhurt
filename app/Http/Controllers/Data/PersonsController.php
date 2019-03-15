@@ -1,9 +1,9 @@
 <?php namespace App\Http\Controllers\Data;
 
 use App\Helpers\RolesHelper;
+use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Data\Section;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -14,12 +14,13 @@ class PersonsController extends Controller {
 
 	private $prefix = 'persons';
 
+	/**
+	 * @param Request $request
+	 * @return mixed
+	 */
     public function list(Request $request) {
 
-		$section = $this->prefix;
-		$get_section = Section::where('alt_name', '=', $section)->first();
-		$ru_section = $get_section->name;
-		$type = $get_section->type;
+		$section = SectionsHelper::getSection($this->prefix);
 
 		$sort = $request->get('sort', 'name');
 		$order = $request->get('order', 'asc');
@@ -50,15 +51,19 @@ class PersonsController extends Controller {
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
-			'ru_section' => $ru_section,
 			'options' => $options,
 		));
 
     }
-	
+
+	/**
+	 * @param Request $request
+	 * @param $id
+	 * @return mixed
+	 */
     public function item(Request $request, $id) {
 
-    	$section = 'persons';
+		$section = SectionsHelper::getSection($this->prefix);
 
 		$person = Person::find($id);
 
@@ -70,8 +75,6 @@ class PersonsController extends Controller {
 			}
 			
 			$all_books = [];
-			$all_genres = [];
-			$top_genres = [];
 			
 			$writer_genres = DB::table('writers_genres')
 				->where('element_type', '=', 'Book')
@@ -93,9 +96,7 @@ class PersonsController extends Controller {
 					->groupBy('genre_id')
 					->orderBy('weight', 'desc')
 					->limit(3)
-					//->get()
 					->pluck('genre_id')
-					//->toArray()
 				;
 				
 				//write		
@@ -107,8 +108,6 @@ class PersonsController extends Controller {
 					->orderBy('weight', 'desc')
 					->limit(3)
 					->get()
-					//->pluck('genre_id')
-					//->toArray()
 				;
 				$new_genres_array = [];
 				foreach($new_genres as $key => $value) {
@@ -130,14 +129,7 @@ class PersonsController extends Controller {
 				->where('element_type', '=', 'Book')
 				->whereIn('id', $all_genres)
 				->get()
-				//->pluck('genre_id')
-				//->toArray()
 			;
-			
-			if(RolesHelper::isAdmin($request)) {
-				//Config::set('app.debug', true);
-				
-			}			
 
 			$sort = $request->get('sort', 'name');
 			$order = $request->get('order', 'asc');

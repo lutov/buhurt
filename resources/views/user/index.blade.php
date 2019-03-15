@@ -38,7 +38,7 @@
                     </div>
                 @endif
 
-                    {!! Form::open(array('action' => 'UserController@login', 'id' => 'entrance_form', 'class' => 'entrance_form', 'method' => 'POST')) !!}
+                    {!! Form::open(array('action' => 'User\UserController@login', 'id' => 'entrance_form', 'class' => 'entrance_form', 'method' => 'POST')) !!}
 
                     <p>{!! Form::text('email', $value = null, $attributes = array('placeholder' => 'Логин или e-mail', 'class' => 'form-control w-100')) !!}</p>
                     <p>{!! Form::password('password', $attributes = array('placeholder' => 'Пароль', 'class' => 'form-control w-100')) !!}</p>

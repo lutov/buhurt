@@ -1,16 +1,17 @@
 @extends('layouts.default')
 
-@section('title'){{$ru_section}}@stop
+@section('title'){{$section->name}}@stop
 
 @section('subtitle')@stop
 
 @section('content')
 
-    <section class="text-center">
-        <h1 class="pt-5">@yield('title')</h1>
-        <h2 class="pb-3">@yield('subtitle')</h2>
+    <section class="text-center mt-5 mb-3">
+        <h1>@yield('title')</h1>
     </section>
 
-    {!! ElementsHelper::getElements($request, $elements, $section, $options) !!}
+    {!! Breadcrumbs::render('section', $section) !!}
+
+    {!! ElementsHelper::getElements($request, $elements, $section->alt_name, $options) !!}
 
 @stop

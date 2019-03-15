@@ -7,9 +7,10 @@
 @section('content')
 
 	<section class="text-center mt-5 mb-3">
-		{!! Breadcrumbs::render('section', $section) !!}
 		<h1>@yield('title')</h1>
 	</section>
+
+	{!! Breadcrumbs::render('section', $section) !!}
 
 	{!! ElementsHelper::getElements($request, $elements, $section->alt_name, $options) !!}
 

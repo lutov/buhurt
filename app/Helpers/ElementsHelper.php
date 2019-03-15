@@ -145,96 +145,45 @@ class ElementsHelper {
 
   			$elements_list .= '</div>';
 
-			if(Auth::check()) {
+			if( Auth::check() && (
+				method_exists($element, 'wanted')
+				||
+				method_exists($element, 'rates')
+				||
+				method_exists($element, 'not_wanted')
+			) ) {
 
 				$elements_list .= '<div class="card-body text-center d-none d-xl-block">';
 
 				//$elements_list .= '<p class="card-text">';
 				//$elements_list .= '</p>';
 
-				$elements_list .= '<div class="fast_rating_block">';
-				if (isset($element->rates) && 0 != count($element->rates)) {
+				if(method_exists($element, 'rates')) {
 
-					$user_id = Auth::user()->id;
-					$rate = $element
-						->rates
-						->where('user_id', $user_id)
-						->toArray();
+					$elements_list .= '<div class="fast_rating_block">';
+					if (isset($element->rates) && 0 != count($element->rates)) {
 
-					if (0 != count($rate)) {
+						$user_id = Auth::user()->id;
+						$rate = $element
+							->rates
+							->where('user_id', $user_id)
+							->toArray();
 
-						$elements_list .= '<input name="val" value="' . array_shift($rate)['rate'] . '" class="fast_rating" id="rating_'.$section.'_'.$element->id.'" type="text" autocomplete="off">';
+						if (0 != count($rate)) {
 
+							$elements_list .= '<input name="val" value="' . array_shift($rate)['rate'] . '" class="fast_rating" id="rating_' . $section . '_' . $element->id . '" type="text" autocomplete="off">';
+
+						} else {
+
+							$elements_list .= '<input name="val" value="0" class="fast_rating" id="rating_' . $section . '_' . $element->id . '" type="text" autocomplete="off">';
+
+						}
 					} else {
 
-						$elements_list .= '<input name="val" value="0" class="fast_rating" id="rating_'.$section.'_'.$element->id.'" type="text" autocomplete="off">';
-
-					}
-				} else {
-
-					$elements_list .= '<input name="val" value="0" class="fast_rating" id="rating_'.$section.'_'.$element->id.'" type="text" autocomplete="off">';
-
-				}
-
-				$elements_list .= '</div>';
-
-				if((RolesHelper::isAdmin($request)) || (isset($options['wanted']) || isset($options['not_wanted']))) {
-
-					$elements_list .= '<div class="mt-3">';
-					$elements_list .= '<div class="btn-group">';
-
-					if (RolesHelper::isAdmin($request)) {
-
-						$elements_list .= '<a role="button" class="btn btn-sm btn-outline-success" href="/admin/edit/' . $section . '/' . $element->id . '" title="Редактировать">';
-						$elements_list .= '&#9998;';
-						$elements_list .= '</a>';
+						$elements_list .= '<input name="val" value="0" class="fast_rating" id="rating_' . $section . '_' . $element->id . '" type="text" autocomplete="off">';
 
 					}
 
-					if (isset($options['wanted'])) {
-						if (in_array($element->id, $options['wanted'])) {
-							$class = 'btn btn-sm btn-success';
-							$handler = 'onclick="unlike(\'' . $section . '\', \'' . $element->id . '\')"';
-						} else {
-							$class = 'btn btn-sm btn-outline-success';
-							$handler = 'onclick="like(\'' . $section . '\', \'' . $element->id . '\')"';
-						}
-						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Хочу">';
-						$elements_list .= '&#10084;';
-						$elements_list .= '</button>';
-					}
-
-					if (RolesHelper::isAdmin($request)) {
-						$class = 'btn btn-sm btn-outline-success';
-						$handler = 'onclick="lists(\'' . $section . '\', \'' . $element->id . '\')"';
-						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Добавить в список">';
-						$elements_list .= '📒';
-						$elements_list .= '</button>';
-					}
-
-					if (isset($options['not_wanted'])) {
-						if (in_array($element->id, $options['not_wanted'])) {
-							$class = 'btn btn-sm btn-danger';
-							$handler = 'onclick="undislike(\'' . $section . '\', \'' . $element->id . '\')"';
-						} else {
-							$class = 'btn btn-sm btn-outline-danger';
-							$handler = 'onclick="dislike(\'' . $section . '\', \'' . $element->id . '\')"';
-						}
-						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="not_want_' . $element->id . '" title="Не хочу">';
-						$elements_list .= '&#9785;';
-						$elements_list .= '</button>';
-					}
-
-					if (RolesHelper::isAdmin($request)) {
-
-						$elements_list .= '<a role="button" class="btn btn-sm btn-outline-danger" href="/admin/delete/' . $section . '/' . $element->id . '" onclick="return window.confirm(\'Удалить?\');" title="Удалить">';
-						$elements_list .= '&#10006;';
-						$elements_list .= '</a>';
-
-					}
-
-					$elements_list .= '</div>';
-					//$elements_list .= '<small class="text-muted"></small>';
 					$elements_list .= '</div>';
 
 					$elements_list .= '<script>';
@@ -250,6 +199,71 @@ class ElementsHelper {
 					$elements_list .= '});';
 
 					$elements_list .= '</script>';
+
+				}
+
+				if((RolesHelper::isAdmin($request)) || (isset($options['wanted']) || isset($options['not_wanted']))) {
+
+					$elements_list .= '<div class="mt-3">';
+					$elements_list .= '<div class="btn-group">';
+
+					if (RolesHelper::isAdmin($request)) {
+
+						$elements_list .= '<a role="button" class="btn btn-sm btn-outline-success" href="/admin/edit/' . $section . '/' . $element->id . '" title="Редактировать">';
+						$elements_list .= '&#9998;';
+						$elements_list .= '</a>';
+
+					}
+
+					if (method_exists($element, 'wanted')) {
+
+						if ($element->isWanted()) {
+							$class = 'btn btn-sm btn-success';
+							$handler = 'onclick="unlike(\'' . $section . '\', \'' . $element->id . '\')"';
+						} else {
+							$class = 'btn btn-sm btn-outline-success';
+							$handler = 'onclick="like(\'' . $section . '\', \'' . $element->id . '\')"';
+						}
+						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Хочу">';
+						$elements_list .= '&#10084;';
+						$elements_list .= '</button>';
+
+					}
+
+					if (RolesHelper::isAdmin($request)) {
+						$class = 'btn btn-sm btn-outline-success';
+						$handler = 'onclick="lists(\'' . $section . '\', \'' . $element->id . '\')"';
+						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Добавить в список">';
+						$elements_list .= '📒';
+						$elements_list .= '</button>';
+					}
+
+					if (method_exists($element, 'not_wanted')) {
+
+						if ($element->isNotWanted()) {
+							$class = 'btn btn-sm btn-danger';
+							$handler = 'onclick="undislike(\'' . $section . '\', \'' . $element->id . '\')"';
+						} else {
+							$class = 'btn btn-sm btn-outline-danger';
+							$handler = 'onclick="dislike(\'' . $section . '\', \'' . $element->id . '\')"';
+						}
+						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="not_want_' . $element->id . '" title="Не хочу">';
+						$elements_list .= '&#9785;';
+						$elements_list .= '</button>';
+
+					}
+
+					if (RolesHelper::isAdmin($request)) {
+
+						$elements_list .= '<a role="button" class="btn btn-sm btn-outline-danger" href="/admin/delete/' . $section . '/' . $element->id . '" onclick="return window.confirm(\'Удалить?\');" title="Удалить">';
+						$elements_list .= '&#10006;';
+						$elements_list .= '</a>';
+
+					}
+
+					$elements_list .= '</div>';
+					//$elements_list .= '<small class="text-muted"></small>';
+					$elements_list .= '</div>';
 
 				}
 
@@ -541,7 +555,8 @@ class ElementsHelper {
 			$element_title .= '</div>';
 		$element_title .= '</div>';
 
-		$element_title .= '<div class="row mt-3 d-md-block">';
+		$element_title .= '<div class="row d-md-block">';
+
 			$element_title .= '<div class="col-md-12">';
 
 			if(isset($info['rate'])) {
@@ -573,143 +588,7 @@ class ElementsHelper {
 			}
 
 			$element_title .= '</div>';
-		$element_title .= '</div>';
 
-		$element_title .= '<div class="row mt-5">';
-			$element_title .= '<div class="col-md-12">';
-
-				$element_title .= '<p>';
-
-				if(isset($info['publishers']) && count($info['publishers'])) {
-
-					$element_title .= DatatypeHelper::arrayToString($info['publishers'], ', ', '/companies/', false, 'publisher');
-					$element_title .= ', ';
-
-				}
-
-				if(!empty($element->year)) {
-
-					$element_title .= '<a itemprop="datePublished" href="/years/'.$section.'/'.$element->year.'">'.$element->year.'</a>';
-					$element_title .= ' г. ';
-
-				}
-
-				if(isset($info['countries'])) {
-
-					$element_title .= DatatypeHelper::arrayToString(
-						$info['countries'],
-						', ',
-						'/countries/'
-					);
-					$element_title .= '. ';
-
-				}
-
-				if(isset($info['genres']) && count($info['genres'])) {
-
-					$element_title .= DatatypeHelper::collectionToString(
-						$info['genres'],
-						'genre',
-						', ',
-						'/genres/'.$section.'/',
-						false,
-						'genre'
-					);
-
-				}
-
-				if(!empty($element->length)) {
-
-					$element_title .= '. ';
-					$element_title .= '<meta itemprop="duration" content="T'.$element->length.'M" />'.$element->length.' мин. ';
-
-				}
-
-				$element_title .= '</p>';
-
-				if(isset($info['directors']) && count($info['directors'])) {
-
-					$element_title .= '<p>';
-					$element_title .= 'Режиссер: '.DatatypeHelper::arrayToString(
-						$info['directors'],
-						', ',
-						'/persons/',
-						false,
-						'director'
-					);
-					$element_title .= '</p>';
-
-				}
-
-				if(isset($info['screenwriters']) && count($info['screenwriters'])) {
-
-					$element_title .= '<p>';
-					$element_title .= 'Сценарий: '.DatatypeHelper::arrayToString(
-						$info['screenwriters'],
-						', ',
-						'/persons/',
-						false,
-						'creator'
-					);
-					$element_title .= '</p>';
-
-				}
-
-				if(isset($info['producers']) && count($info['producers'])) {
-
-					$element_title .= '<p>';
-					$element_title .= 'Продюсер: '.DatatypeHelper::arrayToString(
-						$info['producers'],
-						', ',
-						'/persons/',
-						false,
-						'producer'
-					);
-					$element_title .= '</p>';
-
-				}
-
-				if(isset($info['game_developers']) && count($info['game_developers'])) {
-
-					$element_title .= '<p>';
-					$element_title .= 'Разработчик: '.DatatypeHelper::arrayToString(
-						$info['game_developers'],
-						', ',
-						'/companies/',
-						false,
-						'creator'
-					);
-					$element_title .= '</p>';
-
-				}
-
-				if(isset($info['game_publishers']) && count($info['game_publishers'])) {
-
-					$element_title .= '<p>';
-					$element_title .= 'Издатель: '.DatatypeHelper::arrayToString(
-						$info['game_publishers'],
-						', ',
-						'/companies/',
-						false,
-						'publisher'
-					);
-					$element_title .= '</p>';
-
-				}
-
-				if(isset($info['game_platforms']) && count($info['game_platforms'])) {
-
-					$element_title .= '<p>';
-					$element_title .= 'Платформы: '.DatatypeHelper::arrayToString(
-						$info['game_platforms'],
-						', ',
-						'/platforms/'
-					);
-					$element_title .= '</p>';
-
-				}
-
-			$element_title .= '</div>';
 		$element_title .= '</div>';
 
 		return $element_title;
@@ -794,21 +673,158 @@ class ElementsHelper {
 
 			$element_body .= '</div>';
 
-			$element_body .= '<div itemprop="description" class="col-md-9 border rounded p-3">';
+			$element_body .= '<div class="col-md-9 border rounded p-3">';
 
-				if(!empty($element->description)) {$element_body .= '<p>'.nl2br($element->description).'</p>';}
+				if(!empty($element->description)) {
+
+					$element_body .= '<div class="mt-0 mb-4" itemprop="description">';
+					$element_body .= nl2br($element->description);
+					$element_body .= '</div>';
+
+				}
+
+				$element_body .= '<div class="mt-4 mb-4 small">';
+
+				if(isset($info['publishers']) && count($info['publishers'])) {
+
+					$element_body .= DatatypeHelper::arrayToString($info['publishers'], ', ', '/companies/', false, 'publisher');
+					$element_body .= ', ';
+
+				}
+
+				if(!empty($element->year)) {
+
+					$element_body .= '<a itemprop="datePublished" href="/years/'.$section.'/'.$element->year.'">'.$element->year.'</a>';
+					$element_body .= ' г. ';
+
+				}
+
+				if(isset($info['countries'])) {
+
+					$element_body .= DatatypeHelper::arrayToString(
+						$info['countries'],
+						', ',
+						'/countries/'
+					);
+					$element_body .= '. ';
+
+				}
+
+				if(isset($info['genres']) && count($info['genres'])) {
+
+					$element_body .= DatatypeHelper::collectionToString(
+						$info['genres'],
+						'genre',
+						', ',
+						'/genres/'.$section.'/',
+						false,
+						'genre'
+					);
+
+				}
+
+				if(!empty($element->length)) {
+
+					$element_body .= '. ';
+					$element_body .= '<meta itemprop="duration" content="T'.$element->length.'M" />'.$element->length.' мин. ';
+
+				}
+
+				$element_body .= '</div>';
+
+				if(isset($info['directors']) && count($info['directors'])) {
+
+					$element_body .= '<div class="mt-2 mb-2 small">';
+					$element_body .= 'Режиссер: '.DatatypeHelper::arrayToString(
+							$info['directors'],
+							', ',
+							'/persons/',
+							false,
+							'director'
+						);
+					$element_body .= '</div>';
+
+				}
+
+				if(isset($info['screenwriters']) && count($info['screenwriters'])) {
+
+					$element_body .= '<div class="mt-2 mb-2 small">';
+					$element_body .= 'Сценарий: '.DatatypeHelper::arrayToString(
+							$info['screenwriters'],
+							', ',
+							'/persons/',
+							false,
+							'creator'
+						);
+					$element_body .= '</div>';
+
+				}
+
+				if(isset($info['producers']) && count($info['producers'])) {
+
+					$element_body .= '<div class="mt-2 mb-2 small">';
+					$element_body .= 'Продюсер: '.DatatypeHelper::arrayToString(
+							$info['producers'],
+							', ',
+							'/persons/',
+							false,
+							'producer'
+						);
+					$element_body .= '</div>';
+
+				}
 
 				if(isset($info['actors']) && count($info['actors'])) {
 
-					$element_body .= '<p>';
+					$element_body .= '<div class="mt-4 mb-4 small">';
 					$element_body .= 'В ролях: '.DatatypeHelper::arrayToString(
-						$info['actors'],
-						', ',
-						'/persons/',
-						false,
-						'actor'
-					);
-					$element_body .= '</p>';
+							$info['actors'],
+							', ',
+							'/persons/',
+							false,
+							'actor'
+						);
+					$element_body .= '</div>';
+
+				}
+
+				if(isset($info['game_developers']) && count($info['game_developers'])) {
+
+					$element_body .= '<div class="mt-2 mb-2 small">';
+					$element_body .= 'Разработчик: '.DatatypeHelper::arrayToString(
+							$info['game_developers'],
+							', ',
+							'/companies/',
+							false,
+							'creator'
+						);
+					$element_body .= '</div>';
+
+				}
+
+				if(isset($info['game_publishers']) && count($info['game_publishers'])) {
+
+					$element_body .= '<div class="mt-2 mb-2 small">';
+					$element_body .= 'Издатель: '.DatatypeHelper::arrayToString(
+							$info['game_publishers'],
+							', ',
+							'/companies/',
+							false,
+							'publisher'
+						);
+					$element_body .= '</div>';
+
+				}
+
+				if(isset($info['game_platforms']) && count($info['game_platforms'])) {
+
+					$element_body .= '<div class="mt-2 mb-2 small">';
+					$element_body .= 'Платформы: '.DatatypeHelper::arrayToString(
+							$info['game_platforms'],
+							', ',
+							'/platforms/'
+						);
+					$element_body .= '</div>';
 
 				}
 
@@ -828,6 +844,35 @@ class ElementsHelper {
 					$element_body .= DummyHelper::getExtLink('yandex_music', $element->name);
 					$element_body .= DummyHelper::getExtLink('google_play', $element->name);
 					//$element_body .= DummyHelper::getExtLink('discogs', $element->name);
+					$element_body .= '</div>';
+
+				}
+
+				if(isset($info['collections']) && count($info['collections'])) {
+
+					$element_body .= '<div class="mt-4 mb-4 small">';
+					$element_body .= 'Коллекции: ';
+					$element_body .= DatatypeHelper::collectionToString(
+						$info['collections'],
+						'collection',
+						', ',
+						'/collections/',
+						false,
+						"isPartOf"
+					);
+					$element_body .= '</div>';
+
+				}
+
+				if((isset($info['relations'])) && (0 < $info['relations'])) {
+
+					$element_body .= '<div class="mt-4 mb-4 small">';
+
+					$element_body .= '<a href="/'.$section.'/'.$element->id.'/relations/">';
+					$element_body .= 'Связанные произведения ';
+					$element_body .= '('.$info['relations'].')';
+					$element_body .= '</a>';
+
 					$element_body .= '</div>';
 
 				}
@@ -868,46 +913,9 @@ class ElementsHelper {
 
 		$element_footer = '';
 
-		$element_footer .= '<div class="row mt-3">';
-			$element_footer .= '<div class="col-md-12">';
-
-			if(isset($info['collections']) && count($info['collections'])) {
-				$element_footer .= '<p>';
-				$element_footer .= 'Коллекции: ';
-				$element_footer .= DatatypeHelper::collectionToString(
-					$info['collections'],
-					'collection',
-					', ',
-					'/collections/',
-					false,
-					"isPartOf"
-				);
-				$element_footer .= '</p>';
-			}
-
-			if((isset($info['relations'])) && (0 < $info['relations'])) {
-				$element_footer .= '<p>';
-					$element_footer .= '<a href="/'.$section.'/'.$element->id.'/relations/">';
-						$element_footer .= 'Связи ';
-						$element_footer .= '('.$info['relations'].')';
-					$element_footer .= '</a>';
-				$element_footer .= '</p>';
-			}
-
-			$element_footer .= '</div>';
-		$element_footer .= '</div>';
-
-		if(RolesHelper::isAdmin($request)) {
-
-			$element_footer .= '<p>';
-				$element_footer .= '<a href="/'.$section.'/'.$element->id.'/relations/">Установить связи</a>';
-			$element_footer .= '</p>';
-
-		}
-
         if(isset($info['similar']) && count($info['similar'])) {
 
-			$element_footer .= '<h3>Похожие</h3>';
+			$element_footer .= '<h3 class="mt-5 mb-3">Похожие</h3>';
 			$element_footer .= ElementsHelper::getElements($request, $info['similar'], $section, $options);
 
         }

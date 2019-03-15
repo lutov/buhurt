@@ -8,7 +8,6 @@
 
     <section class="text-center mt-5">
 
-        {!! Breadcrumbs::render('about') !!}
         <h1 class="">@yield('title')</h1>
         <h2 class="">@yield('subtitle')</h2>
 
@@ -16,6 +15,8 @@
 
     <div class="row mt-5">
         <div class="col-md-12">
+
+            {!! Breadcrumbs::render('about') !!}
             
             <blockquote class="blockquote">Что это за сайт?</blockquote>
             <div class="mb-5">Бугурт — это система хранения оценок к фильмам, книгам, играм и музыкальным альбомам. Она позволяет составлять коллекции и списки желаемого, и получать рекомендации для просмотра, чтения, игр и прослушивания.</div>

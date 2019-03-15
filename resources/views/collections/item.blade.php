@@ -6,17 +6,21 @@
 
 @section('content')
 
-	<section class="text-center">
-		<h1 class="pt-5">@yield('title')</h1>
-		<h2 class="pb-3">@yield('subtitle')</h2>
-		<ul class="list-inline">
+	<section class="text-center mt-5 mb-3">
+
+		<h1 class="">@yield('title')</h1>
+
+		<ul class="list-inline mt-3">
 
 			@if(count($books))<li class="list-inline-item"><a href="#books">Книги</a></li>@endif
 			@if(count($films))<li class="list-inline-item"><a href="#films">Фильмы</a></li>@endif
 			@if(count($games))<li class="list-inline-item"><a href="#games">Игры</a></li>@endif
 
 		</ul>
+
 	</section>
+
+	{!! Breadcrumbs::render('element', $element) !!}
 
 	<div itemscope itemtype="http://schema.org/CollectionPage">
 
@@ -26,7 +30,7 @@
 		);
 		?>
 
-		{!! ElementsHelper::getCardBody($request, $section, $element, $info) !!}
+		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $info) !!}
 
 	</div>
 

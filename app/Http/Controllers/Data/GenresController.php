@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Data;
 
 use App\Helpers\SectionsHelper;
+use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -12,15 +13,20 @@ use App\Models\Data\Genre;
 
 class GenresController extends Controller {
 
+	private $prefix = 'genres';
+
 	/**
 	 * @param Request $request
 	 * @return mixed
 	 */
 	public function sections(Request $request) {
 
+		$section = SectionsHelper::getSection($this->prefix);
+
 		return View::make('genres.index', array(
 			'title' => 'Жанры',
 			'subtitle' => 'Разделы',
+			'section' => $section,
 			'request' => $request,
 		));
 
@@ -33,25 +39,23 @@ class GenresController extends Controller {
 	 */
 	public function list(Request $request, $section) {
 
-		$sub_section = 'genres';
-		$title = 'Жанры';
-		$subtitle = SectionsHelper::getSectionName($section);
-		$type = SectionsHelper::getSectionType($section);
+		$parent = SectionsHelper::getSection('genres');
+		$section = SectionsHelper::getSection($section);
+
+		$section->setParent($parent);
 
 		$sort = 'name';
 		$order = 'asc';
 		$limit = 28;
 
-		$elements = Genre::where('element_type', '=', $type)
+		$elements = Genre::where('element_type', '=', $section->type)
 			->orderBy($sort, $order)
 			->paginate($limit)
 		;
 
 		return View::make('genres.list', array(
 			'request' => $request,
-			'title' => $title,
-			'subtitle' => $subtitle,
-			'sub_section' => $sub_section,
+			'parent' => $parent,
 			'section' => $section,
 			'elements' => $elements
 		));
@@ -66,65 +70,62 @@ class GenresController extends Controller {
 	 */
     public function item(Request $request, $section, $id) {
 
-		//$section = $this->prefix;
-		$get_section = Section::where('alt_name', '=', $section)->first();
-		$ru_section = $get_section->name;
-		$type = $get_section->type;
+		$parent = SectionsHelper::getSection('genres');
+		$section = SectionsHelper::getSection($section);
 
-		$sort = $request->get('sort', $section.'.created_at');
-		$sort_direction = $request->get('sort_direction', 'desc');
+		$sort = $request->get('sort', 'created_at');
+		$order = $request->get('order', 'desc');
 		$limit = 28;
 
 		$sort_options = array(
-			$section.'.created_at' => 'Время добавления',
-			$section.'.name' => 'Название',
-			$section.'.alt_name' => 'Оригинальное название',
-			$section.'.year' => 'Год'
+			'created_at' => 'Время добавления',
+			'name' => 'Название',
+			'alt_name' => 'Оригинальное название',
+			'year' => 'Год'
 		);
 
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
+
 		$genre = Genre::find($id);
-		//$element_genre = new ElementGenre;
 
 		if(Auth::check()) {
 
 			$user_id = Auth::user()->id;
 			$not_wanted = Wanted::select('element_id')
-				->where('element_type', '=', $type)
+				->where('element_type', '=', $section->type)
 				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				//->remember(10)
 				->pluck('element_id')
 			;
 
-			$elements = $type::select($section.'.*')
-				->leftJoin('elements_genres', $section.'.id', '=', 'elements_genres.element_id')
+			$elements = $section->type::select($section->alt_name.'.*')
+				->leftJoin('elements_genres', $section->alt_name.'.id', '=', 'elements_genres.element_id')
 				->where('genre_id', '=', $id)
-				->where('element_type', '=', $type)
-				->whereNotIn($section.'.id', $not_wanted)
-				->with(array('rates' => function($query) use($user_id, $type)
+				->where('element_type', '=', $section->type)
+				->whereNotIn($section->alt_name.'.id', $not_wanted)
+				->with(array('rates' => function($query) use($user_id, $section)
 					{
 						$query
 							->where('user_id', '=', $user_id)
-							->where('element_type', '=', $type)
+							->where('element_type', '=', $section->type)
 						;
 					})
 				)
-				->orderBy($sort, $sort_direction)
+				->orderBy($sort, $order)
 				//->toSql()
-				//->remember(10)
 				->paginate($limit)
 			;
-			//echo $elements; die();
 
 		} else {
 
-			$elements = $type::select($section.'.*')
-				->leftJoin('elements_genres', $section.'.id', '=', 'elements_genres.element_id')
+			$elements = $section->type::select($section->alt_name.'.*')
+				->leftJoin('elements_genres', $section->alt_name.'.id', '=', 'elements_genres.element_id')
 				->where('genre_id', '=', $id)
-				->where('element_type', '=', $type)
-				->orderBy($sort, $sort_direction)
+				->where('element_type', '=', $section->type)
+				->orderBy($sort, $order)
 				//->toSql()
-				//->remember(10)
 				->paginate($limit)
 			;
 
@@ -132,13 +133,31 @@ class GenresController extends Controller {
 
 		if(!empty($genre)) {
 
+			$options = array(
+				'header' => true,
+				'footer' => true,
+				'paginate' => true,
+				'sort_list' => $sort_options,
+				'sort' => $sort,
+				'order' => $order,
+			);
+
+			$cover = 0;
+			$file_path = public_path() . '/data/img/covers/'.$parent->alt_name.'/' . $id . '.jpg';
+			if (file_exists($file_path)) {
+				$cover = $id;
+			}
+
+			$genre->setParent($section);
+
 			return View::make('genres.item', array(
 				'request' => $request,
-				'genre' => $genre,
+				'cover' => $cover,
+				'element' => $genre,
 				'elements' => $elements,
+				'parent' => $parent,
 				'section' => $section,
-				'ru_section' => $ru_section,
-				'sort_options' => $sort_options
+				'options' => $options
 			));
 
 		} else {

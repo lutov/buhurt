@@ -6,10 +6,10 @@
 
 @section('content')
 
-	<section class="text-center mb-5">
-		<h1 class="pt-5">@yield('title')</h1>
-		<h2 class="pb-3">@yield('subtitle')</h2>
-		<ul class="list-inline">
+	<section class="text-center mt-5 mb-3">
+		<h1 class="">@yield('title')</h1>
+		<h2 class="">@yield('subtitle')</h2>
+		<ul class="list-inline mt-3">
 
 			@if(count($books))<li class="list-inline-item"><a href="#writer">Писатель</a></li>@endif
 			@if(count($screenplays))<li class="list-inline-item"><a href="#screenwriter">Сценарист</a></li>@endif
@@ -23,6 +23,8 @@
 
 	<div itemscope itemtype="http://schema.org/Person">
 
+		{!! Breadcrumbs::render('element', $element) !!}
+
 		<?php
 		$info = array(
 			'top_genres' => $top_genres,
@@ -30,7 +32,7 @@
 		);
 		?>
 
-		{!! ElementsHelper::getCardBody($request, $section, $element, $info) !!}
+		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $info) !!}
 
 	</div>
 

@@ -1,24 +1,24 @@
 @extends('layouts.default')
 
-@section('title'){{$year}}@stop
+@section('title'){{$element->name}}@stop
 
-@section('subtitle')@stop
+@section('subtitle'){{$section->name}}@stop
 
 @section('content')
 
-	<section class="text-center">
-		<h1 class="pt-5">{{trim($year)}}-й год</h1>
-		<h2 class="pb-3">@yield('subtitle')</h2>
-	</section>
-
-	<section class="text-center mt-5">
-		<h2 id="section">{!! $section->name !!}</h2>
+	<section class="text-center mt-5 mb-3">
+		<h1 class="">@yield('subtitle')</h1>
+		<h2 class="">@yield('title')</h2>
 	</section>
 
 	<div class="row mt-5">
 
 		<div class="col-md-12">
+
+			{!! Breadcrumbs::render('element', $element) !!}
+
 			{!! ElementsHelper::getElements($request, $elements, $section->alt_name) !!}
+
 		</div>
 
 	</div>

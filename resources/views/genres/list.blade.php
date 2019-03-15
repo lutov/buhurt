@@ -1,21 +1,23 @@
 @extends('layouts.default')
 
-@section('title'){{$title}}@stop
+@section('title'){{$parent->name}}@stop
 
-@section('subtitle'){{$subtitle}}@stop
+@section('subtitle'){{$section->name}}@stop
 
 @section('content')
 
-    <section class="text-center">
-        <h1 class="mt-5">@yield('title')</h1>
-        <h2 class="mb-3">@yield('subtitle')</h2>
+    <section class="text-center mt-5 mb-3">
+        <h1 class="m">@yield('title')</h1>
+        <h2 class="m">@yield('subtitle')</h2>
     </section>
 
     <div class="row mt-5">
 
         <div class="col-md-12">
 
-            {!! ElementsHelper::getList($request, $elements, $sub_section, $section)!!}
+            {!! Breadcrumbs::render('section', $section) !!}
+
+            {!! ElementsHelper::getList($request, $elements, $parent->alt_name, $section->alt_name)!!}
 
         </div>
 

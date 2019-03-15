@@ -1,11 +1,11 @@
 <?php namespace App\Http\Controllers\Data;
 
+use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
-use App\Models\Data\Section;
 use App\Models\User\Wanted;
 use App\Models\Data\Country;
 
@@ -15,10 +15,7 @@ class CountriesController extends Controller {
 
     public function list(Request $request) {
 
-		$section = $this->prefix;
-		$get_section = Section::where('alt_name', '=', $section)->first();
-		$ru_section = $get_section->name;
-		$type = $get_section->type;
+		$section = SectionsHelper::getSection($this->prefix);
 
 		$sort = $request->get('sort', 'name');
 		$order = $request->get('order', 'asc');
@@ -34,20 +31,9 @@ class CountriesController extends Controller {
 		$wanted = array();
 		$not_wanted = array();
 
-		if(Auth::check()) {
-
-			$user_id = Auth::user()->id;
-
-			$elements = Country::orderBy($sort, $order)
-				->paginate($limit)
-			;
-
-		} else {
-
-			$elements = Country::orderBy($sort, $order)
-				->paginate($limit)
-			;
-		}
+		$elements = Country::orderBy($sort, $order)
+			->paginate($limit)
+		;
 
 		$options = array(
 			'header' => true,
@@ -64,7 +50,6 @@ class CountriesController extends Controller {
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
-			'ru_section' => $ru_section,
 			'options' => $options,
 		));
 
@@ -77,10 +62,7 @@ class CountriesController extends Controller {
 	 */
     public function item(Request $request, $id) {
 
-		$section = 'films'; //$this->prefix;
-		$get_section = Section::where('alt_name', '=', $section)->first();
-		$ru_section = $get_section->name;
-		$type = $get_section->type;
+		$section = SectionsHelper::getSection('films');
 
 		$sort = $request->get('sort', 'created_at');
 		$order = $request->get('order', 'desc');
@@ -98,36 +80,32 @@ class CountriesController extends Controller {
 
 		$country = Country::find($id);
 
-		$wanted = array();
-		$not_wanted = array();
-
 		if(Auth::check()) {
 
 			$user_id = Auth::user()->id;
 			$not_wanted = Wanted::select('element_id')
-				->where('element_type', '=', $type)
+				->where('element_type', '=', $section->type)
 				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
-				//->remember(10)
 				->pluck('element_id')
 			;
 
-			$elements = $country->$section()->orderBy($sort, $order)
-				->with(array('rates' => function($query) use($user_id, $section, $type)
+			$elements = $country->{$section->alt_name}()->orderBy($sort, $order)
+				->with(array('rates' => function($query) use($user_id, $section)
 					{
 						$query
 							->where('user_id', '=', $user_id)
-							->where('element_type', '=', $type)
+							->where('element_type', '=', $section->type)
 						;
 					})
 				)
-				->whereNotIn($section.'.id', $not_wanted)
+				->whereNotIn($section->alt_name.'.id', $not_wanted)
 				->paginate($limit)
 			;
 
 		} else {
 
-			$elements = $country->$section()->orderBy($sort, $order)
+			$elements = $country->{$section->alt_name}()->orderBy($sort, $order)
 				->paginate($limit)
 			;
 
@@ -137,8 +115,6 @@ class CountriesController extends Controller {
 			'header' => true,
 			'footer' => true,
 			'paginate' => true,
-			//'wanted' => $wanted,
-			//'not_wanted' => $not_wanted,
 			'sort_list' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
@@ -146,10 +122,9 @@ class CountriesController extends Controller {
 
         return View::make($this->prefix.'.item', array(
 			'request' => $request,
-			'country' => $country,
-			'films' => $elements,
+			'element' => $country,
+			'elements' => $elements,
 			'section' => $section,
-			'ru_section' => $ru_section,
 			'options' => $options
 		));
     }

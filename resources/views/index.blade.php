@@ -9,17 +9,9 @@
 
 @section('content')
 
-	<section class="text-center mt-5">
-
-		{!! Breadcrumbs::render('home') !!}
+	<section class="text-center mt-5 mb-3">
 		<h1 class="">@yield('title')</h1>
-
-	</section>
-
-	<section class="text-center mt-3">
-
 		<h2 id="recommendations_title">Рекомендации</h2>
-
 	</section>
 
 	<div class="row mt-5">
@@ -37,10 +29,8 @@
 
 	</div>
 
-	<section class="text-center mt-3">
-
+	<section class="text-center mt-5 mb-3">
 		<h2 id="updates_title">Обновления</h2>
-
 	</section>
 
 	<div class="row mt-5">

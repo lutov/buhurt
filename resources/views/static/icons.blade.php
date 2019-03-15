@@ -6,15 +6,17 @@
 
 @section('content')
 
-	<section class="text-center mt-5">
+	<section class="text-center mt-5 mb-5">
 
-		{!! Breadcrumbs::render('icons') !!}
 		<h1 class="">@yield('title')</h1>
 		<p>Иконки достижений предоставлены <a href="http://thenounproject.com/">http://thenounproject.com/</a></p>
 
 	</section>
 
-	<div class="row mt-5">
+	{!! Breadcrumbs::render('icons') !!}
+
+	<div class="row">
+
 	<?php
 		$result = '';
 		foreach($icons as $icon) {

@@ -6,10 +6,10 @@
 
 @section('content')
 
-	<section class="text-center mb-5">
-		<h1 class="pt-5">@yield('title')</h1>
-		<h2 class="pb-3">@yield('subtitle')</h2>
-		<ul class="list-inline">
+	<section class="text-center mt-5 mb-3">
+		<h1 class="">@yield('title')</h1>
+		<h2 class="">@yield('subtitle')</h2>
+		<ul class="list-inline mt-3">
 
 			@if(count($books_published))<li class="list-inline-item"><a href="#books_published">Изданные книги</a></li>@endif
 			@if(count($games_developed))<li class="list-inline-item"><a href="#games_developed">Разработанные игры</a></li>@endif
@@ -18,6 +18,8 @@
 
 		</ul>
 	</section>
+
+	{!! Breadcrumbs::render('element', $element) !!}
 
 	<div itemscope itemtype="http://schema.org/Person">
 
@@ -37,7 +39,7 @@
 		);
 		?>
 
-		{!! ElementsHelper::getCardBody($request, $section, $element, $info) !!}
+		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $info) !!}
 
 	</div>
 

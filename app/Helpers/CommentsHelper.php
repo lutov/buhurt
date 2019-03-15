@@ -156,7 +156,7 @@ class CommentsHelper {
 			$form .= '<div class="mt-3">';
 			$form .= Form::textarea('comment', $value = null, $attributes = array(
 				'placeholder' => 'Комментарий',
-				'class' => 'w-100 p-3',
+				'class' => 'w-100 border rounded p-3',
 				'id' => 'comment'
 			));
 			$form .= Form::hidden('comment_id', $value = null, $attributes = array('id' => 'comment_id', 'autocomplete' => 'off'));

@@ -1,7 +1,17 @@
-<?php
+<?php namespace App\Models\Data;
 
-class Year extends Eloquent  {
+use App\Traits\SectionTrait;
+use Illuminate\Database\Eloquent\Model;
 
+class Year extends Model {
 
+	use SectionTrait;
+
+	/**
+	 * The database table used by the model.
+	 *
+	 * @var string
+	 */
+	protected $table = 'years';
 
 }

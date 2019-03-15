@@ -22,7 +22,7 @@
 
 	<div class="full">
 		<div class="half">
-			{!! Form::open(array('action' => 'UserController@change_password', 'class' => '', 'method' => 'POST')) !!}
+			{!! Form::open(array('action' => 'User\UserController@change_password', 'class' => '', 'method' => 'POST')) !!}
 			<p><b>Текущий пароль</b>:{!! Form::password('old_password', $attributes = array('id' => 'old_password', 'class' => 'full', 'autocomplete' => 'off')) !!}</p>
 			<p><b>Новый пароль</b>:{!! Form::password('new_password', $attributes = array('id' => 'new_password', 'class' => 'full')) !!}</p>
 			{!! Form::submit('Сохранить', $attributes = array('id' => 'change_password')) !!}

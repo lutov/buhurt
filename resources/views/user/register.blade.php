@@ -38,7 +38,7 @@
                     </div>
                 @endif
 
-                {!! Form::open(array('action' => 'UserController@store', 'id' => 'registration_form', 'class' => 'registration_form', 'method' => 'POST')) !!}
+                {!! Form::open(array('action' => 'User\UserController@store', 'id' => 'registration_form', 'class' => 'registration_form', 'method' => 'POST')) !!}
 
                 <p>{!! Form::text('email', $value = null, $attributes = array('placeholder' => 'E-mail', 'class' => 'form-control w-100', 'autocomplete' => 'off')) !!}</p>
                 <p>{!! Form::text('username', $value = null, $attributes = array('placeholder' => 'Логин', 'class' => 'form-control w-100', 'autocomplete' => 'off')) !!}</p>

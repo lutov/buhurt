@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers\Data;
 
+use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Data\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -15,10 +15,7 @@ class CompaniesController extends Controller {
 
 	public function list(Request $request) {
 
-		$section = $this->prefix;
-		$get_section = Section::where('alt_name', '=', $section)->first();
-		$ru_section = $get_section->name;
-		$type = $get_section->type;
+		$section = SectionsHelper::getSection($this->prefix);
 
 		$sort = $request->get('sort', 'name');
 		$order = $request->get('order', 'asc');
@@ -49,7 +46,6 @@ class CompaniesController extends Controller {
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
-			'ru_section' => $ru_section,
 			'options' => $options,
 		));
 
@@ -57,13 +53,13 @@ class CompaniesController extends Controller {
 	
     public function item(Request $request, $id) {
 
-    	$section = 'companies';
+		$section = SectionsHelper::getSection($this->prefix);
 
 		$company = Company::find($id);
 
 		if(isset($company->id)) {
 			$logo = 0;
-			$file_path = public_path() . '/data/img/covers/companies/'.$id.'.jpg';
+			$file_path = public_path() . '/data/img/covers/'.$section->alt_name.'/'.$id.'.jpg';
 			if (file_exists($file_path)) {
 				$logo = $id;
 			}

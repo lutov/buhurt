@@ -11,7 +11,6 @@
 |
 */
 
-
 Route::get('/', array(
 	'as' => 'home',
 	'uses' => 'HomeController@index'
@@ -78,14 +77,102 @@ Route::any('memes/{id}', array(
 	'uses' => 'Data\MemesController@item'
 ))->where('id', '[0-9]+');
 
-Route::get('persons', array('uses' => 'Data\PersonsController@list'));
-Route::any('persons/{id}', array('uses' => 'Data\PersonsController@item'))->where('id', '[0-9]+');
+Route::get('persons', array(
+	'as' => 'persons',
+	'uses' => 'Data\PersonsController@list'
+));
+Route::any('persons/{id}', array(
+	'as' => 'Person',
+	'uses' => 'Data\PersonsController@item'
+))->where('id', '[0-9]+');
 
-Route::get('bands', array('uses' => 'Data\BandsController@list'));
-Route::any('bands/{id}', array('uses' => 'Data\BandsController@item'))->where('id', '[0-9]+');
+Route::get('bands', array(
+	'as' => 'bands',
+	'uses' => 'Data\BandsController@list'
+));
+Route::any('bands/{id}', array(
+	'as' => 'Band',
+	'uses' => 'Data\BandsController@item'
+))->where('id', '[0-9]+');
 
-Route::get('companies', array('uses' => 'Data\CompaniesController@list'));
-Route::any('companies/{id}', array('uses' => 'Data\CompaniesController@item'))->where('id', '[0-9]+');
+Route::get('companies', array(
+	'as' => 'companies',
+	'uses' => 'Data\CompaniesController@list'
+));
+Route::any('companies/{id}', array(
+	'as' => 'Company',
+	'uses' => 'Data\CompaniesController@item'
+))->where('id', '[0-9]+');
+
+// countries
+Route::group(array('prefix' => 'countries'), function() {
+	Route::any('/', array(
+		'as' => 'countries',
+		'uses' => 'Data\CountriesController@list'
+	));
+	Route::any('{id}', array(
+		'as' => 'Country',
+		'uses' => 'Data\CountriesController@item'
+	));
+	Route::any('films/{id}', function($id) {return Redirect::to('/countries/'.$id.'/');});
+});
+
+// platforms
+Route::group(array('prefix' => 'platforms'), function() {
+	Route::any('/', array(
+		'as' => 'platforms',
+		'uses' => 'Data\PlatformsController@list'
+	));
+	Route::any('{id}', array(
+		'as' => 'Platform',
+		'uses' => 'Data\PlatformsController@item'
+	));
+	Route::any('games/{id}', function($id) {return Redirect::to('/platforms/'.$id.'/');});
+});
+
+// genres
+Route::group(array('prefix' => 'genres'), function() {
+	Route::any('/', array(
+		'as' => 'genres_section',
+		'uses' => 'Data\GenresController@sections'
+	));
+	Route::any('{section}', array(
+		'as' => 'genres',
+		'uses' => 'Data\GenresController@list'
+	));
+	Route::any('{section}/{id}', array(
+		'as' => 'Genre',
+		'uses' => 'Data\GenresController@item'
+	));
+});
+
+// years
+Route::group(array('prefix' => 'years'), function() {
+	Route::any('/', array(
+		'as' => 'years_section',
+		'uses' => 'Data\YearsController@sections'
+	));
+	Route::any('{section}', array(
+		'as' => 'years',
+		'uses' => 'Data\YearsController@list'
+	));
+	Route::any('{section}/{year}', array(
+		'as' => 'Year',
+		'uses' => 'Data\YearsController@item'
+	))->where('year', '[0-9]+');
+});
+
+// collections
+Route::group(array('prefix' => 'collections'), function() {
+	Route::any('/', array(
+		'as' => 'collections',
+		'uses' => 'Data\CollectionsController@list'
+	));
+	Route::any('{id}', array(
+		'as' => 'Collection',
+		'uses' => 'Data\CollectionsController@item'
+	));
+});
 
 //Admin
 Route::group(array('middleware' => 'admin'), function() {
@@ -117,41 +204,6 @@ Route::any('{section}/{id}/relations/add', array('uses' => 'Search\RelationsCont
 Route::any('{section}/{id}/relations/edit', array('uses' => 'Search\RelationsController@editRelation'));
 Route::any('{section}/{id}/relations/delete', array('uses' => 'Search\RelationsController@deleteRelation'));
 
-// Years
-Route::group(array('prefix' => 'years'), function() {
-	Route::any('/', array('uses' => 'Data\YearsController@sections'));
-	Route::any('{section}', array('uses' => 'Data\YearsController@list'));
-	Route::any('{section}/{year}', array('uses' => 'Data\YearsController@item'))->where('year', '[0-9]+');
-});
-
-// genres
-Route::group(array('prefix' => 'genres'), function() {
-	Route::any('/', array('uses' => 'Data\GenresController@sections'));
-	Route::any('{section}', array('uses' => 'Data\GenresController@list'));
-	Route::any('{section}/{id}', array('uses' => 'Data\GenresController@item'));
-});
-
-// platforms
-Route::group(array('prefix' => 'platforms'), function() {
-	Route::any('/', array('uses' => 'Data\PlatformsController@list'));
-	Route::any('{id}', array('uses' => 'Data\PlatformsController@item'));
-	Route::any('games/{id}', function($id) {return Redirect::to('/platforms/'.$id.'/');});
-});
-
-// countries
-Route::group(array('prefix' => 'countries'), function() {
-	Route::any('/', array('uses' => 'Data\CountriesController@list'));
-	Route::any('{id}', array('uses' => 'Data\CountriesController@item'));
-	Route::any('films/{id}', function($id) {return Redirect::to('/countries/'.$id.'/');});
-});
-	
-// collections
-Route::group(array('prefix' => 'collections'), function() {
-	Route::any('/', array('uses' => 'Data\CollectionsController@list'));
-	Route::any('{id}', array('uses' => 'Data\CollectionsController@item'));
-});
-
-
 // Auth manipulations
 Route::group(array('middleware' => 'auth'), function() {
 	// Rates
@@ -171,7 +223,6 @@ Route::group(array('middleware' => 'auth'), function() {
 		Route::any('/', array('uses' => 'User\AchievementsController@check'));
 	});
 });
-
 
 // Search
 Route::group(array('prefix' => 'search'), function() {
@@ -212,8 +263,12 @@ Route::group(array('prefix' => 'user'), function() {
 
 	Route::group(array('middleware' => 'guest',), function() {
 
-		Route::get('register', array('uses' => 'User\UserController@register'));
-		Route::post('register', array('uses' => 'User\UserController@store'));
+		Route::get('register', array(
+			'uses' => 'User\UserController@register'
+		));
+		Route::post('register', array(
+			'uses' => 'User\UserController@store'
+		));
 
 		Route::get('login', array('uses' => 'User\UserController@index'));
 		Route::post('login', array('uses' => 'User\UserController@login'));

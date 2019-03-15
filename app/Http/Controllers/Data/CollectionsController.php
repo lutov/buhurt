@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers\Data;
 
+use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Data\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Models\Data\Collection;
@@ -20,11 +20,7 @@ class CollectionsController extends Controller {
 	 */
 	public function list(Request $request) {
 
-		$section = $this->prefix;
-
-		$get_section = Section::where('alt_name', '=', $section)->first();
-		$ru_section = $get_section->name;
-		$type = $get_section->type;
+		$section = SectionsHelper::getSection($this->prefix);
 
 		$sort = $request->get('sort', 'name');
 		$order = $request->get('order', 'asc');
@@ -41,15 +37,10 @@ class CollectionsController extends Controller {
 			->paginate($limit)
 		;
 
-		$wanted = array();
-		$not_wanted = array();
-
 		$options = array(
 			'header' => true,
 			'footer' => true,
 			'paginate' => true,
-			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
 			'sort_list' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
@@ -59,7 +50,6 @@ class CollectionsController extends Controller {
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
-			'ru_section' => $ru_section,
 			'options' => $options,
 		));
 
@@ -72,26 +62,24 @@ class CollectionsController extends Controller {
 	 */
     public function item(Request $request, $id) {
 
-		$section = $this->prefix;
+		$section = SectionsHelper::getSection($this->prefix);
 
 		$collection = Collection::find($id);
 
 		$cover = 0;
-		$file_path = public_path() . '/data/img/covers/'.$section.'/'.$id.'.jpg';
+		$file_path = public_path() . '/data/img/covers/'.$section->alt_name.'/'.$id.'.jpg';
 		if (file_exists($file_path)) {
 			$cover = $id;
 		}
 
-		$sort_direction = 'asc';
+		$order = 'asc';
 		$limit = 28;
 
 		$books = Book::select('books.*')
 			->leftJoin('elements_collections', 'books.id', '=', 'elements_collections.element_id')
 			->where('collection_id', '=', $id)
 			->where('element_type', '=', 'Book')
-			->orderBy('name', $sort_direction)
-			//>remember(60)
-			//->get()
+			->orderBy('name', $order)
 			->paginate($limit)
 		;
 
@@ -99,9 +87,7 @@ class CollectionsController extends Controller {
 			->leftJoin('elements_collections', 'films.id', '=', 'elements_collections.element_id')
 			->where('collection_id', '=', $id)
 			->where('element_type', '=', 'Film')
-			->orderBy('name', $sort_direction)
-			//->remember(60)
-			//->get()
+			->orderBy('name', $order)
 			->paginate($limit)
 		;
 
@@ -109,9 +95,7 @@ class CollectionsController extends Controller {
 			->leftJoin('elements_collections', 'games.id', '=', 'elements_collections.element_id')
 			->where('collection_id', '=', $id)
 			->where('element_type', '=', 'Game')
-			->orderBy('name', $sort_direction)
-			//->remember(60)
-			//->get()
+			->orderBy('name', $order)
 			->paginate($limit)
 		;
 

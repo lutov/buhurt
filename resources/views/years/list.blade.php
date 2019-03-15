@@ -1,27 +1,26 @@
 @extends('layouts.default')
 
-@section('title'){{$title}}@stop
+@section('title'){{$parent->name}}@stop
 
-@section('subtitle'){{$subtitle}}@stop
+@section('subtitle'){{$section->name}}@stop
 
 @section('content')
 
-    <section class="text-center">
-        <h1 class="mt-5">@yield('title')</h1>
-        <h2 class="mb-3">@yield('subtitle')</h2>
+    <section class="text-center mt-5 mb-3">
+        <h1 class="m">@yield('title')</h1>
+        <h2 class="m">@yield('subtitle')</h2>
     </section>
-
-    <?php
-        $options = array(
-        	'paginate' => false,
-        );
-    ?>
 
     <div class="row mt-5">
 
-        <div class="col-md-12" style="column-count: 10;">
+        <div class="col-md-12">
 
-            {!! ElementsHelper::getList($request, $elements, $sub_section, $section, $options)!!}
+            {!! Breadcrumbs::render('section', $section) !!}
+
+            <div style="column-count: 10; column-width: 5em;">
+				<?php $options = array('paginate' => false,); ?>
+                {!! ElementsHelper::getList($request, $elements, $parent->alt_name, $section->alt_name, $options)!!}
+            </div>
 
         </div>
 

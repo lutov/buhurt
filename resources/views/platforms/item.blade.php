@@ -1,25 +1,23 @@
 @extends('layouts.default')
 
-@section('title'){{$platform->name}}@stop
+@section('title'){{$element->name}}@stop
 
-@section('subtitle')@stop
+@section('subtitle'){{$section->name}}@stop
 
 @section('content')
 
-	<section class="text-center">
-		<h1 class="mt-5">@yield('title')</h1>
-		<h2 class="mb-3">@yield('subtitle')</h2>
-	</section>
-
-	<section class="text-center mt-5">
-		<h2 id="films">{{$ru_section}}</h2>
+	<section class="text-center mt-5 mb-3">
+		<h1 class="">@yield('title')</h1>
+		<h2 class="">@yield('subtitle')</h2>
 	</section>
 
 	<div class="row mt-5">
 
 		<div class="col-md-12">
 
-			{!! ElementsHelper::getElements($request, $games, $section, $options)!!}
+			{!! Breadcrumbs::render('element', $element) !!}
+
+			{!! ElementsHelper::getElements($request, $elements, $elements->first()->section()->alt_name, $options)!!}
 
 		</div>
 

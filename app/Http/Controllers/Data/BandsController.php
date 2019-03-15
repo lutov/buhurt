@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers\Data;
 
+use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Data\Section;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\View;
@@ -19,14 +19,10 @@ class BandsController extends Controller {
 	 */
 	public function list(Request $request) {
 
-		$section = $this->prefix;
+		$section = SectionsHelper::getSection($this->prefix);
 
-		$get_section = Section::where('alt_name', '=', $section)->first();
-		$ru_section = $get_section->name;
-		$type = $get_section->type;
-
-		$sort = Input::get('sort', 'created_at');
-		$order = Input::get('order', 'desc');
+		$sort = Input::get('sort', 'name');
+		$order = Input::get('order', 'asc');
 		$limit = 28;
 
 		$sort_options = array(
@@ -54,7 +50,6 @@ class BandsController extends Controller {
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
-			'ru_section' => $ru_section,
 			'options' => $options,
 		));
 
@@ -67,13 +62,13 @@ class BandsController extends Controller {
 	 */
     public function item(Request $request, $id) {
 
-		$section = $this->prefix;
+		$section = SectionsHelper::getSection($this->prefix);
 
 		$band = Band::find($id);
 
 		if(isset($band->id)) {
 			$photo = 0;
-			$file_path = public_path() . '/data/img/covers/bands/'.$id.'.jpg';
+			$file_path = public_path() . '/data/img/covers/'.$section->alt_name.'/'.$id.'.jpg';
 			if (file_exists($file_path)) {
 				$photo = $id;
 			}

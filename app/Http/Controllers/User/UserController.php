@@ -56,6 +56,8 @@ class UserController extends Controller {
 	 */
 	public function register(Request $request) {
 
+		//Cache::flush();
+
 		if(Auth::check()) {
 
 			return Redirect::to('/');
@@ -87,7 +89,7 @@ class UserController extends Controller {
 
 		if($validator->fails()) {
 
-			return Redirect::to(URL::action('UserController@register'))
+			return Redirect::to(URL::action('User\UserController@register'))
 				->withInput()
 				->withErrors($validator)
 				->with('message', 'При&nbsp;заполнении&nbsp;допущены&nbsp;ошибки')
@@ -103,7 +105,7 @@ class UserController extends Controller {
 
 		if(empty($user_name)) {
 
-			return Redirect::to(URL::action('UserController@register'))
+			return Redirect::to(URL::action('User\UserController@register'))
 				->withInput()
 				->with('message', 'Имя&nbsp;пользователя&nbsp;содержит&nbsp;недопустимые&nbsp;символы');
 
@@ -880,9 +882,7 @@ class UserController extends Controller {
 				 
 				{"access_token":"","expires_in":,"user_id":,"email":"i@vlad-lutov.name"}
 			*/		
-		}
-		else
-		{
+		} else {
 			return Redirect::to('/');
 		}
 	}
