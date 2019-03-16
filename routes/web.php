@@ -275,6 +275,10 @@ Route::group(array('prefix' => 'user'), function() {
 
 	});
 
+	Route::post('avatar', array('uses' => 'User\UserController@avatar'));
+	Route::any('change_password', array('uses' => 'User\UserController@change_password'));
+	Route::any('vk_auth', array('uses' => 'User\UserController@vk_auth'));
+
 	Route::get('{id}/', function($id) {return Redirect::to('/user/'.$id.'/profile');});
 	Route::get('{id}/profile', array('uses' => 'User\UserController@view'));
 	Route::any('{id}/rates/{section}', array('uses' => 'User\UserController@rates'));
@@ -282,12 +286,6 @@ Route::group(array('prefix' => 'user'), function() {
 
 	Route::any('{id}/wanted/{section}', array('uses' => 'User\UserController@wanted'));
 	Route::any('{id}/not_wanted/{section}', array('uses' => 'User\UserController@not_wanted'));
-
-	Route::post('avatar', array('uses' => 'User\UserController@avatar'));
-
-	Route::any('change_password', array('uses' => 'User\UserController@change_password'));
-	
-	Route::any('vk_auth', array('uses' => 'User\UserController@vk_auth'));
 
 	Route::any('{id}/options', array('uses' => 'User\UserController@options'));
 

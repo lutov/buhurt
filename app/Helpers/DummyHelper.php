@@ -557,4 +557,32 @@ class DummyHelper {
 
 	}
 
+	/**
+	 * @param string $problem
+	 * @return string
+	 */
+	public static function report(string $problem = '') {
+
+		$result = '';
+
+		$result .= '<div class="alert-light w-75 pt-3 m-auto ">';
+		$result .= 'Сообщить о проблеме';
+
+		switch($problem) {
+
+			case 'enter': $result .= ' со входом: '; break;
+			case 'registration': $result .= ' с регистрацией: '; break;
+			case 'password': $result .= ' с паролем: '; break;
+			default: $result .= ': ';
+
+		}
+
+		$result .= '<a class="" href="mailto:request@buhurt.ru">email</a>,';
+        $result .= '<a class="" href="https://vk.com/im?sel=-5699972">vk.com</a>';
+		$result .= '</div>';
+
+		return $result;
+
+	}
+
 }

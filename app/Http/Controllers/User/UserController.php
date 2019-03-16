@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\User;
 
+use App\Helpers\DebugHelper;
 use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User\Event;
@@ -216,11 +217,18 @@ class UserController extends Controller {
 		}
 
 		if(isset($user->id)) {
+
 			$avatar = 0;
+			$hash = '';
+
 			$file_path = public_path() . '/data/img/avatars/' . $id . '.jpg';
 			//die($file_path);
+
 			if (file_exists($file_path)) {
+
 				$avatar = $id;
+				$hash = md5_file($file_path);
+
 			}
 
 			$rates = new Rate();
@@ -330,6 +338,7 @@ class UserController extends Controller {
 				'request' => $request,
 				'user' => $user,
 				'avatar' => $avatar,
+				'hash' => $hash,
 				'books_rated' => $books_rated,
 				'films_rated' => $films_rated,
 				'games_rated' => $games_rated,
@@ -665,7 +674,7 @@ class UserController extends Controller {
 				//die($full_path);
 				$real_path = $request->file('avatar')->getRealPath();
 				//die($real_path);
-				$resize = ResizeCrop::resize($real_path, $full_path, 200, 0);
+				$resize = ResizeCrop::resize($real_path, $full_path, 370, 0);
 			}
 		} else {
 
@@ -680,6 +689,7 @@ class UserController extends Controller {
 	public function change_password(Request $request) {
 
 		if (Auth::check()) {
+
 			//$id = Auth::user()->id;
 
 			if(!empty($_POST)) {
@@ -691,11 +701,16 @@ class UserController extends Controller {
 				$validator = Validator::make($request->all(), $rules);
 
 				if ($validator->fails()) {
+
 					return Redirect::back()->withErrors($validator);
+
 				} else {
+
 					$old_password = $request->get('old_password', '');
 					$new_password = $request->get('new_password', '');
+
 					if (!empty($old_password)) {
+
 						$user = Auth::user();
 						$username = $user->username;
 						$credentials = array(
@@ -704,33 +719,44 @@ class UserController extends Controller {
 						);
 
 						if (Auth::attempt($credentials)) {
+
 							if (!empty($new_password)) {
 								$user->password = Hash::make($new_password);
 								$user->save();
 								return Redirect::to('/')->with('message', 'Пароль&nbsp;изменён');
 							}
+
 						} else {
+
 							return Redirect::back()->withErrors(array('message' => 'Текущий&nbsp;пароль&nbsp;введён&nbsp;неправильно'));
+
 						}
-					}
-					else
-					{
+
+					} else {
+
 						// если старый пароль пуст
+						return Redirect::to('/')->with('message', 'Не введён старый пароль');
+
 					}
+
+					return Redirect::to('/');
+
 				}
-			}
-			else {
+
+			} else {
+
 				return View::make('user.change_password', array(
-					//'user' => $user,
-					//'section' => $section,
-					//'sort_options' => $sort_options,
-					//'elements' => $elements
+					'request' => $request,
 				));
+
 			}
+
 		} else {
 
+			return Redirect::to('/');
+
 		}
-		//return Redirect::back();
+
 	}
 
 	/**
@@ -747,7 +773,8 @@ class UserController extends Controller {
 
 			$code = $request->get('code', '');
 			
-			if(!empty($code)) {		 
+			if(!empty($code)) {
+
 				$vk_grand_url = "https://api.vk.com/oauth/access_token?client_id=".$VK_APP_ID
 					."&client_secret=".$VK_SECRET_CODE
 					."&code=".$_GET['code']
@@ -777,13 +804,12 @@ class UserController extends Controller {
 					
 					// тут проверяем, если ид в базе. Если есть, авторизуем. Если нет - идем дальше	
 					$user = User::where('vk_id', '=', $vk_uid)->first();
-					if(!count($user))
-					{
+					if(!count($user)) {
 						// обращаемся к ВК Api, получаем имя, фамилию и ID пользователя вконтакте
 						// метод users.get
 						//$res = file_get_contents("https://api.vk.com/method/users.get?uids=".$vk_uid."&access_token=".$vk_access_token."&fields=uid,first_name,last_name,nickname,photo"); 
 						
-						$url="https://api.vk.com/method/users.get?uids=".$vk_uid."&access_token=".$vk_access_token."&fields=uid,first_name,last_name,nickname,photo";
+						$url="https://api.vk.com/method/users.get?v=5.92&user_ids=".$vk_uid."&access_token=".$vk_access_token."&fields=uid,first_name,last_name,nickname,photo_max";
 						$ch = curl_init();
 						curl_setopt($ch, CURLOPT_URL, $url);
 						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -792,7 +818,7 @@ class UserController extends Controller {
 						curl_close($ch);
 						
 						$data = json_decode($res, true);
-						//die('<pre>'.print_r($data, true).'</pre>');
+						//echo DebugHelper::dump($data, 1); die();
 						$user_info = $data['response'][0];
 						//echo '<pre>'.print_r($user_info, true).'</pre>';
 					  
@@ -835,29 +861,46 @@ class UserController extends Controller {
 						$roles->user_id = $new_user->id;
 						$roles->save();
 
+						if(isset($user_info['photo_max'])) {
+							$path = public_path() . '/data/img/avatars/';
+							$fileName = $new_user->id . '.jpg';
+							$full_path = $path . $fileName;
+							$real_path = $user_info['photo_max'];
+							//die($real_path);
+							$resize = ResizeCrop::resize($real_path, $full_path, 370, 0);
+						}
+
 						$email = 'Здравствуйте, '.$new_user->username."\n\nВаш пароль сгенерирован автоматически: ".$gen_pass."\n\nC ним Вы можете авторизоваться в системе не только через соцсеть, но и непосредственно в форме входа. При желании Вы можете также сменить пароль в своем профиле.\n\nТеперь Вы может пользоваться всеми возможностями системы: ставить оценки, комментировать произведения, зарабатывать достижения и настраивать свой профиль.";
 
-						Mail::raw($email, function($message) use ($new_user)
-						{
+						Mail::raw($email, function($message) use ($new_user) {
+
 							$message->from('robot@buhurt.ru', 'Бугурт');
 
 							$message->to($new_user->email)->subject('Вы зарегистрировались в системе «Бугурт»');
+
 						});
 						
 						Auth::login($new_user);
 
 						return Redirect::to('/')->with('message', 'Вы&nbsp;зарегистрированы');
+
 					} else {
+
 						Auth::login($user);
 						return Redirect::to('/')->with('message', 'Вы&nbsp;успешно&nbsp;авторизовались');
+
 					}
+
 				} else {
 					
 					return Redirect::to('/')->with('message', 'Авторизоваться&nbsp;не&nbsp;удалось. Причина: '.$data['error'].' — '.$data['error_description']);
 					
 				}
+
 			} else {
+
 				return Redirect::to('/')->with('message', 'Авторизоваться&nbsp;не&nbsp;удалось');
+
 			}
 
 			/*
@@ -883,8 +926,11 @@ class UserController extends Controller {
 				{"access_token":"","expires_in":,"user_id":,"email":"i@vlad-lutov.name"}
 			*/		
 		} else {
+
 			return Redirect::to('/');
+
 		}
+
 	}
 
 	/**

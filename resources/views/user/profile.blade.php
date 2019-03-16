@@ -36,7 +36,7 @@
 
 			<div class="card">
 
-			<img src="/data/img/avatars/{!! $avatar !!}.jpg" alt="{!! $user->username !!}" class="card-img-top" />
+			<img src="/data/img/avatars/{!! $avatar !!}.jpg?hash={!! $hash !!}" alt="{!! $user->username !!}" class="card-img-top" />
 
 			</div>
 
@@ -172,15 +172,15 @@
 
 			<div class="col-md-12 border rounded p-3">
 
-				<h3 class="mb-3">Аватар</h3>
-
 				{!! Form::open(array('action' => 'User\UserController@avatar', 'class' => 'avatar', 'method' => 'POST', 'files' => true)) !!}
 
 				<div class="w-50">
-					<div class="custom-file">
-						<input type="file" name="avatar" class="custom-file-input" id="customFile">
-						<label class="custom-file-label" for="customFile">Choose file</label>
+
+					<div class="form-group">
+						<label for="avatar">Аватар</label>
+						<input type="file" class="form-control-file" name="avatar" id="avatar">
 					</div>
+
 				</div>
 
 				<div class="mt-3">

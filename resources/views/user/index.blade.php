@@ -62,6 +62,8 @@
 
             </div>
 
+            {!! DummyHelper::report('enter') !!}
+
         </div>
 
     </div>

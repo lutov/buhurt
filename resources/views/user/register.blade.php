@@ -65,6 +65,8 @@
 
             </div>
 
+            {!! DummyHelper::report('registration') !!}
+
         </div>
 
     </div>
