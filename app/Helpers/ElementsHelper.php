@@ -875,6 +875,14 @@ class ElementsHelper {
 
 					$element_body .= '</div>';
 
+				} elseif(RolesHelper::isAdmin($request)) {
+
+					$element_body .= '<div class="mt-4 mb-4 small">';
+					$element_body .= '<a href="/'.$section.'/'.$element->id.'/relations/">';
+					$element_body .= 'Связанные произведения';
+					$element_body .= '</a>';
+					$element_body .= '</div>';
+
 				}
 
 				if(('films' == $section) && RolesHelper::isAdmin($request)) {

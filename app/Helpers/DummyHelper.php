@@ -96,7 +96,7 @@ class DummyHelper {
 				$query = 'global_sector=all&public_search';
 				$target = '_blank';
 				$site_name = 'World Art';
-				$name = iconv("UTF-8", "windows-1251", $name);
+				$name = iconv("UTF-8", "windows-1251//IGNORE", $name);
 				break;
 
 			case 'wiki': // https://ru.wikipedia.org/w/index.php?search=евангелинон
