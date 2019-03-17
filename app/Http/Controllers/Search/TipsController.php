@@ -9,7 +9,7 @@
 namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Request;
+use Illuminate\Http\Request;
 use App\Models\Data\Album;
 use App\Models\Data\Band;
 use App\Models\Data\Book;
