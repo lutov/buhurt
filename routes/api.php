@@ -32,4 +32,4 @@ Route::get('games/{id}', array('uses' => 'Data\GamesController@getJson'))->where
 Route::get('albums/{id}', array('uses' => 'Data\AlbumsController@getJson'))->where('id', '[0-9]+');
 
 /* POSTERS */
-Route::any('poster', array('uses' => 'Data\PosterController@search'));
+Route::any('poster', array('uses' => 'Search\PosterController@search'));

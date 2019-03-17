@@ -1,7 +1,7 @@
 <?php namespace App\Http\Controllers\Search;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use App\Models\Search\Poster;
 
