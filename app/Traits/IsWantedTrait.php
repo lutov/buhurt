@@ -31,6 +31,7 @@ trait IsWantedTrait {
 			$section = $this->section();
 
 			$wanted = Wanted::where('element_id', '=', $this->id)
+				->where('user_id', '=', Auth::user()->id)
 				->where('element_type', '=', $section->type)
 				->where($this->w_field, '=', $this->w_value)
 				->first()
@@ -60,6 +61,7 @@ trait IsWantedTrait {
 			$section = $this->section();
 
 			$not_wanted = Wanted::where('element_id', '=', $this->id)
+				->where('user_id', '=', Auth::user()->id)
 				->where('element_type', '=', $section->type)
 				->where($this->nw_field, '=', $this->nw_value)
 				->first()

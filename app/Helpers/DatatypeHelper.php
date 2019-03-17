@@ -136,4 +136,15 @@ class DatatypeHelper {
 
 	}
 
+	/**
+	 * @param array $array
+	 * @param string $field
+	 * @return bool
+	 */
+	public static function setAndCount(array $array = array(), string $field = '') {
+
+		return (isset($array[$field]) && count($array[$field]));
+
+	}
+
 }
