@@ -131,7 +131,11 @@ class ElementsHelper {
 
 			$elements_list .= '<a href="'.$link.'">';
 
-			$elements_list .= '<img class="card-img-top" src="/data/img/covers/'.$section.'/'.$element_cover.'.jpg" alt="'.$element->name.'" />';
+			$cover_path = '/data/img/covers/'.$section.'/'.$element_cover.'.jpg';
+			$file_path = public_path().$cover_path;
+			$hash = md5_file($file_path);
+
+			$elements_list .= '<img class="card-img-top" src="'.$cover_path.'?hash='.$hash.'" alt="'.$element->name.'" />';
 
 			$elements_list .= '</a>';
 
@@ -178,6 +182,7 @@ class ElementsHelper {
 							$elements_list .= '<input name="val" value="0" class="fast_rating" id="rating_' . $section . '_' . $element->id . '" type="text" autocomplete="off">';
 
 						}
+
 					} else {
 
 						$elements_list .= '<input name="val" value="0" class="fast_rating" id="rating_' . $section . '_' . $element->id . '" type="text" autocomplete="off">';
@@ -192,6 +197,8 @@ class ElementsHelper {
 
 					$elements_list .= 'var path = \'/rates/rate/' . $section . '/' . $element->id . '\';';
 					$elements_list .= 'var params = {rate_val: value};';
+
+					$elements_list .= 'console.log(params);';
 
 					$elements_list .= '$.post(path, params, function(data) {show_popup(data);}, \'json\');';
 					$elements_list .= '$.post(\'/achievements\', {}, function(data) {show_popup(data);}, \'json\');';
