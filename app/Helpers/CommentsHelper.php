@@ -96,7 +96,7 @@ class CommentsHelper {
 
 			$comments_text .= '<div class="row mt-3 mb-3">';
 
-				$comments_text .= '<div class="col-md-2">';
+				$comments_text .= '<div class="col-lg-1 d-none d-lg-block">';
 
 					if (file_exists($file_path)) {
 						$comments_text .= '<a href="/user/' . $user_id . '/profile"><img src="/data/img/avatars/' . $user_id . '.jpg" width="" alt="" class="img-fluid border" /></a>';
@@ -104,7 +104,7 @@ class CommentsHelper {
 
 				$comments_text .= '</div>';
 
-				$comments_text .= '<div class="col-md-10">';
+				$comments_text .= '<div class="col-12 col-lg-11">';
 
 					$comments_text .= '<p class="p-3 bg-white border" id="comment_' . $comment->id . '_text">'.nl2br($comment->comment).'</p>';
 

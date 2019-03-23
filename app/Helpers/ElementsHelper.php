@@ -1060,7 +1060,7 @@ class ElementsHelper {
 
 		$elements_text .= '<div class="row mt-3 mb-3">';
 
-		$elements_text .= '<div class="col-md-1">';
+		$elements_text .= '<div class="col-lg-1 d-none d-lg-block">';
 
 		if (file_exists($file_path)) {
 
@@ -1069,7 +1069,7 @@ class ElementsHelper {
 
 		$elements_text .= '</div>';
 
-		$elements_text .= '<div class="col-md-11">';
+		$elements_text .= '<div class="col-12 col-lg-11">';
 
 		$elements_text .= '<div class="p-3 bg-white border" id="element_' . $element->id . '_text">';
 

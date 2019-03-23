@@ -133,6 +133,7 @@ class UserHelper {
 
 			$fav_gen_names = Genre::where('element_type', '=', $type)
 				->whereIn('id', $fav_genres)
+				->limit($options['total_gens'])
 				//->pluck('name')
 				->get()
 			;
