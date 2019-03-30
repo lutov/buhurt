@@ -25,7 +25,7 @@ trait WantedTrait {
 	 */
 	public function not_wanted() {
 
-		return $this->morphMany('App\Models\User\NotWanted', 'element');
+		return $this->morphMany('App\Models\User\Unwanted', 'element');
 
 	}
 

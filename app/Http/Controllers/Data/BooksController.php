@@ -4,6 +4,7 @@ use App\Helpers\ElementsHelper;
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
+use App\Models\User\Unwanted;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class BooksController extends Controller {
 		$order = TextHelper::checkOrder($order);
 
 		$wanted = array();
-		$not_wanted = array();
+		$unwanted = array();
 
 		if(Auth::check()) {
 
@@ -44,22 +45,20 @@ class BooksController extends Controller {
 
 			$wanted = Wanted::select('element_id')
 				->where('element_type', '=', $section->type)
-				->where('wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				->pluck('element_id')
 				->toArray()
 			;
 
-			$not_wanted = Wanted::select('element_id')
+			$unwanted = Unwanted::select('element_id')
 				->where('element_type', '=', $section->type)
-				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				->pluck('element_id')
 				->toArray()
 			;
 
 			$elements = Book::where('verified', '=', 1)
-				->whereNotIn('id', $not_wanted)
+				->whereNotIn('id', $unwanted)
 				->with(array('rates' => function($query)
 					{
 						$query
@@ -84,7 +83,7 @@ class BooksController extends Controller {
 			'footer' => true,
 			'paginate' => true,
 			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
+			'unwanted' => $unwanted,
 			'sort_list' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
@@ -151,23 +150,15 @@ class BooksController extends Controller {
 			}
 
 			$user_rate = 0;
-			$wanted = 0;
-			$not_wanted = 0;
+
 			if (Auth::check()) {
+
 				$user_id = Auth::user()->id;
 				$rate = $book->rates()->where('user_id', '=', $user_id)->first();
 				if (isset($rate->rate)) {
 					$user_rate = $rate->rate;
 				}
 
-				$wanted_book = $book
-					->wanted()
-					->where('user_id', '=', $user_id)
-					->first();
-				if (isset($wanted_book->id)) {
-					$wanted = $wanted_book->wanted;
-					$not_wanted = $wanted_book->not_wanted;
-				}
 			}
 
 			$cover = 0;
@@ -194,22 +185,24 @@ class BooksController extends Controller {
 				$similar[] = ElementsHelper::getSimilar($sim_options);
 			}
 
+			$options = array(
+				'rate' => $user_rate,
+				'genres' => $genres,
+				'cover' => $cover,
+				'similar' => collect($similar),
+				'collections' => $collections,
+				'relations' => $relations,
+				'writers' => $writers,
+				'publishers' => $publishers,
+			);
+
 			return View::make($this->prefix . '.item', array(
 				'request' => $request,
 				'element' => $book,
-				'writers' => $writers,
-				'publishers' => $publishers,
-				'genres' => $genres,
-				'collections' => $collections,
-				'cover' => $cover,
-				'rate' => $user_rate,
-				'wanted' => $wanted,
-				'not_wanted' => $not_wanted,
 				'comments' => $comments,
 				'section' => $section,
 				'rating' => $rating,
-				'relations' => $relations,
-				'similar' => collect($similar)
+				'options' => $options,
 			));
 
 		} else {
@@ -227,7 +220,7 @@ class BooksController extends Controller {
 
 		$user_rate = 0;
 		$wanted = 0;
-		$not_wanted = 0;
+		$unwanted = 0;
 		$cover = 0;
 		$similar = array();
 
@@ -270,7 +263,7 @@ class BooksController extends Controller {
 			'cover' => $cover,
 			'rate' => $user_rate,
 			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
+			'unwanted' => $unwanted,
 			'section' => $section,
 			'rating' => $rating,
 			'relations' => $relations,

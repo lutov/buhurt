@@ -8,16 +8,11 @@
 
 namespace App\Traits;
 
+use App\Models\User\Unwanted;
 use App\Models\User\Wanted;
 use Illuminate\Support\Facades\Auth;
 
 trait IsWantedTrait {
-
-	private $w_field = 'wanted';
-	private $w_value = 1;
-
-	private $nw_field = 'not_wanted';
-	private $nw_value = 1;
 
 	/**
 	 * @return bool
@@ -33,15 +28,10 @@ trait IsWantedTrait {
 			$wanted = Wanted::where('element_id', '=', $this->id)
 				->where('user_id', '=', Auth::user()->id)
 				->where('element_type', '=', $section->type)
-				->where($this->w_field, '=', $this->w_value)
 				->first()
 			;
 
-			if($wanted) {
-
-				$result = true;
-
-			}
+			if($wanted) {$result = true;}
 
 		}
 
@@ -52,7 +42,7 @@ trait IsWantedTrait {
 	/**
 	 * @return bool
 	 */
-	public function isNotWanted() {
+	public function isUnwanted() {
 
 		$result = false;
 
@@ -60,18 +50,13 @@ trait IsWantedTrait {
 
 			$section = $this->section();
 
-			$not_wanted = Wanted::where('element_id', '=', $this->id)
+			$unwanted = Unwanted::where('element_id', '=', $this->id)
 				->where('user_id', '=', Auth::user()->id)
 				->where('element_type', '=', $section->type)
-				->where($this->nw_field, '=', $this->nw_value)
 				->first()
 			;
 
-			if($not_wanted) {
-
-				$result = true;
-
-			}
+			if($unwanted) {$result = true;}
 
 		}
 

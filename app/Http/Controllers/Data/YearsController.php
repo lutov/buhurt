@@ -3,6 +3,7 @@
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
+use App\Models\User\Unwanted;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -92,11 +93,9 @@ class YearsController extends Controller {
 		if(Auth::check()) {
 
 			$user_id = Auth::user()->id;
-			$not_wanted = Wanted::select('element_id')
+			$unwanted = Unwanted::select('element_id')
 				->where('element_type', '=', $section->type)
-				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
-				//->remember(10)
 				->pluck('element_id')
 			;
 
@@ -109,7 +108,7 @@ class YearsController extends Controller {
 						;
 					})
 				)
-				->whereNotIn($section.'.id', $not_wanted)
+				->whereNotIn($section.'.id', $unwanted)
 				->where('year', '=', $year)
 				->paginate($limit)
 				//->toSql()

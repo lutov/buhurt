@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property mixed alt_name
+ * @property mixed type
  */
 class Section extends Model {
 

@@ -4,6 +4,7 @@ use App\Helpers\ElementsHelper;
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
+use App\Models\User\Unwanted;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class FilmsController extends Controller {
 		$order = TextHelper::checkOrder($order);
 
 		$wanted = array();
-		$not_wanted = array();
+		$unwanted = array();
 
 		if(Auth::check())  {
 
@@ -44,24 +45,20 @@ class FilmsController extends Controller {
 
 			$wanted = Wanted::select('element_id')
 				->where('element_type', '=', $section->type)
-				->where('wanted', '=', 1)
 				->where('user_id', '=', $user_id)
-				//->remember(10)
 				->pluck('element_id')
 				->toArray()
 			;
 
-			$not_wanted = Wanted::select('element_id')
+			$unwanted = Unwanted::select('element_id')
 				->where('element_type', '=', $section->type)
-				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
-				//->remember(10)
 				->pluck('element_id')
 				->toArray()
 			;
 
 			$elements = Film::where('verified', '=', 1)
-				->whereNotIn('id', $not_wanted)
+				->whereNotIn('id', $unwanted)
 				->with(array('rates' => function($query)
 					{
 						$query
@@ -85,7 +82,7 @@ class FilmsController extends Controller {
 			'footer' => true,
 			'paginate' => true,
 			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
+			'unwanted' => $unwanted,
 			'sort_list' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
@@ -117,9 +114,6 @@ class FilmsController extends Controller {
 			$actors = $film->actors;
 			$collections = $film->collections;
 			$similar = array();
-
-			//die('<pre>'.print_r($countries[0]->country, true).'</pre>');
-			//die('<pre>'.print_r($producers, true).'</pre>');
 
 			if(Auth::check()) {
 
@@ -160,23 +154,15 @@ class FilmsController extends Controller {
 			}
 
 			$user_rate = 0;
-			$wanted = 0;
-			$not_wanted = 0;
+
 			if (Auth::check()) {
+
 				$user_id = Auth::user()->id;
 				$rate = $film->rates()->where('user_id', '=', $user_id)->first();
 				if (isset($rate->rate)) {
 					$user_rate = $rate->rate;
 				}
 
-				$wanted_film = $film
-					->wanted()
-					->where('user_id', '=', $user_id)
-					->first();
-				if (isset($wanted_film->id)) {
-					$wanted = $wanted_film->wanted;
-					$not_wanted = $wanted_film->not_wanted;
-				}
 			}
 
 			$cover = 0;
@@ -203,29 +189,33 @@ class FilmsController extends Controller {
 				$similar[] = ElementsHelper::getSimilar($sim_options);
 			}
 
+			$options = array(
+				'rate' => $user_rate,
+				'genres' => $genres,
+				'cover' => $cover,
+				'similar' => collect($similar),
+				'collections' => $collections,
+				'relations' => $relations,
+				'countries' => $countries,
+				'directors' => $directors,
+				'screenwriters' => $screenwriters,
+				'producers' => $producers,
+				'actors' => $actors,
+			);
+
 			return View::make($this->prefix . '.item', array(
 				'request' => $request,
 				'element' => $film,
-				'screenwriters' => $screenwriters,
-				'producers' => $producers,
-				'directors' => $directors,
-				'actors' => $actors,
-				'genres' => $genres,
-				'collections' => $collections,
-				'countries' => $countries,
-				'cover' => $cover,
-				'rate' => $user_rate,
-				'wanted' => $wanted,
-				'not_wanted' => $not_wanted,
 				'comments' => $comments,
 				'section' => $section,
 				'rating' => $rating,
-				'relations' => $relations,
-				'similar' => collect($similar)
+				'options' => $options,
 			));
 
 		} else {
+
 			return Redirect::to('/base/films');
+
 		}
 	}
 
@@ -249,7 +239,7 @@ class FilmsController extends Controller {
 
 		$user_rate = 0;
 		$wanted = 0;
-		$not_wanted = 0;
+		$unwanted = 0;
 		$cover = 0;
 		$similar = array();
 
@@ -286,7 +276,7 @@ class FilmsController extends Controller {
 			'cover' => $cover,
 			'rate' => $user_rate,
 			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
+			'unwanted' => $unwanted,
 			'section' => $section,
 			'rating' => $rating,
 			'relations' => $relations,

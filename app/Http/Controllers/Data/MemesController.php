@@ -36,7 +36,7 @@ class MemesController extends Controller {
 		$order = TextHelper::checkOrder($order);
 
 		$wanted = array();
-		$not_wanted = array();
+		$unwanted = array();
 
 		if(Auth::check()) {
 
@@ -44,16 +44,14 @@ class MemesController extends Controller {
 
 			$wanted = Wanted::select('element_id')
 				->where('element_type', '=', $section->type)
-				->where('wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				//->remember(10)
 				->pluck('element_id')
 				->toArray()
 			;
 
-			$not_wanted = Wanted::select('element_id')
+			$unwanted = Wanted::select('element_id')
 				->where('element_type', '=', $section->type)
-				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				//->remember(10)
 				->pluck('element_id')
@@ -61,7 +59,7 @@ class MemesController extends Controller {
 			;
 
 			$elements = Meme::where('verified', '=', 1)
-				->whereNotIn('id', $not_wanted)
+				->whereNotIn('id', $unwanted)
 				->with(array('rates' => function($query)
 					{
 						$query
@@ -85,7 +83,7 @@ class MemesController extends Controller {
 			'footer' => true,
 			'paginate' => true,
 			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
+			'unwanted' => $unwanted,
 			'sort_list' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
@@ -109,15 +107,9 @@ class MemesController extends Controller {
 		$meme = Meme::find($id);
 
 		if(count($meme)) {
-			
-			//$tracks = $meme->tracks()->orderBy('order')->get();
-			//$publishers = $meme->publisher;
-			//$bands = $meme->bands()->orderBy('name')->get();
+
 			$genres = $meme->genres; $genres = $genres->sortBy('name')->reverse();
 			$collections = $meme->collections;
-
-			//die('<pre>'.print_r($genres, true).'</pre>');
-			//die('<pre>'.print_r($platforms, true).'</pre>');
 
 			if(Auth::check()) {
 
@@ -158,8 +150,7 @@ class MemesController extends Controller {
 			}
 
 			$user_rate = 0;
-			$wanted = 0;
-			$not_wanted = 0;
+
 			if (Auth::check()) {
 				$user_id = Auth::user()->id;
 				$rate = $meme->rates()->where('user_id', '=', $user_id)->first();
@@ -167,14 +158,6 @@ class MemesController extends Controller {
 					$user_rate = $rate->rate;
 				}
 
-				$wanted_meme = $meme
-					->wanted()
-					->where('user_id', '=', $user_id)
-					->first();
-				if (isset($wanted_meme->id)) {
-					$wanted = $wanted_meme->wanted;
-					$not_wanted = $wanted_meme->not_wanted;
-				}
 			}
 
 			$cover = 0;
@@ -204,23 +187,22 @@ class MemesController extends Controller {
 			}
 			*/
 
+			$options = array(
+				'rate' => $user_rate,
+				'genres' => $genres,
+				'cover' => $cover,
+				'similar' => collect($similar),
+				'collections' => $collections,
+				'relations' => $relations,
+			);
+
 			return View::make($this->prefix . '.item', array(
 				'request' => $request,
 				'element' => $meme,
-				//'tracks' => $tracks,
-				//'publishers' => $publishers,
-				//'bands' => $bands,
-				'genres' => $genres,
-				'collections' => $collections,
-				'cover' => $cover,
-				'rate' => $user_rate,
-				'wanted' => $wanted,
-				'not_wanted' => $not_wanted,
 				'comments' => $comments,
 				'section' => $section,
 				'rating' => $rating,
-				'relations' => $relations,
-				'similar' => collect($similar)
+				'options' => $options,
 			));
 		}
 		else {

@@ -15,13 +15,7 @@
 
 		{!! Breadcrumbs::render('element', $element) !!}
 
-		<?php
-		$info = array(
-			'cover' => $cover,
-		);
-		?>
-
-		{!! ElementsHelper::getCardBody($request, $parent->alt_name, $element, $info) !!}
+		{!! ElementsHelper::getCardBody($request, $parent->alt_name, $element, $options) !!}
 
 	</div>
 

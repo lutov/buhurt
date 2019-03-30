@@ -71,97 +71,106 @@ function show_registration() {
     });
 }
 
-function like(section, id) {
+function set_wanted(section, id) {
 
     var do_want = $('#want_'+id);
     var like_class = 'btn-outline-success';
     var liked_class = 'btn-success';
 
-    if(do_want.hasClass(like_class))
-    {
-        var path = '/like/'+section+'/'+id;
+    if(do_want.hasClass(like_class)) {
+
+        var path = '/set_wanted/'+section+'/'+id;
         $.post(
             path,
             {},
             function(data) {
+
                 do_want.removeClass(like_class);
                 do_want.addClass(liked_class);
                 //console.log(data);
-                show_popup(JSON.parse(data));
+                showToast(data);
+
             }
         );
+
     }
 
 }
 
-function unlike(section, id) {
+function unset_wanted(section, id) {
 
     var do_want = $('#want_'+id);
     var like_class = 'btn-outline-success';
     var liked_class = 'btn-success';
 
-    if(do_want.hasClass(liked_class))
-    {
-        var path = '/unlike/'+section+'/'+id;
+    if(do_want.hasClass(liked_class)) {
+
+        var path = '/unset_wanted/'+section+'/'+id;
         $.post(
             path,
             {},
-            function(data)
-            {
+            function(data) {
+
                 do_want.removeClass(liked_class);
                 do_want.addClass(like_class);
                 //console.log(data);
-                show_popup(JSON.parse(data));
+                showToast(data);
+
             }
         );
+
     }
 
 }
 
-function dislike(section, id) {
+function set_unwanted(section, id) {
 
     var do_not_want = $('#not_want_'+id);
     var dislike_class = 'btn-outline-danger';
     var disliked_class = 'btn-danger';
 
-    if(do_not_want.hasClass(dislike_class))
-    {
-        var path = '/dislike/'+section+'/'+id;
+    if(do_not_want.hasClass(dislike_class)) {
+
+        var path = '/set_unwanted/'+section+'/'+id;
         $.post(
             path,
             {},
-            function(data)
-            {
+            function(data) {
+
                 do_not_want.removeClass(dislike_class);
                 do_not_want.addClass(disliked_class);
                 //console.log(data);
-                show_popup(JSON.parse(data));
+                showToast(data);
+
             }
         );
+
     }
 
 }
 
-function undislike(section, id) {
+function unset_unwanted(section, id) {
 
     var do_not_want = $('#not_want_'+id);
     var dislike_class = 'btn-outline-danger';
     var disliked_class = 'btn-danger';
 
-    if(do_not_want.hasClass(disliked_class))
-    {
-        var path = '/undislike/'+section+'/'+id;
+    if(do_not_want.hasClass(disliked_class)) {
+
+        var path = '/unset_unwanted/'+section+'/'+id;
         $.post(
             path,
             {},
-            function(data)
-            {
+            function(data) {
+
                 do_not_want.removeClass(disliked_class);
                 do_not_want.addClass(dislike_class);
                 //console.log(data);
-                show_popup(JSON.parse(data));
+                showToast(data);
+
             }
         );
+
     }
 
 }
@@ -255,16 +264,6 @@ function lists(section, id) {
         }
     );
 
-}
-
-function scroll_to (elem) {
-    $('html, body').animate({ scrollTop: $(elem).offset().top }, 500);
-}
-
-function show_comment_form() {
-    var comment_form = $('#comment_form');
-    comment_form.show(600);
-    scroll_to(comment_form);
 }
 
 function comment_add(section, element) {
@@ -383,7 +382,6 @@ function bind_genres(block_id, field_id)
     });
 }
 
-
 /**
  * @param data
  */
@@ -429,5 +427,25 @@ function show_popup(data) {
             }, delay);
         })
     }
+
+}
+
+/**
+ *
+ * @param data
+ */
+function showToast(data) {
+
+    var toastBlock = $('#toast_block');
+    var toastTitle = $('#toast_title');
+    var toastContent = $('#toast_content');
+
+    var title = data.title;
+    toastTitle.html(title);
+
+    var inputMessage = data.message;
+    toastContent.html(inputMessage);
+
+    toastBlock.toast('show');
 
 }

@@ -4,6 +4,7 @@ use App\Helpers\ElementsHelper;
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
+use App\Models\User\Unwanted;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class AlbumsController extends Controller {
 		$order = TextHelper::checkOrder($order);
 
 		$wanted = array();
-		$not_wanted = array();
+		$unwanted = array();
 
 		if(Auth::check()) {
 
@@ -44,22 +45,20 @@ class AlbumsController extends Controller {
 
 			$wanted = Wanted::select('element_id')
 				->where('element_type', '=', $section->type)
-				->where('wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				->pluck('element_id')
 				->toArray()
 			;
 
-			$not_wanted = Wanted::select('element_id')
+			$unwanted = Unwanted::select('element_id')
 				->where('element_type', '=', $section->type)
-				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				->pluck('element_id')
 				->toArray()
 			;
 
 			$elements = Album::where('verified', '=', 1)
-				->whereNotIn('id', $not_wanted)
+				->whereNotIn('id', $unwanted)
 				->with(array('rates' => function($query)
 					{
 						$query
@@ -83,7 +82,7 @@ class AlbumsController extends Controller {
 			'footer' => true,
 			'paginate' => true,
 			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
+			'unwanted' => $unwanted,
 			'sort_list' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
@@ -109,13 +108,9 @@ class AlbumsController extends Controller {
 		if(count($album)) {
 			
 			$tracks = $album->tracks()->orderBy('order')->get();
-			//$publishers = $album->publisher;
 			$bands = $album->bands()->orderBy('name')->get();
 			$genres = $album->genres; $genres = $genres->sortBy('name')->reverse();
 			$collections = $album->collections;
-
-			//die('<pre>'.print_r($genres, true).'</pre>');
-			//die('<pre>'.print_r($platforms, true).'</pre>');
 
 			if(Auth::check()) {
 
@@ -156,23 +151,15 @@ class AlbumsController extends Controller {
 			}
 
 			$user_rate = 0;
-			$wanted = 0;
-			$not_wanted = 0;
+
 			if (Auth::check()) {
+
 				$user_id = Auth::user()->id;
 				$rate = $album->rates()->where('user_id', '=', $user_id)->first();
 				if (isset($rate->rate)) {
 					$user_rate = $rate->rate;
 				}
 
-				$wanted_album = $album
-					->wanted()
-					->where('user_id', '=', $user_id)
-					->first();
-				if (isset($wanted_album->id)) {
-					$wanted = $wanted_album->wanted;
-					$not_wanted = $wanted_album->not_wanted;
-				}
 			}
 
 			$cover = 0;
@@ -200,27 +187,30 @@ class AlbumsController extends Controller {
 				$similar[] = ElementsHelper::getSimilar($sim_options);
 			}
 
+			$options = array(
+				'rate' => $user_rate,
+				'genres' => $genres,
+				'cover' => $cover,
+				'similar' => collect($similar),
+				'collections' => $collections,
+				'relations' => $relations,
+				'bands' => $bands,
+				'tracks' => $tracks,
+			);
+
 			return View::make($this->prefix . '.item', array(
 				'request' => $request,
 				'element' => $album,
-				'tracks' => $tracks,
-				//'publishers' => $publishers,
-				'bands' => $bands,
-				'genres' => $genres,
-				'collections' => $collections,
-				'cover' => $cover,
-				'rate' => $user_rate,
-				'wanted' => $wanted,
-				'not_wanted' => $not_wanted,
 				'comments' => $comments,
 				'section' => $section,
 				'rating' => $rating,
-				'relations' => $relations,
-				'similar' => collect($similar)
+				'options' => $options,
 			));
-		}
-		else {
+
+		} else {
+
 			return Redirect::to('/albums/');
+
 		}
 	}
 

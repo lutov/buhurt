@@ -39,16 +39,16 @@
 
 			{!! ElementsHelper::getHeader($request, $options['sort_list']); !!}
 
-			<?php $options['wanted'] = $wanted['books']; $options['not_wanted'] = $not_wanted['books']; ?>
+			<?php $options['wanted'] = $wanted['books']; $options['unwanted'] = $unwanted['books']; ?>
 			{!! ElementsHelper::getElements($request, $books, 'books', $options) !!}
 
-			<?php $options['wanted'] = $wanted['films']; $options['not_wanted'] = $not_wanted['films']; ?>
+			<?php $options['wanted'] = $wanted['films']; $options['unwanted'] = $unwanted['films']; ?>
 			{!! ElementsHelper::getElements($request, $films, 'films', $options) !!}
 
-			<?php $options['wanted'] = $wanted['games']; $options['not_wanted'] = $not_wanted['games']; ?>
+			<?php $options['wanted'] = $wanted['games']; $options['unwanted'] = $unwanted['games']; ?>
 			{!! ElementsHelper::getElements($request, $games, 'games', $options) !!}
 
-			<?php $options['wanted'] = $wanted['albums']; $options['not_wanted'] = $not_wanted['albums']; ?>
+			<?php $options['wanted'] = $wanted['albums']; $options['unwanted'] = $unwanted['albums']; ?>
 			{!! ElementsHelper::getElements($request, $albums, 'albums', $options) !!}
 
 			{!! ElementsHelper::getFooter(); !!}

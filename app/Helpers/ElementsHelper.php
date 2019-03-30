@@ -226,10 +226,10 @@ class ElementsHelper {
 
 						if ($element->isWanted()) {
 							$class = 'btn btn-sm btn-success';
-							$handler = 'onclick="unlike(\'' . $section . '\', \'' . $element->id . '\')"';
+							$handler = 'onclick="unset_wanted(\'' . $section . '\', \'' . $element->id . '\')"';
 						} else {
 							$class = 'btn btn-sm btn-outline-success';
-							$handler = 'onclick="like(\'' . $section . '\', \'' . $element->id . '\')"';
+							$handler = 'onclick="set_wanted(\'' . $section . '\', \'' . $element->id . '\')"';
 						}
 						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Хочу">';
 						$elements_list .= '&#10084;';
@@ -247,12 +247,12 @@ class ElementsHelper {
 
 					if(method_exists($element, 'not_wanted')) {
 
-						if ($element->isNotWanted()) {
+						if ($element->isUnwanted()) {
 							$class = 'btn btn-sm btn-danger';
-							$handler = 'onclick="undislike(\'' . $section . '\', \'' . $element->id . '\')"';
+							$handler = 'onclick="unset_unwanted(\'' . $section . '\', \'' . $element->id . '\')"';
 						} else {
 							$class = 'btn btn-sm btn-outline-danger';
-							$handler = 'onclick="dislike(\'' . $section . '\', \'' . $element->id . '\')"';
+							$handler = 'onclick="set_unwanted(\'' . $section . '\', \'' . $element->id . '\')"';
 						}
 						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="not_want_' . $element->id . '" title="Не хочу">';
 						$elements_list .= '&#9785;';
@@ -653,10 +653,10 @@ class ElementsHelper {
 
 								if ($element->isWanted()) {
 									$class = 'btn btn-sm btn-success';
-									$handler = 'onclick="unlike(\'' . $section . '\', \'' . $element->id . '\')"';
+									$handler = 'onclick="unset_wanted(\'' . $section . '\', \'' . $element->id . '\')"';
 								} else {
 									$class = 'btn btn-sm btn-outline-success';
-									$handler = 'onclick="like(\'' . $section . '\', \'' . $element->id . '\')"';
+									$handler = 'onclick="set_wanted(\'' . $section . '\', \'' . $element->id . '\')"';
 								}
 								$element_body .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Хочу">';
 								$element_body .= '&#10084;';
@@ -666,12 +666,12 @@ class ElementsHelper {
 
 							if (method_exists($element, 'not_wanted')) {
 
-								if ($element->isNotWanted()) {
+								if ($element->isUnwanted()) {
 									$class = 'btn btn-sm btn-danger';
-									$handler = 'onclick="undislike(\'' . $section . '\', \'' . $element->id . '\')"';
+									$handler = 'onclick="unset_unwanted(\'' . $section . '\', \'' . $element->id . '\')"';
 								} else {
 									$class = 'btn btn-sm btn-outline-danger';
-									$handler = 'onclick="dislike(\'' . $section . '\', \'' . $element->id . '\')"';
+									$handler = 'onclick="set_unwanted(\'' . $section . '\', \'' . $element->id . '\')"';
 								}
 								$element_body .= '<button type="button" class="' . $class . '" ' . $handler . ' id="not_want_' . $element->id . '" title="Не хочу">';
 								$element_body .= '&#9785;';

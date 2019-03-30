@@ -212,11 +212,13 @@ Route::group(array('middleware' => 'auth'), function() {
 		Route::post('unrate/{section}/{id}', array('uses' => 'User\RatesController@unrate'));
 	});
 
-	// Wanted & Unwanted
-	Route::post('like/{section}/{id}', array('uses' => 'User\WantedController@like'))->where('id', '[0-9]+');
-		Route::post('unlike/{section}/{id}', array('uses' => 'User\WantedController@unlike'))->where('id', '[0-9]+');
-	Route::post('dislike/{section}/{id}', array('uses' => 'User\WantedController@dislike'))->where('id', '[0-9]+');
-		Route::post('undislike/{section}/{id}', array('uses' => 'User\WantedController@undislike'))->where('id', '[0-9]+');
+	// Wanted
+	Route::post('set_wanted/{section}/{id}', array('uses' => 'User\WantedController@setWanted'))->where('id', '[0-9]+');
+	Route::post('unset_wanted/{section}/{id}', array('uses' => 'User\WantedController@unsetWanted'))->where('id', '[0-9]+');
+
+	// Unwanted
+	Route::post('set_unwanted/{section}/{id}', array('uses' => 'User\UnwantedController@setUnwanted'))->where('id', '[0-9]+');
+	Route::post('unset_unwanted/{section}/{id}', array('uses' => 'User\UnwantedController@unsetUnwanted'))->where('id', '[0-9]+');
 
 	// Achievements
 	Route::group(array('prefix' => 'achievements'), function () {
@@ -285,7 +287,7 @@ Route::group(array('prefix' => 'user'), function() {
 	Route::any('{id}/rates/{section}/export', array('uses' => 'User\UserController@rates_export'));
 
 	Route::any('{id}/wanted/{section}', array('uses' => 'User\UserController@wanted'));
-	Route::any('{id}/not_wanted/{section}', array('uses' => 'User\UserController@not_wanted'));
+	Route::any('{id}/unwanted/{section}', array('uses' => 'User\UserController@unwanted'));
 
 	Route::any('{id}/options', array('uses' => 'User\UserController@options'));
 

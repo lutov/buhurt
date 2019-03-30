@@ -3,6 +3,7 @@
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
+use App\Models\User\Unwanted;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -92,9 +93,8 @@ class GenresController extends Controller {
 		if(Auth::check()) {
 
 			$user_id = Auth::user()->id;
-			$not_wanted = Wanted::select('element_id')
+			$unwanted = Unwanted::select('element_id')
 				->where('element_type', '=', $section->type)
-				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				//->remember(10)
 				->pluck('element_id')
@@ -104,7 +104,7 @@ class GenresController extends Controller {
 				->leftJoin('elements_genres', $section->alt_name.'.id', '=', 'elements_genres.element_id')
 				->where('genre_id', '=', $id)
 				->where('element_type', '=', $section->type)
-				->whereNotIn($section->alt_name.'.id', $not_wanted)
+				->whereNotIn($section->alt_name.'.id', $unwanted)
 				->with(array('rates' => function($query) use($user_id, $section)
 					{
 						$query
@@ -133,6 +133,12 @@ class GenresController extends Controller {
 
 		if(!empty($genre)) {
 
+			$cover = 0;
+			$file_path = public_path() . '/data/img/covers/'.$parent->alt_name.'/' . $id . '.jpg';
+			if (file_exists($file_path)) {
+				$cover = $id;
+			}
+
 			$options = array(
 				'header' => true,
 				'footer' => true,
@@ -140,13 +146,8 @@ class GenresController extends Controller {
 				'sort_list' => $sort_options,
 				'sort' => $sort,
 				'order' => $order,
+				'cover' => $cover,
 			);
-
-			$cover = 0;
-			$file_path = public_path() . '/data/img/covers/'.$parent->alt_name.'/' . $id . '.jpg';
-			if (file_exists($file_path)) {
-				$cover = $id;
-			}
 
 			$genre->setParent($section);
 

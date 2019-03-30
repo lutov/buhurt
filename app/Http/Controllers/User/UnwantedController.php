@@ -2,21 +2,21 @@
 
 use App\Helpers\SectionsHelper;
 use App\Http\Controllers\Controller;
+use App\Models\User\Unwanted;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User\Wanted;
 
-class WantedController extends Controller {
+class UnwantedController extends Controller {
 
-	private $section = 'wanted';
+	private $section = 'unwanted';
 
 	/**
 	 * @param $section
 	 * @param $id
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-    public function setWanted($section, $id) {
+    public function setUnwanted($section, $id) {
 
-    	$result = array();
+		$result = array();
 
 		if(Auth::check()) {
 
@@ -24,7 +24,7 @@ class WantedController extends Controller {
 			$section = SectionsHelper::getSection($section);
 			$type = $section->type;
 
-			$exists = Wanted::where('element_type', '=', $type)
+			$exists = Unwanted::where('element_type', '=', $type)
 				->where('element_id', '=', $id)
 				->where('user_id', '=', $user_id)
 				->first()
@@ -32,19 +32,19 @@ class WantedController extends Controller {
 
 			if(!isset($exists->id)) {
 
-				$wanted = new Wanted();
-				$wanted->user_id = $user_id;
-				$wanted->element_type = $type;
-				$wanted->element_id = $id;
-				$wanted->save();
+				$unwanted = new Unwanted();
+				$unwanted->user_id = $user_id;
+				$unwanted->element_type = $type;
+				$unwanted->element_id = $id;
+				$unwanted->save();
 
-				$result = array("message" => "Произведение добавлено в список желаемого");
+				$result = array("message" => "Произведение добавлено в список нежелаемого");
 
 			} else {
 
-				$wanted = $exists;
+				$unwanted = $exists;
 
-				$result = array("message" => "Произведение уже в списке желаемого");
+				$result = array("message" => "Произведение уже находится в списке нежелаемого");
 
 			}
 
@@ -60,7 +60,7 @@ class WantedController extends Controller {
 	 * @return \Illuminate\Http\JsonResponse
 	 * @throws \Exception
 	 */
-    public function unsetWanted($section, $id) {
+	public function unsetUnwanted($section, $id) {
 
 		$result = array();
 
@@ -70,7 +70,7 @@ class WantedController extends Controller {
 			$section = SectionsHelper::getSection($section);
 			$type = $section->type;
 
-			$exists = Wanted::where('element_type', '=', $type)
+			$exists = Unwanted::where('element_type', '=', $type)
 				->where('element_id', '=', $id)
 				->where('user_id', '=', $user_id)
 				->first()
@@ -79,17 +79,19 @@ class WantedController extends Controller {
 			if(isset($exists->id)) {
 
 				$exists->delete();
-				$result = array("message" => "Произведение удалено из списка желаемого");
+
+				$result = array("message" => "Произведение удалено из списка нежелаемого");
 
 			} else {
 
-				$result = array("message" => "Произведение отсутствует в списке желаемого");
+				$result = array("message" => "Произведение отсутствует в списке нежелаемого");
 
 			}
+
 		}
 
 		return response()->json($result);
 
-    }
-
+	}
+	
 }

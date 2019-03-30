@@ -7,6 +7,7 @@ use App\Models\User\Event;
 use App\Helpers\RolesHelper;
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
+use App\Models\User\Unwanted;
 use App\Models\User\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -232,68 +233,73 @@ class UserController extends Controller {
 			}
 
 			$rates = new Rate();
-			$wants = new Wanted();
+			$wanted = new Wanted();
+			$unwanted = new Unwanted();
 			$option = new Option();
 			$achievement = new Achievement();
 
 			$books_rated = $rates
 				->where('element_type', '=', 'Book')
 				->where('user_id', '=', $user->id)
-				->count('id');
+				->count('id')
+			;
 			$films_rated = $rates
 				->where('element_type', '=', 'Film')
 				->where('user_id', '=', $user->id)
-				->count('id');
+				->count('id')
+			;
 			$games_rated = $rates
 				->where('element_type', '=', 'Game')
 				->where('user_id', '=', $user->id)
-				->count('id');
+				->count('id')
+			;
 			$albums_rated = $rates
 				->where('element_type', '=', 'Album')
 				->where('user_id', '=', $user->id)
-				->count('id');
+				->count('id')
+			;
 
-			$books_wanted = $wants
-				->where('wanted', '=', 1)
+			$books_wanted = $wanted
 				->where('element_type', '=', 'Book')
 				->where('user_id', '=', $user->id)
-				->count('id');
-			$films_wanted = $wants
-				->where('wanted', '=', 1)
+				->count('id')
+			;
+			$films_wanted = $wanted
 				->where('element_type', '=', 'Film')
 				->where('user_id', '=', $user->id)
-				->count('id');
-			$games_wanted = $wants
-				->where('wanted', '=', 1)
+				->count('id')
+			;
+			$games_wanted = $wanted
 				->where('element_type', '=', 'Game')
 				->where('user_id', '=', $user->id)
-				->count('id');
-			$albums_wanted = $wants
-				->where('wanted', '=', 1)
+				->count('id')
+			;
+			$albums_wanted = $wanted
 				->where('element_type', '=', 'Album')
 				->where('user_id', '=', $user->id)
-				->count('id');
+				->count('id')
+			;
 
-			$books_not_wanted = $wants
-				->where('not_wanted', '=', 1)
+			$books_unwanted = $unwanted
 				->where('element_type', '=', 'Book')
 				->where('user_id', '=', $user->id)
-				->count('id');
-			$films_not_wanted = $wants
-				->where('not_wanted', '=', 1)
+				->count('id')
+			;
+			$films_unwanted = $unwanted
 				->where('element_type', '=', 'Film')
 				->where('user_id', '=', $user->id)
-				->count('id');
-			$games_not_wanted = $wants
-				->where('not_wanted', '=', 1)
+				->count('id')
+			;
+			$games_unwanted = $unwanted
 				->where('element_type', '=', 'Game')
 				->where('user_id', '=', $user->id)
-				->count('id');
-			$albums_not_wanted = $wants
-				->where('not_wanted', '=', 1)
+				->count('id')
+			;
+			$albums_unwanted = $unwanted
 				->where('element_type', '=', 'Album')
 				->where('user_id', '=', $user->id)
-				->count('id');
+				->count('id')
+			;
 
 			$achievements = $achievement->all();
 			$user_achievements = $user
@@ -347,10 +353,10 @@ class UserController extends Controller {
 				'films_wanted' => $films_wanted,
 				'games_wanted' => $games_wanted,
 				'albums_wanted' => $albums_wanted,
-				'books_not_wanted' => $books_not_wanted,
-				'films_not_wanted' => $films_not_wanted,
-				'games_not_wanted' => $games_not_wanted,
-				'albums_not_wanted' => $albums_not_wanted,
+				'books_unwanted' => $books_unwanted,
+				'films_unwanted' => $films_unwanted,
+				'games_unwanted' => $games_unwanted,
+				'albums_unwanted' => $albums_unwanted,
 				'achievements' => $achievements,
 				'user_achievements' => $user_achievements,
 				'options' => $options,
@@ -551,7 +557,6 @@ class UserController extends Controller {
 			$user_id = $user->id;
 			$wanted = Wanted::select('element_id')
 				->where('element_type', '=', $type)
-				->where('wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				//->remember(10)
 				->pluck('element_id')
@@ -590,7 +595,7 @@ class UserController extends Controller {
 	 * @param $section
 	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
 	 */
-	public function not_wanted(Request $request, $id, $section) {
+	public function unwanted(Request $request, $id, $section) {
 
 		if(Auth::check() && $id == Auth::user()->id) {
 
@@ -620,9 +625,8 @@ class UserController extends Controller {
 			);
 
 			$user_id = $user->id;
-			$not_wanted = Wanted::select('element_id')
+			$unwanted = Unwanted::select('element_id')
 				->where('element_type', '=', $type)
-				->where('not_wanted', '=', 1)
 				->where('user_id', '=', $user_id)
 				//->remember(10)
 				->pluck('element_id')
@@ -637,11 +641,11 @@ class UserController extends Controller {
 						;
 					})
 				)
-				->whereIn($section.'.id', $not_wanted)
+				->whereIn($section.'.id', $unwanted)
 				->paginate($limit)
 			;
 
-			return View::make('user.not_wanted.index', array(
+			return View::make('user.unwanted.index', array(
 				'request' => $request,
 				'user' => $user,
 				'section' => $section,

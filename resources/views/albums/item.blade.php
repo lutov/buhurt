@@ -11,30 +11,15 @@
 
 	<div itemscope itemtype="http://schema.org/MusicAlbum">
 
-		<?php // move it to controller obviously
-		$info = array(
-			'rate' => $rate,
-			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
-			'genres' => $genres,
-			'cover' => $cover,
-			'similar' => $similar,
-			'collections' => $collections,
-			'relations' => $relations,
-			'bands' => $bands,
-			'tracks' => $tracks,
-		);
-		?>
-
-		{!! ElementsHelper::getCardHeader($request, $section->alt_name, $element, $info) !!}
+		{!! ElementsHelper::getCardHeader($request, $section->alt_name, $element, $options) !!}
 
 			<section class="text-center mt-5 mb-3">
 				{!! Breadcrumbs::render('element', $element) !!}
 			</section>
 
-		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $info) !!}
+		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
 
-		{!! ElementsHelper::getCardFooter($request, $section->alt_name, $element, $info) !!}
+		{!! ElementsHelper::getCardFooter($request, $section->alt_name, $element, $options) !!}
 
 	</div>
 

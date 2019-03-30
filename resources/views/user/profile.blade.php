@@ -66,7 +66,7 @@
 				</p>
 			@endif
 
-			@if(0 != $books_wanted || 0 != $films_wanted || 0 != $games_wanted)
+			@if(0 != $books_wanted || 0 != $films_wanted || 0 != $games_wanted || 0 != $albums_wanted)
 				<p>
 					Хочет
 					@if(0 != $books_wanted)
@@ -84,21 +84,21 @@
 				</p>
 			@endif
 
-			@if(0 != $books_not_wanted || 0 != $films_not_wanted || 0 != $games_not_wanted)
+			@if(0 != $books_unwanted || 0 != $films_unwanted || 0 != $games_unwanted || 0 != $albums_unwanted)
 				<p>
 
 					Не хочет
-					@if(0 != $books_not_wanted)
-						читать <a href="{!! URL::action('User\UserController@not_wanted', array($user->id, 'books')) !!}" >{!! TextHelper::number($books_not_wanted, array('книгу', 'книги', 'книг')) !!}</a>,
+					@if(0 != $books_unwanted)
+						читать <a href="{!! URL::action('User\UserController@unwanted', array($user->id, 'books')) !!}" >{!! TextHelper::number($books_unwanted, array('книгу', 'книги', 'книг')) !!}</a>,
 					@endif
-					@if(0 != $films_not_wanted)
-						смотреть <a href="{!! URL::action('User\UserController@not_wanted', array($user->id, 'films')) !!}" >{!! TextHelper::number($films_not_wanted, array('фильм', 'фильма', 'фильмов')) !!}</a>,
+					@if(0 != $films_unwanted)
+						смотреть <a href="{!! URL::action('User\UserController@unwanted', array($user->id, 'films')) !!}" >{!! TextHelper::number($films_unwanted, array('фильм', 'фильма', 'фильмов')) !!}</a>,
 					@endif
-					@if(0 != $games_not_wanted)
-						играть в <a href="{!! URL::action('User\UserController@not_wanted', array($user->id, 'games')) !!}" >{!! TextHelper::number($games_not_wanted, array('игру', 'игры', 'игр')) !!}</a>,
+					@if(0 != $games_unwanted)
+						играть в <a href="{!! URL::action('User\UserController@unwanted', array($user->id, 'games')) !!}" >{!! TextHelper::number($games_unwanted, array('игру', 'игры', 'игр')) !!}</a>,
 					@endif
-					@if(0 != $albums_not_wanted)
-						слушать <a href="{!! URL::action('User\UserController@not_wanted', array($user->id, 'albums')) !!}" >{!! TextHelper::number($albums_not_wanted, array('альбом', 'альбома', 'альбомов')) !!}</a>
+					@if(0 != $albums_unwanted)
+						слушать <a href="{!! URL::action('User\UserController@unwanted', array($user->id, 'albums')) !!}" >{!! TextHelper::number($albums_unwanted, array('альбом', 'альбома', 'альбомов')) !!}</a>
 					@endif
 				</p>
 			@endif

@@ -70,14 +70,14 @@ $(document).ready(function() {
         $.post(path, params, function(data) {
 
             //console.log(data);
-            show_popup(data);
+            showToast(data);
 
         }, 'json');
 
         $.post('/achievements', {}, function(data) {
 
             //console.log(data);
-            //show_popup(data);
+            //showToast(data);
 
         }, 'json');
 
@@ -99,7 +99,7 @@ $(document).ready(function() {
         $.post(path, params, function(data) {
 
             //console.log(data);
-            show_popup(data);
+            showToast(data);
 
         }, 'json');
 
