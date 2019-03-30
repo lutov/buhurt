@@ -23,23 +23,7 @@
 
 	<div itemscope itemtype="http://schema.org/Person">
 
-		<?php
-		$info = array(
-			//'rate' => $rate,
-			//'wanted' => $wanted,
-			//'not_wanted' => $not_wanted,
-			//'genres' => $genres,
-			//'top_genres' => $top_genres,
-			'cover' => $cover,
-			//'similar' => $similar,
-			//'collections' => $collections,
-			//'relations' => $relations,
-			//'writers' => $writers,
-			//'publishers' => $publishers,
-		);
-		?>
-
-		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $info) !!}
+		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
 
 	</div>
 

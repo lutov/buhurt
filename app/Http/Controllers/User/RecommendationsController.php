@@ -3,8 +3,8 @@
 use App\Http\Controllers\Controller;
 use App\Helpers\DummyHelper;
 use App\Helpers\SectionsHelper;
-use App\Models\Data\NotWanted;
 use App\Models\User\Rate;
+use App\Models\User\Unwanted;
 use App\Models\User\Wanted;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
@@ -43,7 +43,7 @@ class RecommendationsController extends Controller {
 		$limit = DummyHelper::inputOrSession($request, 'recommendations', 'limit', '15');
 
 		$include_wanted = DummyHelper::inputOrSession($request, 'include_wanted', 'include_wanted', 0);
-		$include_not_wanted = DummyHelper::inputOrSession($request, 'include_not_wanted', 'include_not_wanted', 0);
+		$include_unwanted = DummyHelper::inputOrSession($request, 'include_unwanted', 'include_unwanted', 0);
 
 		$minutes = 60 * 24;
 
@@ -81,14 +81,14 @@ class RecommendationsController extends Controller {
 
 			}
 
-			if (1 !== $include_not_wanted) {
+			if (1 !== $include_unwanted) {
 
-				$not_wanted = NotWanted::where('user_id', '=', Auth::user()->id)
+				$unwanted = Unwanted::where('user_id', '=', Auth::user()->id)
 					->where('element_type', '=', $type)
 					->pluck('element_id')
 					->toArray()
 				;
-				$exclude = array_merge($exclude, $not_wanted);
+				$exclude = array_merge($exclude, $unwanted);
 
 			}
 
@@ -212,7 +212,7 @@ class RecommendationsController extends Controller {
 				),
 				'limit' => $limit,
 				'include_wanted' => $include_wanted,
-				'include_not_wanted' => $include_not_wanted,
+				'include_unwanted' => $include_unwanted,
 			),
 			'elements' => $elements,
 			'forms' => $forms,

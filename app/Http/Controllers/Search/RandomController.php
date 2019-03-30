@@ -178,8 +178,6 @@ class RandomController extends Controller {
 		$publisher = TextHelper::mb_ucwords($publisher);
 		$comments = '';
 		$user_rate = 0;
-		$wanted = 0;
-		$not_wanted = 0;
 		$cover = 0;
 		$section = 'books';
 
@@ -192,8 +190,6 @@ class RandomController extends Controller {
 			'publisher' => $publisher,
 			'cover' => $cover,
 			'rate' => $user_rate,
-			'wanted' => $wanted,
-			'not_wanted' => $not_wanted,
 			'comments' => $comments,
 			'section' => $section
 		));

@@ -211,8 +211,8 @@
 						<label class="custom-control-label" for="include_wanted">Включать произведения из списка желаемого</label>
 					</div>
 					<div class="custom-control custom-checkbox">
-						<input type="checkbox" class="custom-control-input" name="include_not_wanted" value="1" id="include_not_wanted" @if($options['include_not_wanted']) checked @endif>
-						<label class="custom-control-label" for="include_not_wanted">Включать произведения из списка нежелаемого</label>
+						<input type="checkbox" class="custom-control-input" name="include_unwanted" value="1" id="include_unwanted" @if($options['include_unwanted']) checked @endif>
+						<label class="custom-control-label" for="include_unwanted">Включать произведения из списка нежелаемого</label>
 					</div>
 
 				</div>

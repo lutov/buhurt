@@ -23,7 +23,7 @@ trait WantedTrait {
 	/**
 	 * @return mixed
 	 */
-	public function not_wanted() {
+	public function unwanted() {
 
 		return $this->morphMany('App\Models\User\Unwanted', 'element');
 

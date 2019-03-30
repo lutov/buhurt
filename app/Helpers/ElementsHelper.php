@@ -154,7 +154,7 @@ class ElementsHelper {
 				||
 				method_exists($element, 'rates')
 				||
-				method_exists($element, 'not_wanted')
+				method_exists($element, 'unwanted')
 			) ) {
 
 				$elements_list .= '<div class="card-body text-center d-none d-xl-block">';
@@ -209,7 +209,7 @@ class ElementsHelper {
 
 				}
 
-				if(method_exists($element, 'wanted') || 	method_exists($element, 'not_wanted') || (RolesHelper::isAdmin($request))) {
+				if(method_exists($element, 'wanted') || 	method_exists($element, 'unwanted') || (RolesHelper::isAdmin($request))) {
 
 					$elements_list .= '<div class="mt-3">';
 					$elements_list .= '<div class="btn-group">';
@@ -245,7 +245,7 @@ class ElementsHelper {
 						$elements_list .= '</button>';
 					}
 
-					if(method_exists($element, 'not_wanted')) {
+					if(method_exists($element, 'unwanted')) {
 
 						if ($element->isUnwanted()) {
 							$class = 'btn btn-sm btn-danger';
@@ -630,7 +630,7 @@ class ElementsHelper {
 						if(
 							method_exists($element, 'wanted')
 							||
-							method_exists($element, 'not_wanted')
+							method_exists($element, 'unwanted')
 							||
 							RolesHelper::isAdmin($request)
 						) {
@@ -664,7 +664,7 @@ class ElementsHelper {
 
 							}
 
-							if (method_exists($element, 'not_wanted')) {
+							if (method_exists($element, 'unwanted')) {
 
 								if ($element->isUnwanted()) {
 									$class = 'btn btn-sm btn-danger';

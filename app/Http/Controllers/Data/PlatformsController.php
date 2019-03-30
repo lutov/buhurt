@@ -3,6 +3,7 @@
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
+use App\Models\User\Unwanted;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
@@ -85,9 +86,8 @@ class PlatformsController extends Controller {
 			if(Auth::check()) {
 
 				$user_id = Auth::user()->id;
-				$not_wanted = Wanted::select('element_id')
+				$unwanted = Unwanted::select('element_id')
 					->where('element_type', '=', $section->type)
-					->where('not_wanted', '=', 1)
 					->where('user_id', '=', $user_id)
 					->pluck('element_id')
 				;
@@ -101,7 +101,7 @@ class PlatformsController extends Controller {
 							;
 						})
 					)
-					->whereNotIn($section->alt_name.'.id', $not_wanted)
+					->whereNotIn($section->alt_name.'.id', $unwanted)
 					->paginate($limit)
 				;
 

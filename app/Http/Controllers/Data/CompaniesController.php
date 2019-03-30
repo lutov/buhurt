@@ -87,13 +87,13 @@ class CompaniesController extends Controller {
 				'sort_list' => $sort_options,
 				'sort' => $sort,
 				'order' => $order,
+				'cover' => $logo,
 			);
 
 			return View::make($this->prefix . '.item', array(
 				'request' => $request,
 				'section' => $section,
 				'element' => $company,
-				'cover' => $logo,
 				'books_published' => $books_published,
 				'games_developed' => $games_developed,
 				'games_published' => $games_published,
