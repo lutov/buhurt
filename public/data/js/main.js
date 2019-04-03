@@ -180,13 +180,13 @@ function add_to_list(section, id, list_id) {
     var path = '/lists/add_to_lists/';
     $.post(
         path,
-        {element_data: {
-            element_id: id,
-            element_type: section
+        {
+            id: id,
+            section: section,
+            list_id: list_id
         },
-        list_id: list_id},
         function (post_data) {
-            console.log(post_data);
+            //console.log(post_data);
         });
 
 }
@@ -196,13 +196,13 @@ function remove_from_list(section, id, list_id) {
     var path = '/lists/remove_from_lists/';
     $.post(
         path,
-        {element_data: {
-            element_id: id,
-            element_type: section
+        {
+            id: id,
+            section: section,
+            list_id: list_id
         },
-        list_id: list_id},
         function (post_data) {
-            console.log(post_data);
+            //console.log(post_data);
         });
 
 }
@@ -222,6 +222,44 @@ function toggle_list(section, id, box) {
         remove_from_list(section, id, check.val());
 
     }
+
+}
+
+/**
+ *
+ * @param section
+ * @param id
+ * @param name
+ */
+function add_list(section, id) {
+
+    var path = '/lists/add_list/';
+
+    var name = $('#new_list').val();
+
+    $.post(path, {name: name}, function (post_data) {
+
+        lists(section, id);
+
+    });
+
+}
+
+/**
+ *
+ * @param section
+ * @param id
+ * @param list_id
+ */
+function remove_list(section, id, list_id) {
+
+    var path = '/lists/remove_list/';
+
+    $.post(path, {list_id: list_id}, function (post_data) {
+
+        lists(section, id);
+
+    });
 
 }
 
@@ -249,8 +287,25 @@ function lists(section, id) {
                 lists += '</label>';
                 lists += '</div>';
 
+                $.post(
+                    '/lists/find_element',
+                    {
+                        id: id,
+                        section: section,
+                        list_id: value.id
+                    },
+                    function(list_data) {if(list_data.id) {$('#list_'+value.id).prop('checked', true);}}
+                );
+
             });
 
+            lists += '</form>';
+
+            lists += '<form method="POST">';
+            lists += '<div>';
+            lists += '<input type="text" name="new_list" id="new_list" placeholder="Новый список" class="form-control">';
+            lists += '<button class="btn btn-outline-primary" type="button" onclick="add_list(\''+section+'\', \''+id+'\')">Создать</button>';
+            lists += '</div>';
             lists += '</form>';
 
             var data = {

@@ -2,8 +2,10 @@ $(document).ready(function() {
 
     var main_rating = $('.main_rating');
 
-    var element_section = $('#element_section');
-    var element_id = $('#element_id');
+    var element_section = $('#element_section').val();
+    var element_id = $('#element_id').val();
+    var element_name = $('#buhurt_name').html();
+    var element_alt_name = $('#buhurt_alt_name').html();
 
     main_rating.rating({
 
@@ -59,9 +61,9 @@ $(document).ready(function() {
 
         var path = '/rates/rate/';
 
-        path += element_section.val();
+        path += element_section;
         path += '/';
-        path += element_id.val();
+        path += element_id;
 
         var params = {
             rate_val: value
@@ -90,9 +92,9 @@ $(document).ready(function() {
 
         var path = '/rates/unrate/';
 
-        path += element_section.val();
+        path += element_section;
         path += '/';
-        path += element_id.val();
+        path += element_id;
 
         var params = {};
 
@@ -102,6 +104,23 @@ $(document).ready(function() {
             showToast(data);
 
         }, 'json');
+
+    });
+
+    var full_cover = '';
+    full_cover += '<div class="modal_images text-center">';
+    full_cover += '<img src="/data/img/covers/'+element_section+'/'+element_id+'.jpg" alt="" class="img-fluid rounded">';
+    full_cover += '</div>';
+
+    var cover_data = {
+        title: element_name,
+        message: full_cover,
+        leave: true
+    };
+
+    $('.buhurt-cover').on('click', function() {
+
+        show_popup(cover_data);
 
     });
 

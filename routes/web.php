@@ -310,6 +310,7 @@ Route::group(array('prefix' => 'lists'), function() {
 	Route::any('get_list', array('uses' => 'User\ListsController@getList'));
 
 	/* LIST ELEMENT */
+	Route::any('find_element', array('uses' => 'User\ListsController@findElement'));
 	Route::any('add_to_lists', array('uses' => 'User\ListsController@addToList'));
 	Route::any('remove_from_lists', array('uses' => 'User\ListsController@removeFromList'));
 

@@ -240,7 +240,7 @@ class ElementsHelper {
 					if (RolesHelper::isAdmin($request)) {
 						$class = 'btn btn-sm btn-outline-success';
 						$handler = 'onclick="lists(\'' . $section . '\', \'' . $element->id . '\')"';
-						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Добавить в список">';
+						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="list_' . $element->id . '" title="Добавить в список">';
 						$elements_list .= '📒';
 						$elements_list .= '</button>';
 					}
@@ -551,11 +551,11 @@ class ElementsHelper {
 
 				}
 
-				$element_title .= '<h1 itemprop="name">'.$element->name.'</h1>';
+				$element_title .= '<h1 itemprop="name" id="buhurt_name">'.$element->name.'</h1>';
 
 				if(!empty($element->alt_name)) {
 
-					$element_title .= '<div class="h4 d-none d-md-block" itemprop="alternativeHeadline">'.$element->alt_name.'</div>';
+					$element_title .= '<div class="h4 d-none d-md-block" itemprop="alternativeHeadline" id="buhurt_alt_name">'.$element->alt_name.'</div>';
 
 				}
 
@@ -623,7 +623,7 @@ class ElementsHelper {
 					$file_path = public_path().$cover_path;
 					$hash = md5_file($file_path);
 
-					$element_body .= '<img itemprop="image" src="'.$cover_path.'?hash='.$hash.'" alt="'.$element->name.'" class="card-img-top" />';
+					$element_body .= '<img itemprop="image" src="'.$cover_path.'?hash='.$hash.'" alt="'.$element->name.'" class="card-img-top buhurt-cover" />';
 
 					if(Auth::check()) {
 

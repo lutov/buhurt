@@ -8,7 +8,10 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Helpers\SectionsHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Data\Section;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Models\Search\ElementList;
 use App\Models\User\Event;
@@ -40,22 +43,22 @@ class ListsController extends Controller {
 	 */
 	public function getLists(Request $request) {
 
-		$filter = $request->get('filter', array());
-
 		$lists = new Lists();
 
-		$lists_list = array();
+		$result = array();
 
-		if(0 != Auth::user()->id) {
+		if(Auth::check()) {
 
-			$lists_list = $lists
-				->where('user_id', '=', Auth::user()->id)
+			$user = Auth::user();
+
+			$result = $lists
+				->where('user_id', '=', $user->id)
 				->paginate($this->limit)
 			;
 
 		}
 
-		return View::make('lists.get_lists', array('lists_list' => $lists_list));
+		return response()->json($result);
 
 	}
 
@@ -65,38 +68,41 @@ class ListsController extends Controller {
 	 */
 	public function addList(Request $request) {
 
-		$fields = $request->get('fields', array());
+		$name = $request->get('name');
 
-		$lists = new Lists();
+		$result = array();
 
-		$list = array();
+		if(Auth::check()) {
 
-		if(0 != Auth::user()->id) {
+			$isPublic = false;
 
-			$lists->name = $fields['name'];
-			$lists->description = TextHelper::wordsLimit($fields['description']);
-			if(RolesHelper::isAdmin($request) && isset($fields['public_list']) && ('public_list' == $fields['public_list'])) {
-				$lists->section = $this->public_list_type;
+			$user = Auth::user();
+
+			$list = new Lists();
+			$list->name = $name;
+			$list->description = '';//TextHelper::wordsLimit($fields['description']);
+			if(RolesHelper::isAdmin($request) && $isPublic) {
+				$list->section = $this->public_list_type;
 			} else {
-				$lists->section = $this->private_list_type;
+				$list->section = $this->private_list_type;
 			}
-			$lists->user_id = Auth::user()->id;
-			$lists->save();
+			$list->user_id = $user->id;
+			$list->save();
 
 			$event = new Event();
 			$event->event_type = 'Lists';
-			$event->element_type = $lists->section;
-			$event->element_id =  $lists->id;
+			$event->element_type = $list->section;
+			$event->element_id =  $list->id;
 			$event->user_id = Auth::user()->id;
 			$event->name = 'Создан список';
-			$event->text = '«'.$lists->name.'»';
+			$event->text = '«'.$list->name.'»';
 			$event->save();
 
-			$list = $lists->get();
+			$result = $list;
 
 		}
 
-		return View::make('lists.add_list', array('list' => $list));
+		return response()->json($result);
 
 	}
 
@@ -141,23 +147,25 @@ class ListsController extends Controller {
 
 		$list_id = $request->get('list_id', 0);
 
-		$lists = new Lists();
+		$result = array();
 
-		$list = array();
+		if(Auth::check()) {
 
-		if(0 != Auth::user()->id) {
+			$user = Auth::user();
 
-			$lists->find($list_id);
+			$list = Lists::find($list_id);
 
-			if(Auth::user()->id == $lists->user_id) {
+			if($user->id == $list->user_id) {
 
-				$lists->delete();
+				$list->delete();
+
+				$result = $list;
 
 			}
 
 		}
 
-		return View::make('lists.remove_list', array('list' => $list));
+		return response()->json($result);
 
 	}
 
@@ -195,32 +203,42 @@ class ListsController extends Controller {
 	 */
 	public function addToList(Request $request) {
 
-		$element_data = $request->get('element_data', array());
+		$id = $request->get('id', array());
+		$section = SectionsHelper::getSection($request->get('section'));
 		$list_id = $request->get('list_id', 0);
 
-		$lists = new Lists();
-		$element_list = new ElementList();
+		$result = array();
 
-		$element = array();
+		if(Auth::check()) {
 
-		if(0 != Auth::user()->id) {
+			$user = Auth::user();
 
-			$lists->find($list_id);
+			$list = Lists::find($list_id);
 
-			if(Auth::user()->id == $lists->user_id) {
+			if($user->id == $list->user_id) {
 
-				$element_list->element_id = $element_data['element_id'];
-				$element_list->element_type = $element_data['element_type'];
-				$element_list->list_id = $list_id;
-				$element_list->user_id = Auth::user()->id;
+				$element = $this->getElement($id, $section, $list_id);
 
-				$element = $element_list->get();
+				if(empty($element)) {
+
+					$element = new ElementList();
+
+					$element->element_id = $id;
+					$element->element_type = $section->type;
+					$element->list_id = $list_id;
+					$element->user_id = $user->id;
+
+					$element->save();
+
+				}
+
+				$result = $element;
 
 			}
 
 		}
 
-		return View::make('lists.add_to_list', array('element' => $element));
+		return response()->json($result);
 
 	}
 
@@ -230,26 +248,63 @@ class ListsController extends Controller {
 	 */
 	public function removeFromList(Request $request) {
 
-		$id = $request->get('id', 0);
-		$filter = $request->get('filter', array());
+		$id = $request->get('id', array());
+		$section = SectionsHelper::getSection($request->get('section'));
+		$list_id = $request->get('list_id', 0);
 
-		$element_list = new ElementList();
+		$result = array();
 
-		$element = array();
+		if(Auth::check()) {
 
-		if(0 != Auth::user()->id) {
+			$user = Auth::user();
 
-			$element_list->find($id);
+			$list = Lists::find($list_id);
 
-			if(Auth::user()->id == $element_list->user_id) {
+			if($user->id == $list->user_id) {
 
-				$element_list->delete();
+				$element = $this->getElement($id, $section, $list_id);
+
+				if(!empty($element)) {$element->delete();}
 
 			}
 
 		}
 
-		return View::make('lists.remove_list', array('element' => $element));
+		return response()->json($result);
+
+	}
+
+	/**
+	 * @param int $id
+	 * @param Section $section
+	 * @param int $list_id
+	 * @return mixed
+	 */
+	public function getElement(int $id = 0, Section $section, int $list_id = 0) {
+
+		$element = ElementList::where('element_type', '=', $section->type)
+			->where('element_id', '=', $id)
+			->where('list_id', '=', $list_id)
+			->first()
+		;
+
+		return $element;
+
+	}
+
+	/**
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function findElement(Request $request) {
+
+		$id = $request->get('id', array());
+		$section = SectionsHelper::getSection($request->get('section'));
+		$list_id = $request->get('list_id', 0);
+
+		$element = $this->getElement($id, $section, $list_id);
+
+		return response()->json($element);
 
 	}
 
