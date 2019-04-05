@@ -192,6 +192,7 @@ Route::group(array('middleware' => 'admin'), function() {
 		Route::any('transfer/books/{id}', array('uses' => 'Data\BooksController@transfer'));
 		Route::any('transfer/films/{id}', array('uses' => 'Data\FilmsController@transfer'));
 		Route::any('transfer/games/{id}', array('uses' => 'Data\GamesController@transfer'));
+		Route::any('transfer/memes/{id}', array('uses' => 'Data\MemesController@transfer'));
 
 	});
 
