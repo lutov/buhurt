@@ -321,6 +321,8 @@ function lists(section, id) {
 
 }
 
+function show_comment_form() {var comment_form = $('#comment_form'); comment_form.show(600);}
+
 function comment_add(section, element) {
     var path = '';
     var comment = $('#comment').val();
