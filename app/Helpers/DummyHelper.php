@@ -131,6 +131,14 @@ class DummyHelper {
 				$site_name = 'Яндекс.Картинки';
 				break;
 
+			case 'yandex_images_square': // https://yandex.ru/images/search?text=евангелион
+				$protocol = 'https';
+				$url = 'yandex.ru/images/search';
+				$query = 'iorient=square&isize=large&text';
+				$target = '_blank';
+				$site_name = 'Яндекс.Картинки';
+				break;
+
 			case 'yandex_music': // https://music.yandex.ru/search?&text=евангелион
 				$protocol = 'https';
 				$url = 'music.yandex.ru/search';

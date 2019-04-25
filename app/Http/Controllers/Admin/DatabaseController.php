@@ -1305,10 +1305,13 @@ class DatabaseController extends Controller {
 
 		$resize = ResizeCrop::resize($real_path, $full_path, $width, 0);
 		$size = getimagesize($full_path);
+
+		/*
 		if($height > $size[1]) {
 			$diff = ($height - $size[1]) / 2;
 			$crop = ResizeCrop::crop($full_path, $full_path, array(0, -$diff, $width, ($height - $diff)));
 		}
+		*/
 
 		return true;
 	}

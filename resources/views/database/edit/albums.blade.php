@@ -85,7 +85,7 @@
                             {!! DummyHelper::getExtLink('discogs', $element->name); !!}
                         </div>
                         <div class="btn-group mt-3">
-                            {!! DummyHelper::getExtLink('yandex_images', $element->name); !!}
+                            {!! DummyHelper::getExtLink('yandex_images_square', $element->name); !!}
                         </div>
                     </div>
                 </div>

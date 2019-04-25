@@ -112,6 +112,10 @@ class ElementsHelper {
 
 		$default_cover = 0;
 
+		$is_square = false;
+
+		if('albums' == $section) {$is_square = true;}
+
 		if(is_object($element)) {
 
 			$file_path = public_path() . '/data/img/covers/' . $section . '/' . $element->id . '.jpg';
@@ -127,7 +131,7 @@ class ElementsHelper {
 			$elements_list .= '<div class="col-lg-3 col-md-4 col-sm-6 col-6">';
 			$elements_list .= '<div class="card mb-4 box-shadow">';
 
-			$elements_list .= '<div class="card-img-box">';
+			if($is_square) {$elements_list .= '<div class="card-img-box-square">';} else {$elements_list .= '<div class="card-img-box">';}
 
 			$elements_list .= '<a href="'.$link.'">';
 
