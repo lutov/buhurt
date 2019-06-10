@@ -181,6 +181,7 @@ class FilmsController extends Controller {
 				->count()
 			;
 
+			$sim_options['element_id'] = $id;
 			$sim_options['type'] = 'Film';
 			$sim_options['genres'] = $genres;
 			$sim_limit = 3;
