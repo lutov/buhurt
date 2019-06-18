@@ -117,6 +117,8 @@ class TextHelper {
 	 */
 	public static function prepareQuery($query) {
 
+		$query = strip_tags($query);
+
 		$replace_from = [
 			'/-/',
 			'/–/',
@@ -125,7 +127,8 @@ class TextHelper {
 			'/, /',
 			'/ & /',
 			'/  /',
-			'/ % /'
+			'/ % /',
+			'/%%/',
 		];
 		$replace_to = [
 			'%',
@@ -135,9 +138,11 @@ class TextHelper {
 			'%',
 			'%',
 			' ',
+			'%',
 			'%'
 		];
 		$query = preg_replace($replace_from, $replace_to, $query);
+
 		return $query;
 
 	}
