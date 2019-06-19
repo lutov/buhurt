@@ -29,6 +29,8 @@ class CommentController extends Controller {
 
 		if(!empty($text)) {
 
+			$text = strip_tags($text);
+
 			$text = EMTypograph::fast_apply($text, array(
 				'Text.paragraphs' => 'off',
 				'Text.breakline' => 'off',

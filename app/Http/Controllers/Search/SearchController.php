@@ -43,6 +43,7 @@ class SearchController extends Controller {
 			if($min_length > $length) {
 				$message = 'Для поиска нужно хотя бы '.$min_length.' буквы';
 				return View::make($this->prefix.'.error', array(
+					'request' => $request,
 					'message' => $message
 				));
 
