@@ -298,6 +298,8 @@ Route::get('users/', array('uses' => 'User\UserController@list'));
 
 Route::any('recommendations', array('uses' => 'User\RecommendationsController@gag'));
 
+Route::any('advise', array('uses' => 'User\RecommendationsController@advise'));
+
 /* LISTS */
 Route::group(array('prefix' => 'lists'), function() {
 

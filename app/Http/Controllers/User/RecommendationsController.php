@@ -3,6 +3,8 @@
 use App\Http\Controllers\Controller;
 use App\Helpers\DummyHelper;
 use App\Helpers\SectionsHelper;
+use App\Models\Data\Book;
+use App\Models\Search\ElementRelation;
 use App\Models\User\Rate;
 use App\Models\User\Unwanted;
 use App\Models\User\Wanted;
@@ -11,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 use App\Helpers\UserHelper;
 
@@ -265,5 +268,69 @@ class RecommendationsController extends Controller {
 			'elements' => $elements,
 		));
     }
+
+	/**
+	 * @param Request $request
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 */
+    public function advise(Request $request) {
+
+    	if(!Auth::check()) {return Redirect::to()->with('message', 'Чтобы получить совет, нужно авторизоваться');}
+
+    	$user = Auth::user();
+
+    	$random_wanted_book = Wanted::where('user_id', '=', $user->id)
+			->where('element_type', '=', 'Book')
+			->inRandomOrder()
+			->first()
+		;
+
+    	if(!empty($random_wanted_book)) {
+
+			$book = Book::find($random_wanted_book->element_id);
+
+			$similar = array();
+
+			$writers = $book->writers;
+			$publishers = $book->publishers;
+			$genres = $book->genres; $genres = $genres->sortBy('name');
+			$collections = $book->collections;
+
+			$user_rate = 0;
+
+			$cover = 0;
+			$file_path = public_path() . '/data/img/covers/books/' . $book->id . '.jpg';
+			if (file_exists($file_path)) {
+				$cover = $book->id;
+			}
+
+			$section_type = 'Book';
+			$relations = ElementRelation::where('to_id', '=', $book->id)
+				->where('to_type', '=', $section_type)
+				->count()
+			;
+
+			$book->options = array(
+				'rate' => $user_rate,
+				'genres' => $genres,
+				'cover' => $cover,
+				'similar' => collect($similar),
+				'collections' => $collections,
+				'relations' => $relations,
+				'writers' => $writers,
+				'publishers' => $publishers,
+			);
+
+		} else {
+    		$book = new Book;
+		}
+
+    	return view('recommendations.advise', array(
+    		'request' => $request,
+    		'user' => $user,
+    		'book' => $book,
+		));
+
+	}
 	
 }
