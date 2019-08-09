@@ -4,19 +4,28 @@
 
 @section('subtitle')@stop
 
+<?php
+
+	$titles = array();
+	if(count($books)){$titles['writer'] = 'писатель';}
+	if(count($screenplays)){$titles['screenwriter'] = 'сценарист';}
+	if(count($directions)){$titles['director'] = 'режиссёр';}
+	if(count($productions)){$titles['producer'] = 'продюссер';}
+	if(count($actions)){$titles['actor'] = 'актёр';}
+
+?>
+
+@section('keywords'){!! $element->name !!}@if(count($titles)), {{implode(', ', $titles)}}@endif @stop
+@section('description'){!! $element->name !!}@if(count($titles)) — {{implode(', ', $titles)}}@endif @stop
+
 @section('content')
 
 	<section class="text-center mt-5 mb-3">
 		<h1 class="">@yield('title')</h1>
 		<h2 class="">@yield('subtitle')</h2>
-		<ul class="list-inline mt-3">
+		<ul class="list-inline mt-3 anchor_list">
 
-			@if(count($books))<li class="list-inline-item"><a href="#writer">Писатель</a></li>@endif
-			@if(count($screenplays))<li class="list-inline-item"><a href="#screenwriter">Сценарист</a></li>@endif
-			@if(count($directions))<li class="list-inline-item"><a href="#director">Режиссёр</a></li>@endif
-			@if(count($productions))<li class="list-inline-item"><a href="#producer">Продюссер</a></li>@endif
-			@if(count($actions))<li class="list-inline-item"><a href="#actor">Актёр</a></li>@endif
-			<?//@if(RolesHelper::isAdmin($request))<li class="list-inline-item"><a href="#transfer">Преемник</a></li>@endif?>
+			@foreach($titles as $key => $title)<li class="list-inline-item"><a href="#{{$key}}">{{$title}}</a></li>@endforeach
 
 		</ul>
 	</section>

@@ -120,3 +120,7 @@
     background: none;
     padding: 0;
 }
+
+.anchor_list {
+    text-transform: capitalize;
+}
