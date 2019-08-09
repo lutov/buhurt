@@ -4,8 +4,8 @@
 
 @section('subtitle'){!! $element->alt_name !!}@stop
 
-@section('keywords')альбом, {!! $element->name !!}, {!! $element->year !!}@stop
-@section('description'){!! TextHelper::wordsLimit($element->description, 15) !!}@stop
+@section('keywords')альбом, {!! DatatypeHelper::arrayToString($options['bands'], ', ', '/bands/', true) !!}, {!! $element->name !!}, {!! $element->year !!}@stop
+@section('description'){!! DatatypeHelper::arrayToString($options['bands'], ', ', '/bands/', true) !!} — {!! $element->name !!} ({!! $element->year !!})@stop
 
 @section('content')
 
