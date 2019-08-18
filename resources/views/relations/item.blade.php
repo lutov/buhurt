@@ -4,6 +4,9 @@
 
 @section('subtitle')@stop
 
+@section('keywords'){!! $element->name !!}, сиквелы, приквелы, ремейки, адаптации@stop
+@section('description')Связи «{!! $element->name !!}» с другими произведениями@stop
+
 @section('content')
 
 	<section class="text-center">
