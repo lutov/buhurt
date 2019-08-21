@@ -3,7 +3,10 @@
 use App\Http\Controllers\Controller;
 use App\Helpers\DummyHelper;
 use App\Helpers\SectionsHelper;
+use App\Models\Data\Album;
 use App\Models\Data\Book;
+use App\Models\Data\Film;
+use App\Models\Data\Game;
 use App\Models\Search\ElementRelation;
 use App\Models\User\Rate;
 use App\Models\User\Unwanted;
@@ -323,12 +326,162 @@ class RecommendationsController extends Controller {
 
 		} else {
     		$book = new Book;
+			$book->options = array();
+		}
+
+		$random_wanted_film = Wanted::where('user_id', '=', $user->id)
+			->where('element_type', '=', 'Film')
+			->inRandomOrder()
+			->first()
+		;
+		if(!empty($random_wanted_film)) {
+
+			$film = Film::find($random_wanted_film->element_id);
+
+			$screenwriters = $film->screenwriters;
+			$producers = $film->producers;
+			$directors = $film->directors;
+			$genres = $film->genres; $genres = $genres->sortBy('name')->reverse();
+			$countries = $film->countries;
+			$actors = $film->actors;
+			$collections = $film->collections;
+			$similar = array();
+
+			$user_rate = 0;
+
+			$cover = 0;
+			$file_path = public_path() . '/data/img/covers/films/' . $film->id . '.jpg';
+			if (file_exists($file_path)) {
+				$cover = $film->id;
+			}
+
+			$section_type = 'Film';
+			$relations = ElementRelation::where('to_id', '=', $film->id)
+				->where('to_type', '=', $section_type)
+				->count()
+			;
+
+			$film->options = array(
+				'rate' => $user_rate,
+				'genres' => $genres,
+				'cover' => $cover,
+				'similar' => collect($similar),
+				'collections' => $collections,
+				'relations' => $relations,
+				'countries' => $countries,
+				'directors' => $directors,
+				'screenwriters' => $screenwriters,
+				'producers' => $producers,
+				'actors' => $actors,
+			);
+
+		} else {
+			$film = new Film;
+			$film->options = array();
+		}
+
+		$random_wanted_game = Wanted::where('user_id', '=', $user->id)
+			->where('element_type', '=', 'Game')
+			->inRandomOrder()
+			->first()
+		;
+		if(!empty($random_wanted_game)) {
+
+			$game = Game::find($random_wanted_game->element_id);
+
+			$developers = $game->developer;
+			$publishers = $game->publisher;
+			$platforms = $game->platforms()->orderBy('name')->get();
+			$genres = $game->genres; $genres = $genres->sortBy('name')->reverse();
+			$collections = $game->collections;
+
+			$user_rate = 0;
+
+			$cover = 0;
+			$file_path = public_path() . '/data/img/covers/games/' . $game->id . '.jpg';
+			if (file_exists($file_path)) {
+				$cover = $game->id;
+			}
+
+			$section_type = 'Game';
+			$relations = ElementRelation::where('to_id', '=', $game->id)
+				->where('to_type', '=', $section_type)
+				->count()
+			;
+
+			$similar = array();
+
+			$game->options = array(
+				'rate' => $user_rate,
+				'genres' => $genres,
+				'cover' => $cover,
+				'similar' => collect($similar),
+				'collections' => $collections,
+				'relations' => $relations,
+				'game_platforms' => $platforms,
+				'game_developers' => $developers,
+				'game_publishers' => $publishers,
+			);
+
+		} else {
+			$game = new Game;
+			$game->options = array();
+		}
+
+		$random_wanted_album = Wanted::where('user_id', '=', $user->id)
+			->where('element_type', '=', 'Album')
+			->inRandomOrder()
+			//->toSql()
+			->first()
+		; //dd($random_wanted_album->attributesToArray());
+		if(!empty($random_wanted_album)) {
+
+			$album = Album::find($random_wanted_album->element_id);
+
+			$tracks = $album->tracks()->orderBy('order')->get();
+			$bands = $album->bands()->orderBy('name')->get();
+			$genres = $album->genres; $genres = $genres->sortBy('name')->reverse();
+			$collections = $album->collections;
+
+			$user_rate = 0;
+
+			$cover = 0;
+			$file_path = public_path() . '/data/img/covers/albums/' . $album->id . '.jpg';
+			if (file_exists($file_path)) {
+				$cover = $album->id;
+			}
+
+			$section_type = 'Album';
+			$relations = ElementRelation::where('to_id', '=', $album->id)
+				->where('to_type', '=', $section_type)
+				->count()
+			;
+
+			$similar = array();
+
+			$album->options = array(
+				'rate' => $user_rate,
+				'genres' => $genres,
+				'cover' => $cover,
+				'similar' => collect($similar),
+				'collections' => $collections,
+				'relations' => $relations,
+				'bands' => $bands,
+				'tracks' => $tracks,
+			);
+
+		} else {
+			$album = new Album;
+			$album->options = array();
 		}
 
     	return view('recommendations.advise', array(
     		'request' => $request,
     		'user' => $user,
     		'book' => $book,
+    		'film' => $film,
+    		'game' => $game,
+    		'album' => $album,
 		));
 
 	}

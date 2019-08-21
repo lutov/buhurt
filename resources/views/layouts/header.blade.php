@@ -40,39 +40,33 @@
 					Бугурт
 				</a>
 
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 
-				<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<div class="collapse navbar-collapse" id="navbar">
 
 					<ul class="navbar-nav mr-auto">
 
 						<li class="nav-item">
-							<a class="nav-link" href="/books/">📖 Книги</a>
+							<span class="d-none d-xl-inline">📖</span><a class="nav-link d-inline" href="/books/">Книги</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/films/">🎞 Фильмы</a>
+							<span class="d-none d-xl-inline">🎞</span><a class="nav-link d-inline" href="/films/">Фильмы</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/games/">🎮 Игры</a>
+							<span class="d-none d-xl-inline">🎮</span><a class="nav-link d-inline" href="/games/">Игры</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/albums/">🎧 Альбомы</a>
+							<span class="d-none d-xl-inline">🎧</span><a class="nav-link d-inline" href="/albums/">Альбомы</a>
 						</li>
-
-						@if (RolesHelper::isAdmin($request))
-
-							<li class="nav-item">
-								<a class="nav-link" href="/memes/">🤔 Мемы</a>
-							</li>
-
-						@endif
+						@if (RolesHelper::isAdmin($request))<li class="nav-item">
+							<span class="d-none d-xl-inline">🤔</span><a class="nav-link d-inline" href="/memes/">Мемы</a>
+						</li>@endif
 
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="add_sections" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								🗄 Картотека
-							</a>
+							<span class="d-none d-xl-inline">🗄</span>
+							<a class="nav-link d-inline dropdown-toggle" href="#" id="add_sections" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Картотека</a>
 							<div class="dropdown-menu" aria-labelledby="add_sections">
 
 								<a class="dropdown-item" href="/persons/">Люди</a>
@@ -87,61 +81,65 @@
 							</div>
 						</li>
 
-						@if (Auth::check())
-
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									👤 {!! Auth::user()->username !!}
-								</a>
-								<div class="dropdown-menu" aria-labelledby="dropdown01">
-
-									<a class="dropdown-item" href="{!! URL::action('User\UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
-									<a class="dropdown-item" href="/events">Лента</a>
-									<a class="dropdown-item" href="/recommendations/">Случайный список</a>
-									<a class="dropdown-item" href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="/user/logout/">Выйти</a>
-
-								</div>
-							</li>
-
-						@else
-
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									👥 Авторизация
-								</a>
-								<div class="dropdown-menu" aria-labelledby="dropdown01">
-
-									<a class="dropdown-item" href="/recommendations/">Рекомендации</a>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="/user/login/">Войти</a>
-									<a class="dropdown-item" href="/user/register/">Зарегистрироваться</a>
-
-								</div>
-							</li>
-
-						@endif
-
 					</ul>
 
-					{!! Form::open(array(
-						'action' => 'Search\SearchController@everything',
-						'class' => 'form-inline my-2 my-lg-0',
-						'id' => 'search_form',
-						'method' => 'GET'
-					)) !!}
-					{!! Form::text(
-                        'query',
-                        $value = Input::get('query', ''),
-                        $attributes = array(
-                            'placeholder' => 'Поиск',
-                            'class' => 'form-control mr-sm-2',
-                            'id' => 'search'
-                        )
-                    ) !!}
-					<button class="btn btn-outline-primary my-2 my-sm-0" type="submit">🔎</button>
-					{!! Form::close() !!}
+					<ul class="navbar-nav ml-auto">
+
+						<li>
+
+							{!! Form::open(array(
+								'action' => 'Search\SearchController@everything',
+								'class' => 'form-inline my-2 my-lg-0',
+								'id' => 'search_form',
+								'method' => 'GET'
+							)) !!}
+							{!! Form::text(
+                                'query',
+                                $value = Input::get('query', ''),
+                                $attributes = array(
+                                    'placeholder' => 'Поиск',
+                                    'class' => 'form-control mr-sm-2',
+                                    'id' => 'search'
+                                )
+                            ) !!}
+							<button class="btn btn-outline-primary my-2 my-sm-0 mr-sm-2 d-none d-xl-inline" type="submit">🔎</button>
+							{!! Form::close() !!}
+
+						</li>
+
+					@if (Auth::check())
+
+						<li class="nav-item dropdown justify-content-start align-self-center">
+							<span class="d-none d-xl-inline">👤</span><a class="nav-link d-inline dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{!! Auth::user()->username !!}</a>
+							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
+
+								<a class="dropdown-item" href="{!! URL::action('User\UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
+								<a class="dropdown-item" href="/events">Лента</a>
+								<a class="dropdown-item" href="/advise">Совет</a>
+								<a class="dropdown-item" href="/recommendations/">Случайный список</a>
+								<a class="dropdown-item" href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="/user/logout/">Выйти</a>
+
+							</div>
+						</li>
+
+					@else
+
+						<li class="nav-item dropdown justify-content-start align-self-center">
+							<span class="d-none d-xl-inline">👥</span><a class="nav-link d-inline dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Авторизация</a>
+							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
+
+								<a class="dropdown-item" href="/recommendations/">Рекомендации</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="/user/login/">Войти</a>
+								<a class="dropdown-item" href="/user/register/">Зарегистрироваться</a>
+
+							</div>
+						</li>
+
+					@endif
+					</ul>
 
 				</div>
 
