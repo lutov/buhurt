@@ -72,6 +72,20 @@ class DummyHelper {
 	}
 
 	/**
+	 * @return string
+	 */
+	public static function regToAdvise() {
+
+		return '<small class="text-muted">
+			<a href="/user/register">Зарегистрируйтесь</a>
+			или
+			<a href="/user/login">войдите</a>,
+			чтобы получать советы
+		</small>';
+
+	}
+
+	/**
 	 * @param $site
 	 * @param $name
 	 * @return string
@@ -585,7 +599,7 @@ class DummyHelper {
 
 		}
 
-		$result .= '<a class="" href="mailto:request@buhurt.ru">email</a>,';
+		$result .= '<a class="" href="mailto:request@buhurt.ru">email</a>, ';
         $result .= '<a class="" href="https://vk.com/im?sel=-5699972">vk.com</a>';
 		$result .= '</div>';
 

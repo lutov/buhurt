@@ -623,7 +623,7 @@ class ElementsHelper {
 
 		$element_body .= '<div class="row mt-3">';
 
-			$element_body .= '<div class="col-md-3">';
+			$element_body .= '<div class="col-md-3 col-6 mb-3">';
 
 				$element_body .= '<div class="card">';
 
@@ -710,7 +710,7 @@ class ElementsHelper {
 
 			$element_body .= '</div>';
 
-			$element_body .= '<div class="col-md-9 border rounded p-3">';
+			$element_body .= '<div class="col-md-9 col-12"><div class="border rounded p-3">';
 
 				if(!empty(trim($element->description))) {
 
@@ -939,7 +939,7 @@ class ElementsHelper {
 
 				}
 
-			$element_body .= '</div>';
+			$element_body .= '</div></div>';
 
 		$element_body .= '</div>';
 

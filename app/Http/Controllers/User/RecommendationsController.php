@@ -278,7 +278,15 @@ class RecommendationsController extends Controller {
 	 */
     public function advise(Request $request) {
 
-    	if(!Auth::check()) {return Redirect::to()->with('message', 'Чтобы получить совет, нужно авторизоваться');}
+    	if(!Auth::check()) {
+
+			return view('recommendations.noadvise', array(
+				'request' => $request,
+			));
+
+    		//return Redirect::to('/')->with('message', 'Чтобы получить совет, нужно авторизоваться');
+
+    	}
 
     	$user = Auth::user();
 
