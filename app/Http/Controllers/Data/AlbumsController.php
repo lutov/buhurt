@@ -27,10 +27,10 @@ class AlbumsController extends Controller {
 		$limit = 28;
 
 		$sort_options = array(
-			$section.'.created_at' => 'Время добавления',
-			$section.'.name' => 'Название',
+			'created_at' => 'Время добавления',
+			'name' => 'Название',
 			//$section.'.alt_name' => 'Оригинальное название',
-			$section.'.year' => 'Год'
+			'year' => 'Год'
 		);
 
 		$sort = TextHelper::checkSort($sort);
