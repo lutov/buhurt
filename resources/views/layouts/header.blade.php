@@ -26,6 +26,7 @@
 		<script type="text/javascript" src="/data/js/app.min.js" defer></script>
 
 		<link rel="manifest" href="/manifest.json">
+		<link rel="canonical" href="{{ url()->current() }}" />
 
 	</head>
 	
