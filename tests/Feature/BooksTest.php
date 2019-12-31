@@ -7,15 +7,14 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class UserTest extends TestCase
+class BooksTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testExample()
-    {
-        $this->assertTrue(true);
-    }
+
+	/** @test  */
+	public function a_user_can_browse_books(): void
+	{
+		$response = $this->get('/books');
+		$response->assertStatus(200);
+	}
+
 }
