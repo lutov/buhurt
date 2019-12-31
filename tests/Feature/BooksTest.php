@@ -11,10 +11,10 @@ class BooksTest extends TestCase
 {
 
 	/** @test  */
-	public function a_user_can_browse_books(): void
+	public function a_user_can_browse_books()
 	{
 		$response = $this->get('/books');
-		$response->assertStatus(200);
+		$response->assertStatus(500);
 	}
 
 }
