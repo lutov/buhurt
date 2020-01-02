@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=7.2",
+        "php": "7.4.1",
         "davejamesmiller/laravel-breadcrumbs": "3.x",
         "elasticsearch/elasticsearch": "^7.5",
         "greggilbert/recaptcha": "dev-master",
