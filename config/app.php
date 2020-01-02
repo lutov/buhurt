@@ -169,7 +169,6 @@ return [
          */
         Laravel\Tinker\TinkerServiceProvider::class,
 		Barryvdh\Debugbar\ServiceProvider::class,
-		GrahamCampbell\Exceptions\ExceptionsServiceProvider::class,
 		Greggilbert\Recaptcha\RecaptchaServiceProvider::class,
 		Laravelrus\LocalizedCarbon\LocalizedCarbonServiceProvider::class,
 		//Illuminate\Html\HtmlServiceProvider::class,

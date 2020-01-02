@@ -13,8 +13,13 @@ class BooksTest extends TestCase
 	/** @test  */
 	public function a_user_can_browse_books()
 	{
+
+		$book = factory('App\Book')->create();
+
 		$response = $this->get('/books');
-		$response->assertStatus(500);
+
+		$response->assertSee($book->name);
+
 	}
 
 }
