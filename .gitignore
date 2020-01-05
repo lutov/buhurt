@@ -11,3 +11,5 @@ Homestead.yaml
 /public/data/phpmorphy
 /public/data/font
 /public/data/img/covers
+/public/data/bootstrap/bootstrap-4.3.1-dist/
+/public/data/js/jquery/
