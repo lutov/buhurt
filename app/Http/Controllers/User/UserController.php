@@ -803,16 +803,13 @@ class UserController extends Controller {
 					$vk_access_token = $data['access_token'];
 					$vk_uid = $data['user_id'];
 					if(isset($data['email'])) {$vk_email = $data['email'];} else {$vk_email = 'robot@buhurt.ru';}
-					//$vk_access_token = 'f594c1d8381d04fe101d4de1e77c96b19bd521097f723bc57087f713a675cd4867d0b03254f691e93f94e';
-					//$vk_uid =  '11347340';
 					
 					// тут проверяем, если ид в базе. Если есть, авторизуем. Если нет - идем дальше	
 					$user = User::where('vk_id', '=', $vk_uid)->first();
 					if(!count($user)) {
 						// обращаемся к ВК Api, получаем имя, фамилию и ID пользователя вконтакте
 						// метод users.get
-						//$res = file_get_contents("https://api.vk.com/method/users.get?uids=".$vk_uid."&access_token=".$vk_access_token."&fields=uid,first_name,last_name,nickname,photo"); 
-						
+
 						$url="https://api.vk.com/method/users.get?v=5.92&user_ids=".$vk_uid."&access_token=".$vk_access_token."&fields=uid,first_name,last_name,nickname,photo_max";
 						$ch = curl_init();
 						curl_setopt($ch, CURLOPT_URL, $url);
@@ -825,19 +822,6 @@ class UserController extends Controller {
 						//echo DebugHelper::dump($data, 1); die();
 						$user_info = $data['response'][0];
 						//echo '<pre>'.print_r($user_info, true).'</pre>';
-					  
-						/*			  
-						Array
-						(
-							[uid] => 11347340
-							[first_name] => Владислав
-							[last_name] => Шевченко
-							[nickname] => 
-							[photo] => http://cs618031.vk.me/v618031340/b9ef/h9Vts5jyTl8.jpg
-						)			  
-						*/
-						//echo $user_info['first_name']." ".$user_info['last_name']."";
-						//echo "<img src='".$user_info['photo']."' border='0' />";
 
 						$user_ip = $_SERVER['REMOTE_ADDR'];
 						$ip_table = 'ip2ruscity_ip_compact';
@@ -907,28 +891,6 @@ class UserController extends Controller {
 
 			}
 
-			/*
-				<p>
-					<span class="symlink"
-					onclick="window.open('https://oauth.vk.com/access_token?client_id=&client_secret=&code=&redirect_uri=http://www.free-buhurt.club/user/vk_auth ');">
-						Токен
-					</span>
-				</p>
-
-				<!-- code=7739f49d6af04d4d9d -->
-
-				<!--
-
-				https://oauth.vk.com/access_token?
-				client_id=&
-				client_secret=
-				code=&
-				redirect_uri=http://www.free-buhurt.club/user/vk_auth 
-
-				-->
-				 
-				{"access_token":"","expires_in":,"user_id":,"email":"i@vlad-lutov.name"}
-			*/		
 		} else {
 
 			return Redirect::to('/');

@@ -169,14 +169,6 @@ class DummyHelper {
 				$site_name = 'Discogs';
 				break;
 
-			case 'rutracker': // http://rutracker.org/forum/tracker.php?nm=евангелион
-				$protocol = 'http';
-				$url = 'rutracker.org/forum/tracker.php';
-				$query = 'nm';
-				$target = '_blank';
-				$site_name = 'Рутрекер';
-				break;
-
 			case 'fantlab': // https://fantlab.ru/searchmain?searchstr=евангелион
 				$protocol = 'https';
 				$url = 'fantlab.ru/searchmain';

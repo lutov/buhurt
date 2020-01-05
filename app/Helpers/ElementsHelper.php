@@ -931,14 +931,6 @@ class ElementsHelper {
 
 				}
 
-				if(RolesHelper::isAdmin($request) && ('films' == $section)) {
-
-					$element_body .= '<p>';
-					$element_body .= DummyHelper::getExtLink('rutracker', $element->name);
-					$element_body .= '</p>';
-
-				}
-
 			$element_body .= '</div></div>';
 
 		$element_body .= '</div>';
