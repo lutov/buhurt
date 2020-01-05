@@ -12,17 +12,17 @@
         
 		<link rel="shortcut icon" href="https://buhurt.ru/favicon.ico" type="image/x-icon">
 
-		<link href="/data/bootstrap/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-		<link href="/data/bootstrap/bootstrap-star-rating/css/star-rating.min.css" rel="stylesheet" type="text/css" />
-		<link href="/data/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.css" rel="stylesheet" type="text/css" />
-		<link href="/data/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.skinFlat.css" rel="stylesheet" type="text/css" />
+		<link href="/data/vendor/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+		<link href="/data/vendor/bootstrap-star-rating/css/star-rating.min.css" rel="stylesheet" type="text/css" />
+		<link href="/data/vendor/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.css" rel="stylesheet" type="text/css" />
+		<link href="/data/vendor/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.skinFlat.css" rel="stylesheet" type="text/css" />
 		<link href="/data/css/main.min.css" rel="stylesheet" type="text/css" />
 
-		<script type="text/javascript" src="/data/js/jquery/jquery-3.3.1.min.js"></script>
-		<script type="text/javascript" src="/data/js/jquery/jquery-ui-1.12.1.custom/jquery-ui.min.js" defer></script>
-		<script type="text/javascript" src="/data/bootstrap/bootstrap-4.3.1-dist/js/bootstrap.min.js" defer></script>
-		<script type="text/javascript" src="/data/bootstrap/bootstrap-star-rating/js/star-rating.min.js" defer></script>
-		<script type="text/javascript" src="/data/rangeSlider/ion.rangeSlider-master/js/ion.rangeSlider.min.js" defer></script>
+		<script type="text/javascript" src="/data/vendor/jquery/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="/data/vendor/jquery/jquery-ui-1.12.1.custom/jquery-ui.min.js" defer></script>
+		<script type="text/javascript" src="/data/vendor/bootstrap-4.3.1-dist/js/bootstrap.min.js" defer></script>
+		<script type="text/javascript" src="/data/vendor/bootstrap-star-rating/js/star-rating.min.js" defer></script>
+		<script type="text/javascript" src="/data/vendor/rangeSlider/ion.rangeSlider-master/js/ion.rangeSlider.min.js" defer></script>
 		<script type="text/javascript" src="/data/js/app.min.js" defer></script>
 
 		<link rel="manifest" href="/manifest.json">

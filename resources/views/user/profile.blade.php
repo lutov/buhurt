@@ -129,7 +129,7 @@
 	@if($has_rates)
 
 		<script>var chart_rates = [{!! implode($chart_rates, ', ') !!}];</script>
-		<script src="/data/js/chart/Chart.js"></script>
+		<script src="/data/vendor/chart/Chart.js"></script>
 		<script src="/data/js/rates_chart.js"></script>
 
 		<section class="text-center mt-5">
