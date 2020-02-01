@@ -1501,7 +1501,7 @@ class DatabaseController extends Controller {
 						break;
 
 					case 'action_film':
-						$genres = array('Боевики');
+						$genres = array('Экшены');
 						$this->setGenres($genres, $type, $element_id);
 						break;
 

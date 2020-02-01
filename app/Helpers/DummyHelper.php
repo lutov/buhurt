@@ -451,7 +451,7 @@ class DummyHelper {
 
 					$output_string .= '<li class=""><span>';
 					$output_string .= '<a href="/q_add/films/?new_name='.urlencode($search).'&template=action_film">';
-					$output_string .= 'Боевики';
+					$output_string .= 'Экшены';
 					$output_string .= '</a>';
 					$output_string .= '</span></li>';
 
