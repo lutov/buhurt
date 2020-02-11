@@ -54,7 +54,7 @@
             <div class="col-md-3">
 
                 <div class="card">
-                    <img class="card-img-top" src="/data/img/covers/{!! $section !!}/{!! $element_cover !!}.jpg" alt="">
+                    <img class="card-img-top" src="/data/img/covers/{!! $section !!}/{!! ElementsHelper::getCover($section, $element->id) !!}.jpg" alt="">
                     <div class="card-body text-center">
                         <p class="card-text">Дополнительная информация</p>
                         <div class="btn-group">
@@ -73,7 +73,7 @@
                         Жанры книг
                     </div>
                     <div class="collapse" id="books_genres_container">
-                        {!! DatatypeHelper::objectToList($genres, 'books_genres') !!}
+                        {!! DatatypeHelper::objectToList(ElementsHelper::getGenres($section), 'books_genres') !!}
                     </div>
                 </div>
 
@@ -82,7 +82,7 @@
                         Коллекции
                     </div>
                     <div class="collapse" id="collections_list_container">
-                        {!! DatatypeHelper::objectToList($collections, 'collections_list') !!}
+                        {!! DatatypeHelper::objectToList(ElementsHelper::getCollections(), 'collections_list') !!}
                     </div>
                 </div>
 

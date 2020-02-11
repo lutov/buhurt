@@ -9,6 +9,9 @@
 namespace App\Helpers;
 
 use App\Models\Data\Collection;
+use App\Models\Data\Country;
+use App\Models\Data\Genre;
+use App\Models\Data\Platform;
 use App\Models\Data\Section;
 use Illuminate\Http\Request;
 use App\Models\Search\ElementGenre;
@@ -1201,13 +1204,13 @@ class ElementsHelper {
 	public static function getGenres(string $section, bool $cache = true) {
 		$minutes = 60;
 		$var_name = $section.'_genres';
-		$model = SectionsHelper::getObjectBy($section);
+		$type = SectionsHelper::getSectionType($section);
 		if($cache) {
-			$result = Cache::remember($var_name, $minutes, function () use ($model) {
-				return $model->genres;
+			$result = Cache::remember($var_name, $minutes, function () use ($type) {
+				return Genre::where('element_type', $type)->orderBy('name')->get();
 			});
 		} else {
-			$result = $model->genres;
+			$result = Genre::where('element_type', $type)->orderBy('name')->get();
 		}
 		return $result;
 	}
@@ -1225,6 +1228,39 @@ class ElementsHelper {
 			});
 		} else {
 			$result = Collection::orderBy('name')->get();
+		}
+		return $result;
+	}
+
+	/**
+	 * @param bool $cache
+	 * @return mixed
+	 */
+	public static function getCountries(bool $cache = true) {
+		if($cache) {
+			$minutes = 60;
+			$var_name = 'countries';
+			$result = Cache::remember($var_name, $minutes, function () {
+				return Country::orderBy('name')->get();
+			});
+		} else {
+			$result = Country::orderBy('name')->get();
+		}
+		return $result;
+	}
+	/**
+	 * @param bool $cache
+	 * @return mixed
+	 */
+	public static function getPlatforms(bool $cache = true) {
+		if($cache) {
+			$minutes = 60;
+			$var_name = 'platforms';
+			$result = Cache::remember($var_name, $minutes, function () {
+				return Platform::orderBy('name')->get();
+			});
+		} else {
+			$result = Platform::orderBy('name')->get();
 		}
 		return $result;
 	}
