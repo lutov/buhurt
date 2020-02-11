@@ -33,167 +33,34 @@ use App\Models\Search\ElementCollection;
 
 class DatabaseController extends Controller {
 
-	public function add(Request $request, $section = '') {
-
-		switch($section) {
-			case 'books':
-				$genres = Genre::where('element_type', '=', 'Book')->orderBy('name')->get();
-				$countries = array();
-				$platforms = array();
-				break;
-
-			case 'films':
-				$genres = Genre::where('element_type', '=', 'Film')->orderBy('name')->get();
-				$countries = Country::orderBy('name')->get();
-				$platforms = array();
-				break;
-
-			case 'games':
-				$genres = Genre::where('element_type', '=', 'Game')->orderBy('name')->get();
-				$platforms = Platform::orderBy('name')->get();
-				$countries = array();
-				break;
-
-			case 'albums':
-				$genres = Genre::where('element_type', '=', 'Album')->orderBy('name')->get();
-				$platforms = array();
-				$countries = array();
-				break;
-
-			case 'memes':
-				$genres = Genre::where('element_type', '=', 'Meme')->orderBy('name')->get();
-				$platforms = array();
-				$countries = array();
-				break;
-
-			default:
-				$section = 'films';
-				$genres = Genre::where('element_type', '=', 'Film')->orderBy('name')->get();
-				$countries = Country::orderBy('name')->get();
-				$platforms = array();
-				break;
-		}
-
-		$collections = Collection::orderBy('name')
-			//->remember(20)
-			->get();
+	/**
+	 * @param Request $request
+	 * @param string $section
+	 * @return \Illuminate\Contracts\View\View
+	 */
+	public function add(Request $request, string $section = '') {
 
 		return View::make('database.add', array(
 			'request' => $request,
 			'section' => $section,
-			'genres' => $genres,
-			'platforms' => $platforms,
-			'countries' => $countries,
-			'collections' => $collections
 		));
+
 	}
 
 	/**
 	 * @param Request $request
-	 * @param $section
-	 * @param $id
+	 * @param string $section
+	 * @param int $id
 	 * @return \Illuminate\Contracts\View\View
 	 */
-	public function edit(Request $request, $section, $id) {
+	public function edit(Request $request, string $section, int $id) {
 
-		//$section = $request->get('section');
-		//$id = $request->get('id');
-
-		switch($section) {
-
-			case 'books':
-				$element = Book::find($id);
-				$genres = Genre::where('element_type', '=', 'Book')->orderBy('name')->get();
-				$countries = array();
-				$platforms = array();
-				break;
-
-			case 'films':
-				$element = Film::find($id); //die(print_r($element));
-				$genres = Genre::where('element_type', '=', 'Film')->orderBy('name')->get();
-				$countries = Country::orderBy('name')->get();
-				$platforms = array();
-				break;
-
-			case 'games':
-				$element = Game::find($id);
-				$genres = Genre::where('element_type', '=', 'Game')->orderBy('name')->get();
-				$platforms = Platform::orderBy('name')->get();
-				$countries = array();
-				break;
-
-			case 'albums':
-				$element = Album::find($id);
-				$genres = Genre::where('element_type', '=', 'Album')->orderBy('name')->get();
-				$platforms = array();
-				$countries = array();
-				break;
-
-			case 'memes':
-				$element = Meme::find($id);
-				$genres = Genre::where('element_type', '=', 'Meme')->orderBy('name')->get();
-				$platforms = array();
-				$countries = array();
-				break;
-
-			case 'persons':
-				$element = Person::find($id);
-				$genres = array();
-				$platforms = array();
-				$countries = array();
-				break;
-
-			case 'companies':
-				$element = Company::find($id);
-				$genres = array();
-				$platforms = array();
-				$countries = array();
-				break;
-
-			case 'collections':
-				$element = Collection::find($id);
-				$genres = array();
-				$platforms = array();
-				$countries = array();
-				break;
-
-			case 'bands':
-				$element = Band::find($id);
-				$genres = array();
-				$platforms = array();
-				$countries = array();
-				break;
-
-			default:
-				$element = array();
-				$genres = array();
-				$countries = array();
-				$platforms = array();
-				break;
-
-		}
-
-		$collections = Collection::orderBy('name')
-			//->remember(20)
-			->get();
-
-		$default_cover = 0;
-		$file_path = public_path() . '/data/img/covers/' . $section . '/' . $id . '.jpg';
-		if (file_exists($file_path)) {
-			$element_cover = $id;
-		} else {
-			$element_cover = $default_cover;
-		}
+		$element = SectionsHelper::getSectionType($section)::find($id);
 
 		return View::make('database.edit.'.$section, array(
 			'request' => $request,
 			'section' => $section,
 			'element' => $element,
-			'element_cover' => $element_cover,
-			'genres' => $genres,
-			'platforms' => $platforms,
-			'countries' => $countries,
-			'collections' => $collections
 		));
 	}
 
@@ -202,8 +69,6 @@ class DatabaseController extends Controller {
 	 * @return $this|\Illuminate\Http\RedirectResponse
 	 */
 	public function save(Request $request) {
-
-		//die('<pre>'.print_r($_POST, true));
 
 		$section = $request->get('section');
 
@@ -1621,8 +1486,6 @@ class DatabaseController extends Controller {
 		LIMIT 1";
 
 		$result = DB::select($query)[0]->empty_id;
-
-		//echo DebugHelper::dump($result, 1); die();
 
 		if(!empty($result)) {$missing_id = $result;}
 

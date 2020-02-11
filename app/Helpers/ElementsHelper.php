@@ -8,9 +8,12 @@
 
 namespace App\Helpers;
 
+use App\Models\Data\Collection;
+use App\Models\Data\Section;
 use Illuminate\Http\Request;
 use App\Models\Search\ElementGenre;
 use App\Models\User\Rate;
+use Illuminate\Support\Facades\Cache;
 use Laravelrus\LocalizedCarbon\LocalizedCarbon;
 use App\Models\User\Event;
 use App\Models\User\User;
@@ -595,9 +598,19 @@ class ElementsHelper {
 			if(!empty($rating['count'])) {
 
 				$element_title .= '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
+
+				$element_title .= '<meta itemprop="worstRating" content = "1">';
 				$element_title .= 'Средняя оценка: <b itemprop="ratingValue">'.$rating['average'].'</b>';
+				$element_title .= '<meta itemprop="bestRating" content = "10">';
+
 				$element_title .= ', ';
-				$element_title .= TextHelper::number($rating['count'], array('голос', 'голоса', 'голосов'));
+				$element_title .= TextHelper::ratingCount($rating['count'], array('голос', 'голоса', 'голосов'));
+
+				if(0 != $element->comments->count()) {
+					$element_title .= ', ';
+					$element_title .= TextHelper::reviewCount($element->comments->count(), array('комментарий', 'комментария', 'комментариев'));
+				}
+
 				$element_title .= '</div>';
 
 			}
@@ -981,7 +994,7 @@ class ElementsHelper {
 
 		$element_comments = '';
 
-		$element_comments .= '<h3>Комментарии</h3>';
+		$element_comments .= '<h3 id="reviews">Комментарии</h3>';
 
 		$element_comments .= '<div class="row mt-3">';
 
@@ -1178,6 +1191,54 @@ class ElementsHelper {
 
 		return true;
 
+	}
+
+	/**
+	 * @param string $section
+	 * @param bool $cache
+	 * @return mixed
+	 */
+	public static function getGenres(string $section, bool $cache = true) {
+		$minutes = 60;
+		$var_name = $section.'_genres';
+		$model = SectionsHelper::getObjectBy($section);
+		if($cache) {
+			$result = Cache::remember($var_name, $minutes, function () use ($model) {
+				return $model->genres;
+			});
+		} else {
+			$result = $model->genres;
+		}
+		return $result;
+	}
+
+	/**
+	 * @param bool $cache
+	 * @return mixed
+	 */
+	public static function getCollections(bool $cache = true) {
+		if($cache) {
+			$minutes = 60;
+			$var_name = 'collections';
+			$result = Cache::remember($var_name, $minutes, function () {
+				return Collection::orderBy('name')->get();
+			});
+		} else {
+			$result = Collection::orderBy('name')->get();
+		}
+		return $result;
+	}
+
+	/**
+	 * @param string $section
+	 * @param int $id
+	 * @return int
+	 */
+	public static function getCover(string $section, int $id) {
+		$cover = 0;
+		$file_path = public_path().'/data/img/covers/'.$section.'/'.$id.'.jpg';
+		if (file_exists($file_path)) {$cover = $id;}
+		return $cover;
 	}
 
 }
