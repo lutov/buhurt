@@ -41,4 +41,40 @@ class Genre extends Eloquent {
 
 	}
 
+	/**
+	 * @return mixed
+	 */
+	public function films() {
+
+		return $this->morphMany('App\Models\Data\Film', 'element');
+
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function games() {
+
+		return $this->morphMany('App\Models\Data\Game', 'element');
+
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function albums() {
+
+		return $this->morphMany('App\Models\Data\Album', 'element');
+
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function memes() {
+
+		return $this->morphMany('App\Models\Data\Meme', 'element');
+
+	}
+
 }

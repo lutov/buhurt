@@ -79,15 +79,6 @@ class Film extends Eloquent  {
 	/**
 	 * @return mixed
 	 */
-	public function genres() {
-
-		return $this->morphMany('App\Models\Search\ElementGenre', 'element');
-
-	}
-
-	/**
-	 * @return mixed
-	 */
 	public function countries() {
 
 		return $this->belongsToMany('App\Models\Data\Country', 'countries_films', 'film_id', 'country_id');
