@@ -102,7 +102,7 @@ class BooksController extends Controller {
 
 		$book = Book::find($id);
 
-		if(count($book)) {
+		if(!empty($book)) {
 
 			$similar = array();
 

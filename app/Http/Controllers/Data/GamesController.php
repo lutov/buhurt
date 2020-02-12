@@ -110,7 +110,7 @@ class GamesController extends Controller {
 
 		$game = Game::find($id);
 
-		if(count($game)) {
+		if(!empty($game)) {
 			$developers = $game->developer;
 			$publishers = $game->publisher;
 			$platforms = $game->platforms()->orderBy('name')->get();

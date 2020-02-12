@@ -105,7 +105,7 @@ class AlbumsController extends Controller {
 
 		$album = Album::find($id);
 
-		if(count($album)) {
+		if(!empty($album)) {
 			
 			$tracks = $album->tracks()->orderBy('order')->get();
 			$bands = $album->bands()->orderBy('name')->get();

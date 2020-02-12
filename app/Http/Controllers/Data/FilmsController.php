@@ -104,7 +104,7 @@ class FilmsController extends Controller {
     public function item(Request $request, $id) {
 
 		$film = Film::find($id);
-		if (count($film)) {
+		if (!empty($film)) {
 
 			$screenwriters = $film->screenwriters;
 			$producers = $film->producers;

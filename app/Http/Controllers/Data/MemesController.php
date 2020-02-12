@@ -106,7 +106,7 @@ class MemesController extends Controller {
 
 		$meme = Meme::find($id);
 
-		if(count($meme)) {
+		if(!empty($meme)) {
 
 			$genres = $meme->genres; $genres = $genres->sortBy('name')->reverse();
 			$collections = $meme->collections;

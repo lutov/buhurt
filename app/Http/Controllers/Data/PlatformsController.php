@@ -81,7 +81,7 @@ class PlatformsController extends Controller {
 
 		$platform = Platform::find($id);
 
-		if(count($platform)) {
+		if(!empty($platform)) {
 
 			if(Auth::check()) {
 
