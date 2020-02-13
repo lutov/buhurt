@@ -43,12 +43,12 @@
                 <p>{!! Form::text('screenwriters', $value = DatatypeHelper::objectToJsArray($element->screenwriters, '; ', true), $attributes = array('placeholder' => 'Сценарист', 'class' => 'form-control w-100', 'id' => 'screenwriters')) !!}</p>
                 <p>{!! Form::text('producers', $value = DatatypeHelper::objectToJsArray($element->producers, '; ', true), $attributes = array('placeholder' => 'Продюсер', 'class' => 'form-control w-100', 'id' => 'producers')) !!}</p>
                 <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'description')) !!}</p>
-                <p>{!! Form::text('genres', $value = $value = DatatypeHelper::objectToJsArray($element->genres, '; ', '', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genres')) !!}</p>
+                <p>{!! Form::text('genres', $value = $value = DatatypeHelper::objectToJsArray($element->genres, '; ', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genres')) !!}</p>
                 <p>{!! Form::text('countries', $value = $value = DatatypeHelper::objectToJsArray($element->countries, '; ', true), $attributes = array('placeholder' => 'Страна производства', 'class' => 'form-control w-100', 'id' => 'countries')) !!}</p>
                 <p>{!! Form::text('length', $value = $element->length, $attributes = array('placeholder' => 'Продолжительность', 'class' => 'form-control w-25', 'id' => 'length')) !!}</p>
                 <p>{!! Form::text('year', $value = $element->year, $attributes = array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
                 <p>{!! Form::text('actors', $value = DatatypeHelper::objectToJsArray($element->actors, '; ', true), $attributes = array('placeholder' => 'Актеры', 'class' => 'form-control w-100', 'id' => 'actors')) !!}</p>
-                <p>{!! Form::text('collections', $value = DatatypeHelper::objectToJsArray($element->collections, '; ', '', true), $attributes = array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
+                <p>{!! Form::text('collections', $value = DatatypeHelper::objectToJsArray($element->collections, '; ', true), $attributes = array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
                 <p><b>Обложка</b> {!! Form::file('cover'); !!}</p>
                 {!! Form::submit('Сохранить', $attributes = array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
                 {!! Form::close() !!}

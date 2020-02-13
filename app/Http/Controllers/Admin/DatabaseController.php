@@ -98,7 +98,7 @@ class DatabaseController extends Controller {
 		$collections = explode('; ', $request->get('collections'));
 
 		$writers = explode('; ', $request->get('writers'));
-		$publishers = explode('; ', $request->get('publishers'));
+		$books_publishers = explode('; ', $request->get('books_publishers'));
 
 		$directors = explode('; ', $request->get('directors'));
 		$screenwriters = explode('; ', $request->get('screenwriters'));
@@ -109,8 +109,9 @@ class DatabaseController extends Controller {
 
 		$platforms = explode('; ', $request->get('platforms'));
 		$developers = explode('; ', $request->get('developers'));
+		$games_publishers = explode('; ', $request->get('games_publishers'));
 
-		$tracks = $request->get('tracks');
+		$tracks = $request->get('tracks', array());
 		$bands = explode('; ', $request->get('bands'));
 
 		if('edit' == $action) {
@@ -142,17 +143,18 @@ class DatabaseController extends Controller {
 		$this->sync($genres, 'genres', $element);
 		$this->sync($collections, 'collections', $element);
 
-		$this->sync($writers, 'persons', $element);
-		$this->sync($publishers, 'companies', $element);
+		$this->sync($writers, 'writers', $element);
+		$this->sync($books_publishers, 'books_publishers', $element);
 
-		$this->sync($directors, 'persons', $element);
-		$this->sync($screenwriters, 'persons', $element);
-		$this->sync($producers, 'persons', $element);
-		$this->sync($actors, 'persons', $element);
+		$this->sync($directors, 'directors', $element);
+		$this->sync($screenwriters, 'screenwriters', $element);
+		$this->sync($producers, 'producers', $element);
+		$this->sync($actors, 'actors', $element);
 		$this->sync($countries, 'countries', $element);
 
 		$this->sync($platforms, 'platforms', $element);
-		$this->sync($developers, 'companies', $element);
+		$this->sync($developers, 'developers', $element);
+		$this->sync($games_publishers, 'games_publishers', $element);
 
 		$this->sync($bands, 'bands', $element);
 		$this->sync($tracks, 'tracks', $element);
@@ -188,7 +190,7 @@ class DatabaseController extends Controller {
 	 */
 	protected function sync(array $list, string $entity_section, $element) {
 
-		if(!count($list)) {return false;}
+		if(!isset($list[0]) || empty($list[0])) {return false;}
 
 		$entities = array();
 
@@ -530,6 +532,11 @@ class DatabaseController extends Controller {
 	 * @return int
 	 */
 	private function getMissingId(string $section = '') {
+
+		// обратная конвертация из конкретного объекта в общий
+		// позже надо будет это как-то переделать
+		$type = SectionsHelper::getSectionType($section);
+		$section = SectionsHelper::getSectionBy($type);
 
 		$missing_id = 0;
 

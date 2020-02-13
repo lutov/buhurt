@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title'){{$parent->name}}@stop
+@section('title'){{$section->name}}@stop
 
 @section('subtitle'){{$section->name}}@stop
 
@@ -17,7 +17,7 @@
 
             {!! Breadcrumbs::render('section', $section) !!}
 
-            {!! ElementsHelper::getList($request, $elements, $parent->alt_name, $section->alt_name)!!}
+            {!! ElementsHelper::getList($request, $elements, $section->alt_name)!!}
 
         </div>
 

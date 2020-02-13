@@ -13,7 +13,7 @@
 
 	<div itemscope itemtype="">
 
-		<?php /*Breadcrumbs::render('element', $element)*/ ?>
+		{!! Breadcrumbs::render('element', $element) !!}
 
 		{!! ElementsHelper::getCardBody($request, $parent->alt_name, $element, $options) !!}
 

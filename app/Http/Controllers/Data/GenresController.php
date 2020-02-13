@@ -40,10 +40,11 @@ class GenresController extends Controller {
 	 */
 	public function list(Request $request, $section) {
 
-		$parent = SectionsHelper::getSection('genres');
-		$section = SectionsHelper::getSection($section);
-
-		$section->setParent($parent);
+		//dd($section);
+		//$parent = SectionsHelper::getSection('genres');
+		//$section = SectionsHelper::getSection($section);
+		$genre = Genre::find($section);
+		$section = SectionsHelper::getSection(SectionsHelper::getSectionBy($genre->element_type)); //dd($section);
 
 		$sort = 'name';
 		$order = 'asc';
@@ -56,7 +57,7 @@ class GenresController extends Controller {
 
 		return View::make('genres.list', array(
 			'request' => $request,
-			'parent' => $parent,
+			//'parent' => $parent,
 			'section' => $section,
 			'elements' => $elements
 		));
@@ -148,8 +149,6 @@ class GenresController extends Controller {
 				'order' => $order,
 				'cover' => $cover,
 			);
-
-			$genre->setParent($section);
 
 			return View::make('genres.item', array(
 				'request' => $request,

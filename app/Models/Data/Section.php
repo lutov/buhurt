@@ -2,6 +2,7 @@
 
 use App\Traits\SectionTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property mixed alt_name
@@ -21,6 +22,15 @@ class Section extends Model {
 	public function element() {
 
 		return $this->morphTo();
+
+	}
+
+	/**
+	 * @return BelongsTo
+	 */
+	public function parent() {
+
+		return $this->belongsTo('App\Models\Data\Section', 'parent_id', 'id');
 
 	}
 

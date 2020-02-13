@@ -8,6 +8,7 @@
 
 namespace App\Traits;
 
+use App\Helpers\SectionsHelper;
 use App\Models\User\Unwanted;
 use App\Models\User\Wanted;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +24,7 @@ trait IsWantedTrait {
 
 		if(Auth::check()) {
 
-			$section = $this->section();
+			$section = SectionsHelper::getSection(SectionsHelper::getSectionBy(class_basename($this)));
 
 			$wanted = Wanted::where('element_id', '=', $this->id)
 				->where('user_id', '=', Auth::user()->id)
@@ -48,7 +49,7 @@ trait IsWantedTrait {
 
 		if(Auth::check()) {
 
-			$section = $this->section();
+			$section = SectionsHelper::getSection(SectionsHelper::getSectionBy(class_basename($this)));
 
 			$unwanted = Unwanted::where('element_id', '=', $this->id)
 				->where('user_id', '=', Auth::user()->id)

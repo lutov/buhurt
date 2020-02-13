@@ -17,7 +17,7 @@
 
 			{!! Breadcrumbs::render('element', $element) !!}
 
-			{!! ElementsHelper::getElements($request, $elements, $elements->first()->section()->alt_name, $options)!!}
+			{!! ElementsHelper::getElements($request, $elements, 'films', $options)!!}
 
 		</div>
 

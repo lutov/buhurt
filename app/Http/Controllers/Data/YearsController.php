@@ -39,10 +39,7 @@ class YearsController extends Controller {
 	 */
 	public function list(Request $request, string $section) {
 
-		$parent = SectionsHelper::getSection('years');
 		$section = SectionsHelper::getSection($section);
-
-		$section->setParent($parent);
 
 		$sort = 'year';
 		$order = 'desc';
@@ -58,7 +55,6 @@ class YearsController extends Controller {
 
 		return View::make('years.list', array(
 			'request' => $request,
-			'parent' => $parent,
 			'section' => $section,
 			'elements' => $elements
 		));
@@ -125,7 +121,6 @@ class YearsController extends Controller {
 
 			$model = 'App\\Models\\Data\\'.$parent->type;
 			$element = new $model();
-			$element->setParent($section);
 			$element->name = $year.'-й год';
 
 			$options = array(

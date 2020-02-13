@@ -25,26 +25,28 @@ Breadcrumbs::register('icons', function($breadcrumbs) {
 
 Breadcrumbs::register('section', function($breadcrumbs, $section) {
 	$breadcrumbs->parent('home');
-	if($parent = $section->parent()) {
-		$breadcrumbs->push($parent->name, route($parent->alt_name.'_section', $parent->id));
+	if(isset($section->parent->id)) {
+		$breadcrumbs->push($section->parent->name, route($section->parent->alt_name.'_section', $section->parent->id));
 	}
 	$breadcrumbs->push($section->name, route($section->alt_name, $section->id));
 });
 
 Breadcrumbs::register('element', function($breadcrumbs, $element) {
 
-	$section = $element->section();
+	$class_name = class_basename($element); //dd($class_name);
+	$section_name = SectionsHelper::getSectionBy($class_name); //dd($section_name);
+	$section = SectionsHelper::getSection($section_name); //dd($section);
 	$breadcrumbs->parent('home');
-	if($parent = $element->parent()) {
+	if(isset($section->parent->id)) {
 
-		$breadcrumbs->push($section->name, route($section->alt_name.'_section', $section->id));
-		$breadcrumbs->push($parent->name, route($section->alt_name, array($parent->alt_name, $parent->id)));
-		$breadcrumbs->push($element->name, route($section->type, array($section->alt_name, $element->id)));
+		$breadcrumbs->push($section->name, route($section->alt_name, $section->id));
+		$breadcrumbs->push($section->parent->name, route($section->route, array($section->parent->alt_name, $section->parent->id)));
+		$breadcrumbs->push($element->name, route($section->route, array($section->alt_name, $element->id)));
 
 	} else {
 
 		$breadcrumbs->push($section->name, route($section->alt_name, $section->id));
-		$breadcrumbs->push($element->name, route($section->type, $element->id));
+		$breadcrumbs->push($element->name, route($section->route, $element->id));
 
 	}
 
