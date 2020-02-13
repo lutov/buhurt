@@ -501,9 +501,9 @@ class DatabaseController extends Controller {
 
 			}
 
-			$this->attach($genres, 'genres', $element);
-			$this->attach($collections, 'collections', $element);
-			$this->attach($countries, 'countries', $element);
+			$this->sync($genres, 'genres', $element);
+			$this->sync($collections, 'collections', $element);
+			$this->sync($countries, 'countries', $element);
 
 			$this->setUploader($type, $element->id);
 
