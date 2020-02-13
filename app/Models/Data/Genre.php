@@ -37,7 +37,7 @@ class Genre extends Eloquent {
 	 */
 	public function books() {
 
-		return $this->morphMany('App\Models\Data\Book', 'element');
+		return $this->morphedByMany('App\Models\Data\Book', 'element');
 
 	}
 
@@ -46,7 +46,7 @@ class Genre extends Eloquent {
 	 */
 	public function films() {
 
-		return $this->morphMany('App\Models\Data\Film', 'element');
+		return $this->morphedByMany('App\Models\Data\Film', 'element');
 
 	}
 
@@ -55,7 +55,7 @@ class Genre extends Eloquent {
 	 */
 	public function games() {
 
-		return $this->morphMany('App\Models\Data\Game', 'element');
+		return $this->morphedByMany('App\Models\Data\Game', 'element');
 
 	}
 
@@ -64,7 +64,7 @@ class Genre extends Eloquent {
 	 */
 	public function albums() {
 
-		return $this->morphMany('App\Models\Data\Album', 'element');
+		return $this->morphdByMany('App\Models\Data\Album', 'element');
 
 	}
 
@@ -73,7 +73,7 @@ class Genre extends Eloquent {
 	 */
 	public function memes() {
 
-		return $this->morphMany('App\Models\Data\Meme', 'element');
+		return $this->morphedByMany('App\Models\Data\Meme', 'element');
 
 	}
 

@@ -109,7 +109,7 @@ class FilmsController extends Controller {
 			$screenwriters = $film->screenwriters;
 			$producers = $film->producers;
 			$directors = $film->directors;
-			$genres = $film->genres; $genres = $genres->sortBy('name')->reverse();
+			$genres = $film->genres; $genres = $genres->sortBy('name');//->reverse();
 			$countries = $film->countries;
 			$actors = $film->actors;
 			$collections = $film->collections;

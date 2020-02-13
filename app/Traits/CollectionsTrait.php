@@ -16,7 +16,7 @@ trait CollectionsTrait {
 	 */
 	public function collections() {
 
-		return $this->morphMany('App\Models\Search\ElementCollection', 'element');
+		return $this->morphToMany('App\Models\Data\Collection', 'element', 'elements_collections');
 
 	}
 

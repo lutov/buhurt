@@ -46,7 +46,8 @@ class Collection extends Eloquent {
 	 */
 	public function books() {
 
-		return $this->morphMany('App\Models\Data\Book', 'element');
+		return $this->morphedByMany('App\Models\Data\Book', 'element');
+
 	}
 
 	/**
@@ -54,16 +55,34 @@ class Collection extends Eloquent {
 	 */
 	public function films() {
 
-		return $this->morphMany('App\Models\Data\Film', 'element');
+		return $this->morphedByMany('App\Models\Data\Film', 'element');
 
 	}
 
 	/**
-	 * Отношение с
+	 * @return mixed
 	 */
 	public function games() {
 
-		return $this->morphMany('App\Models\Data\Game', 'element');
+		return $this->morphedByMany('App\Models\Data\Game', 'element');
+
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function albums() {
+
+		return $this->morphdByMany('App\Models\Data\Album', 'element');
+
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function memes() {
+
+		return $this->morphedByMany('App\Models\Data\Meme', 'element');
 
 	}
 

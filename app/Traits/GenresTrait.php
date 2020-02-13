@@ -15,7 +15,7 @@ trait GenresTrait {
 	 */
 	public function genres() {
 
-		return $this->morphMany('App\Models\Search\ElementGenre', 'element');
+		return $this->morphToMany('App\Models\Data\Genre', 'element', 'elements_genres');
 
 	}
 

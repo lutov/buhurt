@@ -16,39 +16,9 @@ use App\Helpers\RolesHelper;
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Helpers\ElementsHelper;
-use App\Models\Data\Track;
 use App\Models\User\Uploader;
 
 class DatabaseController extends Controller {
-
-	private int $id = 0;
-	private string $section = '';
-	private string $type = '';
-	private string $name = '';
-	private string $alt_name = '';
-	private string $description = '';
-	private string $year = '';
-
-	private array $genres = [];
-	private array $collections = [];
-
-	private array $writers = [];
-	private array $publishers = [];
-
-	private array $directors = [];
-	private array $screenwriters = [];
-	private array $producers = [];
-	private array $actors = [];
-	private array $countries = [];
-	private string $length = '';
-
-	private array $platforms = [];
-	private array $developers = [];
-
-	private array $bands = [];
-	private array $tracks = [];
-
-	private string $action = '';
 
 	/**
 	 * @param Request $request
@@ -87,13 +57,10 @@ class DatabaseController extends Controller {
 	 */
 	public function save(Request $request) {
 
-		$this->section = $request->get('section');
-		$this->type = SectionsHelper::getSectionType($this->section);
-
 		$validator = Validator::make(
 			$_POST,
 			array(
-				$this->section.'_name' => array('required', 'min:1'),
+				'name' => array('required', 'min:1'),
 				'cover' => array('image', 'max:100')
 			)
 		);
@@ -103,27 +70,6 @@ class DatabaseController extends Controller {
 			return Redirect::back()->withInput()->withErrors($validator);
 
 		} else {
-
-			$this->id = $request->get('element_id');
-			$this->name = $request->get($this->section.'_name');
-			$this->alt_name = $request->get($this->section.'_alt_name');
-			$this->description = $request->get($this->section.'_description');
-			$this->year = $request->get($this->section.'_year');
-			$this->genres = explode('; ', $request->get($this->section.'_genre'));
-			$this->collections = explode('; ', $request->get('collections'));
-			$this->writers = explode('; ', $request->get($this->section.'_writers'));
-			$this->publishers = explode('; ', $request->get($this->section.'_publishers'));
-			$this->directors = explode('; ', $request->get($this->section.'_directors'));
-			$this->screenwriters = explode('; ', $request->get($this->section.'_screenwriters'));
-			$this->producers = explode('; ', $request->get($this->section.'_producers'));
-			$this->actors = explode('; ', $request->get($this->section.'_actors'));
-			$this->countries = explode('; ', $request->get($this->section.'_countries'));
-			$this->length = $request->get('length');
-			$this->platforms = explode('; ', $request->get($this->section.'_platform'));
-			$this->developers = explode('; ', $request->get($this->section.'_developer'));
-			$this->tracks = $request->get('tracks');
-			$this->bands = explode('; ', $request->get($this->section.'_band'));
-			$this->action = $request->get('action', '');
 
 			return $this->saveElement($request);
 
@@ -137,43 +83,53 @@ class DatabaseController extends Controller {
 	 */
 	private function saveElement(Request $request) {
 
-		if('edit' == $this->action) {
+		$action = $request->get('action', '');
 
-			$element = $this->type::find($this->id);
+		$id = $request->get('element_id');
+		$section = $request->get('section');
+		$type = SectionsHelper::getSectionType($section);
 
-			/* detach entities */
-			if(count($this->genres)) {$element->genres()->detach();}
-			if(count($this->collections)) {$element->collections()->detach();}
+		$name = $request->get('name');
+		$alt_name = $request->get('alt_name');
+		$description = $request->get('_description');
+		$year = $request->get('year');
 
-			if(count($this->writers)) {$element->writers()->detach();}
-			if(count($this->publishers)) {$element->publishers()->detach();}
+		$genres = explode('; ', $request->get('genres'));
+		$collections = explode('; ', $request->get('collections'));
 
-			if(count($this->directors)) {$element->directors()->detach();}
-			if(count($this->screenwriters)) {$element->screenwriters()->detach();}
-			if(count($this->producers)) {$element->producers()->detach();}
-			if(count($this->countries)) {$element->countries()->detach();}
-			if(count($this->actors)) {$element->actors()->detach();}
+		$writers = explode('; ', $request->get('writers'));
+		$publishers = explode('; ', $request->get('publishers'));
 
-			if(count($this->platforms)) {$element->platforms()->detach();}
-			if(count($this->developers)) {$element->developer()->detach();}
+		$directors = explode('; ', $request->get('directors'));
+		$screenwriters = explode('; ', $request->get('screenwriters'));
+		$producers = explode('; ', $request->get('producers'));
+		$actors = explode('; ', $request->get('actors'));
+		$countries = explode('; ', $request->get('countries'));
+		$length = $request->get('length');
 
-			if(count($this->bands)) {$element->bands()->detach();}
-			if(count($this->tracks)) {$element->tracks()->detach();}
-			/* detach entities */
+		$platforms = explode('; ', $request->get('platforms'));
+		$developers = explode('; ', $request->get('developers'));
+
+		$tracks = $request->get('tracks');
+		$bands = explode('; ', $request->get('bands'));
+
+		if('edit' == $action) {
+
+			$element = $type::find($id);
 
 		} else {
 
-			$element = new $this->type;
-			$fill_id = $this->getMissingId($this->section);
+			$element = new $type;
+			$fill_id = $this->getMissingId($section);
 			if($fill_id) {$element->id = $fill_id;}
 
 		}
 
-		$element->name = $this->name;
-		$element->alt_name = $this->alt_name;
-		$element->description = $this->prepareDescription($this->description);
-		$element->year = $this->year;
-		$element->length = $this->length;
+		$element->name = $name;
+		$element->alt_name = $alt_name;
+		$element->description = $this->prepareDescription($description);
+		$element->year = $year;
+		$element->length = $length;
 
 		if(RolesHelper::isAdmin($request)) {
 			$element->verified = 1;
@@ -183,43 +139,31 @@ class DatabaseController extends Controller {
 
 		$element->save();
 
-		/* attach entities */
-		if(count($this->genres)) {$this->attach($this->genres, 'Genre', $this->section, $element);}
-		if(count($this->collections)) {$this->attach($this->collections, 'Collection', $this->section, $element);}
+		$this->sync($genres, 'genres', $element);
+		$this->sync($collections, 'collections', $element);
 
-		if(count($this->writers)) {$this->attach($this->writers, 'Person', $this->section, $element);}
-		if(count($this->publishers)) {$this->attach($this->publishers, 'Company', $this->section, $element);}
+		$this->sync($writers, 'persons', $element);
+		$this->sync($publishers, 'companies', $element);
 
-		if(count($this->directors)) {$this->attach($this->directors, 'Person', $this->section, $element);}
-		if(count($this->screenwriters)) {$this->attach($this->screenwriters, 'Person', $this->section, $element);}
-		if(count($this->producers)) {$this->attach($this->producers, 'Person', $this->section, $element);}
-		if(count($this->actors)) {$this->attach($this->actors, 'Person', $this->section, $element);}
-		if(count($this->countries)) {$this->attach($this->countries, 'Country', $this->section, $element);}
+		$this->sync($directors, 'persons', $element);
+		$this->sync($screenwriters, 'persons', $element);
+		$this->sync($producers, 'persons', $element);
+		$this->sync($actors, 'persons', $element);
+		$this->sync($countries, 'countries', $element);
 
-		if(count($this->platforms)) {$this->attach($this->platforms, 'Platform', $this->section, $element);}
-		if(count($this->developers)) {$this->attach($this->developers, 'Company', $this->section, $element);}
+		$this->sync($platforms, 'platforms', $element);
+		$this->sync($developers, 'companies', $element);
 
-		if(count($this->bands)) {$this->attach($this->bands, 'Band', $this->section, $element);}
-		if(count($this->tracks)) {
-			foreach ($this->tracks as $key => $track) {
-				if (!empty($track)) {
-					$new_track = new Track;
-					$new_track->name = $track;
-					$new_track->order = $key + 1;
-					$new_track->album_id = $element->id;
-					$new_track->save();
-				}
-			}
-		}
-		/* attach entities */
+		$this->sync($bands, 'bands', $element);
+		$this->sync($tracks, 'tracks', $element);
 
-		$this->setCover($request, $this->section, $element->id);
+		$this->setCover($request, $section, $element->id);
 
-		if('edit' != $this->action) {
-			$this->setUploader($this->type, $element->id);
+		if('edit' != $action) {
+			$this->setUploader($type, $element->id);
 		}
 
-		return $this->returnSuccess($this->section, $element->id);
+		return $this->returnSuccess($section, $element->id);
 
 	}
 
@@ -238,35 +182,43 @@ class DatabaseController extends Controller {
 
 	/**
 	 * @param array $list
-	 * @param string $entity_type
-	 * @param string $section
+	 * @param string $entity_section
 	 * @param $element
+	 * @return bool
 	 */
-	protected function attach(array $list, string $entity_type, string $section, $element) {
+	protected function sync(array $list, string $entity_section, $element) {
+
+		if(!count($list)) {return false;}
+
+		$entities = array();
+
+		$entity_type = SectionsHelper::getSectionType($entity_section);
 
 		foreach ($list as $value) {
 
 			$entity = $entity_type::where('name', '=', $value)->first();
 
-			if (isset($entity->name)) {
-
-				$entity->$section()->save($element);
-
-			} else {
+			if (!isset($entity->name)) {
 
 				$entity = new $entity_type;
 
-				$fill_id = $this->getMissingId(SectionsHelper::getSectionBy($entity_type));
+				$fill_id = $this->getMissingId($entity_section);
 				if($fill_id) {$entity->id = $fill_id;}
 
 				$entity->name = $value;
 				$entity->description = '';
 				$entity->save();
-				$entity->$section()->save($element);
 
 			}
 
+			$entities[] = $entity->id;
+			//$element->$entity_section()->attach($entity);
+
 		}
+
+		$element->$entity_section()->sync($entities);
+
+		return true;
 
 	}
 
@@ -520,7 +472,7 @@ class DatabaseController extends Controller {
 						break;
 
 					case 'quest_game':
-						$genres = array('Приключения');
+						$genres = array('Квесты');
 						break;
 
 					case 'arcade_game':
@@ -549,9 +501,9 @@ class DatabaseController extends Controller {
 
 			}
 
-			if(count($genres)) {$this->attach($genres, 'Genre', $section, $element);}
-			if(count($collections)) {$this->attach($collections, 'Collection', $section, $element);}
-			if(count($countries)) {$this->attach($countries, 'Country', $section, $element);}
+			$this->attach($genres, 'genres', $element);
+			$this->attach($collections, 'collections', $element);
+			$this->attach($countries, 'countries', $element);
 
 			$this->setUploader($type, $element->id);
 

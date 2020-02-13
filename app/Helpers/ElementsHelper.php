@@ -511,15 +511,12 @@ class ElementsHelper {
 				->where(function ($query) use ($options) {
 
 					foreach($options['genres'] as $key => $value) {
-						$query->orWhere('genre_id', '=', $value->genre_id);
+						$query->orWhere('genre_id', '=', $value->id);
 					}
 
 				})
 				->value('element_id')
 			;
-
-			//die(gettype($rand_id));
-			//die($rand_id);
 
 			$sim_elem = $options['type']::find($rand_id);
 
@@ -779,9 +776,10 @@ class ElementsHelper {
 
 				if(DatatypeHelper::setAndCount($info, 'genres')) {
 
-					$main_info .= DatatypeHelper::collectionToString(
+					//dd($info['genres']);
+
+					$main_info .= DatatypeHelper::arrayToString(
 						$info['genres'],
-						'genre',
 						', ',
 						'/genres/'.$section.'/',
 						false,
@@ -914,9 +912,8 @@ class ElementsHelper {
 
 					$element_body .= '<div class="mt-4 mb-4 small">';
 					$element_body .= 'Коллекции: ';
-					$element_body .= DatatypeHelper::collectionToString(
+					$element_body .= DatatypeHelper::arrayToString(
 						$info['collections'],
-						'collection',
 						', ',
 						'/collections/',
 						false,
