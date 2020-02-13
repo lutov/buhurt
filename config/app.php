@@ -252,6 +252,8 @@ return [
 		'Company' => App\Models\Data\Company::class,
 		'Collection' => App\Models\Data\Collection::class,
 		'Band' => App\Models\Data\Band::class,
+		'Genre' => App\Models\Data\Genre::class,
+		'Country' => App\Models\Data\Country::class,
 
 		/* Helpers */
 		'AchievementsHelper' => App\Helpers\AchievementsHelper::class,

@@ -224,7 +224,7 @@ class ElementsHelper {
 					$elements_list .= '<div class="mt-3">';
 					$elements_list .= '<div class="btn-group">';
 
-					if (RolesHelper::isAdmin($request)) {
+					if(RolesHelper::isAdmin($request)) {
 
 						$elements_list .= '<a role="button" class="btn btn-sm btn-outline-success" href="/admin/edit/' . $section . '/' . $element->id . '" title="Редактировать">';
 						$elements_list .= '&#9998;';
@@ -232,7 +232,7 @@ class ElementsHelper {
 
 					}
 
-					if (method_exists($element, 'wanted')) {
+					if(method_exists($element, 'wanted')) {
 
 						if ($element->isWanted()) {
 							$class = 'btn btn-sm btn-success';

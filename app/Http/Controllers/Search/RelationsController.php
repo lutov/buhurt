@@ -47,7 +47,7 @@ class RelationsController extends Controller {
 			->toArray()
 		;
 
-		//echo $relations;
+		//dd($relations);
 
 		$sort_direction = 'asc';
 		$limit = 28;

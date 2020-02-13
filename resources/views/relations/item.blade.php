@@ -37,16 +37,16 @@
 
 				foreach($relations as $rel_elem) {
 
-					//echo DebugHelper::dump($rel_elem->element_type, true); die();
+					//dump($rel_elem);
 
 					$relation_type = $rel_elem->element_type;
 					$relation_section = SectionsHelper::getSectionBy($relation_type);
 
-					//echo DebugHelper::dump($relation_type, true); die();
+					//dd($rel_elem->{$relation_section});
 
-					$relation = $rel_elem->$relation_section[0];
+					$relation = $rel_elem->{$relation_section}[0];
 
-					$options['add_text'] = $rel_elem->relation->name;
+					$options['add_text'] = $rel_elem->relation->name; //dd($options);
 
 					echo ElementsHelper::getElement($request, $relation, $relation_section, $options);
 
@@ -113,8 +113,6 @@
 		</div>
 
 		<?php
-
-			//echo DebugHelper::dump($relations_simple, true);
 
 			$relations_edit_form = '';
 			foreach($relations_simple as $relation_simple) {
