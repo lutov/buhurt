@@ -781,7 +781,7 @@ class ElementsHelper {
 					$main_info .= DatatypeHelper::arrayToString(
 						$info['genres'],
 						', ',
-						'/genres/'.$section.'/',
+						'/genres/', //.$section.'/',
 						false,
 						'genre'
 					);
@@ -903,7 +903,7 @@ class ElementsHelper {
 
 					$element_body .= '<div class="mt-2 mb-2 small">';
 					$element_body .= 'Жанры произведений: ';
-					$element_body .= DatatypeHelper::arrayToString($info['top_genres'], ', ', '/genres/books/');
+					$element_body .= DatatypeHelper::arrayToString($info['top_genres'], ', ', '/genres/');
 					$element_body .= '</div>';
 
 				}

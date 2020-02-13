@@ -1,6 +1,6 @@
 @extends('layouts.default')
 
-@section('title'){{$parent->name}}@stop
+@section('title')Календарь@stop
 
 @section('subtitle'){{$section->name}}@stop
 
@@ -19,7 +19,7 @@
 
             <div style="column-count: 10; column-width: 5em;">
 				<?php $options = array('paginate' => false,); ?>
-                {!! ElementsHelper::getList($request, $elements, $parent->alt_name, $section->alt_name, $options)!!}
+                {!! ElementsHelper::getList($request, $elements, 'years', '', $options)!!}
             </div>
 
         </div>

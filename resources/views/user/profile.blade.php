@@ -116,10 +116,10 @@
 
 			<div class="col-md-12 border rounded p-3">
 
-				@if(count($fav_gens_books))<p>Книги: {!! DatatypeHelper::arrayToString($fav_gens_books, ', ', '/genres/books/'); !!}</p>@endif
-				@if(count($fav_gens_films))<p>Фильмы: {!! DatatypeHelper::arrayToString($fav_gens_films, ', ', '/genres/films/'); !!}</p>@endif
-				@if(count($fav_gens_games))<p>Игры: {!! DatatypeHelper::arrayToString($fav_gens_games, ', ', '/genres/games/'); !!}</p>@endif
-				@if(count($fav_gens_albums))<p>Альбомы: {!! DatatypeHelper::arrayToString($fav_gens_albums, ', ', '/genres/albums/'); !!}</p>@endif
+				@if(count($fav_gens_books))<p>Книги: {!! DatatypeHelper::arrayToString($fav_gens_books, ', ', '/genres/'); !!}</p>@endif
+				@if(count($fav_gens_films))<p>Фильмы: {!! DatatypeHelper::arrayToString($fav_gens_films, ', ', '/genres/'); !!}</p>@endif
+				@if(count($fav_gens_games))<p>Игры: {!! DatatypeHelper::arrayToString($fav_gens_games, ', ', '/genres/'); !!}</p>@endif
+				@if(count($fav_gens_albums))<p>Альбомы: {!! DatatypeHelper::arrayToString($fav_gens_albums, ', ', '/genres/'); !!}</p>@endif
 
 			</div>
 

@@ -15,7 +15,7 @@
 
 		{!! Breadcrumbs::render('element', $element) !!}
 
-		{!! ElementsHelper::getCardBody($request, $parent->alt_name, $element, $options) !!}
+		{!! ElementsHelper::getCardBody($request, 'genres', $element, $options) !!}
 
 	</div>
 

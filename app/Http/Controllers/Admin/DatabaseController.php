@@ -127,15 +127,13 @@ class DatabaseController extends Controller {
 		}
 
 		$element->name = $name;
-		$element->alt_name = $alt_name;
-		$element->description = $this->prepareDescription($description);
-		$element->year = $year;
-		$element->length = $length;
+		if(!empty($alt_name)) {$element->alt_name = $alt_name;}
+		if(!empty($description)) {$element->description = $this->prepareDescription($description);}
+		if(!empty($year)) {$element->year = $year;}
+		if(!empty($length)) {$element->length = $length;}
 
-		if(RolesHelper::isAdmin($request)) {
-			$element->verified = 1;
-		} else {
-			$element->verified = 0;
+		if(!empty($alt_name)) {
+			if (RolesHelper::isAdmin($request)) {$element->verified = 1;} else {$element->verified = 0;}
 		}
 
 		$element->save();

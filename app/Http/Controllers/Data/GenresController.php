@@ -38,13 +38,9 @@ class GenresController extends Controller {
 	 * @param $section
 	 * @return \Illuminate\Contracts\View\View
 	 */
-	public function list(Request $request, $section) {
+	private function list(Request $request, $section) {
 
-		//dd($section);
-		//$parent = SectionsHelper::getSection('genres');
-		//$section = SectionsHelper::getSection($section);
-		$genre = Genre::find($section);
-		$section = SectionsHelper::getSection(SectionsHelper::getSectionBy($genre->element_type)); //dd($section);
+		$section = SectionsHelper::getSection($section);
 
 		$sort = 'name';
 		$order = 'asc';
@@ -57,12 +53,17 @@ class GenresController extends Controller {
 
 		return View::make('genres.list', array(
 			'request' => $request,
-			//'parent' => $parent,
 			'section' => $section,
 			'elements' => $elements
 		));
 
 	}
+
+	public function books_list(Request $request) {$section = 'books'; return $this->list($request, $section);}
+	public function films_list(Request $request) {$section = 'films'; return $this->list($request, $section);}
+	public function games_list(Request $request) {$section = 'games'; return $this->list($request, $section);}
+	public function albums_list(Request $request) {$section = 'albums'; return $this->list($request, $section);}
+	public function memes_list(Request $request) {$section = 'memes'; return $this->list($request, $section);}
 
 	/**
 	 * @param Request $request
@@ -70,10 +71,10 @@ class GenresController extends Controller {
 	 * @param $id
 	 * @return \Illuminate\Contracts\View\View
 	 */
-    public function item(Request $request, $section, $id) {
+    public function item(Request $request, $id) {
 
-		$parent = SectionsHelper::getSection('genres');
-		$section = SectionsHelper::getSection($section);
+		$genre = Genre::find($id);
+		$section = SectionsHelper::getSection(SectionsHelper::getSectionBy($genre->element_type));
 
 		$sort = $request->get('sort', 'created_at');
 		$order = $request->get('order', 'desc');
@@ -89,7 +90,7 @@ class GenresController extends Controller {
 		$sort = TextHelper::checkSort($sort);
 		$order = TextHelper::checkOrder($order);
 
-		$genre = Genre::find($id);
+		//$genre = Genre::find($id);
 
 		if(Auth::check()) {
 
@@ -135,7 +136,7 @@ class GenresController extends Controller {
 		if(!empty($genre)) {
 
 			$cover = 0;
-			$file_path = public_path() . '/data/img/covers/'.$parent->alt_name.'/' . $id . '.jpg';
+			$file_path = public_path() . '/data/img/covers/genres/' . $id . '.jpg';
 			if (file_exists($file_path)) {
 				$cover = $id;
 			}
@@ -155,7 +156,7 @@ class GenresController extends Controller {
 				'cover' => $cover,
 				'element' => $genre,
 				'elements' => $elements,
-				'parent' => $parent,
+				//'parent' => $parent,
 				'section' => $section,
 				'options' => $options
 			));

@@ -133,9 +133,15 @@ Route::group(array('prefix' => 'platforms'), function() {
 // genres
 Route::group(array('prefix' => 'genres'), function() {
 	Route::any('/', array(
-		'as' => 'genres_section',
+		'as' => 'genres',
 		'uses' => 'Data\GenresController@sections'
 	));
+	Route::any('books', array('as' => 'books_genres', 'uses' => 'Data\GenresController@books_list'));
+	Route::any('films', array('as' => 'films_genres', 'uses' => 'Data\GenresController@films_list'));
+	Route::any('games', array('as' => 'games_genres', 'uses' => 'Data\GenresController@games_list'));
+	Route::any('albums', array('as' => 'albums_genres', 'uses' => 'Data\GenresController@albums_list'));
+	Route::any('memes', array('as' => 'memes_genres', 'uses' => 'Data\GenresController@memes_list'));
+	/*
 	Route::any('{section}', array(
 		'as' => 'genres',
 		'uses' => 'Data\GenresController@list'
@@ -144,6 +150,11 @@ Route::group(array('prefix' => 'genres'), function() {
 		'as' => 'Genre',
 		'uses' => 'Data\GenresController@item'
 	));
+	*/
+	Route::any('{id}', array(
+		'as' => 'Genre',
+		'uses' => 'Data\GenresController@item'
+	))->where('id', '[0-9]+');
 });
 
 // years
