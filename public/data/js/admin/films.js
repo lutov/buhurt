@@ -1,32 +1,32 @@
 $(document).ready(function() {
 
-    var director = $('#film_director');
-    var producer = $('#film_producer');
-    var screenwriter = $('#film_screenwriter');
-    var actors = $('#film_actors');
+    var directors = $('#directors');
+    var producers = $('#producers');
+    var screenwriters = $('#screenwriters');
+    var actors = $('#actors');
     var collections = $('#collections');
     // film
-    $('#film_name').autocomplete({
+    $('#name').autocomplete({
         source: "/search/film_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
-    $('#film_genre').autocomplete({
+    $('#genres').autocomplete({
         source: "/search/film_genre/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
-    director.autocomplete({
+    directors.autocomplete({
         source: "/search/person_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
-    producer.autocomplete({
+    producers.autocomplete({
         source: "/search/person_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
-    screenwriter.autocomplete({
+    screenwriters.autocomplete({
         source: "/search/person_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
@@ -41,22 +41,22 @@ $(document).ready(function() {
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
-    $('#film_country').autocomplete({
+    $('#countries').autocomplete({
         source: "/search/country_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
-    bind_genres('films_genres', 'film_genre');
-    bind_genres('countries', 'film_country');
+    bind_genres('genres_list', 'genres');
+    bind_genres('countries_list', 'countries');
     bind_genres('collections_list', 'collections');
 
-    director.blur(function(event) {
+    directors.blur(function(event) {
         $(this).val($(this).val().replace(/,/g, ';'));
     });
-    producer.blur(function(event) {
+    producers.blur(function(event) {
         $(this).val($(this).val().replace(/,/g, ';'));
     });
-    screenwriter.blur(function(event) {
+    screenwriters.blur(function(event) {
         $(this).val($(this).val().replace(/,/g, ';'));
     });
     actors.blur(function(event) {

@@ -91,7 +91,7 @@ class DatabaseController extends Controller {
 
 		$name = $request->get('name');
 		$alt_name = $request->get('alt_name');
-		$description = $request->get('_description');
+		$description = $request->get('description', '');
 		$year = $request->get('year');
 
 		$genres = explode('; ', $request->get('genres'));
