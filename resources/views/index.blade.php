@@ -18,7 +18,7 @@
 
 		<div class="col-md-12">
 
-			{!! ElementsHelper::getHeader($request, $options['sort_list']); !!}
+			{!! ElementsHelper::getHeader($request, $options); !!}
 			{!! ElementsHelper::getRecommend($request, 'books'); !!}
 			{!! ElementsHelper::getRecommend($request, 'films'); !!}
 			{!! ElementsHelper::getRecommend($request, 'games'); !!}
@@ -37,20 +37,11 @@
 
 		<div class="col-md-12">
 
-			{!! ElementsHelper::getHeader($request, $options['sort_list']); !!}
-
-			<?php $options['wanted'] = $wanted['books']; $options['unwanted'] = $unwanted['books']; ?>
+			{!! ElementsHelper::getHeader($request, $options); !!}
 			{!! ElementsHelper::getElements($request, $books, 'books', $options) !!}
-
-			<?php $options['wanted'] = $wanted['films']; $options['unwanted'] = $unwanted['films']; ?>
 			{!! ElementsHelper::getElements($request, $films, 'films', $options) !!}
-
-			<?php $options['wanted'] = $wanted['games']; $options['unwanted'] = $unwanted['games']; ?>
 			{!! ElementsHelper::getElements($request, $games, 'games', $options) !!}
-
-			<?php $options['wanted'] = $wanted['albums']; $options['unwanted'] = $unwanted['albums']; ?>
 			{!! ElementsHelper::getElements($request, $albums, 'albums', $options) !!}
-
 			{!! ElementsHelper::getFooter(); !!}
 
 		</div>

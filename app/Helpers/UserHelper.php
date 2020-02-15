@@ -8,6 +8,7 @@
 
 namespace App\Helpers;
 
+use App\Models\User\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use App\Models\User\Rate;
@@ -146,6 +147,32 @@ class UserHelper {
 
 		//'<pre>'.print_r($fav_gen_names, true).'</pre>';
 
+	}
+
+	/**
+	 * @param User $user
+	 * @param bool $cache
+	 * @return mixed
+	 */
+	public static function getOptions(User $user, bool $cache = true) {
+		if($cache) {
+			$minutes = 60;
+			$var_name = 'user_'.$user->id.'_options';
+			$options = Cache::remember($var_name, $minutes, function () use ($user) {
+				return $user->options()
+					->where('enabled', '=', 1)
+					->pluck('option_id')
+					->toArray()
+				;
+			});
+		} else {
+			$options = $user->options()
+				->where('enabled', '=', 1)
+				->pluck('option_id')
+				->toArray()
+			;
+		}
+		return $options;
 	}
 
 }

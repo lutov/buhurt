@@ -17,10 +17,7 @@
 
             {!! Breadcrumbs::render('section', $section) !!}
 
-            <div style="column-count: 10; column-width: 5em;">
-				<?php $options = array('paginate' => false,); ?>
-                {!! ElementsHelper::getList($request, $elements, 'years', '', $options)!!}
-            </div>
+            {!! ElementsHelper::getList($request, $elements, 'years', $options) !!}
 
         </div>
 

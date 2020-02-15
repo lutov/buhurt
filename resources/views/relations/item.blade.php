@@ -26,7 +26,7 @@
 			);
 			?>
 
-			{!! ElementsHelper::getHeader($request); !!}
+			{!! ElementsHelper::getHeader($request, $options); !!}
 	
 			{!! ElementsHelper::getElement($request, $element, $section, $options) !!}
 

@@ -2,9 +2,9 @@
 
 @section('title'){!! $element->name !!}@stop
 
-@section('subtitle'){!! DatatypeHelper::arrayToString($options['writers'], ', ', '/persons/', false, 'author') !!}@stop
+@section('subtitle'){!! DatatypeHelper::arrayToString($element->writers, ', ', '/persons/', false, 'author') !!}@stop
 
-@section('keywords')книга, {!! DatatypeHelper::arrayToString($options['writers'], ', ', '/persons/', true) !!}, {!! $element->name !!}, {!! $element->alt_name !!}, {!! $element->year !!}@stop
+@section('keywords')книга, {!! DatatypeHelper::arrayToString($element->writers, ', ', '/persons/', true) !!}, {!! $element->name !!}, {!! $element->alt_name !!}, {!! $element->year !!}@stop
 @section('description'){!! TextHelper::wordsLimit($element->description, 25) !!}@stop
 
 @section('content')

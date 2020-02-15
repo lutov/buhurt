@@ -1,13 +1,10 @@
 <?php namespace App\Http\Controllers;
 
-use App\Models\Data\Album;
-use App\Models\Data\Book;
-use App\Models\Data\Film;
-use App\Models\Data\Game;
+use App\Helpers\ElementsHelper;
+use App\Helpers\SectionsHelper;
+use App\Models\Data\Section;
 use App\Models\User\Achievement;
-use App\Models\User\Unwanted;
 use App\Models\User\User;
-use App\Models\User\Wanted;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
@@ -15,218 +12,72 @@ use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller {
 
-	/*
-	|--------------------------------------------------------------------------
-	| Default Home Controller
-	|--------------------------------------------------------------------------
-	|
-	| You may wish to use controllers instead of, or in addition to, Closure
-	| based routes. That's great! Here is an example controller method to
-	| get you started. To route to this controller, just add the route:
-	|
-	|	Route::get('/', 'HomeController@showWelcome');
-	|
-	*/
-
 	/**
 	 * @param Request $request
 	 * @return \Illuminate\Contracts\View\View
 	 */
 	public function index(Request $request) {
 
+		$sort = 'updated_at';
+		$order = 'desc';
 		$limit = 9;
-		$minutes = 10;
-		$order_by = 'updated_at';
 
-		$wanted = array(
-			'books' => array(),
-			'films' => array(),
-			'games' => array(),
-			'albums' => array(),
+		$minutes = 10;
+
+		$sort_options = array(
+			'sort' => $sort,
+			'order' => $order,
+			'limit' => $limit,
 		);
-		$unwanted = array(
-			'books' => array(),
-			'films' => array(),
-			'games' => array(),
-			'albums' => array(),
+
+		$cache = array(
+			'minutes' => $minutes,
 		);
 
 		if(Auth::check()) {
 
-			$user_id = Auth::user()->id;
+			$user = Auth::user();
 
-			$wanted_books = Cache::remember('wanted_books_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
-				return Wanted::select('element_id')
-					->where('element_type', '=', 'Book')
-					->where('user_id', '=', $user_id)
-					->pluck('element_id')
-				;
-			});
-			$unwanted_books = Cache::remember('unwanted_books_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
-				return Unwanted::select('element_id')
-					->where('element_type', '=', 'Book')
-					->where('user_id', '=', $user_id)
-					->pluck('element_id')
-				;
-			});
+			$cache['name'] = 'mainpage_user_'.$user->id;
 
-			$wanted_films = Cache::remember('wanted_films_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
-				return Wanted::select('element_id')
-					->where('element_type', '=', 'Film')
-					->where('user_id', '=', $user_id)
-					//->remember(10)
-					->pluck('element_id')
-				;
-			});
-			$unwanted_films = Cache::remember('unwanted_films_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
-				return Unwanted::select('element_id')
-					->where('element_type', '=', 'Film')
-					->where('user_id', '=', $user_id)
-					->pluck('element_id')
-				;
-			});
+			$section = SectionsHelper::getSection('books');
+			$unwanted = ElementsHelper::getUnwanted($section, $user->id, $cache);
+			$books = $this->getUserElements($section, $user, $unwanted, $sort_options, $cache);
 
-			$wanted_games = Cache::remember('wanted_games_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
-				return Wanted::select('element_id')
-					->where('element_type', '=', 'Game')
-					->where('user_id', '=', $user_id)
-					->pluck('element_id')
-				;
-			});
-			$unwanted_games = Cache::remember('unwanted_games_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
-				return Unwanted::select('element_id')
-					->where('element_type', '=', 'Game')
-					->where('user_id', '=', $user_id)
-					->pluck('element_id')
-				;
-			});
+			$section = SectionsHelper::getSection('films');
+			$unwanted = ElementsHelper::getUnwanted($section, $user->id, $cache);
+			$films = $this->getUserElements($section, $user, $unwanted, $sort_options, $cache);
 
-			$wanted_albums = Cache::remember('unwanted_albums_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
-				return Wanted::select('element_id')
-					->where('element_type', '=', 'Album')
-					->where('user_id', '=', $user_id)
-					//->remember(10)
-					->pluck('element_id')
-				;
-			});
-			$unwanted_albums = Cache::remember('unwanted_albums_mainpage_auth'.$user_id, $minutes, function() use ($user_id) {
-				return Unwanted::select('element_id')
-					->where('element_type', '=', 'Album')
-					->where('user_id', '=', $user_id)
-					->pluck('element_id')
-				;
-			});
+			$section = SectionsHelper::getSection('games');
+			$unwanted = ElementsHelper::getUnwanted($section, $user->id, $cache);
+			$games = $this->getUserElements($section, $user, $unwanted, $sort_options, $cache);
 
-			$wanted = array(
-				'books' => $wanted_books->toArray(),
-				'films' => $wanted_films->toArray(),
-				'games' => $wanted_games->toArray(),
-				'albums' => $wanted_albums->toArray(),
-			);
-			$unwanted = array(
-				'books' => $unwanted_books->toArray(),
-				'films' => $unwanted_films->toArray(),
-				'games' => $unwanted_games->toArray(),
-				'albums' => $unwanted_albums->toArray(),
-			);
-
-			$books = Cache::remember('books_mainpage_auth'.$user_id, $minutes, function() use ($user_id, $unwanted_books, $order_by, $limit) {
-				return Book::where('verified', '=', 1)
-					->whereNotIn('books.id', $unwanted_books)
-					->with(array('rates' => function($query) use($user_id) {
-						$query
-							->where('user_id', '=', $user_id)
-							->where('element_type', '=', 'Book')
-						;
-					}))
-					->orderBy($order_by, 'desc')
-					->limit($limit)
-					->get()
-				;
-			});
-
-			$films = Cache::remember('films_mainpage_auth'.$user_id, $minutes, function() use ($user_id, $unwanted_films, $order_by, $limit) {
-				return Film::where('verified', '=', 1)
-					->whereNotIn('films.id', $unwanted_films)
-					->with(array('rates' => function ($query) use ($user_id) {
-						$query
-							->where('user_id', '=', $user_id)
-							->where('element_type', '=', 'Film')
-						;
-					}))
-					->orderBy($order_by, 'desc')
-					->limit($limit)
-					->get()
-				;
-			});
-
-			$games = Cache::remember('games_mainpage_auth'.$user_id, $minutes, function() use ($user_id, $unwanted_games, $order_by, $limit) {
-				return Game::where('verified', '=', 1)
-					->whereNotIn('games.id', $unwanted_games)
-					->with(array('rates' => function($query) use($user_id) {
-						$query
-							->where('user_id', '=', $user_id)
-							->where('element_type', '=', 'Game')
-						;
-					}))
-					->orderBy($order_by, 'desc')
-					->limit($limit)
-					->get()
-				;
-			});
-
-			$albums = Cache::remember('albums_mainpage_auth'.$user_id, $minutes, function() use ($user_id, $unwanted_albums, $order_by, $limit) {
-				return Album::where('verified', '=', 1)
-					->whereNotIn('albums.id', $unwanted_albums)
-					->with(array('rates' => function($query) use($user_id) {
-						$query
-							->where('user_id', '=', $user_id)
-							->where('element_type', '=', 'Album')
-						;
-					}))
-					->orderBy($order_by, 'desc')
-					->limit($limit)
-					->get()
-				;
-			});
+			$section = SectionsHelper::getSection('albums');
+			$unwanted = ElementsHelper::getUnwanted($section, $user->id, $cache);
+			$albums = $this->getUserElements($section, $user, $unwanted, $sort_options, $cache);
 
 		} else {
 
-			$books = Cache::remember('books_mainpage_unauth', $minutes, function() use ($limit, $order_by) {
-				return Book::where('verified', '=', 1)
-					->orderBy($order_by, 'desc')
-					->limit($limit)
-					->get()
-				;
-			});
-			$films = Cache::remember('films_mainpage_unauth', $minutes, function() use ($limit, $order_by) {
-				return Film::where('verified', '=', 1)
-					->orderBy($order_by, 'desc')
-					->limit($limit)
-					->get()
-				;
-			});
-			$games = Cache::remember('games_mainpage_unauth', $minutes, function() use ($limit, $order_by) {
-				return Game::where('verified', '=', 1)
-					->orderBy($order_by, 'desc')
-					->limit($limit)
-					->get()
-				;
-			});
-			$albums = Cache::remember('albums_mainpage_unauth', $minutes, function() use ($limit, $order_by) {
-				return Album::where('verified', '=', 1)
-					->orderBy($order_by, 'desc')
-					->limit($limit)
-					->get()
-				;
-			});
+			$cache['name'] = 'mainpage_anon_';
+
+			$section = SectionsHelper::getSection('books');
+			$books = $this->getElements($section, $sort_options, $cache);
+
+			$section = SectionsHelper::getSection('films');
+			$films = $this->getElements($section, $sort_options, $cache);
+
+			$section = SectionsHelper::getSection('games');
+			$games = $this->getElements($section, $sort_options, $cache);
+
+			$section = SectionsHelper::getSection('albums');
+			$albums = $this->getElements($section, $sort_options, $cache);
 		}
 
 		$options = array(
 			'header' => false,
 			'paginate' => false,
 			'footer' => false,
-			'sort_list' => array(),
+			'sort_options' => array(),
 			'sort' => 'created_at',
 			'order' => 'asc',
 		);
@@ -237,10 +88,9 @@ class HomeController extends Controller {
 			'films' => $films,
 			'games' => $games,
 			'albums' => $albums,
-			'wanted' => $wanted,
-			'unwanted' => $unwanted,
 			'options' => $options,
 		));
+
 	}
 
 	/**
@@ -266,7 +116,6 @@ class HomeController extends Controller {
 	public function icons(Request $request) {
 
 		$minutes = 60;
-		// remember(60)->
 		$icons = Cache::remember('icons', $minutes, function() {
 			return Achievement::pluck('id');
 		});
@@ -276,6 +125,72 @@ class HomeController extends Controller {
 			'icons' => $icons
 		));
 
+	}
+
+	/**
+	 * @param Section $section
+	 * @param User $user
+	 * @param array $unwanted
+	 * @param array $sort
+	 * @param array $cache
+	 * @return mixed
+	 */
+	private function getUserElements(Section $section, User $user, array $unwanted, array $sort, array $cache) {
+		if(count($cache)) {
+			$var_name = $cache['name'] . '_' . $section->name;
+			$elements = Cache::remember($var_name, $cache['minutes'], function () use ($section, $user, $unwanted, $sort) {
+				return $section->type::where('verified', '=', 1)
+					->whereNotIn($section->name . '.id', $unwanted)
+					->with(array('rates' => function ($query) use ($section, $user) {
+						$query
+							->where('user_id', '=', $user->id)
+							->where('element_type', '=', $section->type);
+					}))
+					->orderBy($sort['sort'], $sort['order'])
+					->limit($sort['limit'])
+					->get()
+				;
+			});
+		} else {
+			$elements = $section->type::where('verified', '=', 1)
+				->whereNotIn($section->name . '.id', $unwanted)
+				->with(array('rates' => function ($query) use ($section, $user) {
+					$query
+						->where('user_id', '=', $user->id)
+						->where('element_type', '=', $section->type);
+				}))
+				->orderBy($sort['sort'], $sort['order'])
+				->limit($sort['limit'])
+				->get()
+			;
+		}
+		return $elements;
+	}
+
+	/**
+	 * @param Section $section
+	 * @param array $sort
+	 * @param array $cache
+	 * @return mixed
+	 */
+	private function getElements(Section $section, array $sort, array $cache) {
+		if(count($cache)) {
+			$var_name = $cache['name'] . '_' . $section->name;
+			$elements = Cache::remember($var_name, $cache['minutes'], function () use ($section, $sort) {
+				return $section->type::where('verified', '=', 1)
+					->orderBy($sort['sort'], $sort['order'])
+					->limit($sort['limit'])
+					->get()
+				;
+			});
+		} else {
+			$elements = $section->type::where('verified', '=', 1)
+				->orderBy($sort['sort'], $sort['order'])
+				->limit($sort['limit'])
+				->get()
+			;
+		}
+		return $elements;
 	}
 
 }

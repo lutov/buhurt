@@ -8,7 +8,6 @@
 
 namespace App\Traits;
 
-
 trait WantedTrait {
 
 	/**
@@ -16,7 +15,7 @@ trait WantedTrait {
 	 */
 	public function wanted() {
 
-		return $this->morphMany('App\Models\User\Wanted', 'element');
+		return $this->morphOne('App\Models\User\Wanted', 'element');
 
 	}
 
@@ -25,7 +24,7 @@ trait WantedTrait {
 	 */
 	public function unwanted() {
 
-		return $this->morphMany('App\Models\User\Unwanted', 'element');
+		return $this->morphOne('App\Models\User\Unwanted', 'element');
 
 	}
 

@@ -18,27 +18,6 @@ class CommentsHelper {
 
 	/**
 	 * @param Request $request
-	 * @param $comments
-	 * @return string
-	 */
-	public static function get(Request $request, $comments) {
-
-		//echo '<pre>'.print_r($comments, true).'</pre>';
-
-		$comments_list = '';
-
-		foreach($comments as $key => $comment) {
-
-			$comments_list .= CommentsHelper::render($request, $comment);
-
-		}
-
-		return $comments_list;
-
-	}
-
-	/**
-	 * @param Request $request
 	 * @param $comment
 	 * @param bool $no_br
 	 * @return string
@@ -200,6 +179,24 @@ class CommentsHelper {
 		}
 
 		return $comments_list;
+
+	}
+
+	/**
+	 * @param $element
+	 * @param int $user_id
+	 * @return mixed
+	 */
+	public static function get($element, int $user_id = 0) {
+
+		$sort = 'created_at';
+		$order = 'desc';
+
+		$comments = $element->comments();
+		if($user_id) {$comments->where('user_id', $user_id);}
+		$comments->orderBy($sort, $order)->get();
+
+		return $comments;
 
 	}
 

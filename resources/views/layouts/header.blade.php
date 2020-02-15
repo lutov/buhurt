@@ -8,8 +8,8 @@
         
 		<meta name="keywords" content="@yield('keywords')" />
 		<meta name="description" content="@yield('description')" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-        
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 		<link rel="shortcut icon" href="https://buhurt.ru/favicon.ico" type="image/x-icon">
 
 		<link href="/data/vendor/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />

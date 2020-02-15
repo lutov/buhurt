@@ -3,7 +3,6 @@
 use App\Traits\CollectionsTrait;
 use App\Traits\CommentsTrait;
 use App\Traits\GenresTrait;
-use App\Traits\IsWantedTrait;
 use App\Traits\RatesTrait;
 use App\Traits\SectionTrait;
 use App\Traits\WantedTrait;
@@ -20,7 +19,6 @@ class Album extends Eloquent  {
 	use RatesTrait;
 	use CommentsTrait;
 	use WantedTrait;
-	use IsWantedTrait;
 
 	/**
 	 * The database table used by the model.

@@ -26,10 +26,6 @@ Route::get('icons', array(
 	'uses' => 'HomeController@icons'
 ));
 
-// Base
-Route::any('base/{section}/', function($section) {return Redirect::to('/'.$section.'/');});
-Route::any('base/{section}/{id}/', function($section, $id) {return Redirect::to('/'.$section.'/'.$id.'/');});
-
 // No "base"
 Route::any('books', array(
 	'as' => 'books',
@@ -114,7 +110,6 @@ Route::group(array('prefix' => 'countries'), function() {
 		'as' => 'Country',
 		'uses' => 'Data\CountriesController@item'
 	));
-	Route::any('films/{id}', function($id) {return Redirect::to('/countries/'.$id.'/');});
 });
 
 // platforms
@@ -127,7 +122,6 @@ Route::group(array('prefix' => 'platforms'), function() {
 		'as' => 'Platform',
 		'uses' => 'Data\PlatformsController@item'
 	));
-	Route::any('games/{id}', function($id) {return Redirect::to('/platforms/'.$id.'/');});
 });
 
 // genres
@@ -141,16 +135,6 @@ Route::group(array('prefix' => 'genres'), function() {
 	Route::any('games', array('as' => 'games_genres', 'uses' => 'Data\GenresController@games_list'));
 	Route::any('albums', array('as' => 'albums_genres', 'uses' => 'Data\GenresController@albums_list'));
 	Route::any('memes', array('as' => 'memes_genres', 'uses' => 'Data\GenresController@memes_list'));
-	/*
-	Route::any('{section}', array(
-		'as' => 'genres',
-		'uses' => 'Data\GenresController@list'
-	));
-	Route::any('{section}/{id}', array(
-		'as' => 'Genre',
-		'uses' => 'Data\GenresController@item'
-	));
-	*/
 	Route::any('{id}', array(
 		'as' => 'Genre',
 		'uses' => 'Data\GenresController@item'

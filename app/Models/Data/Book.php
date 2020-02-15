@@ -20,7 +20,6 @@ class Book extends Eloquent  {
 	use RatesTrait;
 	use CommentsTrait;
 	use WantedTrait;
-	use IsWantedTrait;
 
 	/**
 	 * The database table used by the model.

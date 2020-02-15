@@ -8,7 +8,6 @@
 
 namespace App\Traits;
 
-
 trait RatesTrait {
 
 	/**
@@ -17,6 +16,15 @@ trait RatesTrait {
 	public function rates() {
 
 		return $this->morphMany('App\Models\User\Rate', 'element');
+
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function rate() {
+
+		return $this->morphOne('App\Models\User\Rate', 'element');
 
 	}
 

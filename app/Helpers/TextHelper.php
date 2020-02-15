@@ -199,6 +199,7 @@ class TextHelper {
 			'books.created_at',
 			'games.created_at',
 			'films.created_at',
+			'count',
 		);
 
 		if(in_array($sort, $allowed)) {return $sort;} else {return $default;}

@@ -1,26 +1,27 @@
 <?php namespace App\Http\Controllers\Data;
 
+use App\Helpers\CommentsHelper;
 use App\Helpers\ElementsHelper;
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
+use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
-use App\Models\User\Unwanted;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\Data\Book;
-use App\Models\User\Wanted;
 use App\Models\Search\ElementRelation;
 
 class BooksController extends Controller {
 
-	private $prefix = 'books';
+	private string $section = 'books';
 
     public function list(Request $request) {
 
-		$section = SectionsHelper::getSection($this->prefix);
+		$section = SectionsHelper::getSection($this->section);
 
 		$sort = $request->get('sort', 'created_at');
 		$order = $request->get('order', 'desc');
@@ -36,40 +37,18 @@ class BooksController extends Controller {
 		$sort = TextHelper::checkSort($sort);
 		$order = TextHelper::checkOrder($order);
 
-		$wanted = array();
-		$unwanted = array();
-
 		if(Auth::check()) {
 
-			$user_id = Auth::user()->id;
+			$user = Auth::user();
 
-			$wanted = Wanted::select('element_id')
-				->where('element_type', '=', $section->type)
-				->where('user_id', '=', $user_id)
-				->pluck('element_id')
-				->toArray()
-			;
+			$unwanted = ElementsHelper::getUnwanted($section, $user->id);
 
-			$unwanted = Unwanted::select('element_id')
-				->where('element_type', '=', $section->type)
-				->where('user_id', '=', $user_id)
-				->pluck('element_id')
-				->toArray()
-			;
-
-			$elements = Book::where('verified', '=', 1)
+			$elements = $section->type::where('verified', '=', 1)
 				->whereNotIn('id', $unwanted)
-				->with(array('rates' => function($query)
-					{
-						$query
-							->where('user_id', '=', Auth::user()->id)
-							->where('element_type', '=', 'Book')
-						;
-					})
-				)
 				->orderBy($sort, $order)
 				->paginate($limit)
 			;
+
 		} else {
 
 			$elements = Book::where('verified', '=', 1)
@@ -82,14 +61,12 @@ class BooksController extends Controller {
 			'header' => true,
 			'footer' => true,
 			'paginate' => true,
-			'wanted' => $wanted,
-			'unwanted' => $unwanted,
-			'sort_list' => $sort_options,
+			'sort_options' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
 		);
 
-        return View::make($this->prefix.'.index', array(
+        return View::make($this->section.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
@@ -97,120 +74,64 @@ class BooksController extends Controller {
 		));
 
     }
-	
+
+	/**
+	 * @param Request $request
+	 * @param $id
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
+	 */
     public function item(Request $request, $id) {
 
-		$book = Book::find($id);
+		$section = SectionsHelper::getSection($this->section);
+		$element = $section->type::find($id);
 
-		if(!empty($book)) {
+		if(!empty($element)) {
 
 			$similar = array();
 
-			$writers = $book->writers;
-			$publishers = $book->publishers;
-			$genres = $book->genres; $genres = $genres->sortBy('name');
-			$collections = $book->collections;
+			$genres = $element->genres; $genres = $genres->sortBy('name');
+			$collections = $element->collections;
 
 			if(Auth::check()) {
-
 				$user = Auth::user();
-				$user_options = $user
-					->options()
-					->where('enabled', '=', 1)
-					->pluck('option_id')
-					->toArray();
-
+				$user_options = UserHelper::getOptions($user);
 				$is_other_private = in_array(2, $user_options);
-
-				if($is_other_private) {
-
-					$comments = $book->comments()
-						->with('user')
-						->where('user_id', '=', $user->id)
-						->orderBy('created_at', 'desc')
-						->get();
-
-				} else {
-
-					$comments = $book->comments()
-						->with('user')
-						->orderBy('created_at', 'desc')
-						->get();
-
-				}
-
+				$comments = ($is_other_private) ? CommentsHelper::get($element, $user->id) : CommentsHelper::get($element);
 			} else {
-
-				$comments = $book->comments()
-					->with('user')
-					->orderBy('created_at', 'desc')
-					->get()
-				;
-
+				$comments = CommentsHelper::get($element);
 			}
 
-			$user_rate = 0;
-
-			if (Auth::check()) {
-
-				$user_id = Auth::user()->id;
-				$rate = $book->rates()->where('user_id', '=', $user_id)->first();
-				if (isset($rate->rate)) {
-					$user_rate = $rate->rate;
-				}
-
-			}
-
-			$cover = 0;
-			$file_path = public_path() . '/data/img/covers/books/' . $id . '.jpg';
-			if (file_exists($file_path)) {
-				$cover = $id;
-			}
-
-			$section = SectionsHelper::getSection($this->prefix);
-
-			$rating = ElementsHelper::countRating($book);
-			
-			$section_type = 'Book';
-			$relations = ElementRelation::where('to_id', '=', $id)
-				->where('to_type', '=', $section_type)
-				->count()
-			;
+			$rating = ElementsHelper::countRating($element);
 
 			$sim_options['element_id'] = $id;
-			$sim_options['type'] = 'Book';
+			$sim_options['type'] = $section->type;
 			$sim_options['genres'] = $genres;
 			$sim_limit = 3;
-
 			for($i = 0; $i < $sim_limit; $i++) {
 				$similar[] = ElementsHelper::getSimilar($sim_options);
 			}
 
 			$options = array(
-				'rate' => $user_rate,
 				'genres' => $genres,
-				'cover' => $cover,
 				'similar' => collect($similar),
 				'collections' => $collections,
-				'relations' => $relations,
-				'writers' => $writers,
-				'publishers' => $publishers,
 			);
 
-			return View::make($this->prefix . '.item', array(
+			return View::make($this->section.'.item', array(
 				'request' => $request,
-				'element' => $book,
-				'comments' => $comments,
 				'section' => $section,
+				'element' => $element,
 				'rating' => $rating,
+				'comments' => $comments,
 				'options' => $options,
 			));
 
 		} else {
 
-			return Redirect::to('/books');
+			return Redirect::to('/'.$this->section);
 
 		}
+
     }
 
 	/**

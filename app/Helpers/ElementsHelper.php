@@ -13,6 +13,8 @@ use App\Models\Data\Country;
 use App\Models\Data\Genre;
 use App\Models\Data\Platform;
 use App\Models\Data\Section;
+use App\Models\User\Unwanted;
+use App\Models\User\Wanted;
 use Illuminate\Http\Request;
 use App\Models\Search\ElementGenre;
 use App\Models\User\Rate;
@@ -27,52 +29,29 @@ use Form;
 class ElementsHelper {
 
 	/**
-	 * @param $param
-	 * @param $value
-	 * @return string
-	 */
-	public static function append_url_param($param, $value) {
-
-		$params = $_SERVER['QUERY_STRING'];
-
-		if(!empty($params)) {$params .= '&';}
-		$params .= $param.'='.$value;
-
-		return '?'.$params;
-
-	}
-
-	/**
 	 * @return array
 	 */
 	public static function getSortDirection() {
-
-		$sort_direction = array(
+		return array(
 			'asc' => 'А→Я',
 			'desc' => 'Я→А'
 		);
-
-		return $sort_direction;
-
 	}
 
 	/**
-	 * @param Request $request
 	 * @param array $sort_options
-	 * @param string $default_sort
-	 * @param string $default_order
+	 * @param string $sort
+	 * @param string $order
+	 * @param int $page
 	 * @return string
 	 */
-	public static function getHeader(Request $request, array $sort_options = array(), $default_sort = 'name', $default_order = 'asc') {
-
-		$sort = $request->get('sort', $default_sort);
-		$order = $request->get('order', $default_order);
+	public static function getSort(array $sort_options, string $sort, string $order, int $page = 1) {
 
 		$elements_list = '';
 
 		if(!empty($sort_options)) {
 
-			$sort_direction = ElementsHelper::getSortDirection();
+			$sort_direction = self::getSortDirection();
 
 			$elements_list .= '<noindex><!--noindex-->';
 
@@ -84,7 +63,7 @@ class ElementsHelper {
 			$elements_list .= Form::select('sort', $sort_options, $sort, array('class' => 'custom-select'));
 			$elements_list .= Form::select('order', $sort_direction, $order, array('class' => 'custom-select'));
 
-			$elements_list .= Form::hidden('page', $request->get('page', 1));
+			$elements_list .= Form::hidden('page', $page);
 
 			$elements_list .= '<div class="input-group-append">';
 			$elements_list .= Form::submit('Сортировать', array('class' => 'btn btn-outline-secondary'));
@@ -98,8 +77,122 @@ class ElementsHelper {
 
 		}
 
+		return $elements_list;
+
+	}
+
+	/**
+	 * @param Request $request
+	 * @param array $options
+	 * @return string
+	 */
+	public static function getHeader(Request $request, array $options) {
+
+		$page = $request->get('page', 1);
+
+		$elements_list = '';
+
+		$elements_list .= self::getSort($options['sort_options'], $options['sort'], $options['order'], $page);
+
 		$elements_list .= '<div class="album">';
 		$elements_list .= '<div class="row">';
+
+		return $elements_list;
+
+	}
+
+	/**
+	 * @param string $section
+	 * @param int $id
+	 * @return string
+	 */
+	private static function bindFastRating(string $section, int $id) {
+		// TODO попробовать назначать события как-то более аккуратно
+		$elements_list = '';
+		$elements_list .= '<script>';
+		$elements_list .= '$(\'#rating_' . $section . '_' . $id . '\').on(\'rating:change\', function(event, value, caption) {';
+		$elements_list .= 'var path = \'/rates/rate/' . $section . '/' . $id . '\';';
+		$elements_list .= 'var params = {rate_val: value};';
+		//$elements_list .= 'console.log(params);';
+		$elements_list .= '$.post(path, params, function(data) {show_popup(data);});';
+		$elements_list .= '$.post(\'/achievements\', {}, function(data) {show_popup(data);});';
+		$elements_list .= '});';
+		$elements_list .= '</script>';
+		return $elements_list;
+	}
+
+	/**
+	 * @param string $section
+	 * @param $element
+	 * @param $user
+	 * @return string
+	 */
+	private static function getFastRating(string $section, $element, $user) {
+		$rate = self::getRate($element, $user);
+		$elements_list = '';
+		$elements_list .= '<div class="fast_rating_block">';
+		$elements_list .= '<input name="val" value="'.$rate.'"';
+		$elements_list .= ' class="fast_rating" id="rating_'.$section.'_'.$element->id.'"';
+		$elements_list .= ' type="text" autocomplete="off">';
+		$elements_list .= '</div>';
+		$elements_list .= self::bindFastRating($section, $element->id);
+		return $elements_list;
+	}
+
+	/**
+	 * @param string $section
+	 * @param $element
+	 * @param $user
+	 * @param bool $isAdmin
+	 * @return string
+	 */
+	public static function getControls(string $section, $element, $user, bool $isAdmin = false) {
+
+		$elements_list = '';
+
+		$elements_list .= '<div class="mt-3">';
+		$elements_list .= '<div class="btn-group">';
+
+		$link = $section.'/'.$element->id;
+		$b_class = 'btn btn-sm';
+
+		if($isAdmin) {
+			$elements_list .= '<a role="button" class="'.$b_class.' btn-outline-success" href="/admin/edit/'.$link.'" title="Редактировать">';
+			$elements_list .= '&#9998;';
+			$elements_list .= '</a>';
+		}
+
+		if ($element->wanted) {
+			$class = ' btn-success';
+			$handler = 'unset_wanted(\''.$link.'\')';
+		} else {
+			$class = ' btn-outline-success';
+			$handler = 'set_wanted(\''.$link.'\')';
+		}
+		$elements_list .= '<button type="button" class="'.$b_class.$class.'" onclick="'.$handler.'" id="want_'.$element->id.'" title="Хочу">';
+		$elements_list .= '&#10084;';
+		$elements_list .= '</button>';
+
+		if ($element->unwanted) {
+			$class = ' btn-danger';
+			$handler = 'unset_unwanted(\''.$link.'\')';
+		} else {
+			$class = ' btn-outline-danger';
+			$handler = 'set_unwanted(\''.$link.'\')';
+		}
+		$elements_list .= '<button type="button" class="'.$b_class.$class.'" onclick="'.$handler.'" id="not_want_'.$element->id.'" title="Не хочу">';
+		$elements_list .= '&#9785;';
+		$elements_list .= '</button>';
+
+		if ($isAdmin) {
+			$elements_list .= '<a role="button" class="'.$b_class.' btn-outline-danger" href="/admin/delete/'.$link.'"';
+			$elements_list .= ' onclick="return window.confirm(\'Удалить?\');" title="Удалить">';
+			$elements_list .= '&#10006;';
+			$elements_list .= '</a>';
+		}
+
+		$elements_list .= '</div>';
+		$elements_list .= '</div>';
 
 		return $elements_list;
 
@@ -116,36 +209,26 @@ class ElementsHelper {
 
 		$elements_list = '';
 
-		$default_cover = 0;
-
-		$is_square = false;
-
-		if('albums' == $section) {$is_square = true;}
-
 		if(is_object($element)) {
 
-			$file_path = public_path() . '/data/img/covers/' . $section . '/' . $element->id . '.jpg';
-
-			if (file_exists($file_path)) {
-				$element_cover = $element->id;
-			} else {
-				$element_cover = $default_cover;
-			}
-
 			$link = '/' . $section . '/' . $element->id;
+			$cover = self::getCover($section, $element->id);
 
 			$elements_list .= '<div class="col-lg-3 col-md-4 col-sm-6 col-6">';
 			$elements_list .= '<div class="card mb-4 box-shadow">';
 
-			if($is_square) {$elements_list .= '<div class="card-img-box-square">';} else {$elements_list .= '<div class="card-img-box">';}
+			$is_square = false;
+			if('albums' == $section) {$is_square = true;}
+
+			if($is_square) {
+				$elements_list .= '<div class="card-img-box-square">';
+			} else {
+				$elements_list .= '<div class="card-img-box">';
+			}
 
 			$elements_list .= '<a href="'.$link.'">';
 
-			$cover_path = '/data/img/covers/'.$section.'/'.$element_cover.'.jpg';
-			$file_path = public_path().$cover_path;
-			$hash = md5_file($file_path);
-
-			$elements_list .= '<img class="card-img-top" src="'.$cover_path.'?hash='.$hash.'" alt="'.$element->name.'" />';
+			$elements_list .= '<img class="card-img-top" src="'.$cover.'" alt="'.$element->name.'" />';
 
 			$elements_list .= '</a>';
 
@@ -159,145 +242,23 @@ class ElementsHelper {
 
   			$elements_list .= '</div>';
 
-			if( Auth::check() && (
-				method_exists($element, 'wanted')
-				||
-				method_exists($element, 'rates')
-				||
-				method_exists($element, 'unwanted')
-			) ) {
+			if(Auth::check()) {
+
+				$user = Auth::user();
+
+				$isAdmin = RolesHelper::isAdmin($request);
 
 				$elements_list .= '<div class="card-body text-center d-none d-xl-block">';
-
-				//$elements_list .= '<p class="card-text">';
-				//$elements_list .= '</p>';
-
-				if(method_exists($element, 'rates')) {
-
-					$elements_list .= '<div class="fast_rating_block">';
-					if (isset($element->rates) && 0 != count($element->rates)) {
-
-						$user_id = Auth::user()->id;
-						$rate = $element
-							->rates
-							->where('user_id', $user_id)
-							->toArray();
-
-						if (0 != count($rate)) {
-
-							$elements_list .= '<input name="val" value="' . array_shift($rate)['rate'] . '" class="fast_rating" id="rating_' . $section . '_' . $element->id . '" type="text" autocomplete="off">';
-
-						} else {
-
-							$elements_list .= '<input name="val" value="0" class="fast_rating" id="rating_' . $section . '_' . $element->id . '" type="text" autocomplete="off">';
-
-						}
-
-					} else {
-
-						$elements_list .= '<input name="val" value="0" class="fast_rating" id="rating_' . $section . '_' . $element->id . '" type="text" autocomplete="off">';
-
-					}
-
-					$elements_list .= '</div>';
-
-					$elements_list .= '<script>';
-
-					$elements_list .= '$(\'#rating_' . $section . '_' . $element->id . '\').on(\'rating:change\', function(event, value, caption) {';
-
-					$elements_list .= 'var path = \'/rates/rate/' . $section . '/' . $element->id . '\';';
-					$elements_list .= 'var params = {rate_val: value};';
-
-					$elements_list .= 'console.log(params);';
-
-					$elements_list .= '$.post(path, params, function(data) {show_popup(data);}, \'json\');';
-					$elements_list .= '$.post(\'/achievements\', {}, function(data) {show_popup(data);}, \'json\');';
-
-					$elements_list .= '});';
-
-					$elements_list .= '</script>';
-
-				}
-
-				if(method_exists($element, 'wanted') || 	method_exists($element, 'unwanted') || (RolesHelper::isAdmin($request))) {
-
-					$elements_list .= '<div class="mt-3">';
-					$elements_list .= '<div class="btn-group">';
-
-					if(RolesHelper::isAdmin($request)) {
-
-						$elements_list .= '<a role="button" class="btn btn-sm btn-outline-success" href="/admin/edit/' . $section . '/' . $element->id . '" title="Редактировать">';
-						$elements_list .= '&#9998;';
-						$elements_list .= '</a>';
-
-					}
-
-					if(method_exists($element, 'wanted')) {
-
-						if ($element->isWanted()) {
-							$class = 'btn btn-sm btn-success';
-							$handler = 'onclick="unset_wanted(\'' . $section . '\', \'' . $element->id . '\')"';
-						} else {
-							$class = 'btn btn-sm btn-outline-success';
-							$handler = 'onclick="set_wanted(\'' . $section . '\', \'' . $element->id . '\')"';
-						}
-						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Хочу">';
-						$elements_list .= '&#10084;';
-						$elements_list .= '</button>';
-
-					}
-
-					if (RolesHelper::isAdmin($request)) {
-						$class = 'btn btn-sm btn-outline-success';
-						$handler = 'onclick="lists(\'' . $section . '\', \'' . $element->id . '\')"';
-						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="list_' . $element->id . '" title="Добавить в список">';
-						$elements_list .= '📒';
-						$elements_list .= '</button>';
-					}
-
-					if(method_exists($element, 'unwanted')) {
-
-						if ($element->isUnwanted()) {
-							$class = 'btn btn-sm btn-danger';
-							$handler = 'onclick="unset_unwanted(\'' . $section . '\', \'' . $element->id . '\')"';
-						} else {
-							$class = 'btn btn-sm btn-outline-danger';
-							$handler = 'onclick="set_unwanted(\'' . $section . '\', \'' . $element->id . '\')"';
-						}
-						$elements_list .= '<button type="button" class="' . $class . '" ' . $handler . ' id="not_want_' . $element->id . '" title="Не хочу">';
-						$elements_list .= '&#9785;';
-						$elements_list .= '</button>';
-
-					}
-
-					if (RolesHelper::isAdmin($request)) {
-
-						$elements_list .= '<a role="button" class="btn btn-sm btn-outline-danger" href="/admin/delete/' . $section . '/' . $element->id . '" onclick="return window.confirm(\'Удалить?\');" title="Удалить">';
-						$elements_list .= '&#10006;';
-						$elements_list .= '</a>';
-
-					}
-
-					$elements_list .= '</div>';
-					//$elements_list .= '<small class="text-muted"></small>';
-					$elements_list .= '</div>';
-
-				}
-
+				$elements_list .= self::getFastRating($section, $element, $user);
+				$elements_list .= self::getControls($section, $element, $user, $isAdmin);
 				$elements_list .= '</div>';
-
-			} else {
-
-
 
 			}
 
-			if(isset($options['add_text'])) {
-
+			if(isset($options['caption'])) {
 				$elements_list .= '<div class="card-footer text-muted">';
-				$elements_list .= $options['add_text'];
+				$elements_list .= $options['caption'];
 				$elements_list .= '</div>';
-
 			}
 
 			$elements_list .= '</div>';
@@ -310,16 +271,14 @@ class ElementsHelper {
 
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function getFooter() {
-
 		$elements_list = '';
-
 		$elements_list .= '</div>';
-		//$elements_list .= '</div>';
 		$elements_list .= '</div>';
-
 		return $elements_list;
-
 	}
 
 	/**
@@ -338,40 +297,32 @@ class ElementsHelper {
 				'header' => true,
 				'footer' => true,
 				'paginate' => true,
-				'sort_list' => array(),
+				'sort_options' => array(),
 				'sort' => 'name',
 				'order' => 'asc'
 			);
 		}
 
-		if($options['header']) {$elements_list .= ElementsHelper::getHeader($request, $options['sort_list'], $options['sort'], $options['order']);}
-
+		if($options['header']) {$elements_list .= self::getHeader($request, $options);}
 		foreach ($elements as $element) {
-
-			$elements_list .= ElementsHelper::getElement($request, $element, $section, $options);
-
+			$elements_list .= self::getElement($request, $element, $section, $options);
 		}
-
-		if($options['footer']) {$elements_list .= ElementsHelper::getFooter();}
+		if($options['footer']) {$elements_list .= self::getFooter();}
 
 		if ($options['paginate']) {
-
 			if(!empty($request->get('sort'))) {
-
 				$elements_list .= '<noindex><!--noindex-->';
 				$elements_list .= $elements->appends(
 					array(
 						//'view' => $request->get('view', 'plates'),
-						'sort' => $request->get('sort', $options['sort']),
-						'order' => $request->get('order', $options['order']),
+						'sort' => $options['sort'],
+						'order' => $options['order'],
 					)
 				)->render();
 				$elements_list .= '<!--/noindex--></noindex>';
-
 			} else {
 				$elements_list .= $elements->render();
 			}
-
 		}
 
 		return $elements_list;
@@ -382,11 +333,10 @@ class ElementsHelper {
 	 * @param Request $request
 	 * @param $elements
 	 * @param string $section
-	 * @param string $subsection
 	 * @param array $options
 	 * @return string
 	 */
-	public static function getList(Request $request, $elements, string $section = '', string $subsection = '', array $options = array()) {
+	public static function getList(Request $request, $elements, string $section, array $options = array()) {
 
 		$elements_list = '';
 
@@ -395,11 +345,21 @@ class ElementsHelper {
 				'header' => true,
 				'footer' => true,
 				'paginate' => true,
+				'count' => true,
 			);
 		}
 
-		$elements_list .= '<ul class="list-unstyled">';
+		if($options['header']) {
+			$elements_list .= self::getSort($options['sort_options'], $options['sort'], $options['order']);
+		}
 
+		if(isset($options['columns'])) {
+			$elements_list .= '<div style="';
+			$elements_list .= 'column-count: '.$options['columns']['count'].';';
+			$elements_list .= ' column-width: '.$options['columns']['width'].';';
+			$elements_list .= '">';
+		}
+		$elements_list .= '<ul class="list-unstyled">';
 		foreach ($elements as $element) {
 
 			if('' != $element->name) {
@@ -408,23 +368,24 @@ class ElementsHelper {
 				if (!empty($section)) {
 					$elements_list .= $section . '/';
 				}
-				if (!empty($subsection)) {
-					$elements_list .= $subsection . '/';
+				if (isset($options['subsection'])) {
+					$elements_list .= $options['subsection'] . '/';
 				}
 				$elements_list .= $element->id . '">';
 				$elements_list .= $element->name;
 				$elements_list .= '</a>';
+				if($options['count']) {
+					$elements_list .= ' <span class="small text-secondary">('.$element->count.')</span>';
+				}
 				$elements_list .= '</li>';
 			}
 
 		}
-
 		$elements_list .= '</ul>';
+		if(isset($options['columns'])) {$elements_list .= '</div>';}
 
 		if ($options['paginate']) {
-
 			$elements_list .= $elements->render();
-
 		}
 
 		return $elements_list;
@@ -435,13 +396,10 @@ class ElementsHelper {
 	 * @return array
 	 */
 	public static function countRating($element) {
-
 		$rates = $element->rates;
 		$rates_count = $rates->count('rate');
 		$rates_sum = $rates->sum('rate');
-
 		$rating = array();
-
 		if(0 != $rates_count) {
 			$rating['average'] = round($rates_sum / $rates_count, 2);
 			$rating['count'] = $rates_count;
@@ -449,9 +407,7 @@ class ElementsHelper {
 			$rating['average'] = 0;
 			$rating['count'] = 0;
 		}
-
 		return $rating;
-
 	}
 
 	/**
@@ -485,9 +441,9 @@ class ElementsHelper {
 			$element = $obj_of_type->find($element_id);
 
 			if (!empty($element)) {
-				$result = ElementsHelper::getElement($request, $element, $section);
+				$result = self::getElement($request, $element, $section);
 			} else {
-				$result = ElementsHelper::getRecommend($request, $section);
+				$result = self::getRecommend($request, $section);
 			}
 		}
 
@@ -525,12 +481,11 @@ class ElementsHelper {
 		if(empty($sim_elem)
 			|| (0 == $sim_elem->verified)
 			|| ($options['element_id'] == $sim_elem->id)
-		) {$sim_elem = ElementsHelper::getSimilar($options);}
+		) {$sim_elem = self::getSimilar($options);}
 
 		return $sim_elem;
 
 	}
-
 
 	/**
 	 * @param Request $request
@@ -539,35 +494,29 @@ class ElementsHelper {
 	 * @param array $info
 	 * @return string
 	 */
-	public static function getCardHeader(Request $request, string $section = '', $element, array $info = array()) {
+	public static function getCardHeader(Request $request, string $section, $element, array $info = array()) {
 
 		$element_title = '';
 
 		$element_title .= '<div class="row mt-5">';
 			$element_title .= '<div class="col-md-12">';
 
-				if(isset($info['writers'])) {
-
+				if($element->writers) {
 					$element_title .= '<div class="h2">';
-					$element_title .= DatatypeHelper::arrayToString($info['writers'], ', ', '/persons/', false, 'author');
+					$element_title .= DatatypeHelper::arrayToString($element->writers, ', ', '/persons/', false, 'author');
 					$element_title .= '</div>';
-
 				}
 
-				if(isset($info['bands']) && count($info['bands'])) {
-
+				if($element->bands) {
 					$element_title .= '<div class="h2">';
-					$element_title .= DatatypeHelper::arrayToString($info['bands'], ', ', '/bands/');
+					$element_title .= DatatypeHelper::arrayToString($element->bands, ', ', '/bands/');
 					$element_title .= '</div>';
-
 				}
 
 				$element_title .= '<h1 itemprop="name" id="buhurt_name">'.$element->name.'</h1>';
 
 				if(!empty($element->alt_name)) {
-
 					$element_title .= '<div class="h4 d-none d-md-block" itemprop="alternativeHeadline" id="buhurt_alt_name">'.$element->alt_name.'</div>';
-
 				}
 
 			$element_title .= '</div>';
@@ -577,25 +526,17 @@ class ElementsHelper {
 
 			$element_title .= '<div class="col-md-12">';
 
-			if(isset($info['rate'])) {
-
-				if (Auth::check()) {
-
-					$element_title .= '<div><input class="main_rating" name="val" value="' . $info['rate'] . '" type="text"></div>';
-
-				} else {
-
-					$element_title .= DummyHelper::regToRate();
-
-				}
-
+			if (Auth::check()) {
+				$user = Auth::user();
+				$rate = self::getRate($element, $user);
+				$element_title .= '<div><input class="main_rating" name="val" value="'.$rate.'" type="text"></div>';
 			} else {
-
+				$element_title .= DummyHelper::regToRate();
 			}
 
-			$rating = ElementsHelper::countRating($element);
+			$rating = self::countRating($element);
 
-			if(!empty($rating['count'])) {
+			if($rating['count']) {
 
 				$element_title .= '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
 
@@ -630,7 +571,7 @@ class ElementsHelper {
 	 * @param array $info
 	 * @return string
 	 */
-	public static function getCardBody(Request $request, string $section = '', $element, array $info = array()) {
+	public static function getCardBody(Request $request, string $section, $element, array $info = array()) {
 
 		$element_body = '';
 
@@ -640,83 +581,16 @@ class ElementsHelper {
 
 				$element_body .= '<div class="card">';
 
-					$cover_path = '/data/img/covers/'.$section.'/'.$info['cover'].'.jpg';
-					$file_path = public_path().$cover_path;
-					$hash = md5_file($file_path);
+					$cover = self::getCover($section, $element->id);
 
-					$element_body .= '<img itemprop="image" src="'.$cover_path.'?hash='.$hash.'" alt="'.$element->name.'" class="card-img-top buhurt-cover" />';
+					$element_body .= '<img itemprop="image" src="'.$cover.'" alt="'.$element->name.'" class="card-img-top buhurt-cover" />';
 
 					if(Auth::check()) {
-
-						if(
-							method_exists($element, 'wanted')
-							||
-							method_exists($element, 'unwanted')
-							||
-							RolesHelper::isAdmin($request)
-						) {
-
-							$element_body .= '<div class="card-body text-center">';
-
-							$element_body .= '<div class="btn-group">';
-
-							if (RolesHelper::isAdmin($request)) {
-
-								$class = 'btn btn-sm btn-outline-success';
-								$href = '/admin/edit/'.$section.'/'.$element->id;
-								$element_body .= '<a role="button" class="' . $class . '" href="' . $href . '" title="Редактировать">';
-								$element_body .= '&#9998;';
-								$element_body .= '</a>';
-
-							}
-
-							if (method_exists($element, 'wanted')) {
-
-								if ($element->isWanted()) {
-									$class = 'btn btn-sm btn-success';
-									$handler = 'onclick="unset_wanted(\'' . $section . '\', \'' . $element->id . '\')"';
-								} else {
-									$class = 'btn btn-sm btn-outline-success';
-									$handler = 'onclick="set_wanted(\'' . $section . '\', \'' . $element->id . '\')"';
-								}
-								$element_body .= '<button type="button" class="' . $class . '" ' . $handler . ' id="want_' . $element->id . '" title="Хочу">';
-								$element_body .= '&#10084;';
-								$element_body .= '</button>';
-
-							}
-
-							if (method_exists($element, 'unwanted')) {
-
-								if ($element->isUnwanted()) {
-									$class = 'btn btn-sm btn-danger';
-									$handler = 'onclick="unset_unwanted(\'' . $section . '\', \'' . $element->id . '\')"';
-								} else {
-									$class = 'btn btn-sm btn-outline-danger';
-									$handler = 'onclick="set_unwanted(\'' . $section . '\', \'' . $element->id . '\')"';
-								}
-								$element_body .= '<button type="button" class="' . $class . '" ' . $handler . ' id="not_want_' . $element->id . '" title="Не хочу">';
-								$element_body .= '&#9785;';
-								$element_body .= '</button>';
-
-							}
-
-							if (RolesHelper::isAdmin($request)) {
-
-								$class = 'btn btn-sm btn-outline-danger';
-								$href = '/admin/delete/' . $section . '/' . $element->id;
-								$handler = 'onclick="return window.confirm(\'Удалить?\');"';
-								$element_body .= '<a role="button" class="' . $class . '" href="' . $href . '" ' . $handler . ' title="Удалить">';
-								$element_body .= '&#10006;';
-								$element_body .= '</a>';
-
-							}
-
-							$element_body .= '</div>';
-
-							$element_body .= '</div>';
-
-						}
-
+						$user = Auth::user();
+						$isAdmin = RolesHelper::isAdmin($request);
+						$element_body .= '<div class="card-body text-center d-none d-xl-block">';
+						$element_body .= self::getControls($section, $element, $user, $isAdmin);
+						$element_body .= '</div>';
 					}
 
 				$element_body .= '</div>';
@@ -959,13 +833,13 @@ class ElementsHelper {
 	 * @param array $info
 	 * @return string
 	 */
-	public static function getCardFooter(Request $request, string $section = '', $element, array $info = array()) {
+	public static function getCardFooter(Request $request, string $section, $element, array $info = array()) {
 
 		$options = array(
 			'header' => true,
 			'paginate' => false,
 			'footer' => true,
-			'sort_list' => array(),
+			'sort_options' => array(),
 			'sort' => 'name',
 			'order' => 'asc',
 		);
@@ -975,7 +849,7 @@ class ElementsHelper {
         if(isset($info['similar']) && count($info['similar'])) {
 
 			$element_footer .= '<h3 class="mt-5 mb-3">Похожие</h3>';
-			$element_footer .= ElementsHelper::getElements($request, $info['similar'], $section, $options);
+			$element_footer .= self::getElements($request, $info['similar'], $section, $options);
 
         }
 
@@ -1143,7 +1017,7 @@ class ElementsHelper {
 
 		foreach ($elements as $element) {
 
-			$elements_list .= ElementsHelper::getEvent($element);
+			$elements_list .= self::getEvent($element);
 
 		}
 
@@ -1268,10 +1142,87 @@ class ElementsHelper {
 	 * @return int
 	 */
 	public static function getCover(string $section, int $id) {
-		$cover = 0;
-		$file_path = public_path().'/data/img/covers/'.$section.'/'.$id.'.jpg';
-		if (file_exists($file_path)) {$cover = $id;}
+		$cover = null;
+		$rel_path = '/data/img/covers/'.$section.'/'.$id.'.jpg';
+		$file_path = public_path().$rel_path;
+		if (file_exists($file_path)) {
+			$hash = md5_file($file_path);
+			$cover = $rel_path.'?hash='.$hash;
+		}
 		return $cover;
+	}
+
+	/**
+	 * @param $element
+	 * @param $user
+	 * @return int
+	 */
+	public static function getRate($element, $user) {
+		$user_rate = $element
+			->rates
+			->where('user_id', $user->id)
+			->first()
+		;
+		if(isset($user_rate->rate)) {$rate = $user_rate->rate;} else {$rate = 0;}
+		return $rate;
+	}
+
+	/**
+	 * @param Section $section
+	 * @param int $user_id
+	 * @param array $cache
+	 * @return mixed
+	 */
+	public static function getWanted(Section $section, int $user_id, array $cache = array()) {
+		if(count($cache)) {
+			$minutes = $cache['minutes'];
+			$var_name =  $cache['name'].'_wanted_'.$section->name;
+			$wanted = Cache::remember($var_name, $minutes, function () use ($section, $user_id) {
+				return Wanted::select('element_id')
+					->where('element_type', '=', $section->type)
+					->where('user_id', '=', $user_id)
+					->pluck('element_id')
+					->toArray()
+				;
+			});
+		} else {
+			$wanted = Wanted::select('element_id')
+				->where('element_type', '=', $section->type)
+				->where('user_id', '=', $user_id)
+				->pluck('element_id')
+				->toArray()
+			;
+		}
+		return $wanted;
+	}
+
+	/**
+	 * @param Section $section
+	 * @param int $user_id
+	 * @param array $cache
+	 * @return mixed
+	 */
+	public static function getUnwanted(Section $section, int $user_id, array $cache = array()) {
+		if(count($cache)) {
+			$minutes = $cache['minutes'];
+			$var_name =  $cache['name'].'_unwanted_'.$section->name;
+			$unwanted = Cache::remember($var_name, $minutes, function () use ($section, $user_id) {
+				return Unwanted::select('element_id')
+					->where('element_type', '=', $section->type)
+					->where('user_id', '=', $user_id)
+					->pluck('element_id')
+					->toArray()
+				;
+			});
+		} else {
+			$unwanted = Unwanted::select('element_id')
+				->where('element_type', '=', $section->type)
+				->where('user_id', '=', $user_id)
+				->pluck('element_id')
+				->toArray()
+			;
+		}
+		return $unwanted;
 	}
 
 }
