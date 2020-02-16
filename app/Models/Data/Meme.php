@@ -5,6 +5,7 @@ use App\Traits\CommentsTrait;
 use App\Traits\GenresTrait;
 use App\Traits\IsWantedTrait;
 use App\Traits\RatesTrait;
+use App\Traits\RelationsTrait;
 use App\Traits\SectionTrait;
 use App\Traits\WantedTrait;
 use Eloquent;
@@ -12,12 +13,12 @@ use Eloquent;
 class Meme extends Eloquent  {
 
 	use SectionTrait;
+	use RatesTrait;
+	use WantedTrait;
 	use GenresTrait;
 	use CollectionsTrait;
-	use RatesTrait;
+	use RelationsTrait;
 	use CommentsTrait;
-	use WantedTrait;
-	use IsWantedTrait;
 
 	/**
 	 * The database table used by the model.

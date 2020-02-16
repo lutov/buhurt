@@ -4,6 +4,7 @@ use App\Traits\CollectionsTrait;
 use App\Traits\CommentsTrait;
 use App\Traits\GenresTrait;
 use App\Traits\RatesTrait;
+use App\Traits\RelationsTrait;
 use App\Traits\SectionTrait;
 use App\Traits\WantedTrait;
 use Eloquent;
@@ -14,11 +15,12 @@ use Eloquent;
 class Album extends Eloquent  {
 
 	use SectionTrait;
+	use RatesTrait;
+	use WantedTrait;
 	use GenresTrait;
 	use CollectionsTrait;
-	use RatesTrait;
+	use RelationsTrait;
 	use CommentsTrait;
-	use WantedTrait;
 
 	/**
 	 * The database table used by the model.

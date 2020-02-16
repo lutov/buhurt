@@ -53,16 +53,11 @@ class DatatypeHelper {
 	 * @return string
 	 */
 	public static function collectionToString($object, $type = 'collection', $delimiter = ', ', $path = '/', $no_link = false, $itemprop = false) {
-
 		$string = '';
 		$number = count($object);
 		$i = 1;
 		foreach ($object as $property) {
-			
 			if(is_object($property) && is_object($property->$type)) {
-			
-				//echo DebugHelper::dump($property->$type->id, 1); die();
-				
 				if (!$no_link) {
 					
 					$string .= '<a href="'.$path.$property->$type->id.'"';
@@ -78,12 +73,9 @@ class DatatypeHelper {
 					$string .= $delimiter;
 				}
 				$i++;
-			
 			}
-			
 		}
 		return $string;
-
 	}
 
 	/**

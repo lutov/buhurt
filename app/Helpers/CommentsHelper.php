@@ -27,20 +27,13 @@ class CommentsHelper {
 		$user_id = $comment->user_id;
 		$user = User::find($user_id);
 
-		$user_options = $user
-			->options()
-			->where('enabled', '=', 1)
-			->pluck('option_id')
-			->toArray();
+		$user_options = UserHelper::getOptions($user);
 
 		$is_my_private = in_array(1, $user_options);
 
-		$type = new $comment->element_type;
-		$object = $type->find($comment->element_id);
-		$rate = $object->rates()->where('user_id', '=', $user_id)->first();
-		if (isset($rate->rate)) {
-			$user_rate = $rate->rate;
-		} else {$user_rate = false;}
+		$element = $comment->element_type::find($comment->element_id);
+
+		$rate = ElementsHelper::getRate($element, $user);
 
 		$comments_text = '';
 
@@ -85,13 +78,16 @@ class CommentsHelper {
 
 				$comments_text .= '<div class="col-12 col-lg-11">';
 
-					$comments_text .= '<p class="p-3 bg-white border" id="comment_' . $comment->id . '_text">'.nl2br($comment->comment).'</p>';
+					$comments_text .= '<p class="p-3 bg-white border" id="comment_'.$comment->id.'_text">';
+					if(!$no_br) {
+						$comments_text .= nl2br($comment->comment);
+					} else {
+						$comments_text .= htmlentities($comment->comment);
+					}
+					$comments_text .= '</p>';
 
-					if($user_rate) { // RolesHelper::isAdmin($request)
-
-						$comments_text .= '<p class="">Оценка: '.$user_rate.'</p>'; //DebugHelper::dump($comment)
-						//$comments_text .= '<p class="">'.DebugHelper::dump($comment).'</p>';
-
+					if($rate) {
+						$comments_text .= '<p class="">Оценка: '.$rate.'</p>';
 					}
 
 				$comments_text .= '</div>';
@@ -101,8 +97,8 @@ class CommentsHelper {
 			$comments_text .= '</div>';
 
 			if ($no_br) {
-				$comments_text = preg_replace('/\n/', '', $comments_text);
-				$comments_text = preg_replace('/"/', '\"', $comments_text);
+				$comments_text = str_replace("\n", ' ', $comments_text);
+				$comments_text = addslashes($comments_text);
 			}
 		}
 
@@ -167,19 +163,11 @@ class CommentsHelper {
 	 * @return string
 	 */
 	public static function showComments(Request $request, $comments) {
-
-		//echo '<pre>'.print_r($comments, true).'</pre>';
-
 		$comments_list = '';
-
 		foreach($comments as $key => $comment) {
-
 			$comments_list .= CommentsHelper::render($request, $comment);
-
 		}
-
 		return $comments_list;
-
 	}
 
 	/**
@@ -188,13 +176,22 @@ class CommentsHelper {
 	 * @return mixed
 	 */
 	public static function get($element, int $user_id = 0) {
-
+		
 		$sort = 'created_at';
 		$order = 'desc';
 
-		$comments = $element->comments();
-		if($user_id) {$comments->where('user_id', $user_id);}
-		$comments->orderBy($sort, $order)->get();
+		if($user_id) {
+			$comments = $element->comments()
+				->where('user_id', $user_id)
+				->orderBy($sort, $order)
+				->get()
+			;
+		} else {
+			$comments = $element->comments()
+				->orderBy($sort, $order)
+				->get()
+			;
+		}
 
 		return $comments;
 

@@ -15,6 +15,7 @@ use App\Models\Data\Platform;
 use App\Models\Data\Section;
 use App\Models\User\Unwanted;
 use App\Models\User\Wanted;
+use \Exception;
 use Illuminate\Http\Request;
 use App\Models\Search\ElementGenre;
 use App\Models\User\Rate;
@@ -249,7 +250,9 @@ class ElementsHelper {
 				$isAdmin = RolesHelper::isAdmin($request);
 
 				$elements_list .= '<div class="card-body text-center d-none d-xl-block">';
-				$elements_list .= self::getFastRating($section, $element, $user);
+				if($element->rate) {
+					$elements_list .= self::getFastRating($section, $element, $user);
+				}
 				$elements_list .= self::getControls($section, $element, $user, $isAdmin);
 				$elements_list .= '</div>';
 
@@ -607,10 +610,14 @@ class ElementsHelper {
 
 				}
 
-				if(DatatypeHelper::setAndCount($info, 'tracks')) {
+				if($element->tracks) {
 
 					$element_body .= '<ol>';
-					$element_body .= '<li>'.DatatypeHelper::objectToJsArray($info['tracks'], '</li><li>', true).'</li>';
+					$element_body .= '<li>'.DatatypeHelper::objectToJsArray(
+						$element->tracks,
+						'</li><li>',
+						true
+					).'</li>';
 					$element_body .= '</ol>';
 
 					$element_body .= '<div class="btn-group">';
@@ -623,199 +630,154 @@ class ElementsHelper {
 
 				$main_info = '';
 
-				if(DatatypeHelper::setAndCount($info, 'publishers')) {
-
-					$main_info .= DatatypeHelper::arrayToString($info['publishers'], ', ', '/companies/', false, 'publisher');
+				if($element->books_publishers && $element->books_publishers->count()) {
+					$main_info .= DatatypeHelper::arrayToString(
+						$element->books_publishers,
+						', ',
+						'/companies/',
+						false,
+						'publisher'
+					);
 					$main_info .= ', ';
-
 				}
 
-				if(!empty($element->year)) {
-
+				if($element->year) {
 					$main_info .= '<a itemprop="datePublished" href="/years/'.$section.'/'.$element->year.'">'.$element->year.'</a>';
 					$main_info .= ' г. ';
-
 				}
 
-				if(isset($info['countries'])) {
-
+				if($element->countries) {
 					$main_info .= DatatypeHelper::arrayToString(
-						$info['countries'],
+						$element->countries,
 						', ',
 						'/countries/'
 					);
 					$main_info .= '. ';
-
 				}
 
-				if(DatatypeHelper::setAndCount($info, 'genres')) {
-
-					//dd($info['genres']);
-
+				if($element->genres) {
 					$main_info .= DatatypeHelper::arrayToString(
-						$info['genres'],
+						$element->genres,
 						', ',
-						'/genres/', //.$section.'/',
+						'/genres/',
 						false,
 						'genre'
 					);
-
 				}
 
-				if(!empty($element->length)) {
-
+				if($element->length) {
 					$main_info .= '. ';
 					$main_info .= '<meta itemprop="duration" content="T'.$element->length.'M" />'.$element->length.' мин. ';
-
 				}
 
 				if(!empty($main_info)) {
-
 					$element_body .= '<div class="mt-4 mb-4 small">';
 					$element_body .= $main_info;
 					$element_body .= '</div>';
-
 				}
 
-				if(DatatypeHelper::setAndCount($info, 'directors')) {
-
+				if($element->directors) {
 					$element_body .= '<div class="mt-2 mb-2 small">';
 					$element_body .= 'Режиссер: '.DatatypeHelper::arrayToString(
-							$info['directors'],
+							$element->directors,
 							', ',
 							'/persons/',
 							false,
 							'director'
 						);
 					$element_body .= '</div>';
-
 				}
 
-				if(DatatypeHelper::setAndCount($info, 'screenwriters')) {
-
+				if($element->screenwriters) {
 					$element_body .= '<div class="mt-2 mb-2 small">';
 					$element_body .= 'Сценарий: '.DatatypeHelper::arrayToString(
-							$info['screenwriters'],
+							$element->screenwriters,
 							', ',
 							'/persons/',
 							false,
 							'creator'
 						);
 					$element_body .= '</div>';
-
 				}
 
-				if(DatatypeHelper::setAndCount($info, 'producers')) {
-
+				if($element->producers) {
 					$element_body .= '<div class="mt-2 mb-2 small">';
 					$element_body .= 'Продюсер: '.DatatypeHelper::arrayToString(
-							$info['producers'],
+							$element->producers,
 							', ',
 							'/persons/',
 							false,
 							'producer'
 						);
 					$element_body .= '</div>';
-
 				}
 
-				if(DatatypeHelper::setAndCount($info, 'actors')) {
-
+				if($element->actors) {
 					$element_body .= '<div class="mt-4 mb-4 small">';
 					$element_body .= 'В ролях: '.DatatypeHelper::arrayToString(
-							$info['actors'],
+							$element->actors,
 							', ',
 							'/persons/',
 							false,
 							'actor'
 						);
 					$element_body .= '</div>';
-
 				}
 
-				if(DatatypeHelper::setAndCount($info, 'game_developers')) {
-
+				if($element->developers) {
 					$element_body .= '<div class="mt-2 mb-2 small">';
 					$element_body .= 'Разработчик: '.DatatypeHelper::arrayToString(
-							$info['game_developers'],
+							$element->developers,
 							', ',
 							'/companies/',
 							false,
 							'creator'
 						);
 					$element_body .= '</div>';
-
 				}
 
-				if(DatatypeHelper::setAndCount($info, 'game_publishers')) {
-
+				if($element->games_publishers) {
 					$element_body .= '<div class="mt-2 mb-2 small">';
 					$element_body .= 'Издатель: '.DatatypeHelper::arrayToString(
-							$info['game_publishers'],
+							$element->games_publishers,
 							', ',
 							'/companies/',
 							false,
 							'publisher'
 						);
 					$element_body .= '</div>';
-
 				}
 
-				if(DatatypeHelper::setAndCount($info, 'game_platforms')) {
-
+				if($element->platforms) {
 					$element_body .= '<div class="mt-2 mb-2 small">';
 					$element_body .= 'Платформы: '.DatatypeHelper::arrayToString(
-							$info['game_platforms'],
+							$element->platforms,
 							', ',
 							'/platforms/'
 						);
 					$element_body .= '</div>';
-
 				}
 
-				if(DatatypeHelper::setAndCount($info, 'top_genres')) {
-
-					$element_body .= '<div class="mt-2 mb-2 small">';
-					$element_body .= 'Жанры произведений: ';
-					$element_body .= DatatypeHelper::arrayToString($info['top_genres'], ', ', '/genres/');
-					$element_body .= '</div>';
-
-				}
-
-				if(DatatypeHelper::setAndCount($info, 'collections')) {
-
+				if($element->collections && $element->collections->count()) {
 					$element_body .= '<div class="mt-4 mb-4 small">';
 					$element_body .= 'Коллекции: ';
 					$element_body .= DatatypeHelper::arrayToString(
-						$info['collections'],
+						$element->collections,
 						', ',
 						'/collections/',
 						false,
 						"isPartOf"
 					);
 					$element_body .= '</div>';
-
 				}
 
-				if( (isset($info['relations'])) && (0 < $info['relations']) ) {
-
+				if($element->relations || RolesHelper::isAdmin($request)) {
 					$element_body .= '<div class="mt-4 mb-4 small">';
-
 					$element_body .= '<a href="/'.$section.'/'.$element->id.'/relations/">';
 					$element_body .= 'Связанные произведения ';
-					$element_body .= '('.$info['relations'].')';
-					$element_body .= '</a>';
-
-					$element_body .= '</div>';
-
-				} elseif(RolesHelper::isAdmin($request) && (isset($info['relations']))) {
-
-					$element_body .= '<div class="mt-4 mb-4 small">';
-					$element_body .= '<a href="/'.$section.'/'.$element->id.'/relations/">';
-					$element_body .= 'Связанные произведения';
+					$element_body .= '('.$element->relations->count().')';
 					$element_body .= '</a>';
 					$element_body .= '</div>';
-
 				}
 
 			$element_body .= '</div></div>';
@@ -834,7 +796,6 @@ class ElementsHelper {
 	 * @return string
 	 */
 	public static function getCardFooter(Request $request, string $section, $element, array $info = array()) {
-
 		$options = array(
 			'header' => true,
 			'paginate' => false,
@@ -843,18 +804,12 @@ class ElementsHelper {
 			'sort' => 'name',
 			'order' => 'asc',
 		);
-
 		$element_footer = '';
-
         if(isset($info['similar']) && count($info['similar'])) {
-
 			$element_footer .= '<h3 class="mt-5 mb-3">Похожие</h3>';
 			$element_footer .= self::getElements($request, $info['similar'], $section, $options);
-
         }
-
 		return $element_footer;
-
 	}
 
 	/**
@@ -896,22 +851,15 @@ class ElementsHelper {
 	 * @return string
 	 */
 	public static function getCardScripts(string $section = '', int $element_id = 0) {
-
 		$element_scripts = '';
-
 		$element_scripts .= '<form method="POST">';
 		$element_scripts .= '<input type="hidden" name="element_section" id="element_section" value="'.$section.'" autocomplete="off">';
 		$element_scripts .= '<input type="hidden" name="element_id" id="element_id" value="'.$element_id.'" autocomplete="off">';
 		$element_scripts .= '</form>';
-
 		if(Auth::check()) {
-
 			$element_scripts .= '<script type="text/javascript" src="/data/js/card.js"></script>';
-
 		}
-
 		return $element_scripts;
-
 	}
 
 	/**
@@ -983,10 +931,8 @@ class ElementsHelper {
 		$elements_text .= '</div>';
 
 		if ($no_br) {
-
-			$elements_text = preg_replace('/\n/', '', $elements_text);
-			$elements_text = preg_replace('/"/', '\"', $elements_text);
-
+			$elements_text = str_replace("\n", ' ', $elements_text);
+			$elements_text = addslashes($elements_text);
 		}
 
 		return $elements_text;
@@ -1002,9 +948,7 @@ class ElementsHelper {
 	 * @return string
 	 */
 	public static function getEvents(Request $request, $elements, string $section = '', string $subsection = '', array $options = array()) {
-
 		$elements_list = '';
-
 		if(!count($options)) {
 			$options = array(
 				'header' => true,
@@ -1012,35 +956,21 @@ class ElementsHelper {
 				'paginate' => true,
 			);
 		}
-
-		$elements_list .= '';
-
 		foreach ($elements as $element) {
-
 			$elements_list .= self::getEvent($element);
-
 		}
-
-		$elements_list .= '';
-
 		if ($options['paginate']) {
-
 			$elements_list .= '<div class="mt-5">';
 			$elements_list .= $elements->render();
 			$elements_list .= '</div>';
-
 		}
-
 		return $elements_list;
-
 	}
 
 	/**
 	 * @param int $id
 	 * @param string $section
 	 * @param string $type
-	 * @return bool
-	 * @throws \Exception
 	 */
 	public static function deleteElement(int $id = 0, string $section = '', string $type = '') {
 
@@ -1054,16 +984,32 @@ class ElementsHelper {
 			->delete()
 		;
 
-		$file = __DIR__.'/../../public/data/img/covers/'.$section.'/'.$id.'.jpg';
-		if (file_exists($file)) {
-			unlink($file);
-		} else {
-			// File not found.
-		}
+		self::deleteCover($section, $id);
 
 		$type::find($id)->delete();
 
-		return true;
+	}
+
+	/**
+	 * @param Section $section
+	 * @param int $donor_id
+	 * @param int $recipient_id
+	 */
+	public static function transfer(Section $section, int $donor_id, int $recipient_id) {
+
+		$rates = Rate::where('element_type', '=', $section->type)
+			->where('element_id', '=', $recipient_id)
+			->pluck('id')
+			->toArray()
+		;
+
+		Rate::where('element_type', '=', $section->type)
+			->where('element_id', '=', $donor_id)
+			->whereNotIn('id', $rates)
+			->update(array('element_id' => $recipient_id))
+		;
+
+		self::deleteElement($donor_id, $section->name, $section->type);
 
 	}
 
@@ -1142,14 +1088,30 @@ class ElementsHelper {
 	 * @return int
 	 */
 	public static function getCover(string $section, int $id) {
-		$cover = null;
-		$rel_path = '/data/img/covers/'.$section.'/'.$id.'.jpg';
+		$covers_path = '/data/img/covers/';
+		$extension = '.jpg';
+		$rel_path = $covers_path.$section.'/'.$id.$extension;
 		$file_path = public_path().$rel_path;
 		if (file_exists($file_path)) {
 			$hash = md5_file($file_path);
 			$cover = $rel_path.'?hash='.$hash;
+		} else {
+			$rel_path = $covers_path.$section.'/0'.$extension;
+			$file_path = public_path().$rel_path;
+			$hash = md5_file($file_path);
+			$cover = $rel_path.'?hash='.$hash;
 		}
 		return $cover;
+	}
+
+	/**
+	 * @param string $section
+	 * @param int $id
+	 */
+	public static function deleteCover(string $section, int $id) {
+		$rel_path = '/data/img/covers/'.$section.'/'.$id.'.jpg';
+		$file_path = public_path().$rel_path;
+		if (file_exists($file_path)) {unlink($file_path);}
 	}
 
 	/**

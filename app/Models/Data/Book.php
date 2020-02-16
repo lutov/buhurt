@@ -3,8 +3,8 @@
 use App\Traits\CollectionsTrait;
 use App\Traits\CommentsTrait;
 use App\Traits\GenresTrait;
-use App\Traits\IsWantedTrait;
 use App\Traits\RatesTrait;
+use App\Traits\RelationsTrait;
 use App\Traits\SectionTrait;
 use App\Traits\WantedTrait;
 use Eloquent;
@@ -15,11 +15,12 @@ use Eloquent;
 class Book extends Eloquent  {
 
 	use SectionTrait;
+	use RatesTrait;
+	use WantedTrait;
 	use GenresTrait;
 	use CollectionsTrait;
-	use RatesTrait;
+	use RelationsTrait;
 	use CommentsTrait;
-	use WantedTrait;
 
 	/**
 	 * The database table used by the model.
@@ -51,7 +52,7 @@ class Book extends Eloquent  {
 	/**
 	 * @return mixed
 	 */
-	public function publishers() {
+	public function books_publishers() {
 
 		return $this->belongsToMany('App\Models\Data\Company', 'publishers_books', 'book_id', 'company_id');
 

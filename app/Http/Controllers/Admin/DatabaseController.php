@@ -155,7 +155,10 @@ class DatabaseController extends Controller {
 		$this->sync($games_publishers, 'games_publishers', $element);
 
 		$this->sync($bands, 'bands', $element);
-		$this->sync($tracks, 'tracks', $element);
+		$unique = array(
+			array('album_id', $element->id)
+		);
+		$this->sync($tracks, 'tracks', $element, $unique);
 
 		$this->setCover($request, $section, $element->id);
 
@@ -184,9 +187,10 @@ class DatabaseController extends Controller {
 	 * @param array $list
 	 * @param string $entity_section
 	 * @param $element
+	 * @param array $unique
 	 * @return bool
 	 */
-	protected function sync(array $list, string $entity_section, $element) {
+	protected function sync(array $list, string $entity_section, $element, array $unique = array()) {
 
 		if(!isset($list[0]) || empty($list[0])) {return false;}
 
@@ -196,7 +200,11 @@ class DatabaseController extends Controller {
 
 		foreach ($list as $value) {
 
-			$entity = $entity_type::where('name', '=', $value)->first();
+			if(!$unique) {
+				$entity = $entity_type::where('name', '=', $value)->first();
+			} else {
+				$entity = $entity_type::where('name', '=', $value)->where($unique)->first();
+			}
 
 			if (!isset($entity->name)) {
 
