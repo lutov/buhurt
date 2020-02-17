@@ -14,158 +14,45 @@ use App\Models\Data\Genre;
 
 class GenresController extends Controller {
 
-	private $prefix = 'genres';
+	protected string $section = 'genres';
 
 	/**
 	 * @param Request $request
 	 * @return mixed
 	 */
-	public function sections(Request $request) {
+	public function list(Request $request) {
 
-		$section = SectionsHelper::getSection($this->prefix);
+		$section = SectionsHelper::getSection($this->section);
 
-		return View::make('genres.index', array(
-			'title' => 'Жанры',
-			'subtitle' => 'Разделы',
-			'section' => $section,
-			'request' => $request,
-		));
-
-	}
-
-	/**
-	 * @param Request $request
-	 * @param $section
-	 * @return \Illuminate\Contracts\View\View
-	 */
-	private function list(Request $request, $section) {
-
-		$section = SectionsHelper::getSection($section);
-
-		$sort = 'name';
-		$order = 'asc';
+		$sort = $request->get('sort', 'name');
+		$order = $request->get('order', 'asc');
 		$limit = 28;
-
-		$elements = Genre::where('element_type', '=', $section->type)
-			->orderBy($sort, $order)
-			->paginate($limit)
-		;
-
-		return View::make('genres.list', array(
-			'request' => $request,
-			'section' => $section,
-			'elements' => $elements
-		));
-
-	}
-
-	public function books_list(Request $request) {$section = 'books'; return $this->list($request, $section);}
-	public function films_list(Request $request) {$section = 'films'; return $this->list($request, $section);}
-	public function games_list(Request $request) {$section = 'games'; return $this->list($request, $section);}
-	public function albums_list(Request $request) {$section = 'albums'; return $this->list($request, $section);}
-	public function memes_list(Request $request) {$section = 'memes'; return $this->list($request, $section);}
-
-	/**
-	 * @param Request $request
-	 * @param $section
-	 * @param $id
-	 * @return \Illuminate\Contracts\View\View
-	 */
-    public function item(Request $request, $id) {
-
-		$genre = Genre::find($id);
-		$section = SectionsHelper::getSection(SectionsHelper::getSectionBy($genre->element_type));
-
-		$sort = $request->get('sort', 'created_at');
-		$order = $request->get('order', 'desc');
-		$limit = 28;
-
-		$sort_options = array(
-			'created_at' => 'Время добавления',
-			'name' => 'Название',
-			'alt_name' => 'Оригинальное название',
-			'year' => 'Год'
-		);
 
 		$sort = TextHelper::checkSort($sort);
 		$order = TextHelper::checkOrder($order);
 
-		//$genre = Genre::find($id);
+		$sort_options = array(
+			'name' => 'Имя',
+		);
 
-		if(Auth::check()) {
+		$elements = $section->type::orderBy($sort, $order)->paginate($limit);
 
-			$user_id = Auth::user()->id;
-			$unwanted = Unwanted::select('element_id')
-				->where('element_type', '=', $section->type)
-				->where('user_id', '=', $user_id)
-				//->remember(10)
-				->pluck('element_id')
-			;
+		$options = array(
+			'header' => true,
+			'footer' => true,
+			'paginate' => true,
+			'sort_options' => $sort_options,
+			'sort' => $sort,
+			'order' => $order,
+		);
 
-			$elements = $section->type::select($section->alt_name.'.*')
-				->leftJoin('elements_genres', $section->alt_name.'.id', '=', 'elements_genres.element_id')
-				->where('genre_id', '=', $id)
-				->where('element_type', '=', $section->type)
-				->whereNotIn($section->alt_name.'.id', $unwanted)
-				->with(array('rates' => function($query) use($user_id, $section)
-					{
-						$query
-							->where('user_id', '=', $user_id)
-							->where('element_type', '=', $section->type)
-						;
-					})
-				)
-				->orderBy($sort, $order)
-				//->toSql()
-				->paginate($limit)
-			;
+		return View::make($this->section.'.index', array(
+			'request' => $request,
+			'elements' => $elements,
+			'section' => $section,
+			'options' => $options,
+		));
 
-		} else {
-
-			$elements = $section->type::select($section->alt_name.'.*')
-				->leftJoin('elements_genres', $section->alt_name.'.id', '=', 'elements_genres.element_id')
-				->where('genre_id', '=', $id)
-				->where('element_type', '=', $section->type)
-				->orderBy($sort, $order)
-				//->toSql()
-				->paginate($limit)
-			;
-
-		}
-
-		if(!empty($genre)) {
-
-			$cover = 0;
-			$file_path = public_path() . '/data/img/covers/genres/' . $id . '.jpg';
-			if (file_exists($file_path)) {
-				$cover = $id;
-			}
-
-			$options = array(
-				'header' => true,
-				'footer' => true,
-				'paginate' => true,
-				'sort_list' => $sort_options,
-				'sort' => $sort,
-				'order' => $order,
-				'cover' => $cover,
-			);
-
-			return View::make('genres.item', array(
-				'request' => $request,
-				'cover' => $cover,
-				'element' => $genre,
-				'elements' => $elements,
-				//'parent' => $parent,
-				'section' => $section,
-				'options' => $options
-			));
-
-		} else {
-
-			return Redirect::to('/');
-
-		}
-    }
+	}
 	
 }

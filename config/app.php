@@ -254,6 +254,7 @@ return [
 		'Band' => App\Models\Data\Band::class,
 		'Genre' => App\Models\Data\Genre::class,
 		'Country' => App\Models\Data\Country::class,
+		'Platform' => App\Models\Data\Platform::class,
 
 		/* Helpers */
 		'AchievementsHelper' => App\Helpers\AchievementsHelper::class,

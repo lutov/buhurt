@@ -1,21 +1,27 @@
-<?php namespace App\Http\Controllers\Data;
+<?php
+
+namespace App\Http\Controllers\Data;
 
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
-use App\Models\Data\Company;
 
 class CompaniesController extends Controller {
 
-	private $prefix = 'companies';
+	protected string $section = 'companies';
 
+	/**
+	 * @param Request $request
+	 * @return mixed
+	 */
 	public function list(Request $request) {
 
-		$section = SectionsHelper::getSection($this->prefix);
+		$section = SectionsHelper::getSection($this->section);
 
 		$sort = $request->get('sort', 'name');
 		$order = $request->get('order', 'asc');
@@ -26,23 +32,21 @@ class CompaniesController extends Controller {
 
 		$sort_options = array(
 			'created_at' => 'Время добавления',
-			'name' => 'Название',
+			'name' => 'Имя',
 		);
 
-		$elements = Company::orderBy($sort, $order)
-			->paginate($limit)
-		;
+		$elements = $section->type::orderBy($sort, $order)->paginate($limit);
 
 		$options = array(
 			'header' => true,
 			'footer' => true,
 			'paginate' => true,
-			'sort_list' => $sort_options,
+			'sort_options' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
 		);
 
-		return View::make($this->prefix.'.index', array(
+		return View::make($this->section.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
@@ -50,59 +54,90 @@ class CompaniesController extends Controller {
 		));
 
 	}
-	
-    public function item(Request $request, $id) {
 
-		$section = SectionsHelper::getSection($this->prefix);
+	/**
+	 * @param Request $request
+	 * @param int $id
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
+	 */
+    public function item(Request $request, int $id) {
 
-		$company = Company::find($id);
+		$section = SectionsHelper::getSection($this->section);
+		$element = $section->type::find($id);
 
-		if(isset($company->id)) {
-			$logo = 0;
-			$file_path = public_path() . '/data/img/covers/'.$section->alt_name.'/'.$id.'.jpg';
-			if (file_exists($file_path)) {
-				$logo = $id;
-			}
+		if(isset($element->id)) {
 
 			$sort = $request->get('sort', 'name');
 			$order = $request->get('order', 'asc');
-			$sort_options = array(
-				'created_at' => 'Время добавления',
-				'name' => 'Название',
-				'year' => 'Год'
-			);
 			$limit = 28;
 
 			$sort = TextHelper::checkSort($sort);
 			$order = TextHelper::checkOrder($order);
 
-			$books_published = $company->books_published()->orderBy($sort, $order)->paginate($limit);
-			$games_developed = $company->games_developed()->orderBy($sort, $order)->paginate($limit);
-			$games_published = $company->games_published()->orderBy($sort, $order)->paginate($limit);
+			$sort_options = array(
+				'created_at' => 'Время добавления',
+				'name' => 'Название',
+				'year' => 'Год'
+			);
+
+			$titles = array();
+			$keywords = array();
+			$books_published = $games_developed = $games_published = array();
+			if($element->books_published->count()) {
+				$keywords[] = 'книги';
+				$titles['books']['name'] = 'Книги';
+				$titles['books']['count'] = $element->books_published->count();
+				$books_published = $element->books_published()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			if($element->games_developed->count()) {
+				$keywords[] = 'разработанные игры';
+				$titles['developer']['name'] = 'Разработанные игры';
+				$titles['developer']['count'] = $element->games_developed->count();
+				$games_developed = $element->games_developed()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			if($element->games_published->count()) {
+				$keywords[] = 'изданные игры';
+				$titles['publisher']['name'] = 'Изданные игры';
+				$titles['publisher']['count'] = $element->games_published->count();
+				$games_published = $element->games_published()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			uasort($titles, array('TextHelper', 'compareReverseCount'));
 
 			$options = array(
 				'header' => true,
 				'footer' => true,
 				'paginate' => true,
-				'sort_list' => $sort_options,
+				'sort_options' => $sort_options,
 				'sort' => $sort,
 				'order' => $order,
-				'cover' => $logo,
 			);
 
-			return View::make($this->prefix . '.item', array(
+			return View::make($this->section.'.item', array(
 				'request' => $request,
 				'section' => $section,
-				'element' => $company,
+				'titles' => $titles,
+				'element' => $element,
 				'books_published' => $books_published,
 				'games_developed' => $games_developed,
 				'games_published' => $games_published,
 				'options' => $options,
 			));
+
 		} else {
-			// нет такой буквы
-			return Redirect::to('/companies')->with('message', 'Нет такой компании');
+
+			return Redirect::to('/'.$this->section);
+
 		}
+
     }
 
 	/**
@@ -120,7 +155,7 @@ class CompaniesController extends Controller {
 
 		DB::table('companies')->where('id', '=', $id)->delete();//->update(array('name' => ''));
 
-		return Redirect::to('/'.$this->prefix.'/'.$recipient_id);
+		return Redirect::to('/'.$this->section.'/'.$recipient_id);
 
 	}
 }

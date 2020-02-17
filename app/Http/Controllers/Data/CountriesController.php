@@ -1,127 +1,125 @@
-<?php namespace App\Http\Controllers\Data;
+<?php
+
+namespace App\Http\Controllers\Data;
 
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
-use App\Models\User\Unwanted;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
-use App\Models\User\Wanted;
-use App\Models\Data\Country;
 
 class CountriesController extends Controller {
 
-	private $prefix = 'countries';
+	protected string $section = 'countries';
 
-    public function list(Request $request) {
+	/**
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function list(Request $request) {
 
-		$section = SectionsHelper::getSection($this->prefix);
+		$section = SectionsHelper::getSection($this->section);
 
 		$sort = $request->get('sort', 'name');
 		$order = $request->get('order', 'asc');
 		$limit = 28;
 
-		$sort_options = array(
-			'name' => 'Название',
-		);
-
 		$sort = TextHelper::checkSort($sort);
 		$order = TextHelper::checkOrder($order);
 
-		$elements = Country::orderBy($sort, $order)
-			->paginate($limit)
-		;
+		$sort_options = array(
+			'name' => 'Имя',
+		);
+
+		$elements = $section->type::orderBy($sort, $order)->paginate($limit);
 
 		$options = array(
 			'header' => true,
 			'footer' => true,
 			'paginate' => true,
-			'sort_list' => $sort_options,
+			'sort_options' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
 		);
 
-		return View::make($this->prefix.'.index', array(
+		return View::make($this->section.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
 			'options' => $options,
 		));
 
-    }
+	}
 
 	/**
 	 * @param Request $request
-	 * @param $id
-	 * @return \Illuminate\Contracts\View\View
+	 * @param int $id
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
-    public function item(Request $request, $id) {
+    public function item(Request $request, int $id) {
 
-		$section = SectionsHelper::getSection('films');
+		$section = SectionsHelper::getSection($this->section);
+		$element = $section->type::find($id);
 
-		$sort = $request->get('sort', 'created_at');
-		$order = $request->get('order', 'desc');
-		$limit = 28;
+		if(isset($element->id)) {
 
-		$sort_options = array(
-			'created_at' => 'Время добавления',
-			'name' => 'Название',
-			'alt_name' => 'Оригинальное название',
-			'year' => 'Год'
-		);
+			$sort = $request->get('sort', 'name');
+			$order = $request->get('order', 'asc');
+			$limit = 28;
 
-		$sort = TextHelper::checkSort($sort);
-		$order = TextHelper::checkOrder($order);
+			$sort = TextHelper::checkSort($sort);
+			$order = TextHelper::checkOrder($order);
 
-		$country = Country::find($id);
+			$sort_options = array(
+				'created_at' => 'Время добавления',
+				'name' => 'Название',
+				'alt_name' => 'Оригинальное название',
+				'year' => 'Год'
+			);
 
-		if(Auth::check()) {
+			$sort = TextHelper::checkSort($sort);
+			$order = TextHelper::checkOrder($order);
 
-			$user_id = Auth::user()->id;
-			$unwanted = Unwanted::select('element_id')
-				->where('element_type', '=', $section->type)
-				->where('user_id', '=', $user_id)
-				->pluck('element_id')
-			;
+			$titles = array();
+			$keywords = array();
+			$films = array();
+			if($element->films->count()) {
+				$keywords[] = 'фильмы';
+				$titles['films']['name'] = 'Фильмы';
+				$titles['films']['count'] = $element->films->count();
+				$films = $element->films()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			//uasort($titles, array('TextHelper', 'compareReverseCount'));
 
-			$elements = $country->{$section->alt_name}()->orderBy($sort, $order)
-				->with(array('rates' => function($query) use($user_id, $section)
-					{
-						$query
-							->where('user_id', '=', $user_id)
-							->where('element_type', '=', $section->type)
-						;
-					})
-				)
-				->whereNotIn($section->alt_name.'.id', $unwanted)
-				->paginate($limit)
-			;
+			$options = array(
+				'header' => true,
+				'footer' => true,
+				'paginate' => true,
+				'sort_options' => $sort_options,
+				'sort' => $sort,
+				'order' => $order,
+			);
+
+			return View::make($this->section.'.item', array(
+				'request' => $request,
+				'titles' => $titles,
+				'element' => $element,
+				'section' => $section,
+				'films' => $films,
+				'options' => $options
+			));
 
 		} else {
 
-			$elements = $country->{$section->alt_name}()->orderBy($sort, $order)
-				->paginate($limit)
-			;
+			return Redirect::to('/'.$this->section);
 
 		}
 
-		$options = array(
-			'header' => true,
-			'footer' => true,
-			'paginate' => true,
-			'sort_list' => $sort_options,
-			'sort' => $sort,
-			'order' => $order,
-		);
-
-        return View::make($this->prefix.'.item', array(
-			'request' => $request,
-			'element' => $country,
-			'elements' => $elements,
-			'section' => $section,
-			'options' => $options
-		));
     }
 	
 }

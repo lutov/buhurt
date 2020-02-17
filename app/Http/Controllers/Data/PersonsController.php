@@ -1,4 +1,6 @@
-<?php namespace App\Http\Controllers\Data;
+<?php
+
+namespace App\Http\Controllers\Data;
 
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;

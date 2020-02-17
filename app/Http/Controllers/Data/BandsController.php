@@ -1,52 +1,51 @@
-<?php namespace App\Http\Controllers\Data;
+<?php
+
+namespace App\Http\Controllers\Data;
 
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Redirect;
-use App\Models\Data\Band;
 
 class BandsController extends Controller {
 
-	private $prefix = 'bands';
+	protected string $section = 'bands';
 
 	/**
 	 * @param Request $request
-	 * @return \Illuminate\Contracts\View\View
+	 * @return mixed
 	 */
 	public function list(Request $request) {
 
-		$section = SectionsHelper::getSection($this->prefix);
+		$section = SectionsHelper::getSection($this->section);
 
-		$sort = Input::get('sort', 'name');
-		$order = Input::get('order', 'asc');
+		$sort = $request->get('sort', 'name');
+		$order = $request->get('order', 'asc');
 		$limit = 28;
-
-		$sort_options = array(
-			'created_at' => 'Время добавления',
-			'name' => 'Название',
-		);
 
 		$sort = TextHelper::checkSort($sort);
 		$order = TextHelper::checkOrder($order);
 
-		$elements = Band::orderBy($sort, $order)
-			->paginate($limit)
-		;
+		$sort_options = array(
+			'created_at' => 'Время добавления',
+			'name' => 'Имя',
+		);
+
+		$elements = $section->type::orderBy($sort, $order)->paginate($limit);
 
 		$options = array(
 			'header' => true,
 			'footer' => true,
 			'paginate' => true,
-			'sort_list' => $sort_options,
+			'sort_options' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
 		);
 
-		return View::make($this->prefix.'.index', array(
+		return View::make($this->section.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
@@ -57,28 +56,22 @@ class BandsController extends Controller {
 
 	/**
 	 * @param Request $request
-	 * @param $id
-	 * @return mixed
+	 * @param int $id
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
-    public function item(Request $request, $id) {
+    public function item(Request $request, int $id) {
 
-		$section = SectionsHelper::getSection($this->prefix);
+		$section = SectionsHelper::getSection($this->section);
+		$element = $section->type::find($id);
 
-		$band = Band::find($id);
+		if(isset($element->id)) {
 
-		if(isset($band->id)) {
-			$photo = 0;
-			$file_path = public_path() . '/data/img/covers/'.$section->alt_name.'/'.$id.'.jpg';
-			if (file_exists($file_path)) {
-				$photo = $id;
-			}
-
-			$sort = Input::get('sort', 'created_at');
-			$sort_direction = Input::get('sort_direction', 'desc');
+			$sort = $request->get('sort', 'name');
+			$order = $request->get('order', 'asc');
 			$limit = 28;
 
-			$albums = $band->albums()->orderBy('created_at', $sort_direction)->paginate($limit);
-			$members = $band->members()->orderBy('created_at', $sort_direction)->paginate($limit);
+			$sort = TextHelper::checkSort($sort);
+			$order = TextHelper::checkOrder($order);
 
 			$sort_options = array(
 				'created_at' => 'Время добавления',
@@ -86,19 +79,55 @@ class BandsController extends Controller {
 				'year' => 'Год'
 			);
 
-			return View::make($this->prefix . '.item', array(
+			$titles = array();
+			$keywords = array();
+			$albums = $members = array();
+			if($element->albums->count()) {
+				$keywords[] = 'альбомы';
+				$titles['albums']['name'] = 'Альбомы';
+				$titles['albums']['count'] = $element->albums->count();
+				$albums = $element->albums()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			if($element->members->count()) {
+				$keywords[] = 'участники';
+				$titles['members']['name'] = 'Участники';
+				$titles['members']['count'] = $element->members->members();
+				$members = $element->members()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			//uasort($titles, array('TextHelper', 'compareReverseCount'));
+
+			$options = array(
+				'header' => true,
+				'footer' => true,
+				'paginate' => true,
+				'sort_options' => $sort_options,
+				'sort' => $sort,
+				'order' => $order,
+				'limit' => $limit,
+			);
+
+			return View::make($this->section.'.item', array(
 				'request' => $request,
 				'section' => $section,
-				'element' => $band,
-				'cover' => $photo,
+				'element' => $element,
+				'titles' => $titles,
 				'albums' => $albums,
 				'members' => $members,
-				'sort_options' => $sort_options
+				'options' => $options
 			));
+
 		} else {
-			// нет такой буквы
-			return Redirect::home()->with('message', 'Нет такой персоны');
+
+			return Redirect::to('/'.$this->section);
+
 		}
+
     }
 	
 }

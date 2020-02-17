@@ -9,69 +9,59 @@
 	<section class="text-center mt-5 mb-3">
 		<h1 class="">@yield('title')</h1>
 		<h2 class="">@yield('subtitle')</h2>
-		<ul class="list-inline mt-3">
-
-			@if(count($books_published))<li class="list-inline-item"><a href="#books_published">Изданные книги</a></li>@endif
-			@if(count($games_developed))<li class="list-inline-item"><a href="#games_developed">Разработанные игры</a></li>@endif
-			@if(count($games_published))<li class="list-inline-item"><a href="#games_published">Изданные игры</a></li>@endif
-
-		</ul>
 	</section>
 
-	{!! Breadcrumbs::render('element', $element) !!}
-
 	<div itemscope itemtype="http://schema.org/Person">
+
+		{!! Breadcrumbs::render('element', $element) !!}
 
 		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
 
 	</div>
 
-	@if(count($books_published))
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+		@foreach($titles as $key => $title)
+			<li class="nav-item">
+				<a class="nav-link @if(array_key_first($titles) === $key) active @endif" id="{{$key}}-tab" data-toggle="tab" href="#{{$key}}" role="tab" aria-controls="{{$key}}" aria-selected="@if(array_key_first($titles) === $key) true @else false @endif">
+					{{$title['name']}}
+					<span class="small text-secondary">({{$title['count']}})</span>
+				</a>
+			</li>
+		@endforeach
+	</ul>
 
-		<section class="text-center mt-5">
-			<h2 id="books_published">Изданные книги</h2>
-		</section>
+	<div class="tab-content" id="myTabContent">
 
-		<div class="row mt-5">
-
-			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $books_published, 'books', $options) !!}
+		@if(count($books_published))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'books') show active @endif" id="books" role="tabpanel" aria-labelledby="books-tab">
+				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $books_published, 'books', $options) !!}
+					</div>
+				</div>
 			</div>
+		@endif
 
-		</div>
-
-	@endif
-
-	@if(count($games_developed))
-
-		<section class="text-center mt-5">
-			<h2 id="games_developed">Разработанные игры</h2>
-		</section>
-
-		<div class="row mt-5">
-
-			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $games_developed, 'games', $options) !!}
+		@if(count($games_developed))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'developer') show active @endif" id="developer" role="tabpanel" aria-labelledby="developer-tab">
+				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $games_developed, 'games', $options) !!}
+					</div>
+				</div>
 			</div>
+		@endif
 
-		</div>
-
-	@endif
-
-	@if(count($games_published))
-
-		<section class="text-center mt-5">
-			<h2 id="games_published">Изданные игры</h2>
-		</section>
-
-		<div class="row mt-5">
-
-			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $games_published, 'games', $options) !!}
+		@if(count($games_published))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'publisher') show active @endif" id="publisher" role="tabpanel" aria-labelledby="publisher-tab">
+				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $games_published, 'games', $options) !!}
+					</div>
+				</div>
 			</div>
+		@endif
 
-		</div>
-
-	@endif
+	</div>
 
 @stop

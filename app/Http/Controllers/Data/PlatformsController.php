@@ -1,19 +1,18 @@
-<?php namespace App\Http\Controllers\Data;
+<?php
+
+namespace App\Http\Controllers\Data;
 
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
-use App\Models\User\Unwanted;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Redirect;
-use App\Models\User\Wanted;
-use App\Models\Data\Platform;
 
 class PlatformsController extends Controller {
 
-	private $prefix = 'platforms';
+	protected string $section = 'platforms';
 
 	/**
 	 * @param Request $request
@@ -21,33 +20,31 @@ class PlatformsController extends Controller {
 	 */
 	public function list(Request $request) {
 
-		$section = SectionsHelper::getSection($this->prefix);
+		$section = SectionsHelper::getSection($this->section);
 
 		$sort = $request->get('sort', 'name');
 		$order = $request->get('order', 'asc');
 		$limit = 28;
 
-		$sort_options = array(
-			'name' => 'Название',
-		);
-
 		$sort = TextHelper::checkSort($sort);
 		$order = TextHelper::checkOrder($order);
 
-		$elements = Platform::orderBy($sort, $order)
-			->paginate($limit)
-		;
+		$sort_options = array(
+			'name' => 'Имя',
+		);
+
+		$elements = $section->type::orderBy($sort, $order)->paginate($limit);
 
 		$options = array(
 			'header' => true,
 			'footer' => true,
 			'paginate' => true,
-			'sort_list' => $sort_options,
+			'sort_options' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
 		);
 
-		return View::make($this->prefix.'.index', array(
+		return View::make($this->section.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
@@ -58,83 +55,71 @@ class PlatformsController extends Controller {
 
 	/**
 	 * @param Request $request
-	 * @param $id
-	 * @return mixed
+	 * @param int $id
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
-    public function item(Request $request, $id) {
+	public function item(Request $request, int $id) {
 
-		$section = SectionsHelper::getSection('games');
+		$section = SectionsHelper::getSection($this->section);
+		$element = $section->type::find($id);
 
-		$sort = $request->get('sort', 'created_at');
-		$order = $request->get('order', 'desc');
-		$limit = 28;
+		if(isset($element->id)) {
 
-		$sort_options = array(
-			'created_at' => 'Время добавления',
-			'name' => 'Название',
-			'alt_name' => 'Оригинальное название',
-			'year' => 'Год'
-		);
+			$sort = $request->get('sort', 'name');
+			$order = $request->get('order', 'asc');
+			$limit = 28;
 
-		$sort = TextHelper::checkSort($sort);
-		$order = TextHelper::checkOrder($order);
+			$sort = TextHelper::checkSort($sort);
+			$order = TextHelper::checkOrder($order);
 
-		$platform = Platform::find($id);
+			$sort_options = array(
+				'created_at' => 'Время добавления',
+				'name' => 'Название',
+				'alt_name' => 'Оригинальное название',
+				'year' => 'Год'
+			);
 
-		if(!empty($platform)) {
+			$sort = TextHelper::checkSort($sort);
+			$order = TextHelper::checkOrder($order);
 
-			if(Auth::check()) {
-
-				$user_id = Auth::user()->id;
-				$unwanted = Unwanted::select('element_id')
-					->where('element_type', '=', $section->type)
-					->where('user_id', '=', $user_id)
-					->pluck('element_id')
-				;
-
-				$elements = $platform->{$section->alt_name}()->orderBy($sort, $order)
-					->with(array('rates' => function($query) use($user_id, $section)
-						{
-							$query
-								->where('user_id', '=', $user_id)
-								->where('element_type', '=', $section->type)
-							;
-						})
-					)
-					->whereNotIn($section->alt_name.'.id', $unwanted)
+			$titles = array();
+			$keywords = array();
+			$games = array();
+			if($element->games->count()) {
+				$keywords[] = 'игры';
+				$titles['games']['name'] = 'Игры';
+				$titles['games']['count'] = $element->games->count();
+				$games = $element->games()
+					->orderBy($sort, $order)
 					->paginate($limit)
 				;
-
-			} else {
-
-				$elements = $platform->{$section->alt_name}()->orderBy($sort, $order)
-					->paginate($limit)
-				;
-
 			}
+			//uasort($titles, array('TextHelper', 'compareReverseCount'));
 
 			$options = array(
 				'header' => true,
 				'footer' => true,
 				'paginate' => true,
-				'sort_list' => $sort_options,
+				'sort_options' => $sort_options,
 				'sort' => $sort,
 				'order' => $order,
 			);
 
-			return View::make($this->prefix.'.item', array(
+			return View::make($this->section.'.item', array(
 				'request' => $request,
-				'element' => $platform,
-				'elements' => $elements,
+				'titles' => $titles,
+				'element' => $element,
 				'section' => $section,
+				'games' => $games,
 				'options' => $options
 			));
-		}
-		else {
 
-			return Redirect::to('/games/');
+		} else {
+
+			return Redirect::to('/'.$this->section);
 
 		}
-    }
+
+	}
 	
 }

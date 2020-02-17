@@ -2,7 +2,7 @@
 
 @section('title'){{$element->name}}@stop
 
-@section('subtitle'){{$section->name}}@stop
+@section('subtitle')@stop
 
 @section('content')
 
@@ -11,15 +11,36 @@
 		<h2 class="">@yield('subtitle')</h2>
 	</section>
 
-	<div class="row mt-5">
+	<div>
 
-		<div class="col-md-12">
+		{!! Breadcrumbs::render('element', $element) !!}
 
-			{!! Breadcrumbs::render('element', $element) !!}
+		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
 
-			{!! ElementsHelper::getElements($request, $elements, $elements->first()->section()->alt_name, $options)!!}
+	</div>
 
-		</div>
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+		@foreach($titles as $key => $title)
+			<li class="nav-item">
+				<a class="nav-link @if(array_key_first($titles) === $key) active @endif" id="{{$key}}-tab" data-toggle="tab" href="#{{$key}}" role="tab" aria-controls="{{$key}}" aria-selected="@if(array_key_first($titles) === $key) true @else false @endif">
+					{{$title['name']}}
+					<span class="small text-secondary">({{$title['count']}})</span>
+				</a>
+			</li>
+		@endforeach
+	</ul>
+
+	<div class="tab-content" id="myTabContent">
+
+		@if(count($games))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'games') show active @endif" id="games" role="tabpanel" aria-labelledby="games-tab">
+				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $games, 'games', $options) !!}
+					</div>
+				</div>
+			</div>
+		@endif
 
 	</div>
 
