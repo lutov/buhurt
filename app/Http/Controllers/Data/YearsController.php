@@ -57,7 +57,7 @@ class YearsController extends Controller {
 
 		if('no' != $cache) {
 			$minutes = 60;
-			$var_name = 'years_'.$section->name.'_'.$sort.'_'.$order; //Cache::forget($var_name);
+			$var_name = 'years_'.$section->alt_name.'_'.$sort.'_'.$order; //Cache::forget($var_name);
 			$elements = Cache::remember($var_name, $minutes, function () use ($section, $sort, $order) {
 				return DB::table($section->alt_name)
 					->selectRaw('`year` as `id`, `year` as `name`, count(id) as `count`')

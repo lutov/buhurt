@@ -220,4 +220,15 @@ class TextHelper {
 
 	}
 
+	/**
+	 * @param $a
+	 * @param $b
+	 * @return int
+	 */
+	public static function compareReverseCount ($a, $b) {
+		$field = 'count';
+		if ($a[$field] == $b[$field]) return 0;
+		return ($a[$field] > $b[$field]) ? -1 : 1;
+	}
+
 }

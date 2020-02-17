@@ -4,125 +4,86 @@
 
 @section('subtitle')@stop
 
-<?php
-
-	$titles = array();
-	if(count($books)){$titles['writer'] = 'писатель';}
-	if(count($screenplays)){$titles['screenwriter'] = 'сценарист';}
-	if(count($directions)){$titles['director'] = 'режиссёр';}
-	if(count($productions)){$titles['producer'] = 'продюссер';}
-	if(count($actions)){$titles['actor'] = 'актёр';}
-
-?>
-
-@section('keywords'){!! $element->name !!}@if(count($titles)), {{implode(', ', $titles)}}@endif @stop
-@section('description'){!! $element->name !!}@if(count($titles)) — {{implode(', ', $titles)}}@endif @stop
+@section('keywords'){!! $element->name !!}@if(count($keywords)), {{implode(', ', $keywords)}}@endif @stop
+@section('description'){!! $element->name !!}@if(count($keywords)) — {{implode(', ', $keywords)}}@endif @stop
 
 @section('content')
 
 	<section class="text-center mt-5 mb-3">
 		<h1 class="">@yield('title')</h1>
 		<h2 class="">@yield('subtitle')</h2>
-		<ul class="list-inline mt-3 anchor_list">
-
-			@foreach($titles as $key => $title)<li class="list-inline-item"><a href="#{{$key}}">{{$title}}</a></li>@endforeach
-
-		</ul>
 	</section>
 
 	<div itemscope itemtype="http://schema.org/Person">
 
 		{!! Breadcrumbs::render('element', $element) !!}
 
-		<?php
-		$info = array(
-			'top_genres' => $top_genres,
-			'cover' => $cover,
-		);
-		?>
-
-		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $info) !!}
+		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
 
 	</div>
 
-	@if(count($books))
+	<ul class="nav nav-tabs" id="myTab" role="tablist">
+		@foreach($titles as $key => $title)
+			<li class="nav-item">
+				<a class="nav-link @if(array_key_first($titles) === $key) active @endif" id="{{$key}}-tab" data-toggle="tab" href="#{{$key}}" role="tab" aria-controls="{{$key}}" aria-selected="@if(array_key_first($titles) === $key) true @else false @endif">
+					{{$title['name']}}
+					<span class="small text-secondary">({{$title['count']}})</span>
+				</a>
+			</li>
+		@endforeach
+	</ul>
+	<div class="tab-content" id="myTabContent">
 
-		<section class="text-center mt-5">
-			<h2 id="writer">Писатель</h2>
-		</section>
-
-		<div class="row mt-5">
-
-			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $books, 'books', $options) !!}
+		@if(count($books))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'writer') show active @endif" id="writer" role="tabpanel" aria-labelledby="writer-tab">
+				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $books, 'books', $options) !!}
+					</div>
+				</div>
 			</div>
+		@endif
 
-		</div>
-
-	@endif
-
-	@if(count($screenplays))
-
-		<section class="text-center mt-5">
-			<h2 id="screenwriter">Сценарист</h2>
-		</section>
-
-		<div class="row mt-5">
-
-			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $screenplays, 'films', $options) !!}
+		@if(count($screenplays))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'screenwriter') show active @endif" id="screenwriter" role="tabpanel" aria-labelledby="screenwriter-tab">
+				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $screenplays, 'films', $options) !!}
+					</div>
+				</div>
 			</div>
+		@endif
 
-		</div>
-
-	@endif
-
-    @if(count($directions))
-
-		<section class="text-center mt-5">
-			<h2 id="director">Режиссер</h2>
-		</section>
-
-		<div class="row mt-5">
-
-			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $directions, 'films', $options) !!}
+		@if(count($directions))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'director') show active @endif" id="director" role="tabpanel" aria-labelledby="director-tab">
+				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $directions, 'films', $options) !!}
+					</div>
+				</div>
 			</div>
+		@endif
 
-		</div>
-
-    @endif
-
-	@if(count($productions))
-
-		<section class="text-center mt-5">
-			<h2 id="producer">Продюсер</h2>
-		</section>
-
-		<div class="row mt-5">
-
-			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $productions, 'films', $options) !!}
+		@if(count($productions))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'producer') show active @endif" id="producer" role="tabpanel" aria-labelledby="producer-tab">
+`				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $productions, 'films', $options) !!}
+					</div>
+				</div>
 			</div>
+		@endif
 
-		</div>
-
-	@endif
-
-    @if(count($actions))
-
-		<section class="text-center mt-5">
-			<h2 id="actor">Актёр</h2>
-		</section>
-
-		<div class="row mt-5">
-
-			<div class="col-md-12">
-				{!! ElementsHelper::getElements($request, $actions, 'films', $options) !!}
+		@if(count($roles))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'actor') show active @endif" id="actor" role="tabpanel" aria-labelledby="actor-tab">
+				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $roles, 'films', $options) !!}
+					</div>
+				</div>
 			</div>
+		@endif
 
-		</div>
-
-    @endif
+	</div>
 
 @stop

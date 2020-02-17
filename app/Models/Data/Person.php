@@ -68,7 +68,7 @@ class Person extends Eloquent {
 	/**
 	 * @return mixed
 	 */
-	public function actions() {
+	public function roles() {
 
 		return $this->belongsToMany('App\Models\Data\Film', 'actors_films', 'person_id', 'film_id');
 

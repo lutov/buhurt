@@ -175,7 +175,7 @@ class ElementController extends Controller {
 
 		ElementsHelper::transfer($section, $id, $recipient_id);
 
-		return Redirect::to('/'.$section->name.'/'.$recipient_id);
+		return Redirect::to('/'.$section->alt_name.'/'.$recipient_id);
 
 	}
 

@@ -78,6 +78,56 @@ class PersonsController extends Controller {
 				'year' => 'Год'
 			);
 
+			$titles = array();
+			$keywords = array();
+			$books = $screenplays = $directions = $productions = $roles = array();
+			if($element->books->count()) {
+				$keywords[] = 'писатель';
+				$titles['writer']['name'] = 'Писатель';
+				$titles['writer']['count'] = $element->books->count();
+				$books = $element->books()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			if($element->screenplays->count()) {
+				$keywords[] = 'сценарист';
+				$titles['screenwriter']['name'] = 'Сценарист';
+				$titles['screenwriter']['count'] = $element->screenplays->count();
+				$screenplays = $element->screenplays()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			if($element->directions->count()) {
+				$keywords[] = 'режиссёр';
+				$titles['director']['name'] = 'Режиссёр';
+				$titles['director']['count'] = $element->directions->count();
+				$directions = $element->directions()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			if($element->productions->count()) {
+				$keywords[] = 'продюссер';
+				$titles['producer']['name'] = 'Продюссер';
+				$titles['producer']['count'] = $element->productions->count();
+				$productions = $element->productions()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			if($element->roles->count()) {
+				$keywords[] = 'актёр';
+				$titles['actor']['name'] = 'Актёр';
+				$titles['actor']['count'] = $element->roles->count();
+				$roles = $element->roles()
+					->orderBy($sort, $order)
+					->paginate($limit)
+				;
+			}
+			uasort($titles, array('TextHelper', 'compareReverseCount'));
+
 			$options = array(
 				'header' => true,
 				'footer' => true,
@@ -85,6 +135,7 @@ class PersonsController extends Controller {
 				'sort_options' => $sort_options,
 				'sort' => $sort,
 				'order' => $order,
+				'limit' => $limit,
 			);
 
 			return View::make($this->section.'.item', array(
@@ -92,6 +143,13 @@ class PersonsController extends Controller {
 				'section' => $section,
 				'element' => $element,
 				'options' => $options,
+				'titles' => $titles,
+				'keywords' => $keywords,
+				'books' => $books,
+				'screenplays' => $screenplays,
+				'directions' => $directions,
+				'productions' => $productions,
+				'roles' => $roles,
 			));
 
 		} else {

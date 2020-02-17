@@ -137,15 +137,10 @@ class HomeController extends Controller {
 	 */
 	private function getUserElements(Section $section, User $user, array $unwanted, array $sort, array $cache) {
 		if(count($cache)) {
-			$var_name = $cache['name'] . '_' . $section->name;
+			$var_name = $cache['name'].'_'.$section->alt_name;
 			$elements = Cache::remember($var_name, $cache['minutes'], function () use ($section, $user, $unwanted, $sort) {
 				return $section->type::where('verified', '=', 1)
-					->whereNotIn($section->name . '.id', $unwanted)
-					->with(array('rates' => function ($query) use ($section, $user) {
-						$query
-							->where('user_id', '=', $user->id)
-							->where('element_type', '=', $section->type);
-					}))
+					->whereNotIn($section->alt_name.'.id', $unwanted)
 					->orderBy($sort['sort'], $sort['order'])
 					->limit($sort['limit'])
 					->get()
@@ -153,12 +148,7 @@ class HomeController extends Controller {
 			});
 		} else {
 			$elements = $section->type::where('verified', '=', 1)
-				->whereNotIn($section->name . '.id', $unwanted)
-				->with(array('rates' => function ($query) use ($section, $user) {
-					$query
-						->where('user_id', '=', $user->id)
-						->where('element_type', '=', $section->type);
-				}))
+				->whereNotIn($section->alt_name.'.id', $unwanted)
 				->orderBy($sort['sort'], $sort['order'])
 				->limit($sort['limit'])
 				->get()
@@ -175,7 +165,7 @@ class HomeController extends Controller {
 	 */
 	private function getElements(Section $section, array $sort, array $cache) {
 		if(count($cache)) {
-			$var_name = $cache['name'] . '_' . $section->name;
+			$var_name = $cache['name'].'_'.$section->alt_name;
 			$elements = Cache::remember($var_name, $cache['minutes'], function () use ($section, $sort) {
 				return $section->type::where('verified', '=', 1)
 					->orderBy($sort['sort'], $sort['order'])

@@ -19,13 +19,4 @@ trait RatesTrait {
 
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function rate() {
-
-		return $this->morphOne('App\Models\User\Rate', 'element');
-
-	}
-
 }
