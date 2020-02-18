@@ -79,9 +79,6 @@ class PlatformsController extends Controller {
 				'year' => 'Год'
 			);
 
-			$sort = TextHelper::checkSort($sort);
-			$order = TextHelper::checkOrder($order);
-
 			$titles = array();
 			$keywords = array();
 			$games = array();

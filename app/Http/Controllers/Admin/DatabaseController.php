@@ -214,7 +214,11 @@ class DatabaseController extends Controller {
 				if($fill_id) {$entity->id = $fill_id;}
 
 				$entity->name = $value;
-				$entity->description = '';
+				if(!$unique) {
+					$entity->description = '';
+				} else {
+					foreach($unique as $field) {$entity->{$field[0]} = $field[1];}
+				}
 				$entity->save();
 
 			}

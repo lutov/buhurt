@@ -32,12 +32,18 @@ class Genre extends Eloquent {
 
 	}
 
+	private function getByType(string $type) {
+
+		return $this->where('element_type', $type)->get();
+
+	}
+
 	/**
 	 * @return mixed
 	 */
 	public function books() {
 
-		return $this->morphedByMany('App\Models\Data\Book', 'element');
+		return $this->morphedByMany('App\Models\Data\Book', 'element', 'elements_genres');
 
 	}
 
@@ -46,7 +52,7 @@ class Genre extends Eloquent {
 	 */
 	public function films() {
 
-		return $this->morphedByMany('App\Models\Data\Film', 'element');
+		return $this->morphedByMany('App\Models\Data\Film', 'element', 'elements_genres');
 
 	}
 
@@ -55,7 +61,7 @@ class Genre extends Eloquent {
 	 */
 	public function games() {
 
-		return $this->morphedByMany('App\Models\Data\Game', 'element');
+		return $this->morphedByMany('App\Models\Data\Game', 'element', 'elements_genres');
 
 	}
 
@@ -64,7 +70,7 @@ class Genre extends Eloquent {
 	 */
 	public function albums() {
 
-		return $this->morphdByMany('App\Models\Data\Album', 'element');
+		return $this->morphedByMany('App\Models\Data\Album', 'element', 'elements_genres');
 
 	}
 
@@ -73,7 +79,7 @@ class Genre extends Eloquent {
 	 */
 	public function memes() {
 
-		return $this->morphedByMany('App\Models\Data\Meme', 'element');
+		return $this->morphedByMany('App\Models\Data\Meme', 'element', 'elements_genres');
 
 	}
 
