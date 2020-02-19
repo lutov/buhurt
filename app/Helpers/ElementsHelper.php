@@ -25,6 +25,7 @@ use App\Models\User\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Collective\Html\FormFacade as Form;
+use ResizeCrop;
 
 class ElementsHelper {
 
@@ -679,7 +680,7 @@ class ElementsHelper {
 			$element_body .= '</div>';
 		}
 
-		if($element->directors) {
+		if($element->directors && $element->directors->count()) {
 			$element_body .= '<div class="mt-2 mb-2 small">';
 			$element_body .= 'Режиссер: '.DatatypeHelper::arrayToString(
 					$element->directors,
@@ -691,7 +692,7 @@ class ElementsHelper {
 			$element_body .= '</div>';
 		}
 
-		if($element->screenwriters) {
+		if($element->screenwriters && $element->screenwriters->count()) {
 			$element_body .= '<div class="mt-2 small">';
 			$element_body .= 'Сценарий: '.DatatypeHelper::arrayToString(
 					$element->screenwriters,
@@ -703,7 +704,7 @@ class ElementsHelper {
 			$element_body .= '</div>';
 		}
 
-		if($element->producers) {
+		if($element->producers && $element->producers->count()) {
 			$element_body .= '<div class="mt-2 small">';
 			$element_body .= 'Продюсер: '.DatatypeHelper::arrayToString(
 					$element->producers,
@@ -715,7 +716,7 @@ class ElementsHelper {
 			$element_body .= '</div>';
 		}
 
-		if($element->actors) {
+		if($element->actors && $element->actors->count()) {
 			$element_body .= '<div class="mt-4 small">';
 			$element_body .= 'В ролях: '.DatatypeHelper::arrayToString(
 					$element->actors,
@@ -774,7 +775,11 @@ class ElementsHelper {
 			$element_body .= '</div>';
 		}
 
-		if(($element->relations && $element->relations->count()) || ($isAdmin && method_exists($element, 'relations'))) {
+		if(
+			//($element->relations && $element->relations->count())
+			//||
+			($isAdmin && method_exists($element, 'relations'))
+		) {
 			$element_body .= '<div class="mt-4 small">';
 			$element_body .= '<a href="/'.$section.'/'.$element->id.'/relations/">';
 			$element_body .= 'Связанные произведения ';
@@ -1084,6 +1089,26 @@ class ElementsHelper {
 	}
 
 	/**
+	 * @param Request $request
+	 * @param string $section
+	 * @param int $element_id
+	 */
+	public static function setCover(Request $request, string $section, int $element_id) {
+
+		$path = public_path().'/data/img/covers/'.$section;
+		$fileName = $element_id.'.jpg';
+		$full_path = $path.'/'.$fileName;
+
+		if ($request->hasFile('cover')) {
+			if (file_exists($full_path)) {
+				unlink($full_path);
+			}
+			self::resizeCrop($request->file('cover')->getRealPath(), $full_path);
+		}
+
+	}
+
+	/**
 	 * @param string $section
 	 * @param int $id
 	 * @return int
@@ -1113,6 +1138,28 @@ class ElementsHelper {
 		$rel_path = '/data/img/covers/'.$section.'/'.$id.'.jpg';
 		$file_path = public_path().$rel_path;
 		if (file_exists($file_path)) {unlink($file_path);}
+	}
+
+
+	/**
+	 * @param $real_path
+	 * @param $full_path
+	 */
+	private static function resizeCrop($real_path, $full_path) {
+
+		$width = 185 * 2;
+		$height = 270 * 2;
+
+		$resize = ResizeCrop::resize($real_path, $full_path, $width, 0);
+		$size = getimagesize($full_path);
+
+		/*
+		if($height > $size[1]) {
+			$diff = ($height - $size[1]) / 2;
+			$crop = ResizeCrop::crop($full_path, $full_path, array(0, -$diff, $width, ($height - $diff)));
+		}
+		*/
+
 	}
 
 	/**

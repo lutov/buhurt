@@ -4,7 +4,6 @@ use App\Http\Controllers\Controller;
 use EMTypograph;
 use Exception;
 use Illuminate\Http\RedirectResponse;
-use ResizeCrop;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -138,6 +137,8 @@ class DatabaseController extends Controller {
 
 		$element->save();
 
+		ElementsHelper::setCover($request, $section, $element->id);
+
 		$unique = array(array('element_type', $type));
 		$this->sync($genres, 'genres', $element, $unique);
 		$this->sync($collections, 'collections', $element);
@@ -158,8 +159,6 @@ class DatabaseController extends Controller {
 		$this->sync($bands, 'bands', $element);
 		$unique = array(array('album_id', $element->id));
 		$this->sync($tracks, 'tracks', $element, $unique);
-
-		$this->setCover($request, $section, $element->id);
 
 		if('edit' != $action) {
 			$this->setUploader($type, $element->id);
@@ -233,26 +232,6 @@ class DatabaseController extends Controller {
 	}
 
 	/**
-	 * @param Request $request
-	 * @param string $section
-	 * @param int $element_id
-	 */
-	private function setCover(Request $request, string $section, int $element_id) {
-
-		$path = public_path().'/data/img/covers/'.$section;
-		$fileName = $element_id.'.jpg';
-		$full_path = $path.'/'.$fileName;
-
-		if ($request->hasFile('cover')) {
-			if (file_exists($full_path)) {
-				unlink($full_path);
-			}
-			$this->resizeCrop($request->file('cover')->getRealPath(), $full_path);
-		}
-
-	}
-
-	/**
 	 * @param string $type
 	 * @param int $element_id
 	 */
@@ -275,27 +254,6 @@ class DatabaseController extends Controller {
 	private function returnSuccess(string $section = '', int $element_id = 0) {
 
 		return Redirect::to('/'.$section.'/'.$element_id)->with('message', 'Спасибо, элемент отправлен на модерацию');
-
-	}
-
-	/**
-	 * @param $real_path
-	 * @param $full_path
-	 */
-	private function resizeCrop($real_path, $full_path) {
-
-		$width = 185 * 2;
-		$height = 270 * 2;
-
-		$resize = ResizeCrop::resize($real_path, $full_path, $width, 0);
-		$size = getimagesize($full_path);
-
-		/*
-		if($height > $size[1]) {
-			$diff = ($height - $size[1]) / 2;
-			$crop = ResizeCrop::crop($full_path, $full_path, array(0, -$diff, $width, ($height - $diff)));
-		}
-		*/
 
 	}
 

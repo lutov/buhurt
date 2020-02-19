@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Search;
 
+use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
 use App\Helpers\RolesHelper;
 use App\Helpers\SectionsHelper;
@@ -11,59 +12,44 @@ use App\Models\Search\Relation;
 use App\Models\Search\ElementRelation;
 
 class RelationsController extends Controller {
+
+	protected string $section = 'relations';
 	
     public function getRelations(Request $request, $section, $id) {
 
-		$books = $films = $games = $memes = [];
-		
-		$relations = Relation::all();
-		$relation_list = array();
-		foreach($relations as $key => $value) {
-			$relation_list[$value->id] = $value->name;
-		}
+		$section = SectionsHelper::getSection($section);
+		$element = $section->type::find($id);
 
-		$sections = Section::all();
-		$section_list = array();
-		foreach($sections as $key => $value) {
-			$section_list[$value->alt_name] = $value->name;
-		}
-		
-		$section_name = SectionsHelper::getObjectBy($section);
-		$section_type = SectionsHelper::getSectionType($section);
-		$element = $section_name::find($id);
-		
-		$relations = ElementRelation::with('relation')
-			->where('to_id', '=', $id)
-			//->where('element_type', '=', $section_type)
-			->where('to_type', '=', $section_type)
-			//->orderBy($section.'.year')
-			//->toSql()
-			->get()
-		;
-
-		$relations_simple = ElementRelation::where('to_id', '=', $id)
-			->where('to_type', '=', $section_type)
-			->get()
-			->toArray()
-		;
-
-		//dd($relations);
-
-		$sort_direction = 'asc';
+		$sort = $request->get('sort', 'name');
+		$order = $request->get('order', 'asc');
 		$limit = 28;
+
+		$sort = TextHelper::checkSort($sort);
+		$order = TextHelper::checkOrder($order);
+
+		$sort_options = array(
+			'name' => 'Имя',
+		);
+
+		$relations = Relation::select(array('id', 'name'))->get()->toArray();
+		$sections = Section::select(array('name', 'alt_name'))->get()->toArray();
+
+		$options = array(
+			'header' => true,
+			'footer' => true,
+			'paginate' => true,
+			'sort_options' => $sort_options,
+			'sort' => $sort,
+			'order' => $order,
+		);
 
 		return View::make('relations.item', array(
 			'request' => $request,
 			'element' => $element,
 			'section' => $section,
-			'books' => $books,
-			'films' => $films,
-			'games' => $games,
-			'memes' => $memes,
-			'relation_list' => $relation_list,
-			'section_list' => $section_list,
 			'relations' => $relations,
-			'relations_simple' => $relations_simple,
+			'sections' => $sections,
+			'options' => $options,
 		));
     }
 
