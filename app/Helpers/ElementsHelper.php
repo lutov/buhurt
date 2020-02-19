@@ -256,9 +256,9 @@ class ElementsHelper {
 				$elements_list .= '</div>';
 			}
 
-			if(isset($options['caption'])) {
+			if($element->caption) {
 				$elements_list .= '<div class="card-footer text-muted">';
-				$elements_list .= $options['caption'];
+				$elements_list .= $element->caption;
 				$elements_list .= '</div>';
 			}
 

@@ -37,15 +37,15 @@
                 {!! Form::hidden('action', $value = 'edit') !!}
                 {!! Form::hidden('section', $value = 'games') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
-                <p>{!! Form::text('game_name', $value = $element->name, $attributes = array('placeholder' => 'Название игры', 'id' => 'game_name', 'class' => 'form-control w-100')) !!}</p>
-                <p>{!! Form::text('game_alt_name', $value = $element->alt_name, $attributes = array('placeholder' => 'Альтернативное или оригинальное название игры', 'id' => 'game_alt_name', 'class' => 'form-control w-100')) !!}</p>
-                <p>{!! Form::text('game_developer', $value = DatatypeHelper::objectToJsArray($element->developer, '; ', true), $attributes = array('placeholder' => 'Разработчик', 'class' => 'form-control w-100', 'id' => 'game_developer')) !!}</p>
-                <p>{!! Form::text('game_publisher', $value = DatatypeHelper::objectToJsArray($element->publisher, '; ', true), $attributes = array('placeholder' => 'Издатель', 'class' => 'form-control w-100', 'id' => 'game_publisher')) !!}</p>
-                <p>{!! Form::textarea('game_description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'game_description')) !!}</p>
-                <p>{!! Form::text('game_genre', $value = DatatypeHelper::collectionToString($element->genres, 'genre', '; ', '', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'game_genre')) !!}</p>
-                <p>{!! Form::text('game_platform', $value = DatatypeHelper::objectToJsArray($element->platforms, '; ', true), $attributes = array('placeholder' => 'Платформа', 'class' => 'form-control w-100', 'id' => 'game_platform')) !!}</p>
-                <p>{!! Form::text('game_year', $value = $element->year, $attributes = array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
-                <p>{!! Form::text('collections', $value = DatatypeHelper::collectionToString($element->collections, 'collection', '; ', '', true), $attributes = array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
+                <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название игры', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('alt_name', $value = $element->alt_name, $attributes = array('placeholder' => 'Альтернативное или оригинальное название игры', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('developers', $value = DatatypeHelper::objectToJsArray($element->developers, '; ', true), $attributes = array('placeholder' => 'Разработчик', 'class' => 'form-control w-100', 'id' => 'developers')) !!}</p>
+                <p>{!! Form::text('games_publishers', $value = DatatypeHelper::objectToJsArray($element->games_publishers, '; ', true), $attributes = array('placeholder' => 'Издатель', 'class' => 'form-control w-100', 'id' => 'games_publishers')) !!}</p>
+                <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'description')) !!}</p>
+                <p>{!! Form::text('genres', $value = DatatypeHelper::objectToJsArray($element->genres, '; ', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genres')) !!}</p>
+                <p>{!! Form::text('platforms', $value = DatatypeHelper::objectToJsArray($element->platforms, '; ', true), $attributes = array('placeholder' => 'Платформа', 'class' => 'form-control w-100', 'id' => 'platforms')) !!}</p>
+                <p>{!! Form::text('year', $value = $element->year, $attributes = array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
+                <p>{!! Form::text('collections', $value = DatatypeHelper::objectToJsArray($element->collections, '; ', true), $attributes = array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
                 <p><b>Обложка</b> {!! Form::file('cover'); !!}</p>
                 {!! Form::submit('Сохранить', $attributes = array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
                 {!! Form::close() !!}
@@ -55,7 +55,7 @@
             <div class="col-md-3">
 
                 <div class="card">
-                    <img class="card-img-top" src="/data/img/covers/{!! $section !!}/{!! ElementsHelper::getCover($section, $element->id) !!}.jpg" alt="">
+                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section, $element->id) !!}" alt="">
                     <div class="card-body text-center">
                         <p class="card-text">Дополнительная информация</p>
                         <div class="btn-group">
@@ -74,7 +74,7 @@
                         Жанры игр
                     </div>
                     <div class="collapse" id="games_genres_container">
-                        {!! DatatypeHelper::objectToList(ElementsHelper::getGenres($section), 'games_genres') !!}
+                        {!! DatatypeHelper::objectToList(ElementsHelper::getGenres($section), 'genres_list') !!}
                     </div>
                 </div>
 
@@ -83,7 +83,7 @@
                         Платформы
                     </div>
                     <div class="collapse" id="platforms_container">
-                        {!! DatatypeHelper::objectToList(ElementsHelper::getPlatforms(), 'platforms') !!}
+                        {!! DatatypeHelper::objectToList(ElementsHelper::getPlatforms(), 'platforms_list') !!}
                     </div>
                 </div>
 

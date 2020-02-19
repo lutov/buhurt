@@ -436,7 +436,7 @@ class UserController extends Controller {
 				'header' => true,
 				'footer' => true,
 				'paginate' => true,
-				'sort_list' => $sort_options,
+				'sort_options' => $sort_options,
 				'sort' => $sort,
 				'order' => $order,
 			);

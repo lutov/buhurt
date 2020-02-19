@@ -209,7 +209,7 @@ class SearchController extends Controller {
 				'header' => true,
 				'paginate' => false,
 				'footer' => true,
-				'sort_list' => array(),
+				'sort_options' => array(),
 				'sort' => 'name',
 				'order' => 'asc',
 			);

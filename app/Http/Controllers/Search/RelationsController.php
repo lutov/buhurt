@@ -27,12 +27,35 @@ class RelationsController extends Controller {
 		$sort = TextHelper::checkSort($sort);
 		$order = TextHelper::checkOrder($order);
 
-		$sort_options = array(
-			'name' => 'Имя',
-		);
+		$sort_options = array();
 
-		$relations = Relation::select(array('id', 'name'))->get()->toArray();
-		$sections = Section::select(array('name', 'alt_name'))->get()->toArray();
+		$relations_list = array();
+		$relations = Relation::select(array('id', 'name'))->get();
+		foreach($relations as $key => $value) {
+			$relations_list[$value->id] = $value->name;
+		}
+
+		$sections_list = array();
+		$sections = Section::select(array('name', 'alt_name'))->get();
+		foreach($sections as $key => $value) {
+			$sections_list[$value->alt_name] = $value->name;
+		}
+
+		$relations_simple = ElementRelation::where('to_id', '=', $id)
+			->where('to_type', '=', $section->type)
+			->get()
+			->toArray()
+		;
+
+		$relations = ElementRelation::select('elements_relations.*', 'name as caption')
+			->leftJoin('relations', 'relation_id', 'relations.id')
+			->where('to_id', '=', $id)
+			->where('to_type', '=', $section->type)
+			//->toSql()
+			->get()
+		;
+
+		//dd($relations);
 
 		$options = array(
 			'header' => true,
@@ -47,8 +70,10 @@ class RelationsController extends Controller {
 			'request' => $request,
 			'element' => $element,
 			'section' => $section,
+			'relations_list' => $relations_list,
+			'relations_simple' => $relations_simple,
+			'sections_list' => $sections_list,
 			'relations' => $relations,
-			'sections' => $sections,
 			'options' => $options,
 		));
     }

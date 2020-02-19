@@ -118,7 +118,7 @@
 					'header' => true,
 					'paginate' => false,
 					'footer' => true,
-					'sort_list' => array(),
+					'sort_options' => array(),
 					'sort' => false,
 					'order' => false,
 				); ?>

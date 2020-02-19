@@ -37,14 +37,14 @@
                 {!! Form::hidden('action', $value = 'edit') !!}
                 {!! Form::hidden('section', $value = 'books') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
-                <p>{!! Form::text('book_name', $value = $element->name, $attributes = array('placeholder' => 'Название книги', 'id' => 'book_name', 'class' => 'form-control w-100')) !!}</p>
-                <p>{!! Form::text('book_alt_name', $value = $element->alt_name, $attributes = array('placeholder' => 'Альтернативное или оригинальное название книги', 'id' => 'book_alt_name', 'class' => 'form-control w-100')) !!}</p>
-                <p>{!! Form::text('book_writer', $value = DatatypeHelper::objectToJsArray($element->writers, '; ', true), $attributes = array('placeholder' => 'Автор', 'class' => 'form-control w-100', 'id' => 'book_writer')) !!}</p>
-                <p>{!! Form::text('book_publisher', $value = DatatypeHelper::objectToJsArray($element->publishers, '; ', true), $attributes = array('placeholder' => 'Издатель', 'class' => 'form-control w-100', 'id' => 'book_publisher')) !!}</p>
-                <p>{!! Form::textarea('book_description', $value = $element->description, $attributes = array('placeholder' => 'Аннотация', 'class' => 'form-control w-100', 'id' => 'annotation')) !!}</p>
-                <p>{!! Form::text('book_genre', $value = DatatypeHelper::collectionToString($element->genres, 'genre', '; ', '', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'book_genre')) !!}</p>
-                <p>{!! Form::text('book_year', $value = $element->year, $attributes = array('placeholder' => 'Год написания', 'class' => 'form-control w-25')) !!}</p>
-                <p>{!! Form::text('collections', $value = DatatypeHelper::collectionToString($element->collections, 'collection', '; ', '', true), $attributes = array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
+                <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название книги', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('alt_name', $value = $element->alt_name, $attributes = array('placeholder' => 'Альтернативное или оригинальное название книги', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('writers', $value = DatatypeHelper::objectToJsArray($element->writers, '; ', true), $attributes = array('placeholder' => 'Автор', 'class' => 'form-control w-100', 'id' => 'writers')) !!}</p>
+                <p>{!! Form::text('books_publishers', $value = DatatypeHelper::objectToJsArray($element->books_publishers, '; ', true), $attributes = array('placeholder' => 'Издатель', 'class' => 'form-control w-100', 'id' => 'books_publishers')) !!}</p>
+                <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Аннотация', 'class' => 'form-control w-100', 'id' => 'annotation')) !!}</p>
+                <p>{!! Form::text('genres', $value = DatatypeHelper::objectToJsArray($element->genres, '; ', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genres')) !!}</p>
+                <p>{!! Form::text('year', $value = $element->year, $attributes = array('placeholder' => 'Год написания', 'class' => 'form-control w-25')) !!}</p>
+                <p>{!! Form::text('collections', $value = DatatypeHelper::objectToJsArray($element->collections, '; ', true), $attributes = array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
                 <p><b>Обложка</b> {!! Form::file('cover'); !!}</p>
                 {!! Form::submit('Сохранить', $attributes = array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
                 {!! Form::close() !!}
@@ -54,7 +54,7 @@
             <div class="col-md-3">
 
                 <div class="card">
-                    <img class="card-img-top" src="/data/img/covers/{!! $section !!}/{!! ElementsHelper::getCover($section, $element->id) !!}.jpg" alt="">
+                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section, $element->id) !!}" alt="">
                     <div class="card-body text-center">
                         <p class="card-text">Дополнительная информация</p>
                         <div class="btn-group">
@@ -73,7 +73,7 @@
                         Жанры книг
                     </div>
                     <div class="collapse" id="books_genres_container">
-                        {!! DatatypeHelper::objectToList(ElementsHelper::getGenres($section), 'books_genres') !!}
+                        {!! DatatypeHelper::objectToList(ElementsHelper::getGenres($section), 'genres_list') !!}
                     </div>
                 </div>
 
