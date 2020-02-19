@@ -138,7 +138,8 @@ class DatabaseController extends Controller {
 
 		$element->save();
 
-		$this->sync($genres, 'genres', $element);
+		$unique = array(array('element_type', $type));
+		$this->sync($genres, 'genres', $element, $unique);
 		$this->sync($collections, 'collections', $element);
 
 		$this->sync($writers, 'writers', $element);
@@ -155,9 +156,7 @@ class DatabaseController extends Controller {
 		$this->sync($games_publishers, 'games_publishers', $element);
 
 		$this->sync($bands, 'bands', $element);
-		$unique = array(
-			array('album_id', $element->id)
-		);
+		$unique = array(array('album_id', $element->id));
 		$this->sync($tracks, 'tracks', $element, $unique);
 
 		$this->setCover($request, $section, $element->id);
@@ -224,7 +223,6 @@ class DatabaseController extends Controller {
 			}
 
 			$entities[] = $entity->id;
-			//$element->$entity_section()->attach($entity);
 
 		}
 

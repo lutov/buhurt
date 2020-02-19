@@ -1,9 +1,10 @@
-<?php namespace App\Http\Controllers\Data;
+<?php
+
+namespace App\Http\Controllers\Data;
 
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Data\Section;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\View;
 class GenresController extends Controller {
 
 	protected string $section = 'genres';
+
+	protected array $sections = array(
+		array('section' => 'books', 'type' => 'Book', 'name' => 'Книги'),
+		array('section' => 'films', 'type' => 'Film', 'name' => 'Фильмы'),
+		array('section' => 'games', 'type' => 'Game', 'name' => 'Игры'),
+		array('section' => 'albums', 'type' => 'Album', 'name' => 'Альбомы'),
+	);
 
 	/**
 	 * @param Request $request
@@ -35,33 +43,16 @@ class GenresController extends Controller {
 		);
 
 		$titles = array();
-
-		$type = 'Book';
-		$books = $this->getElementsByType($type, $element, $sort, $order, $limit);
-		if($books->count()) {
-			$titles['books']['name'] = 'Книги';
-			$titles['books']['count'] = $books->count();
-		}
-
-		$type = 'Film';
-		$films = $this->getElementsByType($type, $element, $sort, $order, $limit);
-		if($films->count()) {
-			$titles['films']['name'] = 'Фильмы';
-			$titles['films']['count'] = $films->count();
-		}
-
-		$type = 'Game';
-		$games = $this->getElementsByType($type, $element, $sort, $order, $limit);
-		if($games->count()) {
-			$titles['games']['name'] = 'Игры';
-			$titles['games']['count'] = $games->count();
-		}
-
-		$type = 'Album';
-		$albums = $this->getElementsByType($type, $element, $sort, $order, $limit);
-		if($albums->count()) {
-			$titles['albums']['name'] = 'Альбомы';
-			$titles['albums']['count'] = $albums->count();
+		$books = $films = $games = $albums = array();
+		foreach($this->sections as $genre_section) {
+			$type = $genre_section['type'];
+			$entity = $genre_section['section'];
+			$name = $genre_section['name'];
+			$$entity = $this->getTypeElements($type, $element, $sort, $order, $limit);
+			if ($$entity->count()) {
+				$titles[$entity]['name'] = $name;
+				$titles[$entity]['count'] = $$entity->count();
+			}
 		}
 
 		$options = array(
@@ -113,33 +104,15 @@ class GenresController extends Controller {
 			);
 
 			$titles = array();
-
-			$elements_section = 'books';
-			$books = $this->getElementsByGenre($elements_section, $element, $sort, $order, $limit);
-			if($books->count()) {
-				$titles['books']['name'] = 'Книги';
-				$titles['books']['count'] = $this->countElementsByGenre($elements_section, $element);
-			}
-
-			$elements_section = 'films';
-			$films = $this->getElementsByGenre($elements_section, $element, $sort, $order, $limit);
-			if($films->count()) {
-				$titles['films']['name'] = 'Фильмы';
-				$titles['films']['count'] = $this->countElementsByGenre($elements_section, $element);
-			}
-
-			$elements_section = 'games';
-			$games = $this->getElementsByGenre($elements_section, $element, $sort, $order, $limit);
-			if($games->count()) {
-				$titles['games']['name'] = 'Игры';
-				$titles['games']['count'] = $this->countElementsByGenre($elements_section, $element);
-			}
-
-			$elements_section = 'albums';
-			$albums = $this->getElementsByGenre($elements_section, $element, $sort, $order, $limit);
-			if($albums->count()) {
-				$titles['albums']['name'] = 'Альбомы';
-				$titles['albums']['count'] = $this->countElementsByGenre($elements_section, $element);
+			$books = $films = $games = $albums = array();
+			foreach($this->sections as $genre_section) {
+				$entity = $genre_section['section'];
+				$name = $genre_section['name'];
+				$$entity = $this->getGenreElements($entity, $element, $sort, $order, $limit);
+				if ($$entity->count()) {
+					$titles[$entity]['name'] = $name;
+					$titles[$entity]['count'] = $this->countGenreElements($entity, $element);
+				}
 			}
 
 			$options = array(
@@ -179,7 +152,7 @@ class GenresController extends Controller {
 	 * @param int $limit
 	 * @return mixed
 	 */
-	private function getElementsByType(string $type, $element, string $sort, string $order, int $limit) {
+	private function getTypeElements(string $type, $element, string $sort, string $order, int $limit) {
 		return $element->where('element_type', $type)
 			->orderBy($sort, $order)
 			->paginate($limit)
@@ -194,7 +167,7 @@ class GenresController extends Controller {
 	 * @param int $limit
 	 * @return mixed
 	 */
-	private function getElementsByGenre(string $section, $element, string $sort, string $order, int $limit) {
+	private function getGenreElements(string $section, $element, string $sort, string $order, int $limit) {
 		return $element->{$section}()
 			->orderBy($sort, $order)
 			->paginate($limit)
@@ -206,7 +179,7 @@ class GenresController extends Controller {
 	 * @param $element
 	 * @return mixed
 	 */
-	private function countElementsByGenre(string $section, $element) {
+	private function countGenreElements(string $section, $element) {
 		$minutes = 60;
 		$var_name = 'genre_'.$element->id.'_count';
 		return Cache::remember($var_name, $minutes, function () use ($section, $element) {

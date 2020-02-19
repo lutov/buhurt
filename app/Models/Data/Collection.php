@@ -13,78 +13,62 @@ class Collection extends Eloquent {
 	use SectionTrait;
 
 	/**
-	 * The database table used by the model.
-	 *
 	 * @var string
 	 */
 	protected $table = 'collections';
-
-	protected $morphClass = 'Collection';
-
 	/**
-	 * Record remains in the database, but marked with a special label
-	 *
-	 * @var boolean
+	 * @var string
 	 */
-	//protected $softDelete = true;
-
+	protected $morphClass = 'Collection';
+	/**
+	 * @var bool
+	 */
 	public $timestamps = false;
-
+	/**
+	 * @var array
+	 */
 	protected $fillable = array('name','alt_name', 'description');
 
 	/**
 	 * @return mixed
 	 */
 	public function element() {
-
 		return $this->morphTo();
-
 	}
 
 	/**
 	 * @return mixed
 	 */
 	public function books() {
-
-		return $this->morphedByMany('App\Models\Data\Book', 'element');
-
+		return $this->morphedByMany('App\Models\Data\Book', 'element', 'elements_collections');
 	}
 
 	/**
 	 * @return mixed
 	 */
 	public function films() {
-
-		return $this->morphedByMany('App\Models\Data\Film', 'element');
-
+		return $this->morphedByMany('App\Models\Data\Film', 'element', 'elements_collections');
 	}
 
 	/**
 	 * @return mixed
 	 */
 	public function games() {
-
-		return $this->morphedByMany('App\Models\Data\Game', 'element');
-
+		return $this->morphedByMany('App\Models\Data\Game', 'element', 'elements_collections');
 	}
 
 	/**
 	 * @return mixed
 	 */
 	public function albums() {
-
-		return $this->morphdByMany('App\Models\Data\Album', 'element');
-
+		return $this->morphedByMany('App\Models\Data\Album', 'element', 'elements_collections');
 	}
 
 	/**
 	 * @return mixed
 	 */
 	public function memes() {
-
-		return $this->morphedByMany('App\Models\Data\Meme', 'element');
-
+		return $this->morphedByMany('App\Models\Data\Meme', 'element', 'elements_collections');
 	}
-
 
 }

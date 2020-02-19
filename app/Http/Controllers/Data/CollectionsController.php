@@ -3,50 +3,54 @@
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
-use App\Models\Data\Collection;
-use App\Models\Data\Book;
-use App\Models\Data\Film;
-use App\Models\Data\Game;
 
 class CollectionsController extends Controller {
 
-	private $prefix = 'collections';
+	protected string $section = 'collections';
+
+	protected array $sections = array(
+		array('section' => 'books', 'type' => 'Book', 'name' => 'Книги'),
+		array('section' => 'films', 'type' => 'Film', 'name' => 'Фильмы'),
+		array('section' => 'games', 'type' => 'Game', 'name' => 'Игры'),
+		array('section' => 'albums', 'type' => 'Album', 'name' => 'Альбомы'),
+	);
 
 	/**
 	 * @param Request $request
-	 * @return \Illuminate\Contracts\View\View
+	 * @return mixed
 	 */
 	public function list(Request $request) {
 
-		$section = SectionsHelper::getSection($this->prefix);
+		$section = SectionsHelper::getSection($this->section);
 
 		$sort = $request->get('sort', 'name');
 		$order = $request->get('order', 'asc');
 		$limit = 28;
 
-		$sort_options = array(
-			'name' => 'Название',
-		);
-
 		$sort = TextHelper::checkSort($sort);
 		$order = TextHelper::checkOrder($order);
 
-		$elements = Collection::orderBy($sort, $order)
-			->paginate($limit)
-		;
+		$sort_options = array(
+			'name' => 'Имя',
+		);
+
+		$elements = $section->type::orderBy($sort, $order)->paginate($limit);
 
 		$options = array(
 			'header' => true,
 			'footer' => true,
 			'paginate' => true,
-			'sort_list' => $sort_options,
+			'sort_options' => $sort_options,
 			'sort' => $sort,
 			'order' => $order,
 		);
 
-		return View::make($this->prefix.'.index', array(
+		return View::make($this->section.'.index', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
@@ -57,57 +61,97 @@ class CollectionsController extends Controller {
 
 	/**
 	 * @param Request $request
-	 * @param $id
-	 * @return \Illuminate\Contracts\View\View
+	 * @param int $id
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
-    public function item(Request $request, $id) {
+	public function item(Request $request, int $id) {
 
-		$section = SectionsHelper::getSection($this->prefix);
+		$section = SectionsHelper::getSection($this->section);
+		$element = $section->type::find($id);
 
-		$collection = Collection::find($id);
+		if(isset($element->id)) {
 
-		$cover = 0;
-		$file_path = public_path() . '/data/img/covers/'.$section->alt_name.'/'.$id.'.jpg';
-		if (file_exists($file_path)) {
-			$cover = $id;
+			$sort = $request->get('sort', 'name');
+			$order = $request->get('order', 'asc');
+			$limit = 28;
+
+			$sort = TextHelper::checkSort($sort);
+			$order = TextHelper::checkOrder($order);
+
+			$sort_options = array(
+				'created_at' => 'Время добавления',
+				'name' => 'Название',
+				'alt_name' => 'Оригинальное название',
+				'year' => 'Год'
+			);
+
+			$titles = array();
+			$books = $films = $games = $albums = array();
+			foreach($this->sections as $genre_section) {
+				$entity = $genre_section['section'];
+				$name = $genre_section['name'];
+				$$entity = $this->getCollectionElements($entity, $element, $sort, $order, $limit);
+				if ($$entity->count()) {
+					$titles[$entity]['name'] = $name;
+					$titles[$entity]['count'] = $this->countCollectionElements($entity, $element);
+				}
+			}
+
+			$options = array(
+				'header' => true,
+				'footer' => true,
+				'paginate' => true,
+				'sort_options' => $sort_options,
+				'sort' => $sort,
+				'order' => $order,
+			);
+
+			return View::make($this->section.'.item', array(
+				'request' => $request,
+				'titles' => $titles,
+				'element' => $element,
+				'section' => $section,
+				'books' => $books,
+				'films' => $films,
+				'games' => $games,
+				'albums' => $albums,
+				'options' => $options
+			));
+
+		} else {
+
+			return Redirect::to('/'.$this->section);
+
 		}
 
-		$order = 'asc';
-		$limit = 28;
+	}
 
-		$books = Book::select('books.*')
-			->leftJoin('elements_collections', 'books.id', '=', 'elements_collections.element_id')
-			->where('collection_id', '=', $id)
-			->where('element_type', '=', 'Book')
-			->orderBy('name', $order)
+	/**
+	 * @param string $section
+	 * @param $element
+	 * @param string $sort
+	 * @param string $order
+	 * @param int $limit
+	 * @return mixed
+	 */
+	private function getCollectionElements(string $section, $element, string $sort, string $order, int $limit) {
+		return $element->{$section}()
+			->orderBy($sort, $order)
 			->paginate($limit)
-		;
+			;
+	}
 
-		$films = Film::select('films.*')
-			->leftJoin('elements_collections', 'films.id', '=', 'elements_collections.element_id')
-			->where('collection_id', '=', $id)
-			->where('element_type', '=', 'Film')
-			->orderBy('name', $order)
-			->paginate($limit)
-		;
-
-		$games = Game::select('games.*')
-			->leftJoin('elements_collections', 'games.id', '=', 'elements_collections.element_id')
-			->where('collection_id', '=', $id)
-			->where('element_type', '=', 'Game')
-			->orderBy('name', $order)
-			->paginate($limit)
-		;
-
-		return View::make('collections.item', array(
-			'request' => $request,
-			'books' => $books,
-			'films' => $films,
-			'games' => $games,
-			'section' => $section,
-			'element' => $collection,
-			'cover' => $cover,
-		));
-    }
+	/**
+	 * @param string $section
+	 * @param $element
+	 * @return mixed
+	 */
+	private function countCollectionElements(string $section, $element) {
+		$minutes = 60;
+		$var_name = 'collection_'.$element->id.'_'.$section.'_count';
+		return Cache::remember($var_name, $minutes, function () use ($section, $element) {
+			return $element->{$section}()->count();
+		});
+	}
 	
 }
