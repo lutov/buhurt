@@ -255,6 +255,7 @@ return [
 		'Genre' => App\Models\Data\Genre::class,
 		'Country' => App\Models\Data\Country::class,
 		'Platform' => App\Models\Data\Platform::class,
+		'Year' => App\Models\Data\Year::class,
 
 		/* Helpers */
 		'AchievementsHelper' => App\Helpers\AchievementsHelper::class,

@@ -17,6 +17,7 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 
@@ -111,9 +112,15 @@ class ElementController extends Controller {
 				$sim_options['type'] = $section->type;
 				$sim_options['genres'] = $genres;
 				$sim_limit = 3;
-				for ($i = 0; $i < $sim_limit; $i++) {
-					$similar[] = ElementsHelper::getSimilar($sim_options);
-				}
+				$minutes = 60;
+				$var_name = $section.'_'.$element->id.'_similar';
+				$similar = Cache::remember($var_name, $minutes, function () use ($sim_options, $sim_limit) {
+					$similar = array();
+					for ($i = 0; $i < $sim_limit; $i++) {
+						$similar[] = ElementsHelper::getSimilar($sim_options);
+					}
+					return $similar;
+				});
 			}
 
 			$options = array(
@@ -144,20 +151,11 @@ class ElementController extends Controller {
 	public function getJson($id) {
 		$section = SectionsHelper::getSection($this->section);
 		$element = $section->type::find($id);
-		$genres = $element->genres; $genres = $genres->sortBy('name');
 		$rating = ElementsHelper::countRating($element);
-		$similar = array();
-		$sim_options['type'] = $section->type;
-		$sim_options['genres'] = $genres;
-		$sim_limit = 0;
-		for($i = 0; $i < $sim_limit; $i++) {
-			$similar[] = ElementsHelper::getSimilar($sim_options);
-		}
 		return View::make($this->section.'.json', array(
 			'element' => $element,
 			'section' => $section,
 			'rating' => $rating,
-			'similar' => collect($similar)
 		));
 	}
 

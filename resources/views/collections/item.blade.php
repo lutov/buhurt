@@ -15,7 +15,7 @@
 
 		{!! Breadcrumbs::render('element', $element) !!}
 
-		{!! ElementsHelper::getCardBody($request, 'genres', $element, $options) !!}
+		{!! ElementsHelper::getCardBody($request, 'collections', $element, $options) !!}
 
 	</div>
 

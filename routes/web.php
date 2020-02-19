@@ -139,14 +139,10 @@ Route::group(array('prefix' => 'genres'), function() {
 // years
 Route::group(array('prefix' => 'years'), function() {
 	Route::any('/', array(
-		'as' => 'years_section',
-		'uses' => 'Data\YearsController@sections'
-	));
-	Route::any('{section}', array(
 		'as' => 'years',
 		'uses' => 'Data\YearsController@list'
 	));
-	Route::any('{section}/{year}', array(
+	Route::any('{year}', array(
 		'as' => 'Year',
 		'uses' => 'Data\YearsController@item'
 	))->where('year', '[0-9]+');

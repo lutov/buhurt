@@ -96,6 +96,7 @@ class CollectionsController extends Controller {
 					$titles[$entity]['count'] = $this->countCollectionElements($entity, $element);
 				}
 			}
+			uasort($titles, array('TextHelper', 'compareReverseCount'));
 
 			$options = array(
 				'header' => true,

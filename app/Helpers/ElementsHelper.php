@@ -60,8 +60,8 @@ class ElementsHelper {
 			$elements_list .= '<div class="input-group input-group-sm mb-3">';
 
 			//$elements_list .= Form::hidden('view', $request->get('view', 'plates'));
-			$elements_list .= Form::select('sort', $sort_options, $sort, array('class' => 'custom-select'));
-			$elements_list .= Form::select('order', $sort_direction, $order, array('class' => 'custom-select'));
+			$elements_list .= Form::select('sort', $sort_options, $sort, array('class' => 'custom-select', 'autocomplete' => 'off'));
+			$elements_list .= Form::select('order', $sort_direction, $order, array('class' => 'custom-select', 'autocomplete' => 'off'));
 
 			$elements_list .= Form::hidden('page', $page);
 
@@ -416,75 +416,55 @@ class ElementsHelper {
 	 * @return string
 	 */
 	public static function getRecommend(Request $request, $section) {
-
 		$result = '';
-
 		$type = SectionsHelper::getSectionType($section);
-		//die($type);
-
-		$rows = Rate::where('element_type', '=', $type)
-			->where('user_id', '=', 1)
-			->where('rate', '>', 6)
-			->get()
-		;
-
-		$rows_count = $rows->count();
-
-		$rand_row = rand(0, $rows_count);
-
+		$minutes = 60;
+		$var_name = 'collection_'.$section.'';
+		$rows = Cache::remember($var_name, $minutes, function () use ($type) {
+			return Rate::where('element_type', '=', $type)
+				->where('user_id', '=', 1)
+				->where('rate', '>', 6)
+				->get()
+			;
+		});
+		if(!$rows->count()) {return '';}
+		$rand_row = rand(0, $rows->count());
 		if(isset($rows[$rand_row]) && !empty($rows[$rand_row])) {
 			$element_id = $rows[$rand_row]->element_id;
-
-			//$type = 'App\Models\\'.$type;
-			$obj_of_type = new $type;
-			//die(print_r($obj_of_type));
-			$element = $obj_of_type->find($element_id);
-
+			$element = $type::find($element_id);
 			if (!empty($element)) {
 				$result = self::getElement($request, $element, $section);
 			} else {
 				$result = self::getRecommend($request, $section);
 			}
 		}
-
 		return $result;
-
 	}
 
 	/**
 	 * @param array $options
 	 * @return array
 	 */
-	public static function getSimilar($options = array()) {
-
+	public static function getSimilar(array $options = array()) {
 		$sim_elem = [];
-
 		if(count($options)) {
-
 			$rand_id = DB::table('elements_genres')
 				->orderBy(DB::raw('RAND()'))
 				->where('element_type', '=', $options['type'])
 				->where(function ($query) use ($options) {
-
 					foreach($options['genres'] as $key => $value) {
 						$query->orWhere('genre_id', '=', $value->id);
 					}
-
 				})
 				->value('element_id')
 			;
-
 			$sim_elem = $options['type']::find($rand_id);
-
 		}
-
 		if(empty($sim_elem)
 			|| (0 == $sim_elem->verified)
 			|| ($options['element_id'] == $sim_elem->id)
 		) {$sim_elem = self::getSimilar($options);}
-
 		return $sim_elem;
-
 	}
 
 	/**
@@ -665,7 +645,7 @@ class ElementsHelper {
 		}
 
 		if($element->year) {
-			$main_info .= '<a itemprop="datePublished" href="/years/'.$section.'/'.$element->year.'">'.$element->year.'</a>';
+			$main_info .= '<a itemprop="datePublished" href="/years/'.$element->year.'">'.$element->year.'</a>';
 			$main_info .= ' г. ';
 		}
 
