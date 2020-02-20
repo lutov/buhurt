@@ -1,12 +1,5 @@
 $(function() {
 
-    /*
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) {
-            registration.unregister()
-        } })
-    */
-
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
             navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
@@ -19,43 +12,7 @@ $(function() {
         });
     }
 
-    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-    ym(25959328, "init", {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true
-    });
-
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-    ga('create', 'UA-101861790-1', 'auto');
-    ga('send', 'pageview');
-
 });
-
-function show_entrance() {
-    var entrance_block = $( "#entrance_block" );
-
-    entrance_block.lightbox_me({
-        closeSelector: ".close",
-        centered: true
-    });
-}
-
-function show_registration() {
-    var registration_block = $( "#registration_block" );
-
-    registration_block.lightbox_me({
-        closeSelector: ".close",
-        centered: true
-    });
-}
 
 function set_wanted(section, id) {
 
@@ -161,152 +118,6 @@ function unset_unwanted(section, id) {
 
 }
 
-function add_to_list(section, id, list_id) {
-
-    var path = '/lists/add_to_lists/';
-    $.post(
-        path,
-        {
-            id: id,
-            section: section,
-            list_id: list_id
-        },
-        function (post_data) {
-            //console.log(post_data);
-        });
-
-}
-
-function remove_from_list(section, id, list_id) {
-
-    var path = '/lists/remove_from_lists/';
-    $.post(
-        path,
-        {
-            id: id,
-            section: section,
-            list_id: list_id
-        },
-        function (post_data) {
-            //console.log(post_data);
-        });
-
-}
-
-function toggle_list(section, id, box) {
-
-    var check = $(box);
-
-    //console.log(box.val());
-
-    if(check.prop('checked')) {
-
-        add_to_list(section, id, check.val());
-
-    } else {
-
-        remove_from_list(section, id, check.val());
-
-    }
-
-}
-
-/**
- *
- * @param section
- * @param id
- * @param name
- */
-function add_list(section, id) {
-
-    var path = '/lists/add_list/';
-
-    var name = $('#new_list').val();
-
-    $.post(path, {name: name}, function (post_data) {
-
-        lists(section, id);
-
-    });
-
-}
-
-/**
- *
- * @param section
- * @param id
- * @param list_id
- */
-function remove_list(section, id, list_id) {
-
-    var path = '/lists/remove_list/';
-
-    $.post(path, {list_id: list_id}, function (post_data) {
-
-        lists(section, id);
-
-    });
-
-}
-
-function lists(section, id) {
-
-    var path = '/lists/get_lists/';
-    $.post(
-        path,
-        {},
-        function(get_data) {
-
-            //console.log(get_data);
-
-            var lists = '<form method="POST">';
-
-            jQuery.each(get_data.data, function(key, value) {
-
-                var handler = 'onclick="toggle_list(\''+section+'\', '+id+', this)"';
-
-                lists += '<div>';
-                lists += '<input type="checkbox" name="list" id="list_'+value.id+'" value="'+value.id+'" '+handler+'>';
-                lists += '&nbsp;';
-                lists += '<label for="list_'+value.id+'">';
-                lists += value.name;
-                lists += '</label>';
-                lists += '</div>';
-
-                $.post(
-                    '/lists/find_element',
-                    {
-                        id: id,
-                        section: section,
-                        list_id: value.id
-                    },
-                    function(list_data) {if(list_data.id) {$('#list_'+value.id).prop('checked', true);}}
-                );
-
-            });
-
-            lists += '</form>';
-
-            lists += '<form method="POST">';
-            lists += '<div>';
-            lists += '<input type="text" name="new_list" id="new_list" placeholder="Новый список" class="form-control">';
-            lists += '<button class="btn btn-outline-primary" type="button" onclick="add_list(\''+section+'\', \''+id+'\')">Создать</button>';
-            lists += '</div>';
-            lists += '</form>';
-
-            var data = {
-                title: 'Добавить в список',
-                message: lists,
-                leave: true
-            };
-
-            show_popup(data);
-
-        }
-    );
-
-}
-
 function show_comment_form() {var comment_form = $('#comment_form'); comment_form.show(600);}
 
 function comment_add(section, element) {
@@ -392,33 +203,21 @@ function comment_delete(id) {
 
 }
 
-function show_section(section)
-{
-    location.href = '/admin/add/'+section;
-}
-
-
-function expand_genres(text, section)
-{
+function expand_genres(text, section) {
     $('#'+section).show(600);
     $(text).removeClass('symlink');
 }
 
-
-function bind_genres(block_id, field_id)
-{
+function bind_genres(block_id, field_id) {
     jQuery.each($('#'+block_id).children('li'), function (i, val) {
         //console.log(val);
         $(this).addClass('active_text');
         $(this).click(function () {
             var genre = $('#'+field_id);
             //console.log(genre);
-            if('' === genre.val())
-            {
+            if('' === genre.val()) {
                 genre.val($(this).html());
-            }
-            else
-            {
+            } else {
                 genre.val(genre.val()+'; '+$(this).html());
             }
         });

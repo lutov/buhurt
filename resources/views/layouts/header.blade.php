@@ -14,15 +14,19 @@
 
 		<link href="/data/vendor/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 		<link href="/data/vendor/bootstrap-star-rating/css/star-rating.min.css" rel="stylesheet" type="text/css" />
+		@if(Request::is('*recommendations'))
 		<link href="/data/vendor/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.css" rel="stylesheet" type="text/css" />
 		<link href="/data/vendor/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.skinFlat.css" rel="stylesheet" type="text/css" />
+		@endif
 		<link href="/data/css/main.min.css" rel="stylesheet" type="text/css" />
 
 		<script type="text/javascript" src="/data/vendor/jquery/jquery-3.3.1.min.js"></script>
 		<script type="text/javascript" src="/data/vendor/jquery/jquery-ui-1.12.1.custom/jquery-ui.min.js" defer></script>
 		<script type="text/javascript" src="/data/vendor/bootstrap-4.3.1-dist/js/bootstrap.min.js" defer></script>
 		<script type="text/javascript" src="/data/vendor/bootstrap-star-rating/js/star-rating.min.js" defer></script>
+		@if(Request::is('*recommendations'))
 		<script type="text/javascript" src="/data/vendor/rangeSlider/ion.rangeSlider-master/js/ion.rangeSlider.min.js" defer></script>
+		@endif
 		<script type="text/javascript" src="/data/js/app.min.js" defer></script>
 
 		<link rel="manifest" href="/manifest.json">
@@ -36,10 +40,7 @@
 
 			<nav class="navbar navbar-expand-md navbar-light bg-light border-bottom shadow fixed-top">
 
-				<a class="navbar-brand" href="/">
-					<!--img src="/data/img/design/logo.svg" alt="Бугурт" title="«Бугурт» — свободная система оценок" width="30" height="30" /-->
-					Бугурт
-				</a>
+				<a class="navbar-brand" href="/">Бугурт</a>
 
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -109,7 +110,6 @@
 						</li>
 
 					@if (Auth::check())
-
 						<li class="nav-item dropdown justify-content-start align-self-center">
 							<span class="d-none d-xl-inline">👤</span><a class="nav-link d-inline dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{!! Auth::user()->username !!}</a>
 							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
@@ -124,9 +124,7 @@
 
 							</div>
 						</li>
-
 					@else
-
 						<li class="nav-item dropdown justify-content-start align-self-center">
 							<span class="d-none d-xl-inline">👥</span><a class="nav-link d-inline dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Авторизация</a>
 							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
@@ -138,7 +136,6 @@
 
 							</div>
 						</li>
-
 					@endif
 					</ul>
 
@@ -160,7 +157,6 @@
                     });
 
 					@if(Auth::check())
-
                     $('.fast_rating').rating({
 
                         //fx: 'full',
@@ -209,25 +205,16 @@
                         }
 
                     });
-
 					@endif
 
 					<?php
-
 					$message = Session::get('message');
-
 					$output_message = '';
 					if (isset($message) && !empty($message)) {
-
 						$output_message .= 'var popup_message = {type:"message", title: "Сообщение", message:"'.$message.'", images:[]};';
-						//$output_message .= 'console.log(popup_message);';
 						$output_message .= 'show_popup(popup_message);';
-
-					} else {
-						//console.log('No message');
 					}
 					echo $output_message;
-
 					?>
 					
 				});
