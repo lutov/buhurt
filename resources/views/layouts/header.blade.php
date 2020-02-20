@@ -20,15 +20,6 @@
 		@endif
 		<link href="/data/css/main.min.css" rel="stylesheet" type="text/css" />
 
-		<script type="text/javascript" src="/data/vendor/jquery/jquery-3.3.1.min.js"></script>
-		<script type="text/javascript" src="/data/vendor/jquery/jquery-ui-1.12.1.custom/jquery-ui.min.js" defer></script>
-		<script type="text/javascript" src="/data/vendor/bootstrap-4.3.1-dist/js/bootstrap.min.js" defer></script>
-		<script type="text/javascript" src="/data/vendor/bootstrap-star-rating/js/star-rating.min.js" defer></script>
-		@if(Request::is('*recommendations'))
-		<script type="text/javascript" src="/data/vendor/rangeSlider/ion.rangeSlider-master/js/ion.rangeSlider.min.js" defer></script>
-		@endif
-		<script type="text/javascript" src="/data/js/app.min.js" defer></script>
-
 		<link rel="manifest" href="/manifest.json">
 		<link rel="canonical" href="{{ url()->current() }}" />
 
@@ -142,84 +133,6 @@
 				</div>
 
 			</nav>
-
-			<script>
-				$(document).ready(function() {
-
-                    $('#search').autocomplete({
-                        source: "{!! URL::action('Search\SearchController@everythingJson') !!}", // url-адрес
-                        minLength: 3, // минимальное количество для совершения запроса
-                        delay: 500,
-                        select: function (event, ui) {
-                            $('#search').val(ui.item.value);
-                            $('#search_form').submit();
-                        }
-                    });
-
-					@if(Auth::check())
-                    $('.fast_rating').rating({
-
-                        //fx: 'full',
-                        //url: '/rates/rate',
-
-                        language: 'ru',
-                        theme: 'krajee-uni',
-                        size: 'xs',
-                        emptyStar: '&#9734;',
-                        filledStar: '&#9733;',
-                        clearButton: '&#10006;',
-                        min: 0,
-                        max: 10,
-                        step: 1.0,
-                        stars: '10',
-                        animate: false,
-                        showCaption: false,
-                        showClear: false,
-                        //defaultCaption: 'Нет оценки',
-                        clearCaption: 'Нет оценки',
-                        starCaptions: {
-                            1: 'Очень плохо',
-                            2: 'Плохо',
-                            3: 'Посредственно',
-                            4: 'Ниже среднего',
-                            5: 'Средне',
-                            6: 'Выше среднего',
-                            7: 'Неплохо',
-                            8: 'Хорошо',
-                            9: 'Отлично',
-                            10: 'Великолепно'
-                        },
-                        starCaptionClasses: function (val) {
-                            //console.log(val);
-                            if (val === null) {
-                                return 'badge badge-default';
-                            } else if (val <= 3) {
-                                return 'badge badge-danger';
-                            } else if (val <= 5) {
-                                return 'badge badge-warning';
-                            } else if (val <= 7) {
-                                return 'badge badge-primary';
-                            } else {
-                                return 'badge badge-success';
-                            }
-                        }
-
-                    });
-					@endif
-
-					<?php
-					$message = Session::get('message');
-					$output_message = '';
-					if (isset($message) && !empty($message)) {
-						$output_message .= 'var popup_message = {type:"message", title: "Сообщение", message:"'.$message.'", images:[]};';
-						$output_message .= 'show_popup(popup_message);';
-					}
-					echo $output_message;
-					?>
-					
-				});
-
-            </script>
 
     	</header>
 

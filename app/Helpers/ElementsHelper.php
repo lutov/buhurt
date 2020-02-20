@@ -728,7 +728,7 @@ class ElementsHelper {
 			$element_body .= '</div>';
 		}
 
-		if($element->developers) {
+		if($element->developers && $element->developers->count()) {
 			$element_body .= '<div class="mt-2 small">';
 			$element_body .= 'Разработчик: '.DatatypeHelper::arrayToString(
 					$element->developers,
@@ -740,7 +740,7 @@ class ElementsHelper {
 			$element_body .= '</div>';
 		}
 
-		if($element->games_publishers) {
+		if($element->games_publishers && $element->games_publishers->count()) {
 			$element_body .= '<div class="mt-2 small">';
 			$element_body .= 'Издатель: '.DatatypeHelper::arrayToString(
 					$element->games_publishers,
@@ -752,7 +752,7 @@ class ElementsHelper {
 			$element_body .= '</div>';
 		}
 
-		if($element->platforms) {
+		if($element->platforms && $element->platforms->count()) {
 			$element_body .= '<div class="mt-2 small">';
 			$element_body .= 'Платформы: '.DatatypeHelper::arrayToString(
 					$element->platforms,
