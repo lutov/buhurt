@@ -20,6 +20,8 @@
 		@endif
 		<link href="/data/css/main.min.css" rel="stylesheet" type="text/css" />
 
+		<script type="text/javascript" src="/data/vendor/jquery/jquery-3.3.1.min.js"></script>
+
 		<link rel="manifest" href="/manifest.json">
 		<link rel="canonical" href="{{ url()->current() }}" />
 

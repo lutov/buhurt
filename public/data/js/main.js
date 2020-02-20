@@ -13,7 +13,7 @@ $(function() {
     }
 
     $('#search').autocomplete({
-        source: "{!! URL::action('Search\SearchController@everythingJson') !!}", // url-адрес
+        source: "/search/json", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500,
         select: function (event, ui) {
@@ -37,7 +37,6 @@ $(function() {
         animate: false,
         showCaption: false,
         showClear: false,
-        //defaultCaption: 'Нет оценки',
         clearCaption: 'Нет оценки',
         starCaptions: {
             1: 'Очень плохо',
@@ -52,7 +51,6 @@ $(function() {
             10: 'Великолепно'
         },
         starCaptionClasses: function (val) {
-            //console.log(val);
             if (val === null) {
                 return 'badge badge-default';
             } else if (val <= 3) {

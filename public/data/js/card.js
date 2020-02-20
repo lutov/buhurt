@@ -109,7 +109,7 @@ $(document).ready(function() {
 
     var full_cover = '';
     full_cover += '<div class="modal_images text-center">';
-    full_cover += '<img src="/data/img/covers/'+element_section+'/'+element_id+'.jpg" alt="" class="img-fluid rounded">';
+    full_cover += '<img src="/data/img/covers/'+element_section+'/'+element_id+'.webp" alt="" class="img-fluid rounded">';
     full_cover += '</div>';
 
     var cover_data = {

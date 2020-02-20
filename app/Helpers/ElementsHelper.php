@@ -233,7 +233,7 @@ class ElementsHelper {
 
 			$elements_list .= '<a href="'.$link.'">';
 
-			$elements_list .= '<img class="card-img-top" src="'.$cover.'" alt="'.$element->name.'" />';
+			$elements_list .= '<img class="card-img-top" src="'.$cover.'" alt="'.$element->name.'" loading="lazy" />';
 
 			$elements_list .= '</a>';
 
@@ -372,7 +372,11 @@ class ElementsHelper {
 				if (isset($options['subsection'])) {
 					$elements_list .= $options['subsection'] . '/';
 				}
-				$elements_list .= $element->id . '">';
+				$elements_list .= $element->id;
+				if (isset($options['anchor'])) {
+					$elements_list .= '#'.$options['anchor'];
+				}
+				$elements_list .= '">';
 				$elements_list .= $element->name;
 				$elements_list .= '</a>';
 				if($options['count']) {
@@ -1094,18 +1098,17 @@ class ElementsHelper {
 	 * @param int $element_id
 	 */
 	public static function setCover(Request $request, string $section, int $element_id) {
-
-		$path = public_path().'/data/img/covers/'.$section;
-		$fileName = $element_id.'.jpg';
+		$covers_path = '/data/img/covers/';
+		$extension = '.webp';
+		$path = public_path().$covers_path.$section;
+		$fileName = $element_id.$extension;
 		$full_path = $path.'/'.$fileName;
-
 		if ($request->hasFile('cover')) {
 			if (file_exists($full_path)) {
 				unlink($full_path);
 			}
 			self::resizeCrop($request->file('cover')->getRealPath(), $full_path);
 		}
-
 	}
 
 	/**
@@ -1115,7 +1118,7 @@ class ElementsHelper {
 	 */
 	public static function getCover(string $section, int $id) {
 		$covers_path = '/data/img/covers/';
-		$extension = '.jpg';
+		$extension = '.webp';
 		$rel_path = $covers_path.$section.'/'.$id.$extension;
 		$file_path = public_path().$rel_path;
 		if (file_exists($file_path)) {
@@ -1135,7 +1138,9 @@ class ElementsHelper {
 	 * @param int $id
 	 */
 	public static function deleteCover(string $section, int $id) {
-		$rel_path = '/data/img/covers/'.$section.'/'.$id.'.jpg';
+		$covers_path = '/data/img/covers/';
+		$extension = '.webp';
+		$rel_path = $covers_path.$section.'/'.$id.$extension;
 		$file_path = public_path().$rel_path;
 		if (file_exists($file_path)) {unlink($file_path);}
 	}

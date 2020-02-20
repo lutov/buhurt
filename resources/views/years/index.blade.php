@@ -27,6 +27,9 @@
     <div class="tab-content" id="myTabContent">
 
         @if(count($books))
+            @php
+                $options['anchor'] = 'books';
+            @endphp
             <div class="tab-pane fade @if(array_key_first($titles) === 'books') show active @endif" id="books" role="tabpanel" aria-labelledby="books-tab">
                 <div class="row mt-5">
                     <div class="col-md-12">
@@ -37,6 +40,9 @@
         @endif
 
         @if(count($films))
+            @php
+                $options['anchor'] = 'films';
+            @endphp
             <div class="tab-pane fade @if(array_key_first($titles) === 'films') show active @endif" id="films" role="tabpanel" aria-labelledby="films-tab">
                 <div class="row mt-5">
                     <div class="col-md-12">
@@ -47,6 +53,9 @@
         @endif
 
         @if(count($games))
+            @php
+                $options['anchor'] = 'games';
+            @endphp
             <div class="tab-pane fade @if(array_key_first($titles) === 'games') show active @endif" id="games" role="tabpanel" aria-labelledby="games-tab">
                 <div class="row mt-5">
                     <div class="col-md-12">
@@ -57,6 +66,9 @@
         @endif
 
         @if(count($albums))
+            @php
+                $options['anchor'] = 'albums';
+            @endphp
             <div class="tab-pane fade @if(array_key_first($titles) === 'albums') show active @endif" id="albums" role="tabpanel" aria-labelledby="albums-tab">
                 <div class="row mt-5">
                     <div class="col-md-12">

@@ -80,7 +80,6 @@
 
 		</footer>
 
-		<script type="text/javascript" src="/data/vendor/jquery/jquery-3.3.1.min.js"></script>
 		<script type="text/javascript" src="/data/vendor/jquery/jquery-ui-1.12.1.custom/jquery-ui.min.js" defer></script>
 		<script type="text/javascript" src="/data/vendor/bootstrap-4.3.1-dist/js/bootstrap.min.js" defer></script>
 		<script type="text/javascript" src="/data/vendor/bootstrap-star-rating/js/star-rating.min.js" defer></script>
