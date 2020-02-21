@@ -18,13 +18,7 @@ use Illuminate\Support\Facades\View;
 
 class SearchController extends Controller {
 
-	protected $prefix = 'search';
-
-	protected $x_small_limit = 3;
-	protected $small_limit = 5;
-	protected $normal_limit = 28;
-	protected $default_sort = 'name';
-	protected $default_sort_direction = 'asc';
+	protected string $section = 'search';
 
 	/**
 	 * @param Request $request
@@ -42,7 +36,7 @@ class SearchController extends Controller {
 			$min_length = 3;
 			if($min_length > $length) {
 				$message = 'Для поиска нужно хотя бы '.$min_length.' буквы';
-				return View::make($this->prefix.'.error', array(
+				return View::make($this->section.'.error', array(
 					'request' => $request,
 					'message' => $message
 				));
@@ -62,16 +56,6 @@ class SearchController extends Controller {
 						$lat_result = $this->mainSearch($request, $lat_search, $order, $presearch_query);
 
 						if(!$lat_result) {
-
-							// TODO: Add suggestions
-							//echo $search_query;
-							/*
-							$query_words = explode(' ', $search_query);
-							foreach($query_words as $query) {
-								$word_result = $this->mainSearch($request, $query, $order, $search_query);
-								if($word_result) {return $word_result;}
-							}
-							*/
 
 							$message = 'По запросу «'.TextHelper::getCleanName($search_query).'» ничего не найдено.';
 
@@ -118,7 +102,7 @@ class SearchController extends Controller {
 
 							}
 
-							return View::make($this->prefix . '.error', array(
+							return View::make($this->section . '.error', array(
 								'request' => $request,
 								'message' => $message
 							));
@@ -127,22 +111,16 @@ class SearchController extends Controller {
 
 					} else {return $cyr_result;}
 
-				} else {
-
-					return $search_result;
-
-				}
+				} else {return $search_result;}
 
 			}
 
 		} else {
-
 			$message = 'Кажется, запрос пуст';
-			return View::make($this->prefix.'.error', array(
+			return View::make($this->section.'.error', array(
 				'request' => $request,
 				'message' => $message
 			));
-
 		}
 
 	}
@@ -205,6 +183,25 @@ class SearchController extends Controller {
 
 		} else {
 
+			$sections = array(
+				array('section' => 'books', 'type' => 'Book', 'name' => 'Книги'),
+				array('section' => 'films', 'type' => 'Film', 'name' => 'Фильмы'),
+				array('section' => 'games', 'type' => 'Game', 'name' => 'Игры'),
+				array('section' => 'albums', 'type' => 'Album', 'name' => 'Альбомы'),
+				array('section' => 'persons', 'type' => 'Person', 'name' => 'Персоны'),
+				array('section' => 'bands', 'type' => 'Band', 'name' => 'Группы'),
+			);
+
+			foreach($sections as $genre_section) {
+				$entity = $genre_section['section'];
+				$name = $genre_section['name'];
+				if (count($$entity)) {
+					$titles[$entity]['name'] = $name;
+					$titles[$entity]['count'] = count($$entity);
+				}
+			}
+			uasort($titles, array('TextHelper', 'compareReverseCount'));
+
 			$options = array(
 				'header' => true,
 				'paginate' => false,
@@ -214,9 +211,10 @@ class SearchController extends Controller {
 				'order' => 'asc',
 			);
 
-			return View::make($this->prefix . '.index', array(
+			return View::make($this->section . '.index', array(
 				'request' => $request,
 				'query' => $presearch_query,
+				'titles' => $titles,
 				'persons' => $persons,
 				'books' => $books,
 				'films' => $films,
@@ -249,24 +247,17 @@ class SearchController extends Controller {
 		);
 
 		if(!empty($query)) {
-
 			foreach($sections as $section => $elements) {
-
 				$sections[$section] = $elements->where('name', 'like', '%' . $query . '%')
 					->limit($limit)
 					->pluck('name')
 				;
-
 			}
-
 			foreach($sections as $section => $elements) {
-
 				foreach($elements as $key => $value) {
 					$result[] = $value;
 				}
-
 			}
-
 		}
 
 		return $result;
@@ -300,7 +291,7 @@ class SearchController extends Controller {
 
 		}
 
-		return View::make($this->prefix . '.json', array(
+		return View::make($this->section . '.json', array(
 			'result' => $result,
 		));
 
@@ -311,11 +302,8 @@ class SearchController extends Controller {
 	 * @return array
 	 */
 	private function getIDNameList(string $query = '') {
-
 		$limit = 3;
-
 		$result = array();
-
 		$sections = array(
 			'persons' => new Person(),
 			'books' => new Book(),
@@ -324,31 +312,21 @@ class SearchController extends Controller {
 			'albums' => new Album(),
 			'bands' => new Band(),
 		);
-
 		if(!empty($query)) {
-
 			foreach($sections as $section => $elements) {
-
 				$sections[$section] = $elements->where('name', 'like', '%' . $query . '%')
 					->limit($limit)
 					->get()
 				;
-
 			}
-
 			foreach($sections as $section => $elements) {
-
 				foreach($elements as $key => $value) {
 					$result[$section][$value->id]['id'] = $value->id;
 					$result[$section][$value->id]['name'] = $value->name;
 				}
-
 			}
-
 		}
-
 		return $result;
-
 	}
 
 	/**
@@ -362,7 +340,7 @@ class SearchController extends Controller {
 
 		$result = $this->getIDNameList($query);
 
-		return View::make($this->prefix . '.list_json', array(
+		return View::make($this->section . '.list_json', array(
 			'result' => $result,
 		));
 

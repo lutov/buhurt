@@ -180,7 +180,7 @@ class PersonsController extends Controller {
 
 		DB::table('persons')->where('id', '=', $id)->delete();
 
-		return Redirect::to('/'.$this->prefix.'/'.$recipient_id);
+		return Redirect::to('/'.$this->section.'/'.$recipient_id);
 
 	}
 	
