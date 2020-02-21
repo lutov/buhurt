@@ -60,7 +60,7 @@
 
 			<div class="col-md-10">
 		
-			{!! Form::open(array('action' => array('Search\RelationsController@addRelation', $section, $element->id), 'class' => 'add_relation', 'method' => 'POST', 'files' => true)) !!}
+			{!! Form::open(array('action' => array('Search\RelationsController@addRelation', $section->alt_name, $element->id), 'class' => 'add_relation', 'method' => 'POST', 'files' => true)) !!}
 
 				<div class="form-row">
 					<div class="col">
@@ -71,7 +71,7 @@
 					)) !!}
 					</div>
 					<div class="col">
-					{!! Form::select('section', $sections_list, $section, $attributes = array(
+					{!! Form::select('section', $sections_list, $section->alt_name, $attributes = array(
     					'class' => 'form-control',
     					'autocomplete' => 'off',
 					)) !!}
