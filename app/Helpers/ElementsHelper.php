@@ -483,7 +483,7 @@ class ElementsHelper {
 
 		$element_title = '';
 
-		$element_title .= '<div class="row mt-5">';
+		$element_title .= '<div class="row mt-5 text-center">';
 			$element_title .= '<div class="col-md-12">';
 
 				if($element->writers) {
@@ -507,23 +507,25 @@ class ElementsHelper {
 			$element_title .= '</div>';
 		$element_title .= '</div>';
 
-		$element_title .= '<div class="row d-md-block">';
+		$element_title .= '<div class="row d-md-block text-center">';
 
 			$element_title .= '<div class="col-md-12">';
 
+			$element_title .= '<div class="mb-2">';
 			if (Auth::check()) {
 				$user = Auth::user();
 				$rate = self::getRate($element, $user);
-				$element_title .= '<div><input class="main_rating" name="val" value="'.$rate.'" type="text"></div>';
+				$element_title .= '<input class="main_rating" name="val" value="'.$rate.'" type="text">';
 			} else {
 				$element_title .= DummyHelper::regToRate();
 			}
+			$element_title .= '</div>';
 
 			$rating = self::countRating($element);
 
 			if($rating['count']) {
 
-				$element_title .= '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
+				$element_title .= '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="small text-secondary">';
 
 				$element_title .= '<meta itemprop="worstRating" content = "1">';
 				$element_title .= 'Средняя оценка: <b itemprop="ratingValue">'.$rating['average'].'</b>';
@@ -780,8 +782,8 @@ class ElementsHelper {
 		}
 
 		if(
-			//($element->relations && $element->relations->count())
-			//||
+			($element->relations && $element->relations->count())
+			||
 			($isAdmin && method_exists($element, 'relations'))
 		) {
 			$element_body .= '<div class="mt-4 small">';

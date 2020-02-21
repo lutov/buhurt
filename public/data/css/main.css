@@ -1,6 +1,7 @@
 /* RATING */
 .rating-container {
     display: flex;
+    justify-content: center;
     align-items: baseline;
 }
 .rating-container .rating-stars {
