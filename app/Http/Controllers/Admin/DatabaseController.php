@@ -131,7 +131,7 @@ class DatabaseController extends Controller {
 		if(!empty($year)) {$element->year = $year;}
 		if(!empty($length)) {$element->length = $length;}
 
-		if(!empty($alt_name)) {
+		if(!empty($description)) {
 			if (RolesHelper::isAdmin($request)) {$element->verified = 1;} else {$element->verified = 0;}
 		}
 
