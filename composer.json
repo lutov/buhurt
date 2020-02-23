@@ -17,7 +17,7 @@
         "laravelcollective/html": "^5.4",
         "laravelrus/localized-carbon": "2.3",
         "lutov/mdash": "1.0.1",
-        "lutov/resize_crop": "2.0.0"
+        "lutov/resize_crop": "2.0.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

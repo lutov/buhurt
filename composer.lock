@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0571a1cac6543c84e48f4512579d2b6",
+    "content-hash": "a12797164568042efc34b0d7509599ac",
     "packages": [
         {
             "name": "davejamesmiller/laravel-breadcrumbs",
@@ -1273,16 +1273,16 @@
         },
         {
             "name": "lutov/resize_crop",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lutov/resize_crop.git",
-                "reference": "62d1459f94bd31867ef494254189d185c6fe5c76"
+                "reference": "d2c8efd6804c4c38b419f932cf21ff99038cfb64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lutov/resize_crop/zipball/62d1459f94bd31867ef494254189d185c6fe5c76",
-                "reference": "62d1459f94bd31867ef494254189d185c6fe5c76",
+                "url": "https://api.github.com/repos/lutov/resize_crop/zipball/d2c8efd6804c4c38b419f932cf21ff99038cfb64",
+                "reference": "d2c8efd6804c4c38b419f932cf21ff99038cfb64",
                 "shasum": ""
             },
             "require": {
@@ -1301,7 +1301,7 @@
                 "GPL-3.0+"
             ],
             "description": "Resize and crop images",
-            "time": "2020-02-20T09:31:15+00:00"
+            "time": "2020-02-23T10:50:20+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -1875,16 +1875,16 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.9.2",
+            "version": "3.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "7779489a47d443f845271badbdcedfe4df8e06fb"
+                "reference": "7e1633a6964b48589b142d60542f9ed31bd37a92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/7779489a47d443f845271badbdcedfe4df8e06fb",
-                "reference": "7779489a47d443f845271badbdcedfe4df8e06fb",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/7e1633a6964b48589b142d60542f9ed31bd37a92",
+                "reference": "7e1633a6964b48589b142d60542f9ed31bd37a92",
                 "shasum": ""
             },
             "require": {
@@ -1958,7 +1958,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2019-12-17T08:18:51+00:00"
+            "time": "2020-02-21T04:36:14+00:00"
         },
         {
             "name": "react/promise",
