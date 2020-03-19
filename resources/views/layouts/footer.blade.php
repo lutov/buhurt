@@ -91,7 +91,7 @@
 		@if(Session::get('message'))
 		<script>
 			$(document).ready(function() {
-				let popup_message = {type:"message", title: "Сообщение", message:"'.$message.'", images:[]};
+				let popup_message = {type:"message", title: "Сообщение", message: "{!! Session::get('message') !!}", images:[]};
 				show_popup(popup_message);
 			});
 		</script>

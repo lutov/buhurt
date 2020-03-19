@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\User;
 
+use App\Helpers\ElementsHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User\Event;
 use App\Helpers\CommentsHelper;
@@ -21,9 +22,10 @@ class CommentController extends Controller {
 
 		$text =  $request->get('comment');
 		$section =  $request->get('section');
-		$element =  $request->get('element');
-
+		$element_id =  $request->get('element');
 		$type = SectionsHelper::getSectionType($section);
+		$element = $type::find($element_id);
+		$user = Auth::user();
 
 		$result = '';
 
@@ -37,11 +39,13 @@ class CommentController extends Controller {
 				'OptAlign.all' => 'off',
 				'Nobr.super_nbsp' => 'off'
 			));
+			$rate = ElementsHelper::getRate($element, $user);
 			$comment = new Comment();
-			$comment->user_id = Auth::user()->id;
+			$comment->user_id = $user->id;
 			$comment->element_type = $type;
-			$comment->element_id = $element;
+			$comment->element_id = $element_id;
 			$comment->comment = $text;
+			if($rate) {$comment->rate = $rate;}
 			$comment->save();
 			
 			$new_comment = CommentsHelper::render($request, $comment, true);
@@ -49,12 +53,11 @@ class CommentController extends Controller {
 			$message = 'Комментарий сохранён';
 			$result = '{"message":"'.$message.'", "comment_text":"'.$new_comment.'"}';
 
-			$element = $type::find($element);
 			$event = new Event();
 			$event->event_type = 'Comment';
 			$event->element_type = $type;
 			$event->element_id = $element->id;
-			$event->user_id = Auth::user()->id;
+			$event->user_id = $user->id;
 			$event->name = $element->name; //Auth::user()->username.' комментирует '.$element->name;
 			$event->text = $text;
 			$event->save();

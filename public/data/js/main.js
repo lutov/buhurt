@@ -234,24 +234,26 @@ function comment_add(section, element) {
     }
 }
 
-
+/**
+ *
+ * @param id
+ */
 function comment_edit(id) {
-
-    //var parent_element = $('#comment_'+id);
-    var element = $('#comment_'+id+'_text');
-    var form = $('#comment');
-    var id_field = $('#comment_id');
-    var comment = element.html();
-    comment = comment.replace(/<br>/g, "");
-
+    let element = $('#comment_'+id+'_text');
+    let form = $('#comment');
+    let id_field = $('#comment_id');
+    let comment_html = element.html();
+    let comment = $('<textarea />').html(comment_html).text();
+    comment = comment.replace(/<\/?[^>]+>/gi, '');
     id_field.val(id);
     form.val(comment);
     show_comment_form();
-
-    //console.log(element);
-
 }
 
+/**
+ *
+ * @param id
+ */
 function comment_delete(id) {
 
    if(window.confirm('Удалить комментарий?')) {

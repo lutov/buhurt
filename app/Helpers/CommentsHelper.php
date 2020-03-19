@@ -33,7 +33,7 @@ class CommentsHelper {
 
 		$element = $comment->element_type::find($comment->element_id);
 
-		$rate = ElementsHelper::getRate($element, $user);
+		$rate = $comment->rate;
 
 		$comments_text = '';
 
@@ -82,7 +82,7 @@ class CommentsHelper {
 					if(!$no_br) {
 						$comments_text .= nl2br($comment->comment);
 					} else {
-						$comments_text .= htmlentities($comment->comment);
+						$comments_text .= $comment->comment;
 					}
 					$comments_text .= '</p>';
 
@@ -97,7 +97,7 @@ class CommentsHelper {
 			$comments_text .= '</div>';
 
 			if ($no_br) {
-				$comments_text = str_replace("\n", ' ', $comments_text);
+				$comments_text = str_replace("\n", '<br />', $comments_text);
 				$comments_text = addslashes($comments_text);
 			}
 		}
@@ -165,7 +165,7 @@ class CommentsHelper {
 	public static function showComments(Request $request, $comments) {
 		$comments_list = '';
 		foreach($comments as $key => $comment) {
-			$comments_list .= CommentsHelper::render($request, $comment);
+			$comments_list .= self::render($request, $comment);
 		}
 		return $comments_list;
 	}
