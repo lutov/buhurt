@@ -59,7 +59,7 @@ class Album extends Eloquent  {
 	 */
 	public function tracks() {
 
-		return $this->hasMany('App\Models\Data\Track');
+		return $this->belongsToMany('App\Models\Data\Track', 'albums_tracks');
 
 	}
 }

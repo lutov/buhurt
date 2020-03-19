@@ -37,8 +37,8 @@
                 {!! Form::hidden('action', $value = 'edit') !!}
                 {!! Form::hidden('section', $value = 'albums') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
-                <p>{!! Form::text('album_name', $value = $element->name, $attributes = array('placeholder' => 'Название альбома', 'id' => 'album_name', 'class' => 'form-control w-100')) !!}</p>
-                <p>{!! Form::text('album_band', $value = DatatypeHelper::objectToJsArray($element->bands, '; ', true), $attributes = array('placeholder' => 'Авторы и исполнители', 'class' => 'form-control w-100', 'id' => 'album_band')) !!}</p>
+                <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название альбома', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('bands', $value = DatatypeHelper::objectToJsArray($element->bands, '; ', true), $attributes = array('placeholder' => 'Авторы и исполнители', 'class' => 'form-control w-100', 'id' => 'bands')) !!}</p>
 
                 <ol id="tracks">
 					<?php
@@ -59,9 +59,9 @@
                 </ol>
                 <p><input type="button" class="btn btn-secondary" value="Добавить трек" onclick="add_track()"></p>
 
-                <p>{!! Form::textarea('album_description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'album_description')) !!}</p>
-                <p>{!! Form::text('album_genre', $value = DatatypeHelper::collectionToString($element->genres, 'genre', '; ', '', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'album_genre')) !!}</p>
-                <p>{!! Form::text('album_year', $value = $element->year, $attributes = array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
+                <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'description')) !!}</p>
+                <p>{!! Form::text('genres', $value = DatatypeHelper::objectToJsArray($element->genres, '; ', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genres')) !!}</p>
+                <p>{!! Form::text('year', $value = $element->year, $attributes = array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
                 <p>{!! Form::text('collections', $value = DatatypeHelper::collectionToString($element->collections, 'collection', '; ', '', true), $attributes = array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
                 <p><b>Обложка</b> {!! Form::file('cover'); !!}</p>
                 {!! Form::submit('Сохранить', $attributes = array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
@@ -72,7 +72,7 @@
             <div class="col-md-3">
 
                 <div class="card">
-                    <img class="card-img-top" src="/data/img/covers/{!! $section !!}/{!! ElementsHelper::getCover($section, $element->id) !!}.jpg" alt="">
+                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section, $element->id) !!}" alt="">
                     <div class="card-body text-center">
                         <p class="card-text">Дополнительная информация</p>
                         <div class="btn-group">
@@ -95,7 +95,7 @@
                         Жанры музыки
                     </div>
                     <div class="collapse" id="albums_genres_container">
-                        {!! DatatypeHelper::objectToList(ElementsHelper::getGenres($section), 'albums_genres') !!}
+                        {!! DatatypeHelper::objectToList(ElementsHelper::getGenres($section), 'genres_list') !!}
                     </div>
                 </div>
 

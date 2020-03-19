@@ -1,14 +1,14 @@
 $(document).ready(function(){
 
-    var bands = $('#album_bands');
+    var bands = $('#bands');
     var collections = $('#collections');
     // game
-    $('#album_name').autocomplete({
+    $('#name').autocomplete({
         source: "/search/album_name/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
-    $('#game_genre').autocomplete({
+    $('#genres').autocomplete({
         source: "/search/album_genre/", // url-адрес
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
@@ -23,8 +23,7 @@ $(document).ready(function(){
         minLength: 3, // минимальное количество для совершения запроса
         delay: 500
     });
-    bind_genres('albums_genres', 'album_genre');
-    bind_genres('album_bands', 'album_band');
+    bind_genres('genres_list', 'genres');
     bind_genres('collections_list', 'collections');
 
     bands.blur(function(event) {
@@ -34,10 +33,7 @@ $(document).ready(function(){
 });
 
 function add_track() {
-
     var block = $('#tracks');
     var element = '<li><input type="text" class="form-control w-100 mb-3" name="tracks[]" placeholder="Трек" value="" /></li>';
-
     block.append(element);
-
 }
