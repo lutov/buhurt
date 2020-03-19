@@ -51,7 +51,7 @@ class GenresController extends Controller {
 			$$entity = $this->getTypeElements($type, $element, $sort, $order, $limit);
 			if ($$entity->count()) {
 				$titles[$entity]['name'] = $name;
-				$titles[$entity]['count'] = $$entity->count();
+				$titles[$entity]['count'] = $this->countTypeElements($type, $element);
 			}
 		}
 
@@ -184,6 +184,19 @@ class GenresController extends Controller {
 		$var_name = 'genre_'.$element->id.'_count';
 		return Cache::remember($var_name, $minutes, function () use ($section, $element) {
 			return $element->{$section}()->count();
+		});
+	}
+
+	/**
+	 * @param string $type
+	 * @param $element
+	 * @return mixed
+	 */
+	private function countTypeElements(string $type, $element) {
+		$minutes = 60;
+		$var_name = 'genre_'.$type.'_count';
+		return Cache::remember($var_name, $minutes, function () use ($type, $element) {
+			return $element->where('element_type', $type)->count();
 		});
 	}
 	
