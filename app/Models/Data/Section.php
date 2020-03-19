@@ -19,6 +19,8 @@ class Section extends Model {
 	 */
 	protected $table = 'sections';
 
+	public bool $verification = false;
+
 	public function element() {
 
 		return $this->morphTo();

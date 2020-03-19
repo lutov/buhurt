@@ -29,6 +29,8 @@ class Company extends Eloquent  {
 
 	protected $fillable = array('name','alt_name', 'description');
 
+	public bool $verification = false;
+
 	/**
 	 * @return mixed
 	 */

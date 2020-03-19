@@ -25,6 +25,8 @@ class Genre extends Eloquent {
 	 */
 	protected $fillable = array('name', 'description');
 
+	public bool $verification = false;
+
 	/**
 	 * @return mixed
 	 */

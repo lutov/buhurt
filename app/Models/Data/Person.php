@@ -29,6 +29,8 @@ class Person extends Eloquent {
 
 	protected $fillable = array('name', 'bio');
 
+	public bool $verification = false;
+
 	/**
 	 * @return mixed
 	 */

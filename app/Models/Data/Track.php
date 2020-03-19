@@ -18,6 +18,8 @@ class Track extends Eloquent  {
 
 	protected $morphClass = 'Track';
 
+	public bool $verification = false;
+
 	/**
 	 * Record remains in the database, but marked with a special label
 	 *

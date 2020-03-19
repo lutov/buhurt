@@ -38,4 +38,6 @@ class Meme extends Eloquent  {
 
 	protected $fillable = array('name', 'alt_name', 'description', 'year', 'verified');
 
+	public bool $verification = true;
+
 }

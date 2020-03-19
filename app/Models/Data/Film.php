@@ -40,6 +40,8 @@ class Film extends Eloquent  {
 	
 	protected $fillable = array('name', 'alt_name', 'description', 'year', 'length', 'verified');
 
+	public bool $verification = true;
+
 	/**
 	 * @return mixed
 	 */

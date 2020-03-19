@@ -35,7 +35,7 @@
 
                 {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_company', 'method' => 'POST', 'files' => true)) !!}
                 {!! Form::hidden('action', $value = 'edit') !!}
-                {!! Form::hidden('section', $value = 'bands') !!}
+                {!! Form::hidden('section', $value = 'genres') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
                 <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название', 'id' => 'game_name', 'class' => 'form-control w-100')) !!}</p>
                 <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'game_description')) !!}</p>
@@ -48,7 +48,7 @@
             <div class="col-md-3">
 
                 <div class="card">
-                    <img class="card-img-top" src="/data/img/covers/{!! $section !!}/{!! ElementsHelper::getCover($section, $element->id) !!}.jpg" alt="">
+                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section, $element->id) !!}" alt="">
                     <div class="card-body text-center">
                         <p class="card-text">Дополнительная информация</p>
                         <div class="btn-group">
@@ -66,7 +66,7 @@
 
         </div>
 
-        <!--script type="text/javascript" src="/data/js/admin/bands.js"></script-->
+        <!--script type="text/javascript" src="/data/js/admin/genres.js"></script-->
 
     @else
         {!! DummyHelper::regToAdd() !!}

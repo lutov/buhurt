@@ -136,68 +136,80 @@ class SearchController extends Controller {
 
 		$limit = 100;
 
-		$persons = Person::where('name', 'like', '%' . $search_query . '%')
-			->orderBy($order)
-			->limit($limit)
-			->get()
-		;
+		$persons = $books = $films = $games = $albums = $bands = $companies = $genres = array();
 
-		$books = Book::where(function($query) use ($search_query) {
-			$query
-				->where('name', 'like', '%' . $search_query . '%')
-				->orWhere('alt_name', 'like', '%' . $search_query . '%')
+		$searchable = array(
+			'persons' => array(
+				'name' => 'Персоны',
+				'section' => 'persons',
+				'type' =>'Person',
+				'fields' => array('name')
+			),
+			'books' => array(
+				'name' => 'Книги',
+				'section' => 'books',
+				'type' =>'Book',
+				'fields' => array('name', 'alt_name')
+			),
+			'films' => array(
+				'name' => 'Фильмы',
+				'section' => 'films',
+				'type' =>'Film',
+				'fields' => array('name', 'alt_name')
+			),
+			'games' => array(
+				'name' => 'Игры',
+				'section' => 'games',
+				'type' =>'Game',
+				'fields' => array('name', 'alt_name')
+			),
+			'albums' => array(
+				'name' => 'Альбомы',
+				'section' => 'albums',
+				'type' =>'Album',
+				'fields' => array('name')
+			),
+			'band' => array(
+				'name' => 'Группы',
+				'section' => 'bands',
+				'type' =>'Band',
+				'fields' => array('name')
+			),
+			'companies' => array(
+				'name' => 'Компании',
+				'section' => 'companies',
+				'type' =>'Company',
+				'fields' => array('name')
+			),
+			'genres' => array(
+				'name' => 'Жанры',
+				'section' => 'genres',
+				'type' =>'Genre',
+				'fields' => array('name')
+			),
+		);
+
+		foreach($searchable as $entity) {
+			${$entity['section']} = $entity['type']::where(
+				function ($query) use ($entity, $search_query) {
+					foreach($entity['fields'] as $field) {
+						$query->orWhere($field, 'like', '%'.$search_query.'%');
+					}
+				})
+				->orderBy($order)
+				->limit($limit)
+				->get()
 			;
-		})->orderBy($order)->limit($limit)->get();
+		}
 
-		$films = Film::where(function($query) use ($search_query) {
-			$query
-				->where('name', 'like', '%' . $search_query . '%')
-				->orWhere('alt_name', 'like', '%' . $search_query . '%')
-			;
-		})->orderBy($order)->limit($limit)->get();
+		if(count($persons) || count($books) || count($films) || count($games) || count($albums) || count($bands) || count($companies) || count($genres)) {
 
-		$games = Game::where(function($query) use ($search_query) {
-			$query
-				->where('name', 'like', '%' . $search_query . '%')
-				->orWhere('alt_name', 'like', '%' . $search_query . '%')
-			;
-		})->orderBy($order)->limit($limit)->get();
-
-		$albums = Album::where(function($query) use ($search_query) {
-			$query
-				->where('name', 'like', '%' . $search_query . '%')
-				//->orWhere('alt_name', 'like', '%' . $search_query . '%')
-			;
-		})->orderBy($order)->limit($limit)->get();
-
-		$bands = Band::where(function($query) use ($search_query) {
-			$query
-				->where('name', 'like', '%' . $search_query . '%')
-				//->orWhere('alt_name', 'like', '%' . $search_query . '%')
-			;
-		})->orderBy($order)->limit($limit)->get();
-
-		if(!count($persons) && !count($books) && !count($films) && !count($games) && !count($albums) && !count($bands)) {
-
-			return false;
-
-		} else {
-
-			$sections = array(
-				array('section' => 'books', 'type' => 'Book', 'name' => 'Книги'),
-				array('section' => 'films', 'type' => 'Film', 'name' => 'Фильмы'),
-				array('section' => 'games', 'type' => 'Game', 'name' => 'Игры'),
-				array('section' => 'albums', 'type' => 'Album', 'name' => 'Альбомы'),
-				array('section' => 'persons', 'type' => 'Person', 'name' => 'Персоны'),
-				array('section' => 'bands', 'type' => 'Band', 'name' => 'Группы'),
-			);
-
-			foreach($sections as $genre_section) {
-				$entity = $genre_section['section'];
-				$name = $genre_section['name'];
-				if (count($$entity)) {
-					$titles[$entity]['name'] = $name;
-					$titles[$entity]['count'] = count($$entity);
+			foreach($searchable as $entity) {
+				$entities = $entity['section'];
+				$name = $entity['name'];
+				if (count($$entities)) {
+					$titles[$entities]['name'] = $name;
+					$titles[$entities]['count'] = count($$entities);
 				}
 			}
 			uasort($titles, array('TextHelper', 'compareReverseCount'));
@@ -211,7 +223,7 @@ class SearchController extends Controller {
 				'order' => 'asc',
 			);
 
-			return View::make($this->section . '.index', array(
+			return View::make($this->section.'.index', array(
 				'request' => $request,
 				'query' => $presearch_query,
 				'titles' => $titles,
@@ -221,10 +233,14 @@ class SearchController extends Controller {
 				'games' => $games,
 				'albums' => $albums,
 				'bands' => $bands,
+				'companies' => $companies,
+				'genres' => $genres,
 				'options' => $options,
 			));
 
 		}
+
+		return false;
 
 	}
 

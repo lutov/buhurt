@@ -14,6 +14,8 @@ class NotFound extends Model {
 	 */
 	protected $table = 'notfound';
 
+	public bool $verification = false;
+
 	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\HasOne
 	 */

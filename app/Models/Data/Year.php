@@ -14,4 +14,6 @@ class Year extends Model {
 	 */
 	protected $table = 'years';
 
+	public bool $verification = false;
+
 }

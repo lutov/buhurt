@@ -18,6 +18,8 @@ class Country extends Eloquent {
 	
 	public $timestamps = false;
 
+	public bool $verification = false;
+
 	/**
 	 * Отношение с
 	 */

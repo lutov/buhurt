@@ -20,4 +20,6 @@ class News extends Eloquent  {
 	 */
 	protected $table = 'news';
 
+	public bool $verification = false;
+
 }

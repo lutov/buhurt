@@ -84,6 +84,26 @@
 			</div>
 		@endif
 
+		@if(count($companies))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'companies') show active @endif" id="companies" role="tabpanel" aria-labelledby="companies-tab">
+				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $companies, 'companies', $options) !!}
+					</div>
+				</div>
+			</div>
+		@endif
+
+		@if(count($genres))
+			<div class="tab-pane fade @if(array_key_first($titles) === 'genres') show active @endif" id="genres" role="tabpanel" aria-labelledby="genres-tab">
+				<div class="row mt-5">
+					<div class="col-md-12">
+						{!! ElementsHelper::getElements($request, $genres, 'genres', $options) !!}
+					</div>
+				</div>
+			</div>
+		@endif
+
 	</div>
 
 @stop

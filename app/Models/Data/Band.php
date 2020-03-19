@@ -28,6 +28,8 @@ class Band extends Eloquent {
 
 	protected $fillable = array('name', 'bio');
 
+	public bool $verification = false;
+
 	public function albums() {
 
 		return $this->belongsToMany('App\Models\Data\Album', 'bands_albums', 'band_id', 'album_id');

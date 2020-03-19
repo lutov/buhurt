@@ -43,6 +43,8 @@ class Album extends Eloquent  {
 
 	protected $fillable = array('name', 'description', 'year', 'verified');
 
+	public bool $verification = true;
+
 	/**
 	 * @return mixed
 	 */
