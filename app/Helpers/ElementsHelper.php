@@ -487,9 +487,33 @@ class ElementsHelper {
 			$element_title .= '<div class="col-md-12">';
 
 				if($element->writers) {
-					$element_title .= '<div class="h2">';
-					$element_title .= DatatypeHelper::arrayToString($element->writers, ', ', '/persons/', false, 'author');
-					$element_title .= '</div>';
+
+					$writers = DatatypeHelper::arrayToString($element->writers, ', ', '/persons/', false, 'author');
+
+					$many_authors = (2 < mb_substr_count($writers, ', ')) ? true : false;
+
+					if($many_authors) {
+
+						$authors = explode(', ', $writers);
+
+						$element_title .= '<abbr title="Произведения разных авторов" class="h2" data-toggle="collapse" data-target="#collapseAuthors" aria-expanded="false" aria-controls="collapseAuthors">';
+						$element_title .= 'Альманах';
+						$element_title .= '</abbr>';
+
+						$element_title .= '<div class="h4 mt-2 collapse" id="collapseAuthors">';
+						$element_title .= '<ul class="list-unstyled">';
+						$element_title .= '<li class="mt-2">';
+						$element_title .= implode('</li><li class="mt-2">', $authors);
+						$element_title .= '</li>';
+						$element_title .= '</ul>';
+						$element_title .= '</div>';
+
+					} else {
+						$element_title .= '<div class="h2">';
+						$element_title .= $writers;
+						$element_title .= '</div>';
+					}
+
 				}
 
 				if($element->bands) {
@@ -501,7 +525,35 @@ class ElementsHelper {
 				$element_title .= '<h1 itemprop="name" id="buhurt_name">'.$element->name.'</h1>';
 
 				if(!empty($element->alt_name)) {
-					$element_title .= '<div class="h4 d-none d-md-block" itemprop="alternativeHeadline" id="buhurt_alt_name">'.$element->alt_name.'</div>';
+
+					$alt_name = '';
+					
+					$long_name = (false !== mb_strpos($element->alt_name, '; ')) ? true : false;
+
+					if($long_name) {
+
+						$names = explode('; ', $element->alt_name);
+
+						$alt_name .= '<div class="h4 d-none d-md-block" id="buhurt_alt_name">';
+						$alt_name .= '<ul class="list-unstyled">';
+						$alt_name .= '<li>';
+						$alt_name .= '<abbr title="Альтернативные названия" class="" data-toggle="collapse" data-target="#collapseAltName" aria-expanded="false" aria-controls="collapseAltName" itemprop="alternativeHeadline">';
+						$alt_name .= array_shift($names);
+						$alt_name .= '</abbr>';
+						$alt_name .= '</li>';
+						$alt_name .= '<div class="collapse" id="collapseAltName">';
+						$alt_name .= '<li itemprop="alternativeHeadline">';
+						$alt_name .= implode('</li><li itemprop="alternativeHeadline">', $names);
+						$alt_name .= '</li>';
+						$alt_name .= '</div>';
+						$alt_name .= '</ul>';
+						$alt_name .= '</div>';
+					} else {
+						$alt_name .= '<div class="h4 d-none d-md-block" itemprop="alternativeHeadline" id="buhurt_alt_name">'.$element->alt_name.'</div>';
+					}
+
+					$element_title .= $alt_name;
+
 				}
 
 			$element_title .= '</div>';

@@ -15,7 +15,8 @@ class DatatypeHelper {
 	 * @param string $delimiter
 	 * @param string $path
 	 * @param bool $no_link
-	 * @return string $string
+	 * @param bool $itemprop
+	 * @return string
 	 */
 	public static function arrayToString($object, $delimiter = ', ', $path = '/', $no_link = false, $itemprop = false) {
 
