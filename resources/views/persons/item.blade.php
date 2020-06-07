@@ -66,7 +66,7 @@
 
 		@if(count($productions))
 			<div class="tab-pane fade @if(array_key_first($titles) === 'producer') show active @endif" id="producer" role="tabpanel" aria-labelledby="producer-tab">
-`				<div class="row mt-5">
+				<div class="row mt-5">
 					<div class="col-md-12">
 						{!! ElementsHelper::getElements($request, $productions, 'films', $options) !!}
 					</div>
