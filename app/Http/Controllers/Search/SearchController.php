@@ -330,7 +330,9 @@ class SearchController extends Controller {
 		);
 		if(!empty($query)) {
 			foreach($sections as $section => $elements) {
-				$sections[$section] = $elements->where('name', 'like', '%' . $query . '%')
+				$sections[$section] = $elements
+					->where('name', 'like', '%'.$query.'%')
+					->orWhere('alt_name', 'like', '%'.$query.'%')
 					->limit($limit)
 					->get()
 				;
