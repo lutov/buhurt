@@ -17,6 +17,7 @@
         "laravelrus/localized-carbon": "2.3",
         "lutov/mdash": "1.0.1",
         "lutov/resize_crop": "2.0.1",
+        "lutov/server_yametrika": "^1.0",
         "symfony/translation": "4.3.8"
     },
     "require-dev": {

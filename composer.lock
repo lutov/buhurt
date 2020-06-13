@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd107fb3481126d13904e1aa648c26df",
+    "content-hash": "2354582af720d67905f0856ab69fb891",
     "packages": [
         {
             "name": "davejamesmiller/laravel-breadcrumbs",
@@ -52,6 +52,7 @@
             "keywords": [
                 "laravel"
             ],
+            "abandoned": true,
             "time": "2017-06-24T11:10:49+00:00"
         },
         {
@@ -631,6 +632,7 @@
                     "email": "jakub.onderka@gmail.com"
                 }
             ],
+            "abandoned": "php-parallel-lint/php-console-color",
             "time": "2018-09-29T17:23:10+00:00"
         },
         {
@@ -677,6 +679,7 @@
                 }
             ],
             "description": "Highlight PHP code in terminal",
+            "abandoned": "php-parallel-lint/php-console-highlighter",
             "time": "2018-09-29T18:48:56+00:00"
         },
         {
@@ -1302,6 +1305,37 @@
             ],
             "description": "Resize and crop images",
             "time": "2020-02-23T10:50:20+00:00"
+        },
+        {
+            "name": "lutov/server_yametrika",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lutov/server_yametrika.git",
+                "reference": "7766e15d707f87ed42bd2b3d6c368f421bc43ca3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lutov/server_yametrika/zipball/7766e15d707f87ed42bd2b3d6c368f421bc43ca3",
+                "reference": "7766e15d707f87ed42bd2b3d6c368f421bc43ca3",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "YaMetrika.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "description": "Composer-compatible fork of a server-side Yandex Metrika counter",
+            "time": "2020-06-13T08:43:08+00:00"
         },
         {
             "name": "monolog/monolog",
