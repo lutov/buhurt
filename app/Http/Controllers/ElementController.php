@@ -148,15 +148,17 @@ class ElementController extends Controller {
 	 * @param $id
 	 * @return \Illuminate\Contracts\View\View
 	 */
-	public function getJson($id) {
+	public function api($id) {
+
 		$section = SectionsHelper::getSection($this->section);
-		$element = $section->type::find($id);
-		$rating = ElementsHelper::countRating($element);
-		return View::make($this->section.'.json', array(
-			'element' => $element,
-			'section' => $section,
-			'rating' => $rating,
-		));
+
+		$minutes = 60;
+		$var_name = 'api_'.$this->section.'_'.$id;
+		$element = Cache::remember($var_name, $minutes, function () use ($section, $id) {
+			return $section->type::find($id);
+		});
+
+		return $element;
 	}
 
 	/**

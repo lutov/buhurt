@@ -29,6 +29,8 @@ class Collection extends Eloquent {
 	 */
 	protected $fillable = array('name','alt_name', 'description');
 
+	protected $visible = ['id', 'name'];
+
 	public bool $verification = false;
 
 	/**

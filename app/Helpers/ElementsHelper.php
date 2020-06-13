@@ -528,11 +528,11 @@ class ElementsHelper {
 
 					$alt_name = '';
 					
-					$long_name = (false !== mb_strpos($element->alt_name, '; ')) ? true : false;
+					$long_name = (1 < count($element->alt_name)) ? true : false;
 
 					if($long_name) {
 
-						$names = explode('; ', $element->alt_name);
+						$names = $element->alt_name;
 
 						$alt_name .= '<div class="h4 d-none d-md-block" id="buhurt_alt_name">';
 						$alt_name .= '<ul class="list-unstyled">';
@@ -549,7 +549,7 @@ class ElementsHelper {
 						$alt_name .= '</ul>';
 						$alt_name .= '</div>';
 					} else {
-						$alt_name .= '<div class="h4 d-none d-md-block" itemprop="alternativeHeadline" id="buhurt_alt_name">'.$element->alt_name.'</div>';
+						$alt_name .= '<div class="h4 d-none d-md-block" itemprop="alternativeHeadline" id="buhurt_alt_name">'.$element->alt_name[0].'</div>';
 					}
 
 					$element_title .= $alt_name;

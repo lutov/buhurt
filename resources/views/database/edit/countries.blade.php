@@ -33,11 +33,11 @@
 
             <div class="col-md-9">
 
-                {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_platform', 'method' => 'POST', 'files' => true)) !!}
+                {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_country', 'method' => 'POST', 'files' => true)) !!}
                 {!! Form::hidden('action', $value = 'edit') !!}
-                {!! Form::hidden('section', $value = 'platforms') !!}
+                {!! Form::hidden('section', $value = 'countries') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
-                <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название', 'id' => 'platform_name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название', 'id' => 'country_name', 'class' => 'form-control w-100')) !!}</p>
                 <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'game_description')) !!}</p>
                 <p><b>Обложка</b> {!! Form::file('cover'); !!}</p>
                 {!! Form::submit('Сохранить', $attributes = array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}

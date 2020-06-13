@@ -1,13 +1,13 @@
 <?php namespace App\Models\Data;
 
-use Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string name
  * @property int|string order
  * @property int album_id
  */
-class Track extends Eloquent  {
+class Track extends Model {
 
 	/**
 	 * The database table used by the model.
@@ -28,5 +28,7 @@ class Track extends Eloquent  {
 	//protected $softDelete = true;
 
 	protected $fillable = array('name', 'length', 'order', 'album_id');
+
+	protected $visible = ['id', 'name'];
 
 }

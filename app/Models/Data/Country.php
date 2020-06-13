@@ -18,6 +18,8 @@ class Country extends Eloquent {
 	
 	public $timestamps = false;
 
+	protected $visible = ['id', 'name'];
+
 	public bool $verification = false;
 
 	/**

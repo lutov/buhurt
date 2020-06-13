@@ -38,7 +38,7 @@
                 {!! Form::hidden('section', $value = 'games') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
                 <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название игры', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
-                <p>{!! Form::text('alt_name', $value = $element->alt_name, $attributes = array('placeholder' => 'Альтернативное или оригинальное название игры', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('alt_name', $value = implode('; ', $element->alt_name), $attributes = array('placeholder' => 'Альтернативное или оригинальное название игры', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
                 <p>{!! Form::text('developers', $value = DatatypeHelper::objectToJsArray($element->developers, '; ', true), $attributes = array('placeholder' => 'Разработчик', 'class' => 'form-control w-100', 'id' => 'developers')) !!}</p>
                 <p>{!! Form::text('games_publishers', $value = DatatypeHelper::objectToJsArray($element->games_publishers, '; ', true), $attributes = array('placeholder' => 'Издатель', 'class' => 'form-control w-100', 'id' => 'games_publishers')) !!}</p>
                 <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'description')) !!}</p>

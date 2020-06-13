@@ -1,12 +1,12 @@
 <?php namespace App\Models\Data;
 
 use App\Traits\SectionTrait;
-use Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string name
  */
-class Band extends Eloquent {
+class Band extends Model {
 
 	use SectionTrait;
 
@@ -27,6 +27,8 @@ class Band extends Eloquent {
 	//protected $softDelete = true;
 
 	protected $fillable = array('name', 'bio');
+
+	protected $visible = ['id', 'name'];
 
 	public bool $verification = false;
 

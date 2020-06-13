@@ -38,7 +38,7 @@
                 {!! Form::hidden('section', $value = 'books') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
                 <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название книги', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
-                <p>{!! Form::text('alt_name', $value = $element->alt_name, $attributes = array('placeholder' => 'Альтернативное или оригинальное название книги', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('alt_name', $value = implode('; ', $element->alt_name), $attributes = array('placeholder' => 'Альтернативное или оригинальное название книги', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
                 <p>{!! Form::text('writers', $value = DatatypeHelper::objectToJsArray($element->writers, '; ', true), $attributes = array('placeholder' => 'Автор', 'class' => 'form-control w-100', 'id' => 'writers')) !!}</p>
                 <p>{!! Form::text('books_publishers', $value = DatatypeHelper::objectToJsArray($element->books_publishers, '; ', true), $attributes = array('placeholder' => 'Издатель', 'class' => 'form-control w-100', 'id' => 'books_publishers')) !!}</p>
                 <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Аннотация', 'class' => 'form-control w-100', 'id' => 'annotation')) !!}</p>

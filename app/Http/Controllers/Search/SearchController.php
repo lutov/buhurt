@@ -15,6 +15,7 @@ use App\Models\Data\NotFound;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use YaMetrika;
 
 class SearchController extends Controller {
 
@@ -341,6 +342,7 @@ class SearchController extends Controller {
 				foreach($elements as $key => $value) {
 					$result[$section][$value->id]['id'] = $value->id;
 					$result[$section][$value->id]['name'] = $value->name;
+					$result[$section][$value->id]['alt_name'] = $value->alt_name;
 				}
 			}
 		}
@@ -351,16 +353,24 @@ class SearchController extends Controller {
 	 * @param Request $request
 	 * @return mixed
 	 */
-	public function getJson(Request $request) {
+	public function api(Request $request) {
 
 		$raw_query = urldecode($request->get('query'));
 		$query =  TextHelper::prepareQuery($raw_query);
 
-		$result = $this->getIDNameList($query);
+		$counter = new YaMetrika(env('YA_METRIKA')); // Номер счётчика Метрики
+		$counter->hit($request->fullUrl());
 
-		return View::make($this->section . '.list_json', array(
-			'result' => $result,
-		));
+		$data = $this->getIDNameList($query);
+
+		$result['status'] = (count($data)) ? 'OK' : 'Not Found';
+		$result['count'] = count($data);
+		$result['data'] = $data;
+		$result['url'] = $request->fullUrl();
+		$result['errors'] = null;
+
+		header('Content-Type: application/json; charset=UTF-8');
+		echo json_encode($result); die();
 
 	}
 

@@ -19,6 +19,8 @@ class Relation extends Eloquent {
 	 */
 	protected $fillable = array('name','alt_name');
 
+	protected $visible = ['id', 'name'];
+
 	/**
 	 * @return mixed
 	 */

@@ -38,7 +38,7 @@
                 {!! Form::hidden('section', $value = 'films') !!}
                 {!! Form::hidden('element_id', $value = $element->id) !!}
                 <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название фильма', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
-                <p>{!! Form::text('alt_name', $value = $element->alt_name, $attributes = array('placeholder' => 'Альтернативное или оригинальное название фильма', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
+                <p>{!! Form::text('alt_name', $value = implode('; ', $element->alt_name), $attributes = array('placeholder' => 'Альтернативное или оригинальное название фильма', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
                 <p>{!! Form::text('directors', $value = DatatypeHelper::objectToJsArray($element->directors, '; ', true), $attributes = array('placeholder' => 'Режиссер', 'class' => 'form-control w-100', 'id' => 'directors')) !!}</p>
                 <p>{!! Form::text('screenwriters', $value = DatatypeHelper::objectToJsArray($element->screenwriters, '; ', true), $attributes = array('placeholder' => 'Сценарист', 'class' => 'form-control w-100', 'id' => 'screenwriters')) !!}</p>
                 <p>{!! Form::text('producers', $value = DatatypeHelper::objectToJsArray($element->producers, '; ', true), $attributes = array('placeholder' => 'Продюсер', 'class' => 'form-control w-100', 'id' => 'producers')) !!}</p>
@@ -63,7 +63,7 @@
                         <p class="card-text">Дополнительная информация</p>
                         <div class="btn-group">
                             {!! DummyHelper::getExtLink('kinopoisk', $element->name); !!}
-                            <?php $wa_query = (!empty($element->alt_name)) ? $element->alt_name : $element->name; echo DummyHelper::getExtLink('worldart', $wa_query); ?>
+                            <?php $wa_query = (count($element->alt_name)) ? $element->alt_name[0] : $element->name; echo DummyHelper::getExtLink('worldart', $wa_query); ?>
                             {!! DummyHelper::getExtLink('wiki', $element->name); !!}
                         </div>
                         <div class="btn-group mt-3">
@@ -103,7 +103,7 @@
                 <div class="card mt-3">
                     <div class="card-header" data-toggle="collapse" data-target="#posters" aria-expanded="false" aria-controls="posters">
 						<?php
-						$poster_name = explode('; ', $element->alt_name)[0];
+						$poster_name = (count($element->alt_name)) ? $element->alt_name[0] : '';
 						$poster_name = str_replace('&', '', $poster_name);
 						$poster_name = str_replace(';', '', $poster_name);
 						$poster_name = str_replace(':', '', $poster_name);

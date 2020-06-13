@@ -1,5 +1,6 @@
 <?php namespace App\Models\Data;
 
+use App\Helpers\ElementsHelper;
 use App\Traits\CollectionsTrait;
 use App\Traits\CommentsTrait;
 use App\Traits\GenresTrait;
@@ -7,12 +8,12 @@ use App\Traits\RatesTrait;
 use App\Traits\RelationsTrait;
 use App\Traits\SectionTrait;
 use App\Traits\WantedTrait;
-use Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int id
  */
-class Game extends Eloquent  {
+class Game extends Model {
 
 	use SectionTrait;
 	use RatesTrait;
@@ -39,6 +40,10 @@ class Game extends Eloquent  {
 	//protected $softDelete = true;
 
 	protected $fillable = array('name', 'alt_name', 'description', 'year', 'verified');
+
+	// protected $hidden = ['created_at', 'updated_at'];
+	protected $with = ['genres', 'collections', 'platforms', 'developers', 'games_publishers'];
+	protected $appends = ['cover', 'rating', 'simple_relations'];
 
 	public bool $verification = true;
 
@@ -67,6 +72,28 @@ class Game extends Eloquent  {
 
 		return $this->belongsToMany('App\Models\Data\Company', 'publishers_games', 'game_id', 'company_id');
 
+	}
+
+	/**
+	 * @param $value
+	 * @return array
+	 */
+	public function getAltNameAttribute($value) {
+		return explode('; ', $value);
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getCoverAttribute() {
+		return ElementsHelper::getCover($this->table, $this->id);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRatingAttribute() {
+		return ElementsHelper::countRating($this);
 	}
 
 }

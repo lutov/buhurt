@@ -13,6 +13,8 @@ class Rate extends Model {
 
 	//public $timestamps = false;
 
+	protected $visible = ['id', 'user_id', 'rate'];
+
 	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\MorphTo
 	 */

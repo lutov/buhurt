@@ -1,5 +1,6 @@
 <?php namespace App\Models\Data;
 
+use App\Helpers\ElementsHelper;
 use App\Traits\CollectionsTrait;
 use App\Traits\CommentsTrait;
 use App\Traits\GenresTrait;
@@ -7,12 +8,12 @@ use App\Traits\RatesTrait;
 use App\Traits\RelationsTrait;
 use App\Traits\SectionTrait;
 use App\Traits\WantedTrait;
-use Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int id
  */
-class Album extends Eloquent  {
+class Album extends Model {
 
 	use SectionTrait;
 	use RatesTrait;
@@ -43,6 +44,10 @@ class Album extends Eloquent  {
 
 	protected $fillable = array('name', 'description', 'year', 'verified');
 
+	protected $hidden = ['alt_name', 'description'];
+	protected $with = ['bands', 'tracks'];
+	protected $appends = ['cover', 'rating', 'simple_relations'];
+
 	public bool $verification = true;
 
 	/**
@@ -62,4 +67,19 @@ class Album extends Eloquent  {
 		return $this->belongsToMany('App\Models\Data\Track', 'albums_tracks');
 
 	}
+
+	/**
+	 * @return int
+	 */
+	public function getCoverAttribute() {
+		return ElementsHelper::getCover($this->table, $this->id);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRatingAttribute() {
+		return ElementsHelper::countRating($this);
+	}
+
 }

@@ -25,6 +25,8 @@ class Genre extends Eloquent {
 	 */
 	protected $fillable = array('name', 'description');
 
+	protected $visible = ['id', 'name'];
+
 	public bool $verification = false;
 
 	/**
