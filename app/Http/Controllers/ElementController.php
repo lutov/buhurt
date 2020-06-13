@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
+use YaMetrika;
 
 class ElementController extends Controller {
 
@@ -145,10 +146,14 @@ class ElementController extends Controller {
 	}
 
 	/**
+	 * @param Request $request
 	 * @param $id
-	 * @return \Illuminate\Contracts\View\View
+	 * @return mixed
 	 */
-	public function api($id) {
+	public function api(Request $request, $id) {
+
+		$counter = new YaMetrika(env('YA_METRIKA')); // Номер счётчика Метрики
+		$counter->hit($request->fullUrl());
 
 		$section = SectionsHelper::getSection($this->section);
 
