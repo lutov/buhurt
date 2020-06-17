@@ -296,7 +296,6 @@ class DatabaseController extends Controller {
 			if($fill_id) {$element->id = $fill_id;}
 
 			$element->name = TextHelper::getCleanName(urldecode($name));
-			$element->cover = '';
 			$element->description = '';
 			$element->year = 0;
 			$element->verified = 0;
