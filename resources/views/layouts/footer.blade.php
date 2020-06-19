@@ -13,16 +13,11 @@
 
 						<li class="nav-item"><a class="nav-link" href="/about/">О&nbsp;сайте</a></li>
 						<li class="nav-item"><a class="nav-link" href="https://vk.com/free_buhurt" target="_blank">ВК</a></li>
+						<li class="nav-item"><a class="nav-link" href="https://github.com/lutov/buhurt" target="_blank">GitHub</a></li>
+						<li class="nav-item"><a class="nav-link" href="https://github.com/lutov/buhurt_db" target="_blank">Database</a></li>
+						<li class="nav-item"><a class="nav-link" href="https://github.com/lutov/buhurt/blob/master/api.md" target="_blank">API</a></li>
 						<li class="nav-item"><a class="nav-link" href="mailto:request@buhurt.ru">Обратная&nbsp;связь</a></li>
 						<li class="nav-item"><a class="nav-link" href="/icons">Иконки</a></li>
-						@if (RolesHelper::isAdmin($request))
-						<li class="nav-item">
-							<a class="nav-link" href="/admin/add/">База</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="https://github.com/lutov/buhurt_database/" target="_blank">GitHub</a>
-						</li>
-						@endif
 
 					</ul>
 
