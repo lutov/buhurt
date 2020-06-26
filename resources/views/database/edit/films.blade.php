@@ -63,7 +63,7 @@
                         <p class="card-text">Дополнительная информация</p>
                         <div class="btn-group">
                             {!! DummyHelper::getExtLink('kinopoisk', $element->name); !!}
-                            <?php $wa_query = (count($element->alt_name)) ? $element->alt_name[0] : $element->name; echo DummyHelper::getExtLink('worldart', $wa_query); ?>
+                            <?php $wa_query = (isset($element->alt_name[0]) && !empty($element->alt_name[0])) ? $element->alt_name[0] : $element->name; echo DummyHelper::getExtLink('worldart', $wa_query); ?>
                             {!! DummyHelper::getExtLink('wiki', $element->name); !!}
                         </div>
                         <div class="btn-group mt-3">
