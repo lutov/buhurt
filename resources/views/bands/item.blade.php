@@ -4,6 +4,9 @@
 
 @section('subtitle')@stop
 
+@section('keywords')группа, {!! $element->name !!}, альбомы@stop
+@section('description')Группа {!! $element->name !!}@stop
+
 @section('content')
 
 	<section class="text-center mt-5 mb-3">
