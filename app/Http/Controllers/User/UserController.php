@@ -867,6 +867,15 @@ class UserController extends Controller {
 							$message->to($new_user->email)->subject('Вы зарегистрировались в системе «Бугурт»');
 
 						});
+
+                        $event = new Event();
+                        $event->event_type = 'New';
+                        $event->element_type = 'User';
+                        $event->element_id = $new_user->id;
+                        $event->user_id = $new_user->id;
+                        $event->name = $new_user->username; //.' зарегистрирован';
+                        $event->text = 'Зарегистрирован через <a href="https://vk.com">vk.com</a>';
+                        $event->save();
 						
 						Auth::login($new_user);
 
