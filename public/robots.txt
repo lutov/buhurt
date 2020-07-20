@@ -2,5 +2,5 @@ User-agent: *
 Disallow: /data/phpmorphy
 Disallow: /admin
 Disallow: /base/*
-Clean-param: sort, order /albums
+Clean-param: sort&order /albums
 Host: https://buhurt.ru
