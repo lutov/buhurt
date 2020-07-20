@@ -243,6 +243,7 @@ Route::group(array('prefix' => 'search'), function() {
 	Route::get('meme_genre', array('uses' => 'Search\TipsController@meme_genre'));
 
 });
+Route::get('notfound/{id}', function() {return Redirect::to('/');});
 
 // User
 Route::group(array('prefix' => 'user'), function() {
@@ -268,7 +269,7 @@ Route::group(array('prefix' => 'user'), function() {
 	Route::any('change_password', array('uses' => 'User\UserController@change_password'));
 	Route::any('vk_auth', array('uses' => 'User\UserController@vk_auth'));
 
-	Route::get('{id}/', function($id) {return Redirect::to('/user/'.$id.'/profile');});
+	Route::get('{id}', function($id) {return Redirect::to('/user/'.$id.'/profile');});
 	Route::get('{id}/profile', array('uses' => 'User\UserController@view'));
 	Route::any('{id}/rates/{section}', array('uses' => 'User\UserController@rates'));
 	Route::any('{id}/rates/{section}/export', array('uses' => 'User\UserController@rates_export'));

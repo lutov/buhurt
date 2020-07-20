@@ -86,7 +86,7 @@ class SearchController extends Controller {
 								$event->element_id = 1;
 								$event->user_id = $user_id;
 								$event->name = 'Не найдено'; //«'.$search.'»';
-								$event->text = $search_query;
+								$event->text = '<a href="/search?query='.$search_query.'">'.$search_query.'</a>';
 								$event->save();
 
 								if(Auth::check()) {

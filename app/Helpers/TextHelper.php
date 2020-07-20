@@ -141,6 +141,21 @@ class TextHelper {
 
 		$query = strip_tags($query);
 
+        // well, we don't actually filter by section right now, so these are garbage
+        $replace_from = [
+            '/фильм/u',
+            '/книга/u',
+            '/игра/u',
+            '/альбом/u',
+        ];
+        $replace_to = [
+            ' ',
+            ' ',
+            ' ',
+            ' ',
+        ];
+        $query = preg_replace($replace_from, $replace_to, $query);
+
 		$replace_from = [
 			'/-/',
 			'/–/',
