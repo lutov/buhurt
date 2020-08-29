@@ -527,23 +527,17 @@ class UserController extends Controller {
 	public function wanted(Request $request, $id, $section) {
 
 		if(Auth::check() && $id == Auth::user()->id) {
-
 			$user = Auth::user();
-		}
-		else {
-
+		} else {
 			$user = User::find($id);
-
 		}
 
 		if(isset($user->id)) {
 
-			//$section = $this->prefix;
-			$get_section = Section::where('alt_name', '=', $section)->first();
-			$ru_section = $get_section->name;
-			$type = $get_section->type;
+			$ru_section = SectionsHelper::getSectionName($section);
+			$type = SectionsHelper::getSectionType($section);
 
-			$sort = $request->get('sort', $section.'.created_at');
+			$sort = $request->get('sort','created_at');
 			$order = $request->get('order', 'desc');
 			$limit = 28;
 
@@ -558,20 +552,12 @@ class UserController extends Controller {
 			$wanted = Wanted::select('element_id')
 				->where('element_type', '=', $type)
 				->where('user_id', '=', $user_id)
-				//->remember(10)
+                ->orderBy($sort, $order)
 				->pluck('element_id')
 			;
-
-			$elements = $type::orderBy($sort, $order)
-				->with(array('rates' => function($query) use($user_id, $section, $type)
-					{
-						$query
-							->where('user_id', '=', $user_id)
-							->where('element_type', '=', $type)
-						;
-					})
-				)
-				->whereIn($section.'.id', $wanted)
+            $wanted_string = implode(',', $wanted->toArray());
+			$elements = $type::whereIn($section.'.id', $wanted)
+                ->orderBy(DB::raw('FIELD(id, '.$wanted_string.')'))
 				->paginate($limit)
 			;
 
@@ -598,22 +584,17 @@ class UserController extends Controller {
 	public function unwanted(Request $request, $id, $section) {
 
 		if(Auth::check() && $id == Auth::user()->id) {
-
 			$user = Auth::user();
-
 		} else {
-
 			$user = User::find($id);
-
 		}
 
 		if(isset($user->id)) {
 
-			$get_section = Section::where('alt_name', '=', $section)->first();
-			$ru_section = $get_section->name;
-			$type = $get_section->type;
+            $ru_section = SectionsHelper::getSectionName($section);
+            $type = SectionsHelper::getSectionType($section);
 
-			$sort = $request->get('sort', $section.'.created_at');
+			$sort = $request->get('sort', 'created_at');
 			$order = $request->get('order', 'desc');
 			$limit = 28;
 
@@ -628,20 +609,12 @@ class UserController extends Controller {
 			$unwanted = Unwanted::select('element_id')
 				->where('element_type', '=', $type)
 				->where('user_id', '=', $user_id)
-				//->remember(10)
+                ->orderBy($sort, $order)
 				->pluck('element_id')
 			;
-
-			$elements = $type::orderBy($sort, $order)
-				->with(array('rates' => function($query) use($user_id, $section, $type)
-					{
-						$query
-							->where('user_id', '=', $user_id)
-							->where('element_type', '=', $type)
-						;
-					})
-				)
-				->whereIn($section.'.id', $unwanted)
+            $unwanted_string = implode(',', $unwanted->toArray());
+			$elements = $type::whereIn($section.'.id', $unwanted)
+                ->orderBy(DB::raw('FIELD(id, '.$unwanted_string.')'))
 				->paginate($limit)
 			;
 
@@ -649,7 +622,7 @@ class UserController extends Controller {
 				'request' => $request,
 				'user' => $user,
 				'section' => $section,
-				'ru_section' => $section,
+				'ru_section' => $ru_section,
 				'sort_options' => $sort_options,
 				'elements' => $elements
 			));
