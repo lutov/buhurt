@@ -112,7 +112,7 @@ class ElementController extends Controller {
 				$sim_options['element_id'] = $id;
 				$sim_options['type'] = $section->type;
 				$sim_options['genres'] = $genres;
-				$sim_limit = 3;
+				$sim_limit = 4;
 				$minutes = 60;
 				$var_name = $section.'_'.$element->id.'_similar';
 				$similar = Cache::remember($var_name, $minutes, function () use ($sim_options, $sim_limit) {

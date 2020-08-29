@@ -11,7 +11,7 @@
 
 	<div itemscope itemtype="">
 		{!! ElementsHelper::getCardHeader($request, $section->alt_name, $element, $options) !!}
-		<section class="d-none d-md-block mt-3">
+		<section class="d-none d-md-block">
 			{!! Breadcrumbs::render('element', $element) !!}
 		</section>
 		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}

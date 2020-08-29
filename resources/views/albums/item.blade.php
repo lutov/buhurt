@@ -8,17 +8,12 @@
 @section('description'){!! DatatypeHelper::arrayToString($element->bands, ', ', '/bands/', true) !!} — {!! $element->name !!} ({!! $element->year !!})@stop
 
 @section('content')
-
+	{!! Breadcrumbs::render('element', $element) !!}
 	<div itemscope itemtype="http://schema.org/MusicAlbum">
 		{!! ElementsHelper::getCardHeader($request, $section->alt_name, $element, $options) !!}
-		<section class="d-none d-md-block mt-3">
-			{!! Breadcrumbs::render('element', $element) !!}
-		</section>
 		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
 		{!! ElementsHelper::getCardFooter($request, $section->alt_name, $element, $options) !!}
 	</div>
-
 	{!! ElementsHelper::getCardComments($request, $comments, $section->alt_name, $element->id) !!}
 	{!! ElementsHelper::getCardScripts($section->alt_name, $element->id) !!}
-
 @stop
