@@ -1,6 +1,7 @@
 <?php namespace App\Models\Data;
 
 use App\Traits\SectionTrait;
+use App\Traits\WantedTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Person extends Model {
 
 	use SectionTrait;
+    use WantedTrait;
 
 	/**
 	 * The database table used by the model.

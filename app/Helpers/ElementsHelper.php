@@ -481,7 +481,7 @@ class ElementsHelper
                 $element_title .= 'Альманах';
                 $element_title .= '</abbr>';
 
-                $element_title .= '<div class="h4 mt-2 collapse" id="collapseAuthors">';
+                $element_title .= '<div class="h3 mt-2 collapse" id="collapseAuthors">';
                 $element_title .= '<ul class="list-unstyled">';
                 $element_title .= '<li class="mt-2">';
                 $element_title .= implode('</li><li class="mt-2">', $authors);
@@ -511,7 +511,7 @@ class ElementsHelper
             if ($long_name) {
                 $names = $element->alt_name;
 
-                $alt_name .= '<div class="h4 d-none d-md-block" id="buhurt_alt_name">';
+                $alt_name .= '<div class="h3 d-none d-md-block" id="buhurt_alt_name">';
                 $alt_name .= '<ul class="list-unstyled">';
                 $alt_name .= '<li>';
                 $alt_name .= '<abbr title="Альтернативные названия" class="" data-toggle="collapse" data-target="#collapseAltName" aria-expanded="false" aria-controls="collapseAltName" itemprop="alternativeHeadline">';
@@ -526,7 +526,7 @@ class ElementsHelper
                 $alt_name .= '</ul>';
                 $alt_name .= '</div>';
             } else {
-                $alt_name .= '<div class="h4 d-none d-md-block" itemprop="alternativeHeadline" id="buhurt_alt_name">'.$element->alt_name[0].'</div>';
+                $alt_name .= '<div class="h3 d-none d-md-block" itemprop="alternativeHeadline" id="buhurt_alt_name">'.$element->alt_name[0].'</div>';
             }
 
             $element_title .= $alt_name;
@@ -1237,9 +1237,11 @@ class ElementsHelper
      */
     public static function isWanted($element, User $user)
     {
-        return $element->wanted
-            ->where('user_id', $user->id)
-            ->first();
+        if (method_exists($element, 'wanted')) {
+            return $element->wanted
+                ->where('user_id', $user->id)
+                ->first();
+        } else {return false;}
     }
 
     /**
@@ -1249,9 +1251,11 @@ class ElementsHelper
      */
     public static function isUnwanted($element, User $user)
     {
-        return $element->unwanted
-            ->where('user_id', $user->id)
-            ->first();
+        if (method_exists($element, 'wanted')) {
+            return $element->unwanted
+                ->where('user_id', $user->id)
+                ->first();
+        } else {return false;}
     }
 
     /**
