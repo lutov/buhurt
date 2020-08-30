@@ -8,12 +8,5 @@
 @section('description'){!! TextHelper::wordsLimit($element->description, 15) !!}@stop
 
 @section('content')
-	{!! Breadcrumbs::render('element', $element) !!}
-	<div itemscope itemtype="http://schema.org/Game">
-		{!! ElementsHelper::getCardHeader($request, $section->alt_name, $element, $options) !!}
-		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
-		{!! ElementsHelper::getCardFooter($request, $section->alt_name, $element, $options) !!}
-	</div>
-	{!! ElementsHelper::getCardComments($request, $comments, $section->alt_name, $element->id) !!}
-	{!! ElementsHelper::getCardScripts($section->alt_name, $element->id) !!}
+	@include('widgets.item', array('schema' => 'Game'))
 @stop

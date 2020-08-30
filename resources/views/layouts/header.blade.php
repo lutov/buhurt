@@ -18,7 +18,8 @@
 		<link href="/data/vendor/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.css" rel="stylesheet" type="text/css" />
 		<link href="/data/vendor/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.skinFlat.css" rel="stylesheet" type="text/css" />
 		@endif
-		<link href="/data/css/main.min.css" rel="stylesheet" type="text/css" />
+		<!--link href="/data/css/main.min.css" rel="stylesheet" type="text/css" /-->
+		<link href="/data/css/main.css" rel="stylesheet" type="text/css" />
 
 		<script type="text/javascript" src="/data/vendor/jquery/jquery-3.3.1.min.js"></script>
 

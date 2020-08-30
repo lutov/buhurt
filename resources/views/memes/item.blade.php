@@ -8,17 +8,5 @@
 @section('description'){!! TextHelper::wordsLimit($element->description, 15) !!}@stop
 
 @section('content')
-
-	<div itemscope itemtype="">
-		{!! ElementsHelper::getCardHeader($request, $section->alt_name, $element, $options) !!}
-		<section class="d-none d-md-block">
-			{!! Breadcrumbs::render('element', $element) !!}
-		</section>
-		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
-		{!! ElementsHelper::getCardFooter($request, $section->alt_name, $element, $options) !!}
-	</div>
-
-	{!! ElementsHelper::getCardComments($request, $comments, $section->alt_name, $element->id) !!}
-	{!! ElementsHelper::getCardScripts($section->alt_name, $element->id) !!}
-
+	@include('widgets.item', array('schema' => ''))
 @stop
