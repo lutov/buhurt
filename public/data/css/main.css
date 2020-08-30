@@ -179,6 +179,15 @@ M E D I A  Q U E R I E S
     margin: 1.25rem;
 }
 
+.card-header .nav-link.active {
+    border-color: rgba(0,0,0,.125);
+    border-bottom: transparent;
+    background-color: #343a40;
+    color: #fff;
+}
+.card-header .nav-link:hover {
+    border-color: rgba(0,0,0,.125);
+}
 
 .buhurt-cover {
     cursor: zoom-in;
