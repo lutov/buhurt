@@ -20,6 +20,7 @@ use App\Models\User\Unwanted;
 use App\Models\User\User;
 use App\Models\User\Wanted;
 use Collective\Html\FormFacade as Form;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -488,18 +489,14 @@ class ElementsHelper
 
         $element_body .= '<div class="row">';
 
-            $element_body .= '<div class="col-lg-3 col-md-4 col-12 mb-4">';
-                $element_body .= '<div class="card bg-dark text-white">';
-                    $cover = self::getCover($section, $element->id);
-                    $element_body .= '<img itemprop="image" src="'.$cover.'" alt="'.$element->name.'" class="card-img-top buhurt-cover" />';
-                    if (Auth::check()) {
-                        $user = Auth::user();
-                        $element_body .= '<div class="card-footer text-center d-none d-xl-block">';
-                        $element_body .= self::getControls($section, $element, $user, $isAdmin);
-                        $element_body .= '</div>';
-                    }
-                $element_body .= '</div>';
-            $element_body .= '</div>';
+        $element_body .= view('widgets.item-image-card', array(
+            'section' => $section,
+            'element' => $element,
+            'cover' => self::getCover($section, $element->id),
+            'isAdmin' => $isAdmin,
+            'isWanted' => ((Auth::check()) ? (self::isWanted($element, Auth::user())) : false),
+            'isUnwanted' => ((Auth::check()) ? (self::isUnwanted($element, Auth::user())) : false),
+        ));
 
             /* DETAIL */
             $element_body .= '<div class="col-lg-9 col-md-8 col-12" id="elementDetails">';
@@ -1136,7 +1133,7 @@ class ElementsHelper
 
     /**
      * @param $element
-     * @param  User  $user
+     * @param User|Authenticatable $user
      * @return mixed
      */
     public static function isWanted($element, User $user)
@@ -1150,7 +1147,7 @@ class ElementsHelper
 
     /**
      * @param $element
-     * @param  User  $user
+     * @param User|Authenticatable $user
      * @return mixed
      */
     public static function isUnwanted($element, User $user)

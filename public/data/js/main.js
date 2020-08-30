@@ -146,13 +146,18 @@ function unset_wanted(section, id, like_class, liked_class) {
 
 }
 
-function set_unwanted(section, id) {
+/**
+ *
+ * @param section
+ * @param id
+ * @param like_class
+ * @param liked_class
+ */
+function set_unwanted(section, id, like_class, liked_class) {
 
     var do_not_want = $('#not_want_'+id);
-    var dislike_class = 'btn-outline-danger';
-    var disliked_class = 'btn-danger';
 
-    if(do_not_want.hasClass(dislike_class)) {
+    if(do_not_want.hasClass(like_class)) {
 
         var path = '/set_unwanted/'+section+'/'+id;
         $.post(
@@ -160,8 +165,8 @@ function set_unwanted(section, id) {
             {},
             function(data) {
 
-                do_not_want.removeClass(dislike_class);
-                do_not_want.addClass(disliked_class);
+                do_not_want.removeClass(like_class);
+                do_not_want.addClass(liked_class);
                 //console.log(data);
                 showToast(data);
 
@@ -172,13 +177,18 @@ function set_unwanted(section, id) {
 
 }
 
-function unset_unwanted(section, id) {
+/**
+ *
+ * @param section
+ * @param id
+ * @param like_class
+ * @param liked_class
+ */
+function unset_unwanted(section, id, like_class, liked_class) {
 
     var do_not_want = $('#not_want_'+id);
-    var dislike_class = 'btn-outline-danger';
-    var disliked_class = 'btn-danger';
 
-    if(do_not_want.hasClass(disliked_class)) {
+    if(do_not_want.hasClass(liked_class)) {
 
         var path = '/unset_unwanted/'+section+'/'+id;
         $.post(
@@ -186,8 +196,8 @@ function unset_unwanted(section, id) {
             {},
             function(data) {
 
-                do_not_want.removeClass(disliked_class);
-                do_not_want.addClass(dislike_class);
+                do_not_want.removeClass(liked_class);
+                do_not_want.addClass(like_class);
                 //console.log(data);
                 showToast(data);
 
