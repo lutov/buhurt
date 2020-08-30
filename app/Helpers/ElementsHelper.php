@@ -463,110 +463,14 @@ class ElementsHelper
      */
     public static function getCardHeader(Request $request, string $section, $element, array $info = array())
     {
-        $element_title = '';
-
-        $element_title .= '<div class="card bg-dark text-white text-center mb-4">';
-
-        $element_title .= '<div class="card-header">';
-
-        if ($element->writers) {
-            $writers = DatatypeHelper::arrayToString($element->writers, ', ', '/persons/', false, 'author');
-
-            $many_authors = (2 < mb_substr_count($writers, ', ')) ? true : false;
-
-            if ($many_authors) {
-                $authors = explode(', ', $writers);
-
-                $element_title .= '<abbr title="Произведения разных авторов" class="h2" data-toggle="collapse" data-target="#collapseAuthors" aria-expanded="false" aria-controls="collapseAuthors">';
-                $element_title .= 'Альманах';
-                $element_title .= '</abbr>';
-
-                $element_title .= '<div class="h3 mt-2 collapse" id="collapseAuthors">';
-                $element_title .= '<ul class="list-unstyled">';
-                $element_title .= '<li class="mt-2">';
-                $element_title .= implode('</li><li class="mt-2">', $authors);
-                $element_title .= '</li>';
-                $element_title .= '</ul>';
-                $element_title .= '</div>';
-            } else {
-                $element_title .= '<div class="h2">';
-                $element_title .= $writers;
-                $element_title .= '</div>';
-            }
-        }
-
-        if ($element->bands) {
-            $element_title .= '<div class="h2 card-subtitle">';
-            $element_title .= DatatypeHelper::arrayToString($element->bands, ', ', '/bands/');
-            $element_title .= '</div>';
-        }
-
-        $element_title .= '<h1 itemprop="name" id="buhurt_name" class="card-title">'.$element->name.'</h1>';
-
-        if (!empty($element->alt_name)) {
-            $alt_name = '';
-
-            $long_name = (1 < count($element->alt_name)) ? true : false;
-
-            if ($long_name) {
-                $names = $element->alt_name;
-
-                $alt_name .= '<div class="h3 d-none d-md-block" id="buhurt_alt_name">';
-                $alt_name .= '<ul class="list-unstyled">';
-                $alt_name .= '<li>';
-                $alt_name .= '<abbr title="Альтернативные названия" class="" data-toggle="collapse" data-target="#collapseAltName" aria-expanded="false" aria-controls="collapseAltName" itemprop="alternativeHeadline">';
-                $alt_name .= array_shift($names);
-                $alt_name .= '</abbr>';
-                $alt_name .= '</li>';
-                $alt_name .= '<div class="collapse" id="collapseAltName">';
-                $alt_name .= '<li itemprop="alternativeHeadline">';
-                $alt_name .= implode('</li><li itemprop="alternativeHeadline">', $names);
-                $alt_name .= '</li>';
-                $alt_name .= '</div>';
-                $alt_name .= '</ul>';
-                $alt_name .= '</div>';
-            } else {
-                $alt_name .= '<div class="h3 d-none d-md-block" itemprop="alternativeHeadline" id="buhurt_alt_name">'.$element->alt_name[0].'</div>';
-            }
-
-            $element_title .= $alt_name;
-        }
-
-        $element_title .= '</div>';
-
-        $element_title .= '<div class="card-body text-center overflow-auto">';
-            if (Auth::check()) {
-                $user = Auth::user();
-                $rate = self::getRate($element, $user);
-                $element_title .= '<input class="main_rating" name="val" value="'.$rate.'" type="text">';
-            } else {
-                $element_title .= DummyHelper::regToRate();
-            }
-        $element_title .= '</div>';
-
-        $rating = self::countRating($element);
-        if ($rating['count']) {
-            $element_title .= '<div class="card-footer">';
-                $element_title .= '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="small" style="opacity: .5;">';
-                    $element_title .= '<meta itemprop="worstRating" content = "1">';
-                    $element_title .= 'Средняя оценка: <b itemprop="ratingValue">'.$rating['average'].'</b>';
-                    $element_title .= '<meta itemprop="bestRating" content = "10">';
-                    $element_title .= ', ';
-                    $element_title .= TextHelper::ratingCount($rating['count'], array('голос', 'голоса', 'голосов'));
-                    if (0 != $element->comments->count()) {
-                        $element_title .= ', ';
-                        $element_title .= TextHelper::reviewCount(
-                            $element->comments->count(),
-                            array('комментарий', 'комментария', 'комментариев')
-                        );
-                    }
-                $element_title .= '</div>';
-            $element_title .= '</div>';
-        }
-
-        $element_title .= '</div>';
-
-        return $element_title;
+        return view('widgets.item-header', array(
+            'request' => $request,
+            'section' => $section,
+            'element' => $element,
+            'info' => $info,
+            'rate' => ((Auth::check()) ? (self::getRate($element, Auth::user())) : 0),
+            'rating' => self::countRating($element),
+        ));
     }
 
     /**

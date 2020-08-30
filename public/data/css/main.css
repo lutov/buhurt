@@ -1,6 +1,93 @@
+/*
+####################################################
+M E D I A  Q U E R I E S
+####################################################
+*/
+
+/*
+::::::::::::::::::::::::::::::::::::::::::::::::::::
+Bootstrap 4 breakpoints
+*/
+
+/*
+Extra small devices (portrait phones, less than 576px)
+No media query since this is the default in Bootstrap because it is "mobile first"
+*/
+.container {
+    font-size: .75rem;
+}
+
 .container a {
     color: #a2dffb;
 }
+
+.container h1, .container .h1 {
+    font-size: 1.25rem;
+}
+.container h2, .container .h2 {
+    font-size: 1.10rem;
+}
+.container h3, .container .h3 {
+    font-size: 1rem;
+}
+
+.rating-container .star {
+    font-size: 1.75rem;
+}
+.rating-container .clear-rating {
+    font-size: 1.25rem;
+}
+.fast_rating_block .rating-xs .star {
+    font-size: 1.25rem;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+
+}
+
+/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+@media (min-width: 768px) {
+
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .container {
+        font-size: 1rem;
+    }
+
+    .container h1, .container .h1 {
+        font-size: 2rem;
+    }
+    .container h2, .container .h2 {
+        font-size: 1.5rem;
+    }
+    .container h3, .container .h3 {
+        font-size: 1.25rem;
+    }
+
+    .rating-container .star {
+        font-size: 2rem;
+    }
+    .rating-container .clear-rating {
+        font-size: 1.5rem;
+    }
+    .fast_rating_block .rating-xs .star {
+        font-size: 1.5rem;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+
+}
+
+/*
+####################################################
+M E D I A  Q U E R I E S
+####################################################
+*/
 
 /* RATING */
 .rating-container {
@@ -23,13 +110,11 @@
 }
 .rating-container .star {
     color: #fff;
-    font-size: 2.5rem;
     user-select: none;
     margin: unset;
 }
 .rating-container .clear-rating {
     color: #fff;
-    font-size: 1.5rem;
     opacity: .5;
     user-select: none;
 }
@@ -48,9 +133,6 @@
 }
 .fast_rating_block .rating-container {
     display: block;
-}
-.fast_rating_block .rating-xs .star {
-    font-size: 1.5rem;
 }
 /* RATING */
 
