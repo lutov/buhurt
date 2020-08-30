@@ -162,56 +162,14 @@ class ElementsHelper
      */
     public static function getControls(string $section, $element, $user, bool $isAdmin = false)
     {
-        $elements_list = '';
-
-        $elements_list .= '<div>';
-        $elements_list .= '<div class="btn-group">';
-
-        $link = $section.'/'.$element->id;
-        $call = "'".$section."', '".$element->id."'";
-        $b_class = 'btn btn-sm';
-
-        if ($isAdmin) {
-            $elements_list .= '<a role="button" class="'.$b_class.' btn-secondary" href="/admin/edit/'.$link.'" title="Редактировать">';
-            $elements_list .= '&#9998;';
-            $elements_list .= '</a>';
-        }
-
-        if (method_exists($element, 'wanted')) {
-            if (self::isWanted($element, $user)) {
-                $class = ' btn-light';
-                $handler = 'unset_wanted('.$call.')';
-            } else {
-                $class = ' btn-secondary';
-                $handler = 'set_wanted('.$call.')';
-            }
-            $elements_list .= '<button type="button" class="'.$b_class.$class.'" onclick="'.$handler.'" id="want_'.$element->id.'" title="Хочу">';
-            $elements_list .= '&#10084;';
-            $elements_list .= '</button>';
-
-            if (self::isUnwanted($element, $user)) {
-                $class = ' btn-light';
-                $handler = 'unset_unwanted('.$call.')';
-            } else {
-                $class = ' btn-secondary';
-                $handler = 'set_unwanted('.$call.')';
-            }
-            $elements_list .= '<button type="button" class="'.$b_class.$class.'" onclick="'.$handler.'" id="not_want_'.$element->id.'" title="Не хочу">';
-            $elements_list .= '&#9785;';
-            $elements_list .= '</button>';
-        }
-
-        if ($isAdmin) {
-            $elements_list .= '<a role="button" class="'.$b_class.' btn-secondary" href="/admin/delete/'.$link.'"';
-            $elements_list .= ' onclick="return window.confirm(\'Удалить?\');" title="Удалить">';
-            $elements_list .= '&#10006;';
-            $elements_list .= '</a>';
-        }
-
-        $elements_list .= '</div>';
-        $elements_list .= '</div>';
-
-        return $elements_list;
+        return view('widgets.card-controls', array(
+            'section' => $section,
+            'element' => $element,
+            'user' => $user,
+            'isAdmin' => $isAdmin,
+            'isWanted' => self::isWanted($element, $user),
+            'isUnwanted' => self::isUnwanted($element, $user),
+        ));
     }
 
     /**

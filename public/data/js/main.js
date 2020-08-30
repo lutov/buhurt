@@ -84,11 +84,16 @@ $(function() {
 
 });
 
-function set_wanted(section, id) {
+/**
+ *
+ * @param section
+ * @param id
+ * @param like_class
+ * @param liked_class
+ */
+function set_wanted(section, id, like_class, liked_class) {
 
     var do_want = $('#want_'+id);
-    var like_class = 'btn-outline-success';
-    var liked_class = 'btn-success';
 
     if(do_want.hasClass(like_class)) {
 
@@ -110,11 +115,16 @@ function set_wanted(section, id) {
 
 }
 
-function unset_wanted(section, id) {
+/**
+ *
+ * @param section
+ * @param id
+ * @param like_class
+ * @param liked_class
+ */
+function unset_wanted(section, id, like_class, liked_class) {
 
     var do_want = $('#want_'+id);
-    var like_class = 'btn-outline-success';
-    var liked_class = 'btn-success';
 
     if(do_want.hasClass(liked_class)) {
 

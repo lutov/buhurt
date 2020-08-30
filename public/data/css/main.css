@@ -93,8 +93,8 @@
     background: none;
 }
 .card-body.small {
-    padding-top: .75rem !important;
-    padding-bottom: .75rem !important;
+    padding: 0;
+    margin: 1.25rem;
 }
 
 
