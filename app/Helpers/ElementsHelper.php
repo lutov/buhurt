@@ -656,49 +656,27 @@ class ElementsHelper
 
         $file_path = public_path().'/data/img/avatars/'.$user_id.'.jpg';
 
-        $elements_text .= '<div class="container-fluid border bg-light mt-3" id="element_'.$element->id.'">';
+        $elements_text .= '<div class="card bg-dark text-white mt-3" id="element_'.$element->id.'">';
 
-        $elements_text .= '<div class="row mt-3 mb-3">';
+        $elements_text .= '<div class="card-header">';
+        $elements_text .= '<a href="/'.$section.'/'.$element->element_id.'">';
+        $elements_text .= $element->name;
+        $elements_text .= '</a>';
+        $elements_text .= '</div>';
 
-        $elements_text .= '<div class="col-md-6">';
+        $elements_text .= '<div class="card-body" id="element_'.$element->id.'_text">';
+        if (!empty($element->text)) {
+            $elements_text .= '<p class="card-text">';
+            $elements_text .= nl2br($element->text);
+            $elements_text .= '</p>';
+        }
+        $elements_text .= '</div>';
+
+        $elements_text .= '<div class="card-footer small text-muted">';
 
         $elements_text .= '<a href="/user/'.$user_id.'/profile">'.$user->username.'</a>';
         $elements_text .= ', ';
         $elements_text .= LocalizedCarbon::instance($element->created_at)->diffForHumans();
-
-        $elements_text .= '</div>';
-
-        $elements_text .= '</div>';
-
-        $elements_text .= '<div class="row mt-3 mb-3">';
-
-        $elements_text .= '<div class="col-lg-1 d-none d-lg-block">';
-
-        if (file_exists($file_path)) {
-            $elements_text .= '<a href="/user/'.$user_id.'/profile"><img src="/data/img/avatars/'.$user_id.'.jpg" width="" alt="" class="img-fluid border" /></a>';
-        }
-
-        $elements_text .= '</div>';
-
-        $elements_text .= '<div class="col-12 col-lg-11">';
-
-        $elements_text .= '<div class="p-3 bg-white border" id="element_'.$element->id.'_text">';
-
-        $elements_text .= '<p>';
-        $elements_text .= '<a href="/'.$section.'/'.$element->element_id.'">';
-        $elements_text .= $element->name;
-        $elements_text .= '</a>';
-        $elements_text .= '</p>';
-
-        if (!empty($element->text)) {
-            $elements_text .= '<p>';
-            $elements_text .= nl2br($element->text);
-            $elements_text .= '</p>';
-        }
-
-        $elements_text .= '</div>';
-
-        $elements_text .= '</div>';
 
         $elements_text .= '</div>';
 
