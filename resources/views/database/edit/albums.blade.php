@@ -71,7 +71,7 @@
 
             <div class="col-md-3">
 
-                <div class="card">
+                <div class="card bg-dark text-white">
                     <img class="card-img-top" src="{!! ElementsHelper::getCover($section, $element->id) !!}" alt="">
                     <div class="card-body text-center">
                         <p class="card-text">Дополнительная информация</p>
@@ -90,7 +90,7 @@
                     </div>
                 </div>
 
-                <div class="card mt-3">
+                <div class="card bg-dark text-white mt-3">
                     <div class="card-header" data-toggle="collapse" data-target="#albums_genres_container" aria-expanded="false" aria-controls="albums_genres_container">
                         Жанры музыки
                     </div>
@@ -99,7 +99,7 @@
                     </div>
                 </div>
 
-                <div class="card mt-3">
+                <div class="card bg-dark text-white mt-3">
                     <div class="card-header" data-toggle="collapse" data-target="#collections_list_container" aria-expanded="false" aria-controls="collections_list_container">
                         Коллекции
                     </div>
@@ -108,7 +108,7 @@
                     </div>
                 </div>
 
-                <div class="card mt-3">
+                <div class="card bg-dark text-white mt-3">
 
                     <div id="transfer" class="card-body text-center">
 
