@@ -179,6 +179,10 @@ M E D I A  Q U E R I E S
     margin: 1.25rem;
 }
 
+.card-header .nav-tabs {
+    border-bottom: 0;
+}
+
 .card-header .nav-link.active {
     border-color: rgba(0,0,0,.125);
     border-bottom: transparent;
@@ -219,6 +223,7 @@ M E D I A  Q U E R I E S
 
 .ui-autocomplete>li {
     padding: 3px 12px;
+    color: rgba(0,0,0,.9);
 }
 
 .ui-autocomplete>li.ui-state-focus, .ui-autocomplete>li:hover {
