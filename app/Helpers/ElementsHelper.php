@@ -51,45 +51,17 @@ class ElementsHelper
      */
     public static function getSort(array $sort_options, string $sort, string $order, int $page = 1)
     {
-        $elements_list = '';
-
-        if (!empty($sort_options)) {
-            $sort_direction = self::getSortDirection();
-
-            $elements_list .= '<noindex><!--noindex-->';
-
-            $elements_list .= Form::open(array('class' => 'sort', 'method' => 'GET'));
-
-            $elements_list .= '<div class="input-group input-group-sm mb-3">';
-
-            //$elements_list .= Form::hidden('view', $request->get('view', 'plates'));
-            $elements_list .= Form::select(
-                'sort',
-                $sort_options,
-                $sort,
-                array('class' => 'custom-select', 'autocomplete' => 'off')
-            );
-            $elements_list .= Form::select(
-                'order',
-                $sort_direction,
-                $order,
-                array('class' => 'custom-select', 'autocomplete' => 'off')
-            );
-
-            $elements_list .= Form::hidden('page', $page);
-
-            $elements_list .= '<div class="input-group-append">';
-            $elements_list .= Form::submit('Сортировать', array('class' => 'btn btn-secondary'));
-            $elements_list .= '</div>';
-
-            $elements_list .= Form::close();
-
-            $elements_list .= '</div>';
-
-            $elements_list .= '<!--/noindex--></noindex>';
-        }
-
-        return $elements_list;
+        $sort_direction = self::getSortDirection();
+        return view(
+            'widgets.item-sort',
+            array(
+                'sort_options' => $sort_options,
+                'sort' => $sort,
+                'order' => $order,
+                'page' => $page,
+                'sort_direction' => $sort_direction,
+            )
+        );
     }
 
     /**
@@ -105,7 +77,7 @@ class ElementsHelper
 
         $elements_list .= self::getSort($options['sort_options'], $options['sort'], $options['order'], $page);
 
-        $elements_list .= '<div class="album">';
+        $elements_list .= '<div class="album mt-4">';
         $elements_list .= '<div class="row">';
 
         return $elements_list;
