@@ -248,6 +248,41 @@ M E D I A  Q U E R I E S
     border: 1px solid rgba(0,0,0,.125);
 }
 
+/* PAGINATION */
+.pagination, .pagination a {
+    color: #fff;
+}
+.page-link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #fff;
+    background-color: #343a40;
+    border: 1px solid rgba(0,0,0,.125);
+}
+.page-item.disabled .page-link {
+    color: #5a6268;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #343a40;
+    border-color: rgba(0,0,0,.125);
+}
+.page-item.active .page-link {
+    z-index: 1;
+    color: #5a6268;
+    background-color: #f8f9fa;
+    border-color: #f8f9fa;
+}
+.page-link:focus, .page-link:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: #5a6268;
+    border-color: #5a6268;
+}
+/* PAGINATION */
+
 .anchor_list {
     text-transform: capitalize;
 }

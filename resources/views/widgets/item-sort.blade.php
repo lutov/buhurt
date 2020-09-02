@@ -1,3 +1,4 @@
+@if(!empty($sort_options))
 <noindex><!--noindex-->
     <div class="card bg-dark mt-4">
         <div class="card-body">
@@ -14,3 +15,4 @@
         </div>
     </div>
 <!--/noindex--></noindex>
+@endif
