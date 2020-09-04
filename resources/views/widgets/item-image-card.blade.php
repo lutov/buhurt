@@ -3,13 +3,7 @@
         <img itemprop="image" src="{!! $cover !!}" alt="{!! $element->name !!}" class="card-img-top buhurt-cover" />
         @if (Auth::check())
             <div class="card-footer text-center d-none d-xl-block">
-                {!! view('widgets.card-controls', array(
-                    'section' => $section,
-                    'element' => $element,
-                    'isAdmin' => $isAdmin,
-                    'isWanted' => $isWanted,
-                    'isUnwanted' => $isUnwanted,
-                )); !!}
+                @include('widgets.card-controls')
             </div>
         @endif
     </div>
