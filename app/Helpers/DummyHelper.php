@@ -92,8 +92,6 @@ class DummyHelper {
 	 */
 	public static function getExtLink($site, $name) {
 
-		$link = '';
-
 		switch($site) {
 
 			case 'kinopoisk':
@@ -195,9 +193,15 @@ class DummyHelper {
 
 		}
 
-		$link .= '<a href="'.$protocol.'://'.$url.'?'.$query.'='.urlencode($name).'" target="'.$target.'" role="button" class="btn btn-sm btn-outline-primary">'.$site_name.'</a>';
-
-		return $link;
+		return view('widgets.external-link', array(
+            'site' => $site,
+            'name' => $name,
+            'protocol' => $protocol,
+            'url' => $url,
+            'query' => $query,
+            'target' => $target,
+            'site_name' => $site_name,
+        ));
 
 	}
 
