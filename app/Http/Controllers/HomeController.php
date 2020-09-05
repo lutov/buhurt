@@ -48,6 +48,7 @@ class HomeController extends Controller {
 			$unwanted = ElementsHelper::getUnwanted($section, $user->id, $cache);
 			$films = $this->getUserElements($section, $user, $unwanted, $sort_options, $cache);
 
+            $sort_options['limit'] = 7;
 			$section = SectionsHelper::getSection('games');
 			$unwanted = ElementsHelper::getUnwanted($section, $user->id, $cache);
 			$games = $this->getUserElements($section, $user, $unwanted, $sort_options, $cache);
