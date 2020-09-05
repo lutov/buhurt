@@ -2,7 +2,7 @@
 
 <div class="row">
 	<div class="col-4 col-md-4">
-		<div class="card bg-dark text-white small">
+		<div class="card @include('widgets.card-class') small">
 			<div class="card-header"><a href="/q_add/books/?new_name={!! urlencode($search) !!}">Книгу</a></div>
 			<ul class="list-group list-group-flush">
 				<li class="list-group-item">
@@ -69,7 +69,7 @@
 		</div>
 	</div>
 	<div class="col-4 col-md-4">
-		<div class="card bg-dark text-white small">
+		<div class="card @include('widgets.card-class') small">
 			<div class="card-header"><a href="/q_add/films/?new_name={!! urlencode($search) !!}">Фильм</a></div>
 			<ul class="list-group list-group-flush">
 				<li class="list-group-item">
@@ -156,7 +156,7 @@
 		</div>
 	</div>
 	<div class="col-4 col-md-4">
-		<div class="card bg-dark text-white small">
+		<div class="card @include('widgets.card-class') small">
 			<div class="card-header"><a href="/q_add/games/?new_name={!! urlencode($search) !!}">Игру</a></div>
 			<ul class="list-group list-group-flush">
 				<li class="list-group-item">
@@ -186,7 +186,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="card bg-dark text-white small mt-4">
+		<div class="card @include('widgets.card-class') small mt-4">
 			<div class="card-header"><a href="/q_add/albums/?new_name={!! urlencode($search) !!}">Альбом</a></div>
 			<ul class="list-group list-group-flush">
 				<li class="list-group-item">
@@ -212,7 +212,7 @@
 			</ul>
 		</div>
 		@if($isAdmin)
-			<div class="card bg-dark text-white small mt-4">
+			<div class="card @include('widgets.card-class') mt-4">
 				<div class="card-header"><a href="/q_add/memes/?new_name={!! urlencode($search) !!}">Мем</a></div>
 			</div>
 		@endif

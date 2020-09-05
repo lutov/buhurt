@@ -1,80 +1,65 @@
+@php
+    /** @var $element */
+    $bands = view('widgets.string-collection-names', array('collection' => $element->bands, 'delimiter' => '; ', 'no_quotes' => true));
+    $genres = view('widgets.string-collection-names', array('collection' => $element->genres, 'delimiter' => '; ', 'no_quotes' => true));
+    $collections = view('widgets.string-collection-names', array('collection' => $element->collections, 'delimiter' => '; ', 'no_quotes' => true));
+@endphp
 @extends('layouts.default')
-
 @section('title'){!! $element->name !!}@stop
-
-@section('subtitle')Редактировать элемент@stop
-
+@section('subtitle') Редактировать @stop
 @section('content')
-
-    <section class="text-center">
-        <h1 class="mt-5">@yield('title')</h1>
-        <h2 class="mb-3">@yield('subtitle')</h2>
-    </section>
-
     @if(Auth::check())
-
         @if(count($errors))
-
             <div class="row mt-5">
-
                 <div class="col-md-12">
-
                     @foreach ($errors->all() as $error)
                         <p>{!! $error !!}</p>
                     @endforeach
-
                 </div>
-
             </div>
-
         @endif
-
         <div class="row mt-5">
-
             <div class="col-md-9">
-
-                {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_album', 'method' => 'POST', 'files' => true)) !!}
-                {!! Form::hidden('action', $value = 'edit') !!}
-                {!! Form::hidden('section', $value = 'albums') !!}
-                {!! Form::hidden('element_id', $value = $element->id) !!}
-                <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название альбома', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
-                <p>{!! Form::text('bands', $value = DatatypeHelper::objectToJsArray($element->bands, '; ', true), $attributes = array('placeholder' => 'Авторы и исполнители', 'class' => 'form-control w-100', 'id' => 'bands')) !!}</p>
-
-                <ol id="tracks">
-					<?php
-
-					//echo DebugHelper::dump($element->tracks(), 1);
-					//echo '<pre>'.print_r($element->tracks, 1).'</pre>';
-
-					$track_list = $element->tracks()->orderBy('order')->get();
-					$tracks = '';
-					foreach($track_list as $key => $value) {
-
-						$tracks .= '<li><input type="text" class="form-control w-100 mb-3" name="tracks[]" placeholder="Трек" value="'.$value->name.'" /></li>';
-
-					}
-					echo $tracks;
-
-					?>
-                </ol>
-                <p><input type="button" class="btn btn-secondary" value="Добавить трек" onclick="add_track()"></p>
-
-                <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'description')) !!}</p>
-                <p>{!! Form::text('genres', $value = DatatypeHelper::objectToJsArray($element->genres, '; ', true), $attributes = array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genres')) !!}</p>
-                <p>{!! Form::text('year', $value = $element->year, $attributes = array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
-                <p>{!! Form::text('collections', $value = DatatypeHelper::collectionToString($element->collections, 'collection', '; ', '', true), $attributes = array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
-                <p><b>Обложка</b> {!! Form::file('cover'); !!}</p>
-                {!! Form::submit('Сохранить', $attributes = array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
-                {!! Form::close() !!}
-
+                <div class="card @include('widgets.card-class')">
+                    {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_album', 'method' => 'POST', 'files' => true)) !!}
+                    <div class="card-header">
+                        <h1 class="card-title">@yield('title')</h1>
+                        <h2 class="card-subtitle mb-2 text-muted">@yield('subtitle')</h2>
+                        {!! Form::hidden('action', 'edit') !!}
+                        {!! Form::hidden('section', 'albums') !!}
+                        {!! Form::hidden('element_id', $element->id) !!}
+                    </div>
+                    <div class="card-body">
+                        <p>{!! Form::text('name', $element->name, array('placeholder' => 'Название альбома', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
+                        <p>{!! Form::text('bands', $bands, array('placeholder' => 'Авторы и исполнители', 'class' => 'form-control w-100', 'id' => 'bands')) !!}</p>
+                        <ol id="tracks">
+                            @php
+                                /** @var $element */
+                                $track_list = $element->tracks()->orderBy('order')->get();
+                            @endphp
+                            @foreach($track_list as $key => $track)
+                                <li>
+                                    <input type="text" class="form-control w-100 mb-3" name="tracks[]" placeholder="Трек" value="{!! $track->name !!}" />
+                                </li>
+                            @endforeach
+                        </ol>
+                        <p><input type="button" class="btn btn-secondary" value="Добавить трек" onclick="add_track()"></p>
+                        <p>{!! Form::textarea('description', $element->description, array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'description')) !!}</p>
+                        <p>{!! Form::text('genres', $genres, array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genres')) !!}</p>
+                        <p>{!! Form::text('year', $element->year, array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
+                        <p>{!! Form::text('collections', $collections, array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
+                        <b>Обложка</b> {!! Form::file('cover'); !!}
+                    </div>
+                    <div class="card-footer">
+                        {!! Form::submit('Сохранить', array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
             </div>
-
             <div class="col-md-3">
-
-                <div class="card bg-dark text-white">
+                <div class="card @include('widgets.card-class')">
                     <img class="card-img-top" src="{!! ElementsHelper::getCover($section, $element->id) !!}" alt="">
                     <div class="card-body text-center">
-                        <p class="card-text">Дополнительная информация</p>
                         <div class="btn-group">
                             {!! DummyHelper::getExtLink('wiki', $element->name); !!}
                             {!! DummyHelper::getExtLink('wiki_en', $element->name); !!}
@@ -88,69 +73,26 @@
                             {!! DummyHelper::getExtLink('yandex_images_square', $element->name); !!}
                         </div>
                     </div>
-                </div>
-
-                <div class="card bg-dark text-white mt-3">
                     <div class="card-header" data-toggle="collapse" data-target="#albums_genres_container" aria-expanded="false" aria-controls="albums_genres_container">
                         Жанры музыки
                     </div>
                     <div class="collapse" id="albums_genres_container">
-                        {!! DatatypeHelper::objectToList(ElementsHelper::getGenres($section), 'genres_list') !!}
+                        @include('widgets.list-collection-names', array('id' => 'genres_list', 'collection' => ElementsHelper::getGenres($section)))
                     </div>
-                </div>
-
-                <div class="card bg-dark text-white mt-3">
                     <div class="card-header" data-toggle="collapse" data-target="#collections_list_container" aria-expanded="false" aria-controls="collections_list_container">
                         Коллекции
                     </div>
                     <div class="collapse" id="collections_list_container">
-                        {!! DatatypeHelper::objectToList(ElementsHelper::getCollections(), 'collections_list') !!}
+                        @include('widgets.list-collection-names', array('id' => 'collections_list', 'collection' => ElementsHelper::getCollections()))
+                    </div>
+                    <div id="transfer" class="card-footer text-center">
+                        @include('widgets.card-transfer', array('controller' => 'AlbumsController', 'element' => $element))
                     </div>
                 </div>
-
-                <div class="card bg-dark text-white mt-3">
-
-                    <div id="transfer" class="card-body text-center">
-
-                        {!! Form::open(array(
-                            'action' => array(
-                                'Data\AlbumsController@transfer', $element->id),
-                                'class' => 'transfer',
-                                'method' => 'POST',
-                                'files' => false
-                            )
-                        ) !!}
-
-                        <div>
-                            {!! Form::text('recipient_id', $value = '', $attributes = array(
-                                'placeholder' => 'Преемник',
-                                'id' => 'recipient',
-                                'class' => 'form-control'
-                            )) !!}
-                        </div>
-
-                        <div class="btn-group mt-3">
-                            {!! Form::submit('Перенести', $attributes = array(
-                                'id' => 'do_transfer',
-                                'type' => 'button',
-                                'class' => 'btn btn-sm btn-outline-primary'
-                            )) !!}
-                        </div>
-
-                        {!! Form::close() !!}
-
-                    </div>
-
-                </div>
-
             </div>
-
         </div>
-
         <script type="text/javascript" src="/data/js/admin/albums.js"></script>
-
     @else
         {!! DummyHelper::regToAdd() !!}
     @endif
-
 @stop

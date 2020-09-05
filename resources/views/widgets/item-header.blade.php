@@ -1,4 +1,4 @@
-<div class="card bg-dark text-white text-center mb-4">
+<div class="card @include('widgets.card-class') text-center mb-4">
 
     <div class="card-header">
         @if($element->writers)

@@ -171,7 +171,7 @@ M E D I A  Q U E R I E S
     display: block;
     padding-top: 100%; 	/* initial ratio of 1:1*/
 }
-.card .list-group-item {
+.card .tab-pane .list-group-item {
     background: none;
 }
 .card-body.small {

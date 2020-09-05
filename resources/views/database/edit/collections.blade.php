@@ -1,56 +1,43 @@
 @extends('layouts.default')
-
 @section('title'){!! $element->name !!}@stop
-
-@section('subtitle')Редактировать элемент@stop
-
+@section('subtitle') Редактировать @stop
 @section('content')
-
-    <section class="text-center">
-        <h1 class="mt-5">@yield('title')</h1>
-        <h2 class="mb-3">@yield('subtitle')</h2>
-    </section>
-
     @if(Auth::check())
-
         @if(count($errors))
-
             <div class="row mt-5">
-
                 <div class="col-md-12">
-
                     @foreach ($errors->all() as $error)
                         <p>{!! $error !!}</p>
                     @endforeach
-
                 </div>
-
             </div>
-
         @endif
-
         <div class="row mt-5">
-
             <div class="col-md-9">
-
-                {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_company', 'method' => 'POST', 'files' => true)) !!}
-                {!! Form::hidden('action', $value = 'edit') !!}
-                {!! Form::hidden('section', $value = 'collections') !!}
-                {!! Form::hidden('element_id', $value = $element->id) !!}
-                <p>{!! Form::text('name', $value = $element->name, $attributes = array('placeholder' => 'Название', 'id' => 'game_name', 'class' => 'form-control w-100')) !!}</p>
-                <p>{!! Form::textarea('description', $value = $element->description, $attributes = array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'game_description')) !!}</p>
-                <p><b>Обложка</b> {!! Form::file('cover'); !!}</p>
-                {!! Form::submit('Сохранить', $attributes = array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
-                {!! Form::close() !!}
-
+                <div class="card @include('widgets.card-class')">
+                    {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_company', 'method' => 'POST', 'files' => true)) !!}
+                    <div class="card-header">
+                        <h1 class="card-title">@yield('title')</h1>
+                        <h2 class="card-subtitle mb-2 text-muted">@yield('subtitle')</h2>
+                        {!! Form::hidden('action', 'edit') !!}
+                        {!! Form::hidden('section', 'collections') !!}
+                        {!! Form::hidden('element_id', $element->id) !!}
+                    </div>
+                    <div class="card-body">
+                        <p>{!! Form::text('name', $element->name, array('placeholder' => 'Название', 'id' => 'game_name', 'class' => 'form-control w-100')) !!}</p>
+                        <p>{!! Form::textarea('description', $element->description, array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'game_description')) !!}</p>
+                        <b>Обложка</b> {!! Form::file('cover'); !!}
+                    </div>
+                    <div class="card-footer">
+                        {!! Form::submit('Сохранить', array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
             </div>
-
             <div class="col-md-3">
-
-                <div class="card">
-                    <img class="card-img-top" src="/data/img/covers/{!! $section !!}/{!! ElementsHelper::getCover($section, $element->id) !!}.jpg" alt="">
+                <div class="card @include('widgets.card-class')">
+                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section, $element->id) !!}" alt="">
                     <div class="card-body text-center">
-                        <p class="card-text">Дополнительная информация</p>
                         <div class="btn-group">
                             {!! DummyHelper::getExtLink('wiki', $element->name); !!}
                             {!! DummyHelper::getExtLink('wiki_en', $element->name); !!}
@@ -61,15 +48,10 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
         <!--script type="text/javascript" src="/data/js/admin/companies.js"></script-->
-
     @else
         {!! DummyHelper::regToAdd() !!}
     @endif
-
 @stop

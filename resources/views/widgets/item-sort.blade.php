@@ -1,6 +1,6 @@
 @if(!empty($sort_options))
 <noindex><!--noindex-->
-    <div class="card bg-dark mt-4">
+    <div class="card @include('widgets.card-class') mt-4">
         <div class="card-body">
             {!! Form::open(array('class' => 'sort', 'method' => 'GET')); !!}
             <div class="input-group input-group-sm">

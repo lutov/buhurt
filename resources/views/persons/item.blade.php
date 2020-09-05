@@ -19,7 +19,7 @@
 		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
 	</div>
 
-	<div class="card bg-dark text-white">
+	<div class="card @include('widgets.card-class')">
 		<div class="card-header">
 			<ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
 				@foreach($titles as $key => $title)

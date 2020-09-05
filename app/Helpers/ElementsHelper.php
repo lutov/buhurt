@@ -161,7 +161,7 @@ class ElementsHelper
             $cover = self::getCover($section, $element->id);
 
             $elements_list .= '<div class="col-lg-3 col-md-4 col-sm-6 col-6">';
-            $elements_list .= '<div class="card bg-dark text-white mb-4">';
+            $elements_list .= '<div class="card '.view('widgets.card-class').' mb-4">';
 
             $elements_list .= '<div class="card-header">';
             $elements_list .= '<a href="'.$link.'" class="one-liner" title="'.$element->name.'">';
@@ -473,7 +473,7 @@ class ElementsHelper
             /* DETAIL */
             $element_body .= '<div class="col-lg-9 col-md-8 col-12" id="elementDetails">';
                 /* DETAIL CARD */
-                $element_body .= '<div class="card bg-dark text-white" id="cardDetails">';
+                $element_body .= '<div class="card '.view('widgets.card-class').'" id="cardDetails">';
 
                     /* DETAIL CARD DESCRIPTION */
                     $card_details = self::getCardDetails($section, $element, $isAdmin);
@@ -628,7 +628,7 @@ class ElementsHelper
 
         $file_path = public_path().'/data/img/avatars/'.$user_id.'.jpg';
 
-        $elements_text .= '<div class="card bg-dark text-white mt-3" id="element_'.$element->id.'">';
+        $elements_text .= '<div class="card '.view('widgets.card-class').' mt-3" id="element_'.$element->id.'">';
 
         $elements_text .= '<div class="card-header">';
         $elements_text .= '<a href="/'.$section.'/'.$element->element_id.'">';
