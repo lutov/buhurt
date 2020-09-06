@@ -193,7 +193,7 @@ class DummyHelper {
 
 		}
 
-		return view('widgets.external-link', array(
+		return view('card.external-link', array(
             'site' => $site,
             'name' => $name,
             'protocol' => $protocol,
@@ -296,7 +296,7 @@ class DummyHelper {
 	 * @return string
 	 */
 	public static function getQuickAddLinks(string $search, Request $request) {
-		return view('widgets.search-quick-links', array(
+		return view('card.quick-links', array(
 		    'search' => $search,
             'isAdmin' => RolesHelper::isAdmin($request),
         ));

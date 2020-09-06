@@ -40,7 +40,7 @@ class EventsController extends Controller {
 
 		}
 
-		return View::make('events.list', array(
+		return View::make('sections.events.list', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $this->section,

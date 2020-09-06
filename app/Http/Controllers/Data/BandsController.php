@@ -45,7 +45,7 @@ class BandsController extends Controller {
 			'order' => $order,
 		);
 
-		return View::make($this->section.'.index', array(
+		return View::make('sections.'.$this->section.'.section', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
@@ -112,7 +112,7 @@ class BandsController extends Controller {
 				'limit' => $limit,
 			);
 
-			return View::make($this->section.'.item', array(
+			return View::make('sections.'.$this->section.'.item', array(
 				'request' => $request,
 				'section' => $section,
 				'element' => $element,

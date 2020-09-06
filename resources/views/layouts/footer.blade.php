@@ -1,5 +1,6 @@
 
-		</main> <!-- #main -->
+			</main> <!-- #main -->
+		</div> <!-- #main -->
 
 		<footer class="footer text-muted font-small blue">
 
@@ -81,7 +82,8 @@
 		@if(Request::is('*recommendations'))
 			<script type="text/javascript" src="/data/vendor/rangeSlider/ion.rangeSlider-master/js/ion.rangeSlider.min.js" defer></script>
 		@endif
-		<script type="text/javascript" src="/data/js/app.min.js" defer></script>
+		<!--script type="text/javascript" src="/data/js/app.min.js" defer></script-->
+		<script type="text/javascript" src="/data/js/main.js" defer></script>
 
 		@if(Session::get('message'))
 		<script>

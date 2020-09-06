@@ -103,7 +103,7 @@ class SearchController extends Controller {
 
 							}
 
-							return View::make($this->section . '.error', array(
+							return View::make('sections.'.$this->section . '.error', array(
 								'request' => $request,
 								'message' => $message
 							));
@@ -118,7 +118,7 @@ class SearchController extends Controller {
 
 		} else {
 			$message = 'Кажется, запрос пуст';
-			return View::make($this->section.'.error', array(
+			return View::make('sections.'.$this->section.'.error', array(
 				'request' => $request,
 				'message' => $message
 			));
@@ -224,7 +224,7 @@ class SearchController extends Controller {
 				'order' => 'asc',
 			);
 
-			return View::make($this->section.'.index', array(
+			return View::make('sections.'.$this->section.'.section', array(
 				'request' => $request,
 				'query' => $presearch_query,
 				'titles' => $titles,

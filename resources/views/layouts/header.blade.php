@@ -4,7 +4,7 @@
         <meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
         
-        <title>@yield('title')</title>
+        <title>@yield('title') | Бугурт</title>
         
 		<meta name="keywords" content="@yield('keywords')" />
 		<meta name="description" content="@yield('description')" />
@@ -19,7 +19,7 @@
 		<link href="/data/vendor/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.skinFlat.css" rel="stylesheet" type="text/css" />
 		@endif
 		<!--link href="/data/css/main.min.css" rel="stylesheet" type="text/css" /-->
-		<link href="/data/css/main.css" rel="stylesheet" type="text/css" />
+		<link href="/data/css/main.css?hash={!! date('His') !!}" rel="stylesheet" type="text/css" />
 
 		<script type="text/javascript" src="/data/vendor/jquery/jquery-3.3.1.min.js"></script>
 
@@ -28,7 +28,7 @@
 
 	</head>
 	
-    <body class="bg-secondary text-white">
+    <body class="bg-light">
 
     	<header>
 
@@ -139,4 +139,5 @@
 
     	</header>
 
-		<main role="main" class="container pt-5 pb-5">
+		<div id="wrapper" class="container-fulid bg-secondary">
+			<main role="main" class="container">

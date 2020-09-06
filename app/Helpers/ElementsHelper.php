@@ -21,10 +21,12 @@ use App\Models\User\User;
 use App\Models\User\Wanted;
 use Collective\Html\FormFacade as Form;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 use Laravelrus\LocalizedCarbon\LocalizedCarbon;
 use ResizeCrop;
 
@@ -32,32 +34,24 @@ class ElementsHelper
 {
 
     /**
-     * @return array
+     * @param  Request  $request
+     * @param  Section  $section
+     * @param  array  $options
+     * @return Factory|View
      */
-    public static function getSortDirection()
+    public static function getSectionHeader(Request $request, Section $section, array $options)
     {
-        return array(
+        $page = $request->get('page', 1);
+        $sort_direction = array(
             'asc' => 'А→Я',
             'desc' => 'Я→А'
         );
-    }
-
-    /**
-     * @param  array  $sort_options
-     * @param  string  $sort
-     * @param  string  $order
-     * @param  int  $page
-     * @return string
-     */
-    public static function getSort(array $sort_options, string $sort, string $order, int $page = 1)
-    {
-        $sort_direction = self::getSortDirection();
         return view(
-            'widgets.item-sort',
+            'widgets.section-card-header',
             array(
-                'sort_options' => $sort_options,
-                'sort' => $sort,
-                'order' => $order,
+                'sort_options' => $options['sort_options'],
+                'sort' => $options['sort'],
+                'order' => $options['order'],
                 'page' => $page,
                 'sort_direction' => $sort_direction,
             )
@@ -66,20 +60,51 @@ class ElementsHelper
 
     /**
      * @param  Request  $request
+     * @param $elements
+     * @param  string  $section
      * @param  array  $options
      * @return string
      */
-    public static function getHeader(Request $request, array $options)
+    public static function getSection(Request $request, $elements, string $section = '', array $options = array())
     {
-        $page = $request->get('page', 1);
-
         $elements_list = '';
+        if (!count($options)) {
+            $options = array(
+                'header' => true,
+                'footer' => true,
+                'paginate' => true,
+                'sort_options' => array(),
+                'sort' => 'name',
+                'order' => 'asc'
+            );
+        }
+        foreach ($elements as $element) {
+            $elements_list .= self::getElement($request, $element, $section, $options);
+        }
+        return $elements_list;
+    }
 
-        $elements_list .= self::getSort($options['sort_options'], $options['sort'], $options['order'], $page);
-
-        $elements_list .= '<div class="album mt-4">';
-        $elements_list .= '<div class="row">';
-
+    /**
+     * @param $request
+     * @param $elements
+     * @param $options
+     * @return string
+     */
+    public static function getSectionFooter(Request $request, $elements, array $options)
+    {
+        $elements_list = '';
+        if ($options['paginate']) {
+            if (!empty($request->get('sort'))) {
+                $elements_list .= $elements->appends(
+                    array(
+                        'sort' => $options['sort'],
+                        'order' => $options['order'],
+                    )
+                )->render();
+            } else {
+                $elements_list .= $elements->render();
+            }
+        }
         return $elements_list;
     }
 
@@ -135,7 +160,7 @@ class ElementsHelper
      */
     public static function getControls(string $section, $element, $user, bool $isAdmin = false)
     {
-        return view('widgets.card-controls', array(
+        return view('card.controls', array(
             'section' => $section,
             'element' => $element,
             'user' => $user,
@@ -161,7 +186,7 @@ class ElementsHelper
             $cover = self::getCover($section, $element->id);
 
             $elements_list .= '<div class="col-lg-3 col-md-4 col-sm-6 col-6">';
-            $elements_list .= '<div class="card '.view('widgets.card-class').' mb-4">';
+            $elements_list .= '<div class="card '.view('card.class').' mb-4">';
 
             $elements_list .= '<div class="card-header">';
             $elements_list .= '<a href="'.$link.'" class="one-liner" title="'.$element->name.'">';
@@ -213,68 +238,6 @@ class ElementsHelper
     }
 
     /**
-     * @return string
-     */
-    public static function getFooter()
-    {
-        $elements_list = '';
-        $elements_list .= '</div>';
-        $elements_list .= '</div>';
-        return $elements_list;
-    }
-
-    /**
-     * @param  Request  $request
-     * @param $elements
-     * @param  string  $section
-     * @param  array  $options
-     * @return string
-     */
-    public static function getElements(Request $request, $elements, string $section = '', array $options = array())
-    {
-        $elements_list = '';
-
-        if (!count($options)) {
-            $options = array(
-                'header' => true,
-                'footer' => true,
-                'paginate' => true,
-                'sort_options' => array(),
-                'sort' => 'name',
-                'order' => 'asc'
-            );
-        }
-
-        if ($options['header']) {
-            $elements_list .= self::getHeader($request, $options);
-        }
-        foreach ($elements as $element) {
-            $elements_list .= self::getElement($request, $element, $section, $options);
-        }
-        if ($options['footer']) {
-            $elements_list .= self::getFooter();
-        }
-
-        if ($options['paginate']) {
-            if (!empty($request->get('sort'))) {
-                $elements_list .= '<noindex><!--noindex-->';
-                $elements_list .= $elements->appends(
-                    array(
-                        //'view' => $request->get('view', 'plates'),
-                        'sort' => $options['sort'],
-                        'order' => $options['order'],
-                    )
-                )->render();
-                $elements_list .= '<!--/noindex--></noindex>';
-            } else {
-                $elements_list .= $elements->render();
-            }
-        }
-
-        return $elements_list;
-    }
-
-    /**
      * @param  Request  $request
      * @param $elements
      * @param  string  $section
@@ -292,10 +255,6 @@ class ElementsHelper
                 'paginate' => true,
                 'count' => true,
             );
-        }
-
-        if ($options['header']) {
-            $elements_list .= self::getSort($options['sort_options'], $options['sort'], $options['order']);
         }
 
         if (isset($options['columns'])) {
@@ -436,7 +395,7 @@ class ElementsHelper
      */
     public static function getCardHeader(Request $request, string $section, $element, array $info = array())
     {
-        return view('widgets.item-header', array(
+        return view('item.cards.header', array(
             'request' => $request,
             'section' => $section,
             'element' => $element,
@@ -461,7 +420,7 @@ class ElementsHelper
 
         $element_body .= '<div class="row">';
 
-        $element_body .= view('widgets.item-image-card', array(
+        $element_body .= view('item.cards.image', array(
             'section' => $section,
             'element' => $element,
             'cover' => self::getCover($section, $element->id),
@@ -473,7 +432,7 @@ class ElementsHelper
             /* DETAIL */
             $element_body .= '<div class="col-lg-9 col-md-8 col-12" id="elementDetails">';
                 /* DETAIL CARD */
-                $element_body .= '<div class="card '.view('widgets.card-class').'" id="cardDetails">';
+                $element_body .= '<div class="card '.view('card.class').'" id="cardDetails">';
 
                     /* DETAIL CARD DESCRIPTION */
                     $card_details = self::getCardDetails($section, $element, $isAdmin);
@@ -531,7 +490,7 @@ class ElementsHelper
      */
     public static function getCardDetails(string $section, $element, bool $isAdmin = false)
     {
-        return view('widgets.item-description-card', array(
+        return view('item.cards.description', array(
             'element' => $element,
         ));
     }
@@ -555,8 +514,10 @@ class ElementsHelper
         );
         $element_footer = '';
         if (isset($info['similar']) && count($info['similar'])) {
-            $element_footer .= '<h3 class="mt-5 mb-3">Похожие</h3>';
-            $element_footer .= self::getElements($request, $info['similar'], $section, $options);
+            $element_footer .= '<h3 class="mb-3">Похожие</h3>';
+            $element_footer .= '<div class="row">';
+            $element_footer .= self::getSection($request, $info['similar'], $section, $options);
+            $element_footer .= '</div>';
         }
         return $element_footer;
     }
@@ -628,7 +589,7 @@ class ElementsHelper
 
         $file_path = public_path().'/data/img/avatars/'.$user_id.'.jpg';
 
-        $elements_text .= '<div class="card '.view('widgets.card-class').' mt-3" id="element_'.$element->id.'">';
+        $elements_text .= '<div class="card '.view('card.class').' mt-3" id="element_'.$element->id.'">';
 
         $elements_text .= '<div class="card-header">';
         $elements_text .= '<a href="/'.$section.'/'.$element->element_id.'">';

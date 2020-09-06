@@ -340,7 +340,7 @@ class UserController extends Controller {
 			
 			//die(print_r($chart_rates));
 
-			return View::make('user.profile', array(
+			return View::make('sections.user.profile', array(
 				'request' => $request,
 				'user' => $user,
 				'avatar' => $avatar,

@@ -21,7 +21,7 @@
 		$result = '';
 		foreach($icons as $icon) {
 
-			$result .= '<div class="col-md-3">';
+			$result .= '<div class="col-md-3 mb-4">';
 			$result .= '<img src="/data/img/achievements/raw/'.$icon.'.png" alt="" class="img-fluid">';
 			$result .= '</div>';
 

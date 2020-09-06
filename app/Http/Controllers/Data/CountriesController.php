@@ -44,7 +44,7 @@ class CountriesController extends Controller {
 			'order' => $order,
 		);
 
-		return View::make($this->section.'.index', array(
+		return View::make('sections.'.$this->section.'.section', array(
 			'request' => $request,
 			'elements' => $elements,
 			'section' => $section,
@@ -105,7 +105,7 @@ class CountriesController extends Controller {
 				'order' => $order,
 			);
 
-			return View::make($this->section.'.item', array(
+			return View::make('sections.'.$this->section.'.item', array(
 				'request' => $request,
 				'titles' => $titles,
 				'element' => $element,

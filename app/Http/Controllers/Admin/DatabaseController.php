@@ -43,7 +43,7 @@ class DatabaseController extends Controller {
 
 		$element = SectionsHelper::getSectionType($section)::find($id);
 
-		return View::make('database.edit.'.$section, array(
+		return View::make('sections.admin.edit.'.$section, array(
 			'request' => $request,
 			'section' => $section,
 			'element' => $element,

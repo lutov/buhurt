@@ -13,6 +13,11 @@ Bootstrap 4 breakpoints
 Extra small devices (portrait phones, less than 576px)
 No media query since this is the default in Bootstrap because it is "mobile first"
 */
+#wrapper {
+    margin-top: 57px;
+    padding-top: 24px;
+}
+
 .container {
     font-size: .75rem;
 }
@@ -136,6 +141,10 @@ M E D I A  Q U E R I E S
 }
 /* RATING */
 
+/* CARD */
+.card.bg-dark {
+    color: #fff;
+}
 .card-img-box .card-img-top {
     position:  absolute;
     top: 0;
@@ -203,6 +212,10 @@ M E D I A  Q U E R I E S
     -webkit-line-clamp: 1; /* number of lines to show */
     -webkit-box-orient: vertical;
 }
+.quick-links ul a {
+    color: #212529;
+}
+/* CARD */
 
 .ui-autocomplete {
     position: absolute;
@@ -223,7 +236,7 @@ M E D I A  Q U E R I E S
 
 .ui-autocomplete>li {
     padding: 3px 12px;
-    color: rgba(0,0,0,.9);
+    color: #212529;
 }
 
 .ui-autocomplete>li.ui-state-focus, .ui-autocomplete>li:hover {

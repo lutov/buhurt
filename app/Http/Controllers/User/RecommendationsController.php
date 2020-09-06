@@ -202,7 +202,7 @@ class RecommendationsController extends Controller {
 
 		});
 
-		return View::make('recommendations.personal', array(
+		return View::make('sections.recommendations.personal', array(
 			'request' => $request,
 			'section' => $section,
 			'principle' => $principle,
@@ -257,7 +257,7 @@ class RecommendationsController extends Controller {
 
 		}
 
-		return View::make('recommendations.gag', array(
+		return View::make('sections.recommendations.gag', array(
 			'request' => $request,
 			'section' => $section,
 			'options' => array(
@@ -280,7 +280,7 @@ class RecommendationsController extends Controller {
 
     	if(!Auth::check()) {
 
-			return view('recommendations.noadvise', array(
+			return view('sections.recommendations.noadvise', array(
 				'request' => $request,
 			));
 
@@ -483,7 +483,7 @@ class RecommendationsController extends Controller {
 			$album->options = array();
 		}
 
-    	return view('recommendations.advise', array(
+    	return view('sections.recommendations.advise', array(
     		'request' => $request,
     		'user' => $user,
     		'book' => $book,
