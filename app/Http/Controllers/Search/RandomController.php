@@ -15,7 +15,7 @@ class RandomController extends Controller {
 	 */
 	public function index() {
 
-		return View::make('random.index', array(
+		return View::make('random.section', array(
 
 		));
 

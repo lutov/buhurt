@@ -66,7 +66,7 @@ class RelationsController extends Controller {
 			'order' => $order,
 		);
 
-		return View::make('relations.item', array(
+		return View::make('sections.relations.item', array(
 			'request' => $request,
 			'element' => $element,
 			'section' => $section,

@@ -47,11 +47,10 @@ class ElementsHelper
             'desc' => 'Я→А'
         );
         return view(
-            'widgets.section-card-header',
+            'section.cards.header',
             array(
-                'sort_options' => $options['sort_options'],
-                'sort' => $options['sort'],
-                'order' => $options['order'],
+                'request' => $request,
+                'options' => $options,
                 'page' => $page,
                 'sort_direction' => $sort_direction,
             )

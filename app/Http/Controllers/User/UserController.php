@@ -44,7 +44,7 @@ class UserController extends Controller {
 
 		} else {
 
-			return View::make('user.index', array(
+			return View::make('sections.user.section', array(
 				'request' => $request
 			));
 
@@ -66,7 +66,7 @@ class UserController extends Controller {
 
 		} else {
 
-			return View::make('user.register', array(
+			return View::make('sections.user.register', array(
 				'request' => $request
 			));
 
@@ -441,7 +441,7 @@ class UserController extends Controller {
 				'order' => $order,
 			);
 
-			return View::make('user.rates.index', array(
+			return View::make('sections.user.rates.section', array(
 				'request' => $request,
 				'user' => $user,
 				'section' => $section,
@@ -561,7 +561,7 @@ class UserController extends Controller {
 				->paginate($limit)
 			;
 
-			return View::make('user.wanted.index', array(
+			return View::make('sections.user.wanted.section', array(
 				'request' => $request,
 				'user' => $user,
 				'section' => $section,
@@ -618,7 +618,7 @@ class UserController extends Controller {
 				->paginate($limit)
 			;
 
-			return View::make('user.unwanted.index', array(
+			return View::make('sections.user.unwanted.section', array(
 				'request' => $request,
 				'user' => $user,
 				'section' => $section,
@@ -722,7 +722,7 @@ class UserController extends Controller {
 
 			} else {
 
-				return View::make('user.change_password', array(
+				return View::make('sections.user.change_password', array(
 					'request' => $request,
 				));
 
@@ -964,7 +964,7 @@ class UserController extends Controller {
 				->paginate($limit)
 			;
 
-			return View::make('user.list', array(
+			return View::make('sections.user.list', array(
 				'request' => $request,
 				'elements' => $elements,
 				'section' => 'user',
