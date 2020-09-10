@@ -80,55 +80,64 @@ class PersonsController extends Controller {
 				'year' => 'Год'
 			);
 
-			$titles = array();
+			$tabs = array();
 			$keywords = array();
-			$books = $screenplays = $directions = $productions = $roles = array();
 			if($element->books->count()) {
 				$keywords[] = 'писатель';
-				$titles['writer']['name'] = 'Писатель';
-				$titles['writer']['count'] = $element->books->count();
-				$books = $element->books()
+				$tabs['writer']['slug'] = 'writer';
+				$tabs['writer']['name'] = 'Писатель';
+				$tabs['writer']['count'] = $element->books->count();
+				$tabs['writer']['section'] = 'books';
+                $tabs['writer']['elements'] = $element->books()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
 			if($element->screenplays->count()) {
 				$keywords[] = 'сценарист';
-				$titles['screenwriter']['name'] = 'Сценарист';
-				$titles['screenwriter']['count'] = $element->screenplays->count();
-				$screenplays = $element->screenplays()
+				$tabs['screenwriter']['slug'] = 'screenwriter';
+				$tabs['screenwriter']['name'] = 'Сценарист';
+				$tabs['screenwriter']['count'] = $element->screenplays->count();
+                $tabs['screenwriter']['section'] = 'films';
+                $tabs['screenwriter']['elements'] = $element->screenplays()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
 			if($element->directions->count()) {
 				$keywords[] = 'режиссёр';
-				$titles['director']['name'] = 'Режиссёр';
-				$titles['director']['count'] = $element->directions->count();
-				$directions = $element->directions()
+				$tabs['director']['slug'] = 'director';
+				$tabs['director']['name'] = 'Режиссёр';
+				$tabs['director']['count'] = $element->directions->count();
+                $tabs['director']['section'] = 'films';
+                $tabs['director']['elements'] = $element->directions()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
 			if($element->productions->count()) {
 				$keywords[] = 'продюссер';
-				$titles['producer']['name'] = 'Продюссер';
-				$titles['producer']['count'] = $element->productions->count();
-				$productions = $element->productions()
+				$tabs['producer']['slug'] = 'producer';
+				$tabs['producer']['name'] = 'Продюссер';
+				$tabs['producer']['count'] = $element->productions->count();
+                $tabs['producer']['section'] = 'films';
+                $tabs['producer']['elements'] = $element->productions()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
 			if($element->roles->count()) {
 				$keywords[] = 'актёр';
-				$titles['actor']['name'] = 'Актёр';
-				$titles['actor']['count'] = $element->roles->count();
-				$roles = $element->roles()
+				$tabs['actor']['slug'] = 'actor';
+				$tabs['actor']['name'] = 'Актёр';
+				$tabs['actor']['count'] = $element->roles->count();
+                $tabs['actor']['section'] = 'films';
+                $tabs['actor']['elements'] = $element->roles()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
-			uasort($titles, array('TextHelper', 'compareReverseCount'));
+			uasort($tabs, array('TextHelper', 'compareReverseCount'));
 
 			$options = array(
 				'header' => true,
@@ -145,13 +154,8 @@ class PersonsController extends Controller {
 				'section' => $section,
 				'element' => $element,
 				'options' => $options,
-				'titles' => $titles,
+				'tabs' => $tabs,
 				'keywords' => $keywords,
-				'books' => $books,
-				'screenplays' => $screenplays,
-				'directions' => $directions,
-				'productions' => $productions,
-				'roles' => $roles,
 			));
 
 		} else {

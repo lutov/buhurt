@@ -1,3 +1,14 @@
+@php
+    /** @var $request */
+    $page = $request->get('page', 1);
+    $sort_options = $options['sort_options'];
+    $sort = $options['sort'];
+    $order = $options['order'];
+    $sort_direction = array(
+        'asc' => 'А→Я',
+        'desc' => 'Я→А'
+    );
+@endphp
 {!! Form::open(array('class' => 'sort', 'method' => 'GET')); !!}
 <div class="input-group input-group-sm">
     {!! Form::select('sort', $sort_options, $sort, array('class' => 'custom-select', 'autocomplete' => 'off')); !!}
