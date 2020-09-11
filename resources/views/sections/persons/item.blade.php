@@ -6,7 +6,7 @@
 @section('content')
 	@include('item.cards.title', array('title' => $element->name, 'subtitle' => ''))
 	<div itemscope itemtype="http://schema.org/Person">
-		{!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
+		@include('item.body')
 	</div>
 	@include('section.tabs')
 @stop

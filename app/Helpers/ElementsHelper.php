@@ -428,70 +428,15 @@ class ElementsHelper
             'isUnwanted' => ((Auth::check()) ? (self::isUnwanted($element, Auth::user())) : false),
         ));
 
-            /* DETAIL */
-            $element_body .= '<div class="col-lg-9 col-md-8 col-12" id="elementDetails">';
-                /* DETAIL CARD */
-                $element_body .= '<div class="card '.view('card.class').'" id="cardDetails">';
-
-                    /* DETAIL CARD DESCRIPTION */
-                    $card_details = self::getCardDetails($section, $element, $isAdmin);
-                    if (!empty($card_details)) {
-                        $element_body .= $card_details;
-                    }
-                    /* DETAIL CARD DESCRIPTION */
-
-                    /* DETAIL CARD FOOTER */
-                    $element_body .= '<div class="card-footer">';
-                    if ($element->collections && $element->collections->count()) {
-                        $element_body .= '<span class="small card-link">';
-                        $element_body .= 'Коллекции: ';
-                        $element_body .= DatatypeHelper::arrayToString(
-                            $element->collections,
-                            ', ',
-                            '/collections/',
-                            false,
-                            "isPartOf"
-                        );
-                        $element_body .= '</span>';
-                    }
-                    if (
-                        ($element->relations && $element->relations->count())
-                        ||
-                        ($isAdmin && method_exists($element, 'relations'))
-                    ) {
-                        $element_body .= '<span class="small card-link">';
-                        $element_body .= '<a href="/'.$section.'/'.$element->id.'/relations/">';
-                        $element_body .= 'Связанные произведения ';
-                        if ($element->relations) {
-                            $element_body .= '('.$element->relations->count().')';
-                        }
-                        $element_body .= '</a>';
-                        $element_body .= '</span>';
-                    }
-                    $element_body .= '</div>';
-                    /* DETAIL CARD FOOTER */
-
-                $element_body .= '</div>';
-                /* DETAIL CARD */
-            $element_body .= '</div>';
-            /* DETAIL */
+        $element_body .= view('item.cards.description', array(
+            'section' => $section,
+            'element' => $element,
+            'isAdmin' => $isAdmin,
+        ));
 
         $element_body .= '</div>';
 
         return $element_body;
-    }
-
-    /**
-     * @param  string  $section
-     * @param $element
-     * @param  bool  $isAdmin
-     * @return string
-     */
-    public static function getCardDetails(string $section, $element, bool $isAdmin = false)
-    {
-        return view('item.cards.description', array(
-            'element' => $element,
-        ));
     }
 
     /**

@@ -79,28 +79,31 @@ class BandsController extends Controller {
 				'year' => 'Год'
 			);
 
-			$titles = array();
+			$tabs = array();
 			$keywords = array();
-			$albums = $members = array();
 			if($element->albums->count()) {
 				$keywords[] = 'альбомы';
-				$titles['albums']['name'] = 'Альбомы';
-				$titles['albums']['count'] = $element->albums->count();
-				$albums = $element->albums()
+				$tabs['albums']['slug'] = 'albums';
+				$tabs['albums']['name'] = 'Альбомы';
+				$tabs['albums']['count'] = $element->albums->count();
+				$tabs['albums']['section'] = 'albums';
+                $tabs['albums']['elements'] = $element->albums()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
 			if($element->members->count()) {
 				$keywords[] = 'участники';
-				$titles['members']['name'] = 'Участники';
-				$titles['members']['count'] = $element->members->members();
-				$members = $element->members()
+				$tabs['members']['slug'] = 'members';
+				$tabs['members']['name'] = 'Участники';
+				$tabs['members']['count'] = $element->members->members();
+				$tabs['members']['section'] = 'persons';
+                $tabs['members']['elements'] = $element->members()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
-			//uasort($titles, array('TextHelper', 'compareReverseCount'));
+			//uasort($tabs, array('TextHelper', 'compareReverseCount'));
 
 			$options = array(
 				'header' => true,
@@ -116,9 +119,7 @@ class BandsController extends Controller {
 				'request' => $request,
 				'section' => $section,
 				'element' => $element,
-				'titles' => $titles,
-				'albums' => $albums,
-				'members' => $members,
+				'tabs' => $tabs,
 				'options' => $options
 			));
 
