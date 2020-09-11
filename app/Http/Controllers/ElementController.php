@@ -89,24 +89,11 @@ class ElementController extends Controller {
 	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
 	public function item(Request $request, $id) {
-
 		$section = SectionsHelper::getSection($this->section);
 		$element = $section->type::find($id);
-
 		if(!empty($element)) {
-
-			if(Auth::check()) {
-				$user = Auth::user();
-				$user_options = UserHelper::getOptions($user);
-				$is_other_private = in_array(2, $user_options);
-				$comments = ($is_other_private) ? CommentsHelper::get($element, $user->id) : CommentsHelper::get($element);
-			} else {
-				$comments = CommentsHelper::get($element);
-			}
-
+            $tabs = array();
 			$rating = ElementsHelper::countRating($element);
-
-			$similar = array();
 			if($this->getSimilar) {
 				$genres = $element->genres; $genres = $genres->sortBy('name');
 				$sim_options['element_id'] = $id;
@@ -122,19 +109,33 @@ class ElementController extends Controller {
 					}
 					return $similar;
 				});
+                $tabs['similar']['slug'] = 'similar';
+                $tabs['similar']['name'] = 'Похожие '.mb_strtolower($section->name);
+                $tabs['similar']['count'] = $sim_limit;
+                $tabs['similar']['section'] = $section;
+                $tabs['similar']['elements'] = collect($similar);
 			}
-
-			$options = array(
-				'similar' => collect($similar),
-			);
-
+            if(Auth::check()) {
+                $user = Auth::user();
+                $user_options = UserHelper::getOptions($user);
+                $is_other_private = in_array(2, $user_options);
+                $comments = ($is_other_private) ? CommentsHelper::get($element, $user->id) : CommentsHelper::get($element);
+            } else {
+                $comments = CommentsHelper::get($element);
+            }
+            $tabs['comments']['slug'] = 'comments';
+            $tabs['comments']['name'] = 'Комментарии';
+            $tabs['comments']['count'] = count($comments);
+            $tabs['comments']['section'] = SectionsHelper::getSection('comments');
+            $tabs['comments']['elements'] = $comments;
 			return View::make('sections.'.$this->section.'.item', array(
 				'request' => $request,
 				'section' => $section,
 				'element' => $element,
 				'rating' => $rating,
 				'comments' => $comments,
-				'options' => $options,
+				'tabs' => $tabs,
+				'options' => array(),
 			));
 
 		} else {

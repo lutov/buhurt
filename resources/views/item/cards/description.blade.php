@@ -207,7 +207,7 @@
                 @endif
                 @if($relations)
                      <span class="small card-link">
-                        <a href="/{{$section}}/{{$element->id}}/relations/">
+                        <a href="/{{$section->alt_name}}/{{$element->id}}/relations/">
                             Связанные произведения
                             @if($element->relations)
                                 ({{$element->relations->count()}})

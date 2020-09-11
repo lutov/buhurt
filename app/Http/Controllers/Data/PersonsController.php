@@ -87,7 +87,7 @@ class PersonsController extends Controller {
 				$tabs['writer']['slug'] = 'writer';
 				$tabs['writer']['name'] = 'Писатель';
 				$tabs['writer']['count'] = $element->books->count();
-				$tabs['writer']['section'] = 'books';
+				$tabs['writer']['section'] = SectionsHelper::getSection('books');
                 $tabs['writer']['elements'] = $element->books()
 					->orderBy($sort, $order)
 					->paginate($limit)
@@ -98,7 +98,7 @@ class PersonsController extends Controller {
 				$tabs['screenwriter']['slug'] = 'screenwriter';
 				$tabs['screenwriter']['name'] = 'Сценарист';
 				$tabs['screenwriter']['count'] = $element->screenplays->count();
-                $tabs['screenwriter']['section'] = 'films';
+                $tabs['screenwriter']['section'] = SectionsHelper::getSection('films');
                 $tabs['screenwriter']['elements'] = $element->screenplays()
 					->orderBy($sort, $order)
 					->paginate($limit)
@@ -109,7 +109,7 @@ class PersonsController extends Controller {
 				$tabs['director']['slug'] = 'director';
 				$tabs['director']['name'] = 'Режиссёр';
 				$tabs['director']['count'] = $element->directions->count();
-                $tabs['director']['section'] = 'films';
+                $tabs['director']['section'] = SectionsHelper::getSection('films');
                 $tabs['director']['elements'] = $element->directions()
 					->orderBy($sort, $order)
 					->paginate($limit)
@@ -120,7 +120,7 @@ class PersonsController extends Controller {
 				$tabs['producer']['slug'] = 'producer';
 				$tabs['producer']['name'] = 'Продюссер';
 				$tabs['producer']['count'] = $element->productions->count();
-                $tabs['producer']['section'] = 'films';
+                $tabs['producer']['section'] = SectionsHelper::getSection('films');
                 $tabs['producer']['elements'] = $element->productions()
 					->orderBy($sort, $order)
 					->paginate($limit)
@@ -131,7 +131,7 @@ class PersonsController extends Controller {
 				$tabs['actor']['slug'] = 'actor';
 				$tabs['actor']['name'] = 'Актёр';
 				$tabs['actor']['count'] = $element->roles->count();
-                $tabs['actor']['section'] = 'films';
+                $tabs['actor']['section'] = SectionsHelper::getSection('films');
                 $tabs['actor']['elements'] = $element->roles()
 					->orderBy($sort, $order)
 					->paginate($limit)

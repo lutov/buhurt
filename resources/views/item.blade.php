@@ -1,7 +1,6 @@
 <div itemscope itemtype="http://schema.org/{!! $schema !!}">
-    {!! ElementsHelper::getCardHeader($request, $section->alt_name, $element, $options) !!}
-    {!! ElementsHelper::getCardBody($request, $section->alt_name, $element, $options) !!}
-    {!! ElementsHelper::getCardFooter($request, $section->alt_name, $element, $options) !!}
+    @include('item.cards.header')
+    @include('item.body')
+    @include('item.footer')
 </div>
-{!! ElementsHelper::getCardComments($request, $comments, $section->alt_name, $element->id) !!}
 {!! ElementsHelper::getCardScripts($section->alt_name, $element->id) !!}

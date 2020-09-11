@@ -1,3 +1,10 @@
+@php
+    use App\Helpers\ElementsHelper;
+    use Illuminate\Support\Facades\Auth;
+    /** @var $element */
+    $rate = ((Auth::check()) ? (ElementsHelper::getRate($element, Auth::user())) : 0);
+    $rating = ElementsHelper::countRating($element);
+@endphp
 <div class="card @include('card.class') text-center mb-4">
 
     <div class="card-header">
@@ -78,12 +85,9 @@
         <div class="card-footer">
             <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="small" style="opacity: .5;">
                 <meta itemprop="worstRating" content = "1">
-                    Средняя оценка: <b itemprop="ratingValue">{!! $rating['average'] !!}</b>
+                Средняя оценка: <b itemprop="ratingValue">{!! $rating['average'] !!}</b>
                 <meta itemprop="bestRating" content = "10">,
                 {!! TextHelper::ratingCount($rating['count'], array('голос', 'голоса', 'голосов')); !!}
-                @if(0 != $element->comments->count())
-                    , {!! TextHelper::reviewCount($element->comments->count(), array('комментарий', 'комментария', 'комментариев')); !!}
-                @endif
             </div>
         </div>
     @endif

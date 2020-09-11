@@ -86,7 +86,7 @@ class BandsController extends Controller {
 				$tabs['albums']['slug'] = 'albums';
 				$tabs['albums']['name'] = 'Альбомы';
 				$tabs['albums']['count'] = $element->albums->count();
-				$tabs['albums']['section'] = 'albums';
+				$tabs['albums']['section'] = SectionsHelper::getSection('albums');
                 $tabs['albums']['elements'] = $element->albums()
 					->orderBy($sort, $order)
 					->paginate($limit)
@@ -97,7 +97,7 @@ class BandsController extends Controller {
 				$tabs['members']['slug'] = 'members';
 				$tabs['members']['name'] = 'Участники';
 				$tabs['members']['count'] = $element->members->members();
-				$tabs['members']['section'] = 'persons';
+				$tabs['members']['section'] = SectionsHelper::getSection('persons');
                 $tabs['members']['elements'] = $element->members()
 					->orderBy($sort, $order)
 					->paginate($limit)
