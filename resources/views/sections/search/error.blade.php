@@ -6,19 +6,19 @@
 
 @section('content')
 
-	<section class="text-center">
-		<h1 class="pt-5">@yield('title')</h1>
-		<h2 class="pb-3">@yield('subtitle')</h2>
-	</section>
+    <section class="text-center">
+        <h1 class="pt-5">@yield('title')</h1>
+        <h2 class="pb-3">@yield('subtitle')</h2>
+    </section>
 
-	<div class="row">
+    <div class="row">
 
-		<div class="col-md-12">
+        <div class="col-md-12">
 
-			<p>{!! $message; !!}</p>
+            <p>{!! $message; !!}</p>
 
-		</div>
+        </div>
 
-	</div>
+    </div>
 
 @stop

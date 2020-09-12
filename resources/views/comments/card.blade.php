@@ -6,15 +6,17 @@
     $user = User::find($user_id);
     $user_options = UserHelper::getOptions($user);
     $is_my_private = in_array(1, $user_options);
-    $rate = $comment->rate;
+    $rate = $comment->rate
 @endphp
 @if(!$is_my_private || (Auth::check() && $user_id == Auth::user()->id))
     <div class="card @include('card.class') mb-4" id="comment_{!! $comment->id !!}">
         @if(Auth::check() && $user_id == Auth::user()->id)
             <div class="card-header text-right">
                 <div class="btn-group">
-                    <span role="button" class="btn btn-sm btn-secondary" onclick="comment_edit({!! $comment->id !!})" title="Редактировать">&#9998;</span>
-                    <span role="button" class="btn btn-sm btn-secondary" onclick="comment_delete({!! $comment->id !!})" title="Удалить">&#10006;</span>
+                    <span role="button" class="btn btn-sm btn-secondary" onclick="comment_edit({!! $comment->id !!})"
+                          title="Редактировать">&#9998;</span>
+                    <span role="button" class="btn btn-sm btn-secondary" onclick="comment_delete({!! $comment->id !!})"
+                          title="Удалить">&#10006;</span>
                 </div>
             </div>
         @endif

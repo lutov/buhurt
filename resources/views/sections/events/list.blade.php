@@ -6,19 +6,19 @@
 
 @section('content')
 
-	<section class="text-center">
-		<h1 class="mt-5">@yield('title')</h1>
-		<h2 class="mb-3">@yield('subtitle')</h2>
-	</section>
+    <section class="text-center">
+        <h1 class="mt-5">@yield('title')</h1>
+        <h2 class="mb-3">@yield('subtitle')</h2>
+    </section>
 
-	<div class="row">
+    <div class="row">
 
-		<div class="col-md-12">
+        <div class="col-md-12">
 
-			{!! ElementsHelper::getEvents($request, $elements, $section, '')!!}
+            {!! ElementsHelper::getEvents($request, $elements, $section, '')!!}
 
-		</div>
+        </div>
 
-	</div>
+    </div>
 
 @stop

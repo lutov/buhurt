@@ -72,26 +72,30 @@
                             {!! DummyHelper::getExtLink('yandex_images', $element->name); !!}
                         </div>
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#genres_list_container" aria-expanded="false" aria-controls="genres_list_container">
+                    <div class="card-header" data-toggle="collapse" data-target="#genres_list_container"
+                         aria-expanded="false" aria-controls="genres_list_container">
                         Жанры фильмов
                     </div>
                     <div class="collapse" id="genres_list_container">
                         @include('collection.names.array', array('id' => 'genres_list', 'collection' => ElementsHelper::getGenres($section)))
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#countries_list_container" aria-expanded="false" aria-controls="countries_list_container">
+                    <div class="card-header" data-toggle="collapse" data-target="#countries_list_container"
+                         aria-expanded="false" aria-controls="countries_list_container">
                         Страны
                     </div>
                     <div class="collapse" id="countries_list_container">
                         @include('collection.names.array', array('id' => 'countries_list', 'collection' => ElementsHelper::getCountries()))
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#collections_list_container" aria-expanded="false" aria-controls="collections_list_container">
+                    <div class="card-header" data-toggle="collapse" data-target="#collections_list_container"
+                         aria-expanded="false" aria-controls="collections_list_container">
                         Коллекции
                     </div>
                     <div class="collapse" id="collections_list_container">
                         @include('collection.names.array', array('id' => 'collections_list', 'collection' => ElementsHelper::getCollections()))
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#posters" aria-expanded="false" aria-controls="posters">
-						@php
+                    <div class="card-header" data-toggle="collapse" data-target="#posters" aria-expanded="false"
+                         aria-controls="posters">
+                        @php
                             /** @var $element */
                             $poster_name = (count($element->alt_name)) ? $element->alt_name[0] : '';
                             $poster_name = str_replace('&', '', $poster_name);
@@ -100,9 +104,10 @@
                             $poster_name = str_replace('.', '', $poster_name);
                             $poster_name = str_replace(',', '', $poster_name);
                             $poster_name = str_replace('  ', ' ', $poster_name);
-                            $poster_name = str_replace(' ', '-', $poster_name);
-						@endphp
-                        <input id="poster_query" class="form-control" onblur="search_poster()" placeholder="Искать постеры" value="{!! $poster_name !!}">
+                            $poster_name = str_replace(' ', '-', $poster_name)
+                        @endphp
+                        <input id="poster_query" class="form-control" onblur="search_poster()"
+                               placeholder="Искать постеры" value="{!! $poster_name !!}">
                     </div>
                     <div class="collapse" id="posters"></div>
                     <div id="transfer" class="card-footer text-center">

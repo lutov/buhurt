@@ -20,7 +20,8 @@
                     /** @var string $writers */
                     $authors = explode(', ', $writers);
                 @endphp
-                <abbr title="Произведения разных авторов" class="h2" data-toggle="collapse" data-target="#collapseAuthors" aria-expanded="false" aria-controls="collapseAuthors">
+                <abbr title="Произведения разных авторов" class="h2" data-toggle="collapse"
+                      data-target="#collapseAuthors" aria-expanded="false" aria-controls="collapseAuthors">
                     Альманах
                 </abbr>
                 <div class="h3 mt-2 collapse" id="collapseAuthors">
@@ -56,7 +57,9 @@
                 <div class="h3 mt-2 mb-0" id="buhurt_alt_name">
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <abbr title="Альтернативные названия" class="" data-toggle="collapse" data-target=".collapseAltName" aria-expanded="false" aria-controls="collapseAltName" itemprop="alternativeHeadline">
+                            <abbr title="Альтернативные названия" class="" data-toggle="collapse"
+                                  data-target=".collapseAltName" aria-expanded="false" aria-controls="collapseAltName"
+                                  itemprop="alternativeHeadline">
                                 {!! array_shift($names); !!}
                             </abbr>
                         </li>
@@ -68,7 +71,8 @@
                     </ul>
                 </div>
             @else
-                <div class="h3 mt-2 mb-0" itemprop="alternativeHeadline" id="buhurt_alt_name">{!! $element->alt_name[0] !!}</div>
+                <div class="h3 mt-2 mb-0" itemprop="alternativeHeadline"
+                     id="buhurt_alt_name">{!! $element->alt_name[0] !!}</div>
             @endif
         @endif
     </div>
@@ -83,10 +87,12 @@
 
     @if($rating['count'])
         <div class="card-footer">
-            <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="small" style="opacity: .5;">
-                <meta itemprop="worstRating" content = "1">
+            <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="small"
+                 style="opacity: .5;">
+                <meta itemprop="worstRating" content="1">
                 Средняя оценка: <b itemprop="ratingValue">{!! $rating['average'] !!}</b>
-                <meta itemprop="bestRating" content = "10">,
+                <meta itemprop="bestRating" content="10">
+                ,
                 {!! TextHelper::ratingCount($rating['count'], array('голос', 'голоса', 'голосов')); !!}
             </div>
         </div>

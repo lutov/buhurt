@@ -56,13 +56,15 @@
                             {!! DummyHelper::getExtLink('yandex_images', $element->name); !!}
                         </div>
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#memes_genres_container" aria-expanded="false" aria-controls="memes_genres_container">
+                    <div class="card-header" data-toggle="collapse" data-target="#memes_genres_container"
+                         aria-expanded="false" aria-controls="memes_genres_container">
                         Жанры мемов
                     </div>
                     <div class="collapse" id="memes_genres_container">
                         @include('collection.names.array', array('id' => 'genres_list', 'collection' => ElementsHelper::getGenres($section)))
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#collections_list_container" aria-expanded="false" aria-controls="collections_list_container">
+                    <div class="card-header" data-toggle="collapse" data-target="#collections_list_container"
+                         aria-expanded="false" aria-controls="collections_list_container">
                         Коллекции
                     </div>
                     <div class="collapse" id="collections_list_container">

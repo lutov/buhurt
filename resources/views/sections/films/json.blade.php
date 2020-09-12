@@ -20,8 +20,16 @@ $output['genres'] = DatatypeHelper::collectionToString($element->genres, 'genre'
 $output['cover'] = $site.ElementsHelper::getCover($section->alt_name, $element->id);
 $output['description'] = $element->description;
 $output['rating'] = $rating['average'];
-$output['votes'] = TextHelper::number(ElementsHelper::countRating($element)['count'], array('голос', 'голоса', 'голосов'));
-$output['collections'] = DatatypeHelper::collectionToString($element->collections, 'collection', ', ', $site.'/collections/');
+$output['votes'] = TextHelper::number(
+    ElementsHelper::countRating($element)['count'],
+    array('голос', 'голоса', 'голосов')
+);
+$output['collections'] = DatatypeHelper::collectionToString(
+    $element->collections,
+    'collection',
+    ', ',
+    $site.'/collections/'
+);
 $output['link'] = $site.'/films/'.$element->id;
 
 echo json_encode($output);

@@ -8,5 +8,5 @@
 @section('description'){!! TextHelper::wordsLimit($element->description, 25) !!}@stop
 
 @section('content')
-	@include('item', array('schema' => 'Book'))
+    @include('item', array('schema' => 'Book'))
 @stop

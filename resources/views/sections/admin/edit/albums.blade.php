@@ -39,11 +39,13 @@
                             @endphp
                             @foreach($track_list as $key => $track)
                                 <li>
-                                    <input type="text" class="form-control w-100 mb-3" name="tracks[]" placeholder="Трек" value="{!! $track->name !!}" />
+                                    <input type="text" class="form-control w-100 mb-3" name="tracks[]"
+                                           placeholder="Трек" value="{!! $track->name !!}"/>
                                 </li>
                             @endforeach
                         </ol>
-                        <p><input type="button" class="btn btn-secondary" value="Добавить трек" onclick="add_track()"></p>
+                        <p><input type="button" class="btn btn-secondary" value="Добавить трек" onclick="add_track()">
+                        </p>
                         <p>{!! Form::textarea('description', $element->description, array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'description')) !!}</p>
                         <p>{!! Form::text('genres', $genres, array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genres')) !!}</p>
                         <p>{!! Form::text('year', $element->year, array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
@@ -73,13 +75,15 @@
                             {!! DummyHelper::getExtLink('yandex_images_square', $element->name); !!}
                         </div>
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#albums_genres_container" aria-expanded="false" aria-controls="albums_genres_container">
+                    <div class="card-header" data-toggle="collapse" data-target="#albums_genres_container"
+                         aria-expanded="false" aria-controls="albums_genres_container">
                         Жанры музыки
                     </div>
                     <div class="collapse" id="albums_genres_container">
                         @include('collection.names.array', array('id' => 'genres_list', 'collection' => ElementsHelper::getGenres($section)))
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#collections_list_container" aria-expanded="false" aria-controls="collections_list_container">
+                    <div class="card-header" data-toggle="collapse" data-target="#collections_list_container"
+                         aria-expanded="false" aria-controls="collections_list_container">
                         Коллекции
                     </div>
                     <div class="collapse" id="collections_list_container">

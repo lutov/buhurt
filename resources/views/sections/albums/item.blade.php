@@ -8,5 +8,5 @@
 @section('description'){!! DatatypeHelper::arrayToString($element->bands, ', ', '/bands/', true) !!} — {!! $element->name !!} ({!! $element->year !!})@stop
 
 @section('content')
-	@include('item', array('schema' => 'MusicAlbum'))
+    @include('item', array('schema' => 'MusicAlbum'))
 @stop

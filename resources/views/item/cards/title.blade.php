@@ -7,9 +7,11 @@
                         @php
                             /** @var array $tabs */
                             /** @var array $tab */
-                            $active = array_key_first($tabs) === $tab['slug'];
+                            $active = array_key_first($tabs) === $tab['slug']
                         @endphp
-                        <a class="nav-link @if($active) active @endif" id="{{$tab['slug']}}-tab" data-toggle="tab" href="#{{$tab['slug']}}" role="tab" aria-controls="{{$key}}" aria-selected="@if($active) true @else false @endif">
+                        <a class="nav-link @if($active) active @endif" id="{{$tab['slug']}}-tab" data-toggle="tab"
+                           href="#{{$tab['slug']}}" role="tab" aria-controls="{{$key}}"
+                           aria-selected="@if($active) true @else false @endif">
                             {{$tab['name']}}
                             <span class="small text-secondary">({{$tab['count']}})</span>
                         </a>

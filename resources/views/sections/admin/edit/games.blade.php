@@ -62,19 +62,22 @@
                             {!! DummyHelper::getExtLink('yandex_images', $element->name); !!}
                         </div>
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#games_genres_container" aria-expanded="false" aria-controls="games_genres_container">
+                    <div class="card-header" data-toggle="collapse" data-target="#games_genres_container"
+                         aria-expanded="false" aria-controls="games_genres_container">
                         Жанры игр
                     </div>
                     <div class="collapse" id="games_genres_container">
                         @include('collection.names.array', array('id' => 'genres_list', 'collection' => ElementsHelper::getGenres($section)))
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#platforms_container" aria-expanded="false" aria-controls="platforms_container">
+                    <div class="card-header" data-toggle="collapse" data-target="#platforms_container"
+                         aria-expanded="false" aria-controls="platforms_container">
                         Платформы
                     </div>
                     <div class="collapse" id="platforms_container">
                         @include('collection.names.array', array('id' => 'platforms_list', 'collection' => ElementsHelper::getPlatforms()))
                     </div>
-                    <div class="card-header" data-toggle="collapse" data-target="#collections_list_container" aria-expanded="false" aria-controls="collections_list_container">
+                    <div class="card-header" data-toggle="collapse" data-target="#collections_list_container"
+                         aria-expanded="false" aria-controls="collections_list_container">
                         Коллекции
                     </div>
                     <div class="collapse" id="collections_list_container">

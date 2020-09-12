@@ -1,4 +1,5 @@
 <?php
+
 // Created by : Abdellah Chadidi => https://github.com/chadidi
 return array(
     "january" => "يناير",

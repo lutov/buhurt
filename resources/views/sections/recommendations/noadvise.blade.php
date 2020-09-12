@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('title')
-	Совет
+    Совет
 @stop
 
 @section('subtitle')
@@ -10,11 +10,11 @@
 
 @section('content')
 
-	<section class="text-center">
-		<h1 class="pt-5">@yield('title')</h1>
-		<h2 class="pb-3">@yield('subtitle')</h2>
-	</section>
+    <section class="text-center">
+        <h1 class="pt-5">@yield('title')</h1>
+        <h2 class="pb-3">@yield('subtitle')</h2>
+    </section>
 
-	{!! DummyHelper::regToAdvise(); !!}
+    {!! DummyHelper::regToAdvise(); !!}
 
 @stop

@@ -9,7 +9,7 @@
     $isAdmin = RolesHelper::isAdmin($request);
     $cover = ElementsHelper::getCover($section->alt_name, $element->id);
     $isWanted = ((Auth::check()) ? (ElementsHelper::isWanted($element, Auth::user())) : false);
-    $isUnwanted = ((Auth::check()) ? (ElementsHelper::isUnwanted($element, Auth::user())) : false);
+    $isUnwanted = ((Auth::check()) ? (ElementsHelper::isUnwanted($element, Auth::user())) : false)
 @endphp
 <div class="row">
     @include('item.cards.image')

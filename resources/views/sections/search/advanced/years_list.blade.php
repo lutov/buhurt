@@ -12,9 +12,9 @@
     </section>
 
     <?php
-        $options = array(
-        	'paginate' => false,
-        );
+    $options = array(
+        'paginate' => false,
+    );
     ?>
 
     <div class="row">

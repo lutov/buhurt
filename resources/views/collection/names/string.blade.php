@@ -12,5 +12,5 @@
         if($i < $number) {$output .= $delimiter;}
         $i++;
     }
-    echo $output;
+    echo $output
 @endphp

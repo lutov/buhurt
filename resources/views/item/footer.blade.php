@@ -2,7 +2,8 @@
     @include('section.cards.subtitle')
     <div class="tab-content" id="tabFooter">
         @include('section.tab', array('tab' => $tabs['similar']))
-        <div class="tab-pane fade @if(array_key_first($tabs) === $tabs['comments']['slug']) show active @endif" id="{{$tabs['comments']['slug']}}" role="tabpanel" aria-labelledby="{{$tabs['comments']['slug']}}-tab">
+        <div class="tab-pane fade @if(array_key_first($tabs) === $tabs['comments']['slug']) show active @endif"
+             id="{{$tabs['comments']['slug']}}" role="tabpanel" aria-labelledby="{{$tabs['comments']['slug']}}-tab">
             <div class="row">
                 <div class="col-md-12">
                     @include('comments.form')

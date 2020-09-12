@@ -29,8 +29,9 @@
                     <p>{!! Form::text('email', null, array('placeholder' => 'Логин или e-mail', 'class' => 'form-control w-100')) !!}</p>
                     <p>{!! Form::password('password', array('placeholder' => 'Пароль', 'class' => 'form-control w-100')) !!}</p>
                     {!! Form::submit('Войти', array('class' => 'btn btn-success')) !!}
-                    <a class="btn btn-primary" href="https://oauth.vk.com/authorize?client_id=4591194&redirect_uri=https://buhurt.ru/user/vk_auth&scope=email&display=popup">
-                        <img src="https://vk.com/favicon.ico" alt="Вконтакте" /> vk.com
+                    <a class="btn btn-primary"
+                       href="https://oauth.vk.com/authorize?client_id=4591194&redirect_uri=https://buhurt.ru/user/vk_auth&scope=email&display=popup">
+                        <img src="https://vk.com/favicon.ico" alt="Вконтакте"/> vk.com
                     </a>
                     {!! Form::close() !!}
                 </div>
@@ -40,5 +41,4 @@
             </div>
         </div>
     </div>
-
 @stop
