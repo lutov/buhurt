@@ -310,7 +310,7 @@ class DummyHelper {
 
 		$result = '';
 
-		$result .= '<div class="alert-light w-75 pt-3 m-auto ">';
+		$result .= '<div class="">';
 		$result .= 'Сообщить о проблеме';
 
 		switch($problem) {

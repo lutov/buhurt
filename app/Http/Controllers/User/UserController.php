@@ -9,6 +9,7 @@ use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Models\User\Unwanted;
 use App\Models\User\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -34,27 +35,21 @@ class UserController extends Controller {
 
 	/**
 	 * @param Request $request
-	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
 	public function index(Request $request) {
-
 		if(Auth::check()) {
-
 			return Redirect::to('/');
-
 		} else {
-
-			return View::make('sections.user.section', array(
+			return view('sections.user.login', array(
 				'request' => $request
 			));
-
 		}
-
 	}
 
 	/**
 	 * @param Request $request
-	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
 	public function register(Request $request) {
 
@@ -172,7 +167,7 @@ class UserController extends Controller {
 
 	/**
 	 * @param Request $request
-	 * @return \Illuminate\Http\RedirectResponse
+	 * @return RedirectResponse
 	 */
 	public function login(Request $request) {
 
@@ -191,7 +186,7 @@ class UserController extends Controller {
 
 	/**
 	 * @param Request $request
-	 * @return \Illuminate\Http\RedirectResponse
+	 * @return RedirectResponse
 	 */
 	public function logout(Request $request) {
 
@@ -205,7 +200,7 @@ class UserController extends Controller {
 	/**
 	 * @param Request $request
 	 * @param $id
-	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
 	public function view(Request $request, $id) {
 
@@ -379,7 +374,7 @@ class UserController extends Controller {
 	 * @param Request $request
 	 * @param $id
 	 * @param $section
-	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
 	public function rates(Request $request, $id, $section) {
 
@@ -522,7 +517,7 @@ class UserController extends Controller {
 	 * @param Request $request
 	 * @param $id
 	 * @param $section
-	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
 	public function wanted(Request $request, $id, $section) {
 
@@ -579,7 +574,7 @@ class UserController extends Controller {
 	 * @param Request $request
 	 * @param $id
 	 * @param $section
-	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
 	public function unwanted(Request $request, $id, $section) {
 
@@ -946,7 +941,7 @@ class UserController extends Controller {
 
 	/**
 	 * @param Request $request
-	 * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
 	public function list(Request $request) {
 

@@ -308,9 +308,7 @@ class SearchController extends Controller {
 
 		}
 
-		return View::make($this->section . '.json', array(
-			'result' => $result,
-		));
+		return $result;
 
 	}
 

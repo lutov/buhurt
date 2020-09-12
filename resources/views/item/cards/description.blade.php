@@ -33,7 +33,7 @@
 @endphp
 @if($card)
 <div class="col-lg-9 col-md-8 col-12" id="elementDetails">
-    <div class="card @include('card.class')" id="cardDetails">
+    <div class="card @include('card.class') mb-4" id="cardDetails">
         @if($nav)
             <div class="card-header">
                 <nav>

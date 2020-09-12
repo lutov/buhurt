@@ -89,16 +89,20 @@
 								'id' => 'search_form',
 								'method' => 'GET'
 							)) !!}
-							{!! Form::text(
-                                'query',
-                                $value = Input::get('query', ''),
-                                $attributes = array(
-                                    'placeholder' => 'Поиск',
-                                    'class' => 'form-control mr-sm-2',
-                                    'id' => 'search'
-                                )
-                            ) !!}
-							<button class="btn btn-outline-primary my-2 my-sm-0 mr-sm-2 d-none d-xl-inline" type="submit">🔎</button>
+								<div class="input-group input-group-sm">
+									{!! Form::text(
+										'query',
+										$value = Input::get('query', ''),
+										$attributes = array(
+											'placeholder' => 'Поиск',
+											'class' => 'form-control',
+											'id' => 'search'
+										)
+									) !!}
+									<div class="input-group-append">
+										<button class="btn btn-outline-primary mr-sm-3 d-none d-xl-inline" type="submit">🔎</button>
+									</div>
+								</div>
 							{!! Form::close() !!}
 
 						</li>
