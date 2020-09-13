@@ -85,18 +85,20 @@ class CollectionsController extends Controller {
 				'year' => 'Год'
 			);
 
-			$titles = array();
-			$books = $films = $games = $albums = array();
+			$tabs = array();
 			foreach($this->sections as $genre_section) {
-				$entity = $genre_section['section'];
+				$entity = $genre_section['section']; // TODO check naming logic
 				$name = $genre_section['name'];
-				$$entity = $this->getCollectionElements($entity, $element, $sort, $order, $limit);
-				if ($$entity->count()) {
-					$titles[$entity]['name'] = $name;
-					$titles[$entity]['count'] = $this->countCollectionElements($entity, $element);
-				}
+				$count = $this->countCollectionElements($entity, $element);
+				if(0 != $count) {
+                    $tabs[$entity]['slug'] = $entity;
+                    $tabs[$entity]['name'] = $name;
+                    $tabs[$entity]['count'] = $count;
+                    $tabs[$entity]['section'] = SectionsHelper::getSection($entity);;
+                    $tabs[$entity]['elements'] = $this->getCollectionElements($entity, $element, $sort, $order, $limit);
+                }
 			}
-			uasort($titles, array('TextHelper', 'compareReverseCount'));
+			uasort($tabs, array('TextHelper', 'compareReverseCount'));
 
 			$options = array(
 				'header' => true,
@@ -109,13 +111,9 @@ class CollectionsController extends Controller {
 
 			return View::make('sections.'.$this->section.'.item', array(
 				'request' => $request,
-				'titles' => $titles,
+				'tabs' => $tabs,
 				'element' => $element,
 				'section' => $section,
-				'books' => $books,
-				'films' => $films,
-				'games' => $games,
-				'albums' => $albums,
 				'options' => $options
 			));
 

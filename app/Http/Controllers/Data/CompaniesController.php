@@ -80,37 +80,42 @@ class CompaniesController extends Controller {
 				'year' => 'Год'
 			);
 
-			$titles = array();
+			$tabs = array();
 			$keywords = array();
-			$books_published = $games_developed = $games_published = array();
 			if($element->books_published->count()) {
 				$keywords[] = 'книги';
-				$titles['books']['name'] = 'Книги';
-				$titles['books']['count'] = $element->books_published->count();
-				$books_published = $element->books_published()
+                $tabs['book_publisher']['slug'] = 'book_publisher';
+				$tabs['book_publisher']['name'] = 'Книги';
+				$tabs['book_publisher']['count'] = $element->books_published->count();
+                $tabs['book_publisher']['section'] = SectionsHelper::getSection('books');
+                $tabs['book_publisher']['elements'] = $element->books_published()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
 			if($element->games_developed->count()) {
 				$keywords[] = 'разработанные игры';
-				$titles['developer']['name'] = 'Разработанные игры';
-				$titles['developer']['count'] = $element->games_developed->count();
-				$games_developed = $element->games_developed()
+                $tabs['game_developer']['slug'] = 'game_developer';
+				$tabs['game_developer']['name'] = 'Разработанные игры';
+				$tabs['game_developer']['count'] = $element->games_developed->count();
+                $tabs['game_developer']['section'] = SectionsHelper::getSection('games');
+                $tabs['game_developer']['elements'] = $element->games_developed()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
 			if($element->games_published->count()) {
 				$keywords[] = 'изданные игры';
-				$titles['publisher']['name'] = 'Изданные игры';
-				$titles['publisher']['count'] = $element->games_published->count();
-				$games_published = $element->games_published()
+                $tabs['game_publisher']['slug'] = 'game_publisher';
+				$tabs['game_publisher']['name'] = 'Изданные игры';
+				$tabs['game_publisher']['count'] = $element->games_published->count();
+                $tabs['game_publisher']['section'] = SectionsHelper::getSection('games');
+                $tabs['game_publisher']['elements'] = $element->games_published()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
-			uasort($titles, array('TextHelper', 'compareReverseCount'));
+			uasort($tabs, array('TextHelper', 'compareReverseCount'));
 
 			$options = array(
 				'header' => true,
@@ -124,11 +129,8 @@ class CompaniesController extends Controller {
 			return View::make('sections.'.$this->section.'.item', array(
 				'request' => $request,
 				'section' => $section,
-				'titles' => $titles,
+				'tabs' => $tabs,
 				'element' => $element,
-				'books_published' => $books_published,
-				'games_developed' => $games_developed,
-				'games_published' => $games_published,
 				'options' => $options,
 			));
 

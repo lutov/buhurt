@@ -79,19 +79,20 @@ class PlatformsController extends Controller {
 				'year' => 'Год'
 			);
 
-			$titles = array();
+			$tabs = array();
 			$keywords = array();
-			$games = array();
 			if($element->games->count()) {
 				$keywords[] = 'игры';
-				$titles['games']['name'] = 'Игры';
-				$titles['games']['count'] = $element->games->count();
-				$games = $element->games()
+				$tabs['games']['slug'] = 'games';
+				$tabs['games']['name'] = 'Игры';
+				$tabs['games']['count'] = $element->games->count();
+                $tabs['games']['section'] = SectionsHelper::getSection('games');
+                $tabs['games']['elements'] = $element->games()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
-			//uasort($titles, array('TextHelper', 'compareReverseCount'));
+			//uasort($tabs, array('TextHelper', 'compareReverseCount'));
 
 			$options = array(
 				'header' => true,
@@ -104,10 +105,9 @@ class PlatformsController extends Controller {
 
 			return View::make('sections.'.$this->section.'.item', array(
 				'request' => $request,
-				'titles' => $titles,
+				'tabs' => $tabs,
 				'element' => $element,
 				'section' => $section,
-				'games' => $games,
 				'options' => $options
 			));
 

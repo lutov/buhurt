@@ -82,19 +82,20 @@ class CountriesController extends Controller {
 			$sort = TextHelper::checkSort($sort);
 			$order = TextHelper::checkOrder($order);
 
-			$titles = array();
+			$tabs = array();
 			$keywords = array();
-			$films = array();
 			if($element->films->count()) {
 				$keywords[] = 'фильмы';
-				$titles['films']['name'] = 'Фильмы';
-				$titles['films']['count'] = $element->films->count();
-				$films = $element->films()
+				$tabs['films']['slug'] = 'films';
+				$tabs['films']['name'] = 'Фильмы';
+				$tabs['films']['count'] = $element->films->count();
+                $tabs['films']['section'] = SectionsHelper::getSection('films');
+                $tabs['films']['elements'] = $element->films()
 					->orderBy($sort, $order)
 					->paginate($limit)
 				;
 			}
-			//uasort($titles, array('TextHelper', 'compareReverseCount'));
+			//uasort($tabs, array('TextHelper', 'compareReverseCount'));
 
 			$options = array(
 				'header' => true,
@@ -107,10 +108,9 @@ class CountriesController extends Controller {
 
 			return View::make('sections.'.$this->section.'.item', array(
 				'request' => $request,
-				'titles' => $titles,
+				'tabs' => $tabs,
 				'element' => $element,
 				'section' => $section,
-				'films' => $films,
 				'options' => $options
 			));
 
