@@ -41,16 +41,19 @@ class YearsController extends Controller {
 			'count' => 'Число произведений'
 		);
 
-		$titles = array();
-		$books = $films = $games = $albums = array();
+		$tabs = array();
 		foreach($this->sections as $genre_section) {
-			$entity = $genre_section['section'];
-			$name = $genre_section['name'];
-			$$entity = $this->getSectionYears($entity, $sort, $order);
-			if ($$entity->count()) {
-				$titles[$entity]['name'] = $name;
-				$titles[$entity]['count'] = $$entity->count();
-			}
+            $entity = $genre_section['section']; // TODO check naming logic
+            $name = $genre_section['name'];
+            $elements = $this->getSectionYears($entity, $sort, $order);
+            $count = $elements->count();
+            if(0 != $count) {
+                $tabs[$entity]['slug'] = $entity;
+                $tabs[$entity]['name'] = $name;
+                $tabs[$entity]['count'] = $count;
+                $tabs[$entity]['section'] = SectionsHelper::getSection('years');
+                $tabs[$entity]['elements'] = $elements;
+            }
 		}
 
 		$options = array(
@@ -69,11 +72,7 @@ class YearsController extends Controller {
 
 		return View::make('sections.'.$this->section.'.section', array(
 			'request' => $request,
-			'titles' => $titles,
-			'books' => $books,
-			'films' => $films,
-			'games' => $games,
-			'albums' => $albums,
+			'tabs' => $tabs,
 			'section' => $section,
 			'options' => $options,
 		));
@@ -105,17 +104,21 @@ class YearsController extends Controller {
 			'year' => 'Год'
 		);
 
-		$titles = array();
+		$tabs = array();
 		$books = $films = $games = $albums = array();
 		foreach($this->sections as $genre_section) {
-			$type = $genre_section['type'];
-			$entity = $genre_section['section'];
-			$name = $genre_section['name'];
-			$$entity = $this->getYearElements($type, $year, $sort, $order, $limit);
-			if ($$entity->count()) {
-				$titles[$entity]['name'] = $name;
-				$titles[$entity]['count'] = $this->countYearElements($type, $element);
-			}
+            $type = $genre_section['type'];
+            $entity = $genre_section['section']; // TODO check naming logic
+            $name = $genre_section['name'];
+            $elements = $this->getYearElements($type, $year, $sort, $order, $limit);
+            $count = $elements->count();
+            if(0 != $count) {
+                $tabs[$entity]['slug'] = $entity;
+                $tabs[$entity]['name'] = $name;
+                $tabs[$entity]['count'] = $count;
+                $tabs[$entity]['section'] = SectionsHelper::getSection($entity);
+                $tabs[$entity]['elements'] = $elements;
+            }
 		}
 
 		$options = array(
@@ -129,7 +132,7 @@ class YearsController extends Controller {
 
 		return View::make('sections.'.$this->section.'.item', array(
 			'request' => $request,
-			'titles' => $titles,
+			'tabs' => $tabs,
 			'element' => $element,
 			'section' => $section,
 			'books' => $books,

@@ -2,17 +2,17 @@
     <div class="btn-group">
 
         @php
-            /** @var string $section */
+            /** @var $section */
             /** @var $element */
-            $link = $section.'/'.$element->id;
+            $link = $section->alt_name.'/'.$element->id;
             $like_class = 'btn-secondary';
             $liked_class = 'btn-light';
-            $call = "'".$section."', '".$element->id."', '".$like_class."', '".$liked_class."'";
+            $call = "'".$section->alt_name."', '".$element->id."', '".$like_class."', '".$liked_class."'";
             $b_class = 'btn btn-sm '.$like_class;
         @endphp
 
         @if($isAdmin)
-            <a role="button" class="{!! $b_class !!}" href="/admin/edit/{!! $link !!}"
+            <a role="button" class="{!! $b_class !!}" href="/admin/edit/{{$link}}"
                title="Редактировать">
                 &#9998;
             </a>

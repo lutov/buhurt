@@ -218,7 +218,14 @@ class ElementsHelper
                 $user = Auth::user();
                 $isAdmin = RolesHelper::isAdmin($request);
                 $elements_list .= '<div class="card-footer text-center d-none d-xl-block">';
-                $elements_list .= self::getControls($section, $element, $user, $isAdmin);
+                $elements_list .= view('card.controls', array(
+                    'section' => SectionsHelper::getSection($section),
+                    'element' => $element,
+                    'user' => $user,
+                    'isAdmin' => $isAdmin,
+                    'isWanted' => self::isWanted($element, $user),
+                    'isUnwanted' => self::isUnwanted($element, $user),
+                ));
                 $elements_list .= '</div>';
             }
 

@@ -42,17 +42,19 @@ class GenresController extends Controller {
 			'name' => 'Имя',
 		);
 
-		$titles = array();
-		$books = $films = $games = $albums = array();
+		$tabs = array();
 		foreach($this->sections as $genre_section) {
-			$type = $genre_section['type'];
-			$entity = $genre_section['section'];
-			$name = $genre_section['name'];
-			$$entity = $this->getTypeElements($type, $element, $sort, $order, $limit);
-			if ($$entity->count()) {
-				$titles[$entity]['name'] = $name;
-				$titles[$entity]['count'] = $this->countTypeElements($type, $element);
-			}
+            $type = $genre_section['type'];
+            $entity = $genre_section['section']; // TODO check naming logic
+            $name = $genre_section['name'];
+            $count = $this->countTypeElements($type, $element);
+            if(0 != $count) {
+                $tabs[$entity]['slug'] = $entity;
+                $tabs[$entity]['name'] = $name;
+                $tabs[$entity]['count'] = $count;
+                $tabs[$entity]['section'] = SectionsHelper::getSection('genres');
+                $tabs[$entity]['elements'] = $this->getTypeElements($type, $element, $sort, $order, $limit);
+            }
 		}
 
 		$options = array(
@@ -66,11 +68,7 @@ class GenresController extends Controller {
 
 		return View::make('sections.'.$this->section.'.section', array(
 			'request' => $request,
-			'titles' => $titles,
-			'books' => $books,
-			'films' => $films,
-			'games' => $games,
-			'albums' => $albums,
+			'tabs' => $tabs,
 			'section' => $section,
 			'options' => $options,
 		));
@@ -103,16 +101,18 @@ class GenresController extends Controller {
 				'year' => 'Год'
 			);
 
-			$titles = array();
-			$books = $films = $games = $albums = array();
+			$tabs = array();
 			foreach($this->sections as $genre_section) {
-				$entity = $genre_section['section'];
-				$name = $genre_section['name'];
-				$$entity = $this->getGenreElements($entity, $element, $sort, $order, $limit);
-				if ($$entity->count()) {
-					$titles[$entity]['name'] = $name;
-					$titles[$entity]['count'] = $this->countGenreElements($entity, $element);
-				}
+                $entity = $genre_section['section']; // TODO check naming logic
+                $name = $genre_section['name'];
+                $count = $this->countGenreElements($entity, $element);
+                if(0 != $count) {
+                    $tabs[$entity]['slug'] = $entity;
+                    $tabs[$entity]['name'] = $name;
+                    $tabs[$entity]['count'] = $count;
+                    $tabs[$entity]['section'] = SectionsHelper::getSection($entity);
+                    $tabs[$entity]['elements'] = $this->getGenreElements($entity, $element, $sort, $order, $limit);
+                }
 			}
 
 			$options = array(
@@ -126,13 +126,9 @@ class GenresController extends Controller {
 
 			return View::make('sections.'.$this->section.'.item', array(
 				'request' => $request,
-				'titles' => $titles,
+				'tabs' => $tabs,
 				'element' => $element,
 				'section' => $section,
-				'books' => $books,
-				'films' => $films,
-				'games' => $games,
-				'albums' => $albums,
 				'options' => $options
 			));
 
@@ -181,7 +177,7 @@ class GenresController extends Controller {
 	 */
 	private function countGenreElements(string $section, $element) {
 		$minutes = 60;
-		$var_name = 'genre_'.$element->id.'_count';
+		$var_name = 'genre_'.$element->id.'_'.$section.'_count';
 		return Cache::remember($var_name, $minutes, function () use ($section, $element) {
 			return $element->{$section}()->count();
 		});
