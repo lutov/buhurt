@@ -1,13 +1,6 @@
 @extends('layouts.default')
-
-@section('title')
-    Совет
-@stop
-
-@section('subtitle')
-
-@stop
-
+@section('title')Совет@stop
+@section('subtitle')@stop
 @section('content')
 
     <section class="text-center">

@@ -120,10 +120,10 @@
                             <a class="dropdown-item"
                                href="{!! URL::action('User\UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
                             <a class="dropdown-item" href="/events">Лента</a>
-                            <a class="dropdown-item" href="/advise">Совет</a>
-                            <a class="dropdown-item" href="/recommendations/">Случайный список</a>
-                            <a class="dropdown-item"
-                               href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a>
+                            <!--a class="dropdown-item" href="/advise">Совет</a-->
+                            <a class="dropdown-item" href="/recommendations/">Рекомендации</a>
+                            <!--a class="dropdown-item"
+                               href="/user/{!! Auth::user()->id !!}/recommendations">Рекомендации</a-->
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/user/logout/">Выйти</a>
 

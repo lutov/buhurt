@@ -11,6 +11,7 @@ use App\Models\Search\ElementRelation;
 use App\Models\User\Rate;
 use App\Models\User\Unwanted;
 use App\Models\User\Wanted;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,11 +23,23 @@ use App\Helpers\UserHelper;
 
 class RecommendationsController extends Controller {
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index(Request $request) {
+        if(Auth::check()) {
+            return $this->personal($request);
+        } else {
+            return $this->random($request);
+        }
+    }
+
 	/**
 	 * @param Request $request
 	 * @return \Illuminate\Contracts\View\View
 	 */
-    public function get(Request $request) {
+    public function personal(Request $request) {
 
 		$elements = new Collection();
 
@@ -202,9 +215,9 @@ class RecommendationsController extends Controller {
 
 		});
 
-		return View::make('sections.recommendations.personal', array(
+		return View::make('sections.recommendations.section', array(
 			'request' => $request,
-			'section' => $section,
+			'section' => SectionsHelper::getSection($section),
 			'principle' => $principle,
 			'options' => array(
 				'rates' => array(
@@ -229,7 +242,7 @@ class RecommendationsController extends Controller {
 	 * @param Request $request
 	 * @return \Illuminate\Contracts\View\View
 	 */
-    public function gag(Request $request) {
+    public function random(Request $request) {
 
 		$input = $request->all();
 
@@ -257,9 +270,9 @@ class RecommendationsController extends Controller {
 
 		}
 
-		return View::make('sections.recommendations.gag', array(
+		return View::make('sections.recommendations.random', array(
 			'request' => $request,
-			'section' => $section,
+			'section' => SectionsHelper::getSection($section),
 			'options' => array(
 				'years' => array(
 					'from' => $min_year,
@@ -274,18 +287,15 @@ class RecommendationsController extends Controller {
 
 	/**
 	 * @param Request $request
-	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+	 * @return Factory|\Illuminate\View\View
 	 */
     public function advise(Request $request) {
 
     	if(!Auth::check()) {
-
 			return view('sections.recommendations.noadvise', array(
 				'request' => $request,
 			));
-
     		//return Redirect::to('/')->with('message', 'Чтобы получить совет, нужно авторизоваться');
-
     	}
 
     	$user = Auth::user();

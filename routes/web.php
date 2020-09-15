@@ -279,12 +279,10 @@ Route::group(array('prefix' => 'user'), function() {
 
 	Route::any('{id}/options', array('uses' => 'User\UserController@options'));
 
-	Route::any('{id}/recommendations', array('uses' => 'User\RecommendationsController@get'));
+	//Route::any('{id}/recommendations', array('uses' => 'User\RecommendationsController@get'));
 });
 Route::get('users/', array('uses' => 'User\UserController@list'));
-
-Route::any('recommendations', array('uses' => 'User\RecommendationsController@gag'));
-
+Route::any('recommendations', array('uses' => 'User\RecommendationsController@index'));
 Route::any('advise', array('uses' => 'User\RecommendationsController@advise'));
 
 /* LISTS */

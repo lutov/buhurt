@@ -2,4 +2,4 @@
 <div class="row">
     @include('section.items')
 </div>
-{!! ElementsHelper::getSectionFooter($request, $elements, $options); !!}
+@include('section.cards.footer')
