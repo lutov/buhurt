@@ -1,3 +1,3 @@
 @foreach ($elements as $element)
-    {!! ElementsHelper::getElement($request, $element, $section->alt_name, $options) !!}
+    @include('section.cards.item')
 @endforeach
