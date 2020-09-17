@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\User;
 
+use App\Helpers\SectionsHelper;
 use App\Http\Controllers\Controller;
 use App\Helpers\RolesHelper;
 use Illuminate\Support\Facades\Auth;
@@ -40,11 +41,13 @@ class EventsController extends Controller {
 
 		}
 
-		return View::make('sections.events.list', array(
+		$options = array('paginate' => true);
+
+		return View::make('sections.events.section', array(
 			'request' => $request,
 			'elements' => $elements,
-			'section' => $this->section,
-			'section_name' => $this->section_name,
+			'section' => SectionsHelper::getSection($this->section),
+            'options' => $options,
 		));
 
 	}
