@@ -270,7 +270,7 @@ Route::group(array('prefix' => 'user'), function() {
 	Route::any('vk_auth', array('uses' => 'User\UserController@vk_auth'));
 
 	Route::get('{id}', function($id) {return Redirect::to('/user/'.$id.'/profile');});
-	Route::get('{id}/profile', array('uses' => 'User\UserController@view'));
+	Route::get('{id}/profile', array('uses' => 'User\UserController@profile'));
 	Route::any('{id}/rates/{section}', array('uses' => 'User\UserController@rates'));
 	Route::any('{id}/rates/{section}/export', array('uses' => 'User\UserController@rates_export'));
 

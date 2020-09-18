@@ -118,7 +118,7 @@
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown01">
 
                             <a class="dropdown-item"
-                               href="{!! URL::action('User\UserController@view', array(Auth::user()->id)) !!}">Профиль</a>
+                               href="{!! URL::action('User\UserController@profile', array(Auth::user()->id)) !!}">Профиль</a>
                             <a class="dropdown-item" href="/events">Лента</a>
                             <!--a class="dropdown-item" href="/advise">Совет</a-->
                             <a class="dropdown-item" href="/recommendations/">Рекомендации</a>

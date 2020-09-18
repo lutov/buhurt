@@ -1,8 +1,10 @@
 <?php namespace App\Http\Controllers\User;
 
 use App\Helpers\DebugHelper;
+use App\Helpers\ElementsHelper;
 use App\Helpers\UserHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Data\Collection;
 use App\Models\User\Event;
 use App\Helpers\RolesHelper;
 use App\Helpers\SectionsHelper;
@@ -202,10 +204,9 @@ class UserController extends Controller {
 	 * @param $id
 	 * @return \Illuminate\Contracts\View\View|RedirectResponse
 	 */
-	public function view(Request $request, $id) {
+	public function profile(Request $request, $id) {
 
 		//Cache::flush();
-
 		if(Auth::check() && $id == Auth::user()->id) {
 			$user = Auth::user();
 		} else {
@@ -221,10 +222,8 @@ class UserController extends Controller {
 			//die($file_path);
 
 			if (file_exists($file_path)) {
-
 				$avatar = $id;
 				$hash = md5_file($file_path);
-
 			}
 
 			$rates = new Rate();
@@ -335,6 +334,56 @@ class UserController extends Controller {
 			
 			//die(print_r($chart_rates));
 
+            $has_genres = count($fav_gens_books) || count($fav_gens_films) || count($fav_gens_games) || count($fav_gens_albums);
+            $has_rates = (!empty($chart_rates));
+            $has_achievements = true;
+            $has_options = (Auth::check() && Auth::user()->id == $user->id);
+
+            $tabs = array();
+            $tabs['info'] = ElementsHelper::tab(
+                'info',
+                'Информация',
+                0,
+                new Section(),
+                new Collection()
+            );
+            if($has_genres) {
+                $tabs['genres'] = ElementsHelper::tab(
+                    'genres',
+                    'Жанры',
+                    0,
+                    new Section(),
+                    new Collection()
+                );
+            }
+            if($has_rates) {
+                $tabs['rates'] = ElementsHelper::tab(
+                    'rates',
+                    'Оценки',
+                    0,
+                    new Section(),
+                    new Collection()
+                );
+            }
+            if($has_achievements) {
+                $tabs['achievements'] = ElementsHelper::tab(
+                    'achievements',
+                    'Достижения',
+                    0,
+                    new Section(),
+                    new Collection()
+                );
+            }
+            if($has_options) {
+                $tabs['options'] = ElementsHelper::tab(
+                    'options',
+                    'Настройки',
+                    0,
+                    new Section(),
+                    new Collection()
+                );
+            }
+
 			return View::make('sections.user.profile', array(
 				'request' => $request,
 				'user' => $user,
@@ -362,6 +411,11 @@ class UserController extends Controller {
 				'fav_gens_games' => $fav_gens_games,
 				'fav_gens_albums' => $fav_gens_albums,
 				'chart_rates' => $chart_rates,
+                'tabs' => $tabs,
+                'has_genres' => $has_genres,
+                'has_rates' => $has_rates,
+                'has_achievements' => $has_achievements,
+                'has_options' => $has_options,
 			));
 		}
 		else {
