@@ -29,6 +29,25 @@ class ElementsHelper
 {
 
     /**
+     * @param  string  $slug
+     * @param  string  $name
+     * @param  int  $count
+     * @param  Section  $section
+     * @param $elements
+     * @return array
+     */
+    public static function tab(string $slug, string $name, int $count, Section $section, $elements)
+    {
+       return array(
+           'slug' => $slug,
+           'name' => $name,
+           'count' => $count,
+           'section' => $section,
+           'elements' => $elements,
+       );
+    }
+
+    /**
      * @param  string  $section
      * @param  int  $id
      * @return string

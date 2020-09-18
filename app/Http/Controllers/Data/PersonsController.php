@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Data;
 
+use App\Helpers\ElementsHelper;
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
 use App\Http\Controllers\Controller;
@@ -80,63 +81,52 @@ class PersonsController extends Controller {
 				'year' => 'Год'
 			);
 
-			$tabs = array();
-			$keywords = array();
-			if($element->books->count()) {
-				$keywords[] = 'писатель';
-				$tabs['writer']['slug'] = 'writer';
-				$tabs['writer']['name'] = 'Писатель';
-				$tabs['writer']['count'] = $element->books->count();
-				$tabs['writer']['section'] = SectionsHelper::getSection('books');
-                $tabs['writer']['elements'] = $element->books()
-					->orderBy($sort, $order)
-					->paginate($limit)
-				;
-			}
-			if($element->screenplays->count()) {
-				$keywords[] = 'сценарист';
-				$tabs['screenwriter']['slug'] = 'screenwriter';
-				$tabs['screenwriter']['name'] = 'Сценарист';
-				$tabs['screenwriter']['count'] = $element->screenplays->count();
-                $tabs['screenwriter']['section'] = SectionsHelper::getSection('films');
-                $tabs['screenwriter']['elements'] = $element->screenplays()
-					->orderBy($sort, $order)
-					->paginate($limit)
-				;
-			}
-			if($element->directions->count()) {
-				$keywords[] = 'режиссёр';
-				$tabs['director']['slug'] = 'director';
-				$tabs['director']['name'] = 'Режиссёр';
-				$tabs['director']['count'] = $element->directions->count();
-                $tabs['director']['section'] = SectionsHelper::getSection('films');
-                $tabs['director']['elements'] = $element->directions()
-					->orderBy($sort, $order)
-					->paginate($limit)
-				;
-			}
-			if($element->productions->count()) {
-				$keywords[] = 'продюссер';
-				$tabs['producer']['slug'] = 'producer';
-				$tabs['producer']['name'] = 'Продюссер';
-				$tabs['producer']['count'] = $element->productions->count();
-                $tabs['producer']['section'] = SectionsHelper::getSection('films');
-                $tabs['producer']['elements'] = $element->productions()
-					->orderBy($sort, $order)
-					->paginate($limit)
-				;
-			}
-			if($element->roles->count()) {
-				$keywords[] = 'актёр';
-				$tabs['actor']['slug'] = 'actor';
-				$tabs['actor']['name'] = 'Актёр';
-				$tabs['actor']['count'] = $element->roles->count();
-                $tabs['actor']['section'] = SectionsHelper::getSection('films');
-                $tabs['actor']['elements'] = $element->roles()
-					->orderBy($sort, $order)
-					->paginate($limit)
-				;
-			}
+            $tabs = array();
+            $keywords = array();
+			$titles = array(
+			    'writer' => array(
+			        'title' => 'Писатель',
+                    'slug' => 'writer',
+                    'relation' => 'books',
+                    'section' => 'books'
+                ),
+			    'screenwriter' => array(
+			        'title' => 'Сценарист',
+                    'slug' => 'screenwriter',
+                    'relation' => 'screenplays',
+                    'section' => 'films'
+                ),
+			    'director' => array(
+			        'title' => 'Режиссёр',
+                    'slug' => 'director',
+                    'relation' => 'directions',
+                    'section' => 'films'
+                ),
+			    'producer' => array(
+			        'title' => 'Продюссер',
+                    'slug' => 'producer',
+                    'relation' => 'productions',
+                    'section' => 'films'
+                ),
+			    'actor' => array(
+			        'title' => 'Актёр',
+                    'slug' => 'actor',
+                    'relation' => 'roles',
+                    'section' => 'films'
+                ),
+            );
+            foreach($titles as $title) {
+                if($element->{$title['relation']}->count()) {
+                    $keywords[] = mb_strtolower($title['title']);
+                    $tabs[$title['slug']] = ElementsHelper::tab(
+                        $title['slug'],
+                        $title['title'],
+                        $element->{$title['relation']}->count(),
+                        SectionsHelper::getSection($title['section']),
+                        $element->{$title['relation']}()->orderBy($sort, $order)->paginate($limit)
+                    );
+                }
+            }
 			uasort($tabs, array('TextHelper', 'compareReverseCount'));
 
 			$options = array(
