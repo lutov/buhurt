@@ -5,19 +5,27 @@
 @section('description')Связи «{!! $element->name !!}» с другими произведениями@stop
 @section('content')
 
-    @include('item.cards.title', array('title' => $element->name, 'subtitle' => 'Связи с произведениями'))
     <div class="row">
-        @include('section.cards.item')
-        @if($relations->count())
-            @foreach($relations as $relation)
-                @php
-                    $relation_section = SectionsHelper::getSectionBy($relation->element_type);
-                    $relation_element = $relation->element_type::find($relation->element_id);
-                    $relation_element->caption = $relation->caption;
-                @endphp
-                @include('section.cards.item', array('section' => SectionsHelper::getSection($relation_section), 'element' => $relation_element))
-            @endforeach
-        @endif
+        <div class="@include('card.grid.sidebar') mb-4">
+            @include('section.cards.item')
+        </div>
+        <div class="@include('card.grid.main') mb-4">
+            @include('item.cards.title', array('title' => $element->name, 'subtitle' => 'Связи с произведениями'))
+            @if($relations->count())
+                <div class="row">
+                    @foreach($relations as $relation)
+                        @php
+                            $relation_section = SectionsHelper::getSectionBy($relation->element_type);
+                            $relation_element = $relation->element_type::find($relation->element_id);
+                            $relation_element->caption = $relation->caption;
+                        @endphp
+                        <div class="@include('card.grid.third')">
+                            @include('section.cards.item', array('section' => SectionsHelper::getSection($relation_section), 'element' => $relation_element))
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
     </div>
 
     @if(RolesHelper::isAdmin($request))

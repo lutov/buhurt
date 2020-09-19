@@ -1,3 +1,8 @@
+@php
+    if(!isset($grid)) {$grid = 'quarter';}
+@endphp
 @foreach ($elements as $element)
-    @include('section.cards.item')
+    <div class="@include('card.grid.'.$grid)">
+        @include('section.cards.item')
+    </div>
 @endforeach

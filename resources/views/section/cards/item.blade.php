@@ -17,30 +17,28 @@
     if('albums' == $section->alt_name) {$square = true;}
     $img_class = ($square) ? 'card-img-box-square' : 'card-img-box';
 @endphp
-<div class="col-lg-3 col-md-4 col-sm-6 col-6">
-    <div class="card @include('card.class') mb-4">
-        <div class="card-header">
-            <a href="/{{ $section->alt_name }}/{{ $element->id }}" class="one-liner" title="{!! $element->name !!}">
-                {!! $element->name !!}
-            </a>
-        </div>
-        <div class="{{ $img_class }}">
-            <a href="/{{ $section->alt_name }}/{{ $element->id }}">
-                <img class="card-img-top" src="{!! ElementsHelper::getCover($section->alt_name, $element->id) !!}" alt="{!! $element->name !!}" title="{!! $element->name !!}" loading="lazy"/>
-            </a>
-        </div>
-        @if($auth)
-            <div class="card-body text-center d-none d-xl-block p-2">
-                {!! ElementsHelper::getFastRating($section, $element, $user) !!}
-            </div>
-            <div class="card-footer text-center d-none d-xl-block">
-                @include('card.controls')
-            </div>
-        @endif
-        @if($element->caption)
-            <div class="card-footer text-muted">
-                {!! $element->caption !!}
-            </div>
-        @endif
+<div class="card @include('card.class') mb-4">
+    <div class="card-header">
+        <a href="/{{ $section->alt_name }}/{{ $element->id }}" class="one-liner" title="{!! $element->name !!}">
+            {!! $element->name !!}
+        </a>
     </div>
+    <div class="{{ $img_class }}">
+        <a href="/{{ $section->alt_name }}/{{ $element->id }}">
+            <img class="card-img-top" src="{!! ElementsHelper::getCover($section->alt_name, $element->id) !!}" alt="{!! $element->name !!}" title="{!! $element->name !!}" loading="lazy"/>
+        </a>
+    </div>
+    @if($auth)
+        <div class="card-body text-center d-none d-xl-block p-2">
+            {!! ElementsHelper::getFastRating($section, $element, $user) !!}
+        </div>
+        <div class="card-footer text-center d-none d-xl-block">
+            @include('card.controls')
+        </div>
+    @endif
+    @if($element->caption)
+        <div class="card-footer text-muted">
+            {!! $element->caption !!}
+        </div>
+    @endif
 </div>

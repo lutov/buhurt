@@ -4,9 +4,18 @@
 @section('keywords'){!! $element->name !!}@if(count($keywords)), {{implode(', ', $keywords)}}@endif @stop
 @section('description'){!! $element->name !!}@if(count($keywords)) — {{implode(', ', $keywords)}}@endif @stop
 @section('content')
-    @include('item.cards.title', array('title' => $element->name, 'subtitle' => ''))
     <div itemscope itemtype="http://schema.org/Person">
-        @include('item.body')
+        <div class="row">
+            <div class="@include('card.grid.sidebar') mb-4">
+                <div class="mb-4">
+                    @include('item.cards.image')
+                </div>
+                @include('item.cards.description')
+            </div>
+            <div class="@include('card.grid.main')">
+                @include('item.cards.title', array('title' => $element->name, 'subtitle' => ''))
+                @include('section.tabs', array('grid' => 'third'))
+            </div>
+        </div>
     </div>
-    @include('section.tabs')
 @stop
