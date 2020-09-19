@@ -101,15 +101,15 @@
         @endif
         @if(0 != $books_unwanted || 0 != $films_unwanted || 0 != $games_unwanted || 0 != $albums_unwanted)
             <p class="card-text">
-                Хочет
+                Не хочет
                 @if(0 != $books_unwanted)
-                    прочесть <a href="{!! $url['unwanted']['books'] !!}">{!! $numbers['unwanted']['books'] !!}</a>,
+                    читать <a href="{!! $url['unwanted']['books'] !!}">{!! $numbers['unwanted']['books'] !!}</a>,
                 @endif
                 @if(0 != $films_unwanted)
-                    посмотреть <a href="{!! $url['unwanted']['films'] !!}">{!! $numbers['unwanted']['films'] !!}</a>,
+                    смотреть <a href="{!! $url['unwanted']['films'] !!}">{!! $numbers['unwanted']['films'] !!}</a>,
                 @endif
                 @if(0 != $games_unwanted)
-                    сыграть в <a href="{!! $url['unwanted']['games'] !!}">{!! $numbers['unwanted']['games'] !!}</a>,
+                    играть в <a href="{!! $url['unwanted']['games'] !!}">{!! $numbers['unwanted']['games'] !!}</a>,
                 @endif
                 @if(0 != $albums_unwanted)
                     слушать <a href="{!! $url['unwanted']['albums'] !!}">{!! $numbers['unwanted']['albums'] !!}</a>

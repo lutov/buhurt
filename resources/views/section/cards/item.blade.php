@@ -37,7 +37,7 @@
                 @include('card.controls')
             </div>
         @endif
-        @if($element->caption) {
+        @if($element->caption)
             <div class="card-footer text-muted">
                 {!! $element->caption !!}
             </div>

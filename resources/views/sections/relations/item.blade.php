@@ -7,7 +7,7 @@
 
     @include('item.cards.title', array('title' => $element->name, 'subtitle' => 'Связи с произведениями'))
     <div class="row">
-        {!! ElementsHelper::getElement($request, $element, $section->alt_name, $options) !!}
+        @include('section.cards.item')
         @if($relations->count())
             @foreach($relations as $relation)
                 @php
@@ -15,7 +15,7 @@
                     $relation_element = $relation->element_type::find($relation->element_id);
                     $relation_element->caption = $relation->caption;
                 @endphp
-                {!! ElementsHelper::getElement($request, $relation_element, $relation_section, $options); !!}
+                @include('section.cards.item', array('section' => SectionsHelper::getSection($relation_section), 'element' => $relation_element))
             @endforeach
         @endif
     </div>

@@ -493,7 +493,7 @@ class UserController extends Controller {
 			return View::make('sections.user.rates.section', array(
 				'request' => $request,
 				'user' => $user,
-				'section' => $section,
+				'section' => SectionsHelper::getSection($section),
 				'section_name' => $section_name,
 				'options' => $options,
 				'elements' => $elements
@@ -546,7 +546,7 @@ class UserController extends Controller {
 			foreach($elements as $element) {
 
 				$rates .= '"'.$element->name.'";';
-				$rates .= '"'.$element->alt_name.'";';
+				$rates .= '"'.implode('; ', $element->alt_name).'";';
 				$rates .= '"'.$element->year.'";';
 				$rates .= '"'.$element->rates[0]->rate.'";';
 				$rates .= '"'.$element->rates[0]->created_at.'"';
@@ -591,31 +591,42 @@ class UserController extends Controller {
 			$limit = 28;
 
 			$sort_options = array(
-				$section.'.created_at' => 'Время добавления',
+				'wanted.created_at' => 'Время добавления',
 				$section.'.name' => 'Название',
 				$section.'.alt_name' => 'Оригинальное название',
 				$section.'.year' => 'Год'
 			);
 
-			$user_id = $user->id;
-			$wanted = Wanted::select('element_id')
-				->where('element_type', '=', $type)
-				->where('user_id', '=', $user_id)
+            $elements = $type::select($section.'.*')
+                ->leftJoin('wanted', $section.'.id', '=', 'wanted.element_id')
+                ->where('wanted.element_type', '=', $type)
+                ->where('wanted.user_id', '=', $id)
+                ->with(array('wanted' => function($query) use($user, $type)
+                       {
+                           $query
+                               ->where('user_id', '=', $user->id)
+                               ->where('element_type', '=', $type)
+                           ;
+                       })
+                )
                 ->orderBy($sort, $order)
-				->pluck('element_id')
-			;
-            $wanted_string = implode(',', $wanted->toArray());
-			$elements = $type::whereIn($section.'.id', $wanted)
-                ->orderBy(DB::raw('FIELD(id, '.$wanted_string.')'))
-				->paginate($limit)
-			;
+                ->paginate($limit)
+            ;
+
+            $options = array(
+                'header' => true,
+                'footer' => true,
+                'paginate' => true,
+                'sort_options' => $sort_options,
+                'sort' => $sort,
+                'order' => $order,
+            );
 
 			return View::make('sections.user.wanted.section', array(
 				'request' => $request,
 				'user' => $user,
-				'section' => $section,
-				'ru_section' => $ru_section,
-				'sort_options' => $sort_options,
+				'section' => SectionsHelper::getSection($section),
+				'options' => $options,
 				'elements' => $elements
 			));
 		}
@@ -648,31 +659,42 @@ class UserController extends Controller {
 			$limit = 28;
 
 			$sort_options = array(
-				$section.'.created_at' => 'Время добавления',
+				'unwanted.created_at' => 'Время добавления',
 				$section.'.name' => 'Название',
 				$section.'.alt_name' => 'Оригинальное название',
 				$section.'.year' => 'Год'
 			);
 
-			$user_id = $user->id;
-			$unwanted = Unwanted::select('element_id')
-				->where('element_type', '=', $type)
-				->where('user_id', '=', $user_id)
+            $options = array(
+                'header' => true,
+                'footer' => true,
+                'paginate' => true,
+                'sort_options' => $sort_options,
+                'sort' => $sort,
+                'order' => $order,
+            );
+
+            $elements = $type::select($section.'.*')
+                ->leftJoin('unwanted', $section.'.id', '=', 'unwanted.element_id')
+                ->where('unwanted.element_type', '=', $type)
+                ->where('unwanted.user_id', '=', $id)
+                ->with(array('unwanted' => function($query) use($user, $type)
+                       {
+                           $query
+                               ->where('user_id', '=', $user->id)
+                               ->where('element_type', '=', $type)
+                           ;
+                       })
+                )
                 ->orderBy($sort, $order)
-				->pluck('element_id')
-			;
-            $unwanted_string = implode(',', $unwanted->toArray());
-			$elements = $type::whereIn($section.'.id', $unwanted)
-                ->orderBy(DB::raw('FIELD(id, '.$unwanted_string.')'))
-				->paginate($limit)
-			;
+                ->paginate($limit)
+            ;
 
 			return View::make('sections.user.unwanted.section', array(
 				'request' => $request,
 				'user' => $user,
-				'section' => $section,
-				'ru_section' => $ru_section,
-				'sort_options' => $sort_options,
+				'section' => SectionsHelper::getSection($section),
+				'options' => $options,
 				'elements' => $elements
 			));
 		}
