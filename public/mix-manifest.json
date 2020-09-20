@@ -1,4 +1,8 @@
 {
-    "/js/main.min.js": "/js/main.min.js?id=645bf63589ee50b93979",
-    "/css/main.min.css": "/css/main.min.css?id=2d118958996a79117b8e"
+    "/js/app.js": "/js/app.js?id=3f218e1258c4e063bbff",
+    "/css/app.css": "/css/app.css?id=b57eb12c00f09c496428",
+    "/js/manifest.js": "/js/manifest.js?id=3c768977c2574a34506e",
+    "/js/vendor.js": "/js/vendor.js?id=cdabc29b23ff59d181aa",
+    "/js/custom.js": "/js/custom.js?id=ecf683bd177a6c4a431e",
+    "/css/custom.css": "/css/custom.css?id=d2894283f1ed65022cd8"
 }

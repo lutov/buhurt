@@ -1,0 +1,301 @@
+/*
+####################################################
+M E D I A  Q U E R I E S
+####################################################
+*/
+
+/*
+::::::::::::::::::::::::::::::::::::::::::::::::::::
+Bootstrap 4 breakpoints
+*/
+
+/*
+Extra small devices (portrait phones, less than 576px)
+No media query since this is the default in Bootstrap because it is "mobile first"
+*/
+#wrapper {
+    margin-top: 57px;
+    padding-top: 24px;
+}
+
+.container {
+    font-size: .75rem;
+}
+
+.container a {
+    color: #a2dffb;
+}
+
+.container h1, .container .h1 {
+    font-size: 1.25rem;
+}
+.container h2, .container .h2 {
+    font-size: 1.10rem;
+}
+.container h3, .container .h3 {
+    font-size: 1rem;
+}
+
+.rating-container .star {
+    font-size: 1.75rem;
+}
+.rating-container .clear-rating {
+    font-size: 1.25rem;
+}
+.fast_rating_block .rating-xs .star {
+    font-size: 1.25rem;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+
+}
+
+/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+@media (min-width: 768px) {
+
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .container {
+        font-size: 1rem;
+    }
+
+    .container h1, .container .h1 {
+        font-size: 2rem;
+    }
+    .container h2, .container .h2 {
+        font-size: 1.5rem;
+    }
+    .container h3, .container .h3 {
+        font-size: 1.25rem;
+    }
+
+    .rating-container .star {
+        font-size: 2rem;
+    }
+    .rating-container .clear-rating {
+        font-size: 1.5rem;
+    }
+    .fast_rating_block .rating-xs .star {
+        font-size: 1.5rem;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+
+}
+
+/*
+####################################################
+M E D I A  Q U E R I E S
+####################################################
+*/
+
+/* RATING */
+.rating-container {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+}
+.rating-md {
+    font-size: unset;
+}
+.rating-xs {
+    font-size: unset;
+}
+.rating-container .rating-stars {
+    order: 1;
+    overflow: unset;
+}
+.rating-container .clear-rating {
+    order: 2;
+}
+.rating-container .star {
+    color: #fff;
+    user-select: none;
+    margin: unset;
+}
+.rating-container .clear-rating {
+    color: #fff;
+    opacity: .5;
+    user-select: none;
+}
+.rating-container .clear-rating:hover {
+    opacity: 1;
+}
+.rating-container .empty-stars {
+    opacity: .5;
+}
+.rating-container .filled-stars {
+    -webkit-text-stroke: unset;
+    text-shadow: none;
+}
+.fast_rating_block {
+    line-height: 1;
+}
+.fast_rating_block .rating-container {
+    display: block;
+}
+/* RATING */
+
+/* CARD */
+.card.bg-dark {
+    color: #fff;
+}
+.card-img-box .card-img-top {
+    position:  absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+.card-img-box {
+    position: relative;
+    width: 100%;		/* desired width */
+    overflow: hidden;
+}
+.card-img-box:before {
+    content: "";
+    display: block;
+    padding-top: 145%; 	/* initial ratio of 1:1*/
+}
+
+.card-img-box-square .card-img-top {
+    position:  absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+.card-img-box-square {
+    position: relative;
+    width: 100%;		/* desired width */
+    overflow: hidden;
+}
+.card-img-box-square:before {
+    content: "";
+    display: block;
+    padding-top: 100%; 	/* initial ratio of 1:1*/
+}
+.card .tab-pane .list-group-item {
+    background: none;
+}
+.card-body.small {
+    padding: 0;
+    margin: 1.25rem;
+}
+
+.card-header .nav-tabs {
+    border-bottom: 0;
+}
+
+.card-header .nav-link.active {
+    border-color: rgba(0,0,0,.125);
+    border-bottom: transparent;
+    background-color: #343a40;
+    color: #fff;
+}
+.card-header .nav-link:hover {
+    border-color: rgba(0,0,0,.125);
+}
+
+.buhurt-cover {
+    cursor: zoom-in;
+}
+.one-liner {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1; /* number of lines to show */
+    -webkit-box-orient: vertical;
+}
+.quick-links ul a {
+    color: #212529;
+}
+/* CARD */
+
+.ui-autocomplete {
+    position: absolute;
+    z-index: 99999 !important;
+    cursor: default;
+    padding: 0;
+    margin-top: 2px;
+    list-style: none;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ui-autocomplete>li {
+    padding: 3px 12px;
+    color: #212529;
+}
+
+.ui-autocomplete>li.ui-state-focus, .ui-autocomplete>li:hover {
+    background-color: #DDD;
+}
+
+.ui-helper-hidden-accessible {
+    display: none;
+}
+
+.irs-from, .irs-to, .irs-single {
+    background: #007bff;
+}
+
+.irs-from:after, .irs-to:after, .irs-single:after {
+    border-top-color: #007bff;
+}
+
+.breadcrumb {
+    background: #343a40 !important;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+/* PAGINATION */
+.pagination, .pagination a {
+    color: #fff;
+}
+.page-link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #fff;
+    background-color: #343a40;
+    border: 1px solid rgba(0,0,0,.125);
+}
+.page-item.disabled .page-link {
+    color: #5a6268;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #343a40;
+    border-color: rgba(0,0,0,.125);
+}
+.page-item.active .page-link {
+    z-index: 1;
+    color: #5a6268;
+    background-color: #f8f9fa;
+    border-color: #f8f9fa;
+}
+.page-link:focus, .page-link:hover {
+    color: #fff;
+    text-decoration: none;
+    background-color: #5a6268;
+    border-color: #5a6268;
+}
+/* PAGINATION */
+
+.anchor_list {
+    text-transform: capitalize;
+}

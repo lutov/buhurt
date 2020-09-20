@@ -12,18 +12,13 @@
 
     <link rel="shortcut icon" href="https://buhurt.ru/favicon.ico" type="image/x-icon">
 
-    <link href="/data/vendor/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="/data/vendor/bootstrap-star-rating/css/star-rating.min.css" rel="stylesheet" type="text/css"/>
-    @if(Request::is('*recommendations'))
-        <link href="/data/vendor/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.css" rel="stylesheet"
-              type="text/css"/>
-        <link href="/data/vendor/rangeSlider/ion.rangeSlider-master/css/ion.rangeSlider.skinFlat.css" rel="stylesheet"
-              type="text/css"/>
-@endif
-<!--link href="/data/css/main.min.css" rel="stylesheet" type="text/css" /-->
-    <link href="/data/css/main.css?hash={!! date('His') !!}" rel="stylesheet" type="text/css"/>
+    <link href="/css/app.css" rel="stylesheet" type="text/css"/>
+    <link href="/css/custom.css" rel="stylesheet" type="text/css"/>
 
-    <script type="text/javascript" src="/data/vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/js/manifest.js"></script>
+    <script type="text/javascript" src="/js/vendor.js"></script>
+    <script type="text/javascript" src="/js/app.js"></script>
+    <script type="text/javascript" src="/js/custom.js"></script>
 
     <link rel="manifest" href="/manifest.json">
     <link rel="canonical" href="{{ url()->current() }}"/>

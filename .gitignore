@@ -12,3 +12,5 @@ Homestead.yaml
 /public/data/font
 /public/data/img/covers
 /public/data/vendor/
+/resources/assets/js/vendor/
+/resources/assets/css/vendor/

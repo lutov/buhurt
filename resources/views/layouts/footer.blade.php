@@ -81,16 +81,6 @@
 
 </footer>
 
-<script type="text/javascript" src="/data/vendor/jquery/jquery-ui-1.12.1.custom/jquery-ui.min.js" defer></script>
-<script type="text/javascript" src="/data/vendor/bootstrap-4.3.1-dist/js/bootstrap.min.js" defer></script>
-<script type="text/javascript" src="/data/vendor/bootstrap-star-rating/js/star-rating.min.js" defer></script>
-@if(Request::is('*recommendations'))
-    <script type="text/javascript" src="/data/vendor/rangeSlider/ion.rangeSlider-master/js/ion.rangeSlider.min.js"
-            defer></script>
-@endif
-<!--script type="text/javascript" src="/data/js/app.min.js" defer></script-->
-<script type="text/javascript" src="/data/js/main.js" defer></script>
-
 @if(Session::get('message'))
     <script>
         $(document).ready(function () {
