@@ -6,7 +6,7 @@
 @endphp
 <div class="card @include('card.class') mb-3" id="element_{!! $element->id !!}">
     <div class="card-header">
-        <a href="/{!! $section !!}/{!! $element->element_id !!}">
+        <a href="/{!! $section->alt_name !!}/{!! $element->element_id !!}">
             {!! $element->name !!}
         </a>
     </div>
