@@ -67,7 +67,24 @@ $(function() {
     };
 
     let fastRating = $('.fast_rating');
-    if(fastRating) {fastRating.rating(fastRatingParams);}
+    if(fastRating) {
+        fastRating.rating(fastRatingParams);
+        fastRating.on('rating:change', function(event, value, caption) {
+            //console.log(this);
+            let that = $(this);
+            let section = that.data('section');
+            let element = that.data('element');
+            let path = '/rates/rate/'+section+'/'+element;
+            let params = {rate_val: value};
+            //console.log(params);
+            $.post(path, params, function(data) {
+                show_popup(data);
+                $.post('/achievements', {}, function(data) {
+                    show_popup(data);
+                });
+            });
+        });
+    }
 
     let url = window.location.href;
     if (url.indexOf("#") > 0) {

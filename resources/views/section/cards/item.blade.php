@@ -30,7 +30,7 @@
     </div>
     @if($auth)
         <div class="card-body text-center d-none d-xl-block p-2">
-            {!! ElementsHelper::getFastRating($section, $element, $user) !!}
+            @include('card.rating')
         </div>
         <div class="card-footer text-center d-none d-xl-block">
             @include('card.controls')

@@ -48,49 +48,6 @@ class ElementsHelper
     }
 
     /**
-     * @param  string  $section
-     * @param  int  $id
-     * @return string
-     */
-    private static function bindFastRating(string $section, int $id)
-    {
-        // TODO попробовать назначать события как-то более аккуратно
-        $elements_list = '';
-        $elements_list .= '<script>';
-        $elements_list .= '$(\'#rating_'.$section.'_'.$id.'\').on(\'rating:change\', function(event, value, caption) {';
-        $elements_list .= 'var path = \'/rates/rate/'.$section.'/'.$id.'\';';
-        $elements_list .= 'var params = {rate_val: value};';
-        //$elements_list .= 'console.log(params);';
-        $elements_list .= '$.post(path, params, function(data) {show_popup(data);});';
-        $elements_list .= '$.post(\'/achievements\', {}, function(data) {show_popup(data);});';
-        $elements_list .= '});';
-        $elements_list .= '</script>';
-        return $elements_list;
-    }
-
-    /**
-     * @param  string  $section
-     * @param $element
-     * @param $user
-     * @return string
-     */
-    public static function getFastRating(string $section, $element, $user)
-    {
-        if (!method_exists($element, 'rates')) {
-            return '';
-        }
-        $rate = self::getRate($element, $user);
-        $elements_list = '';
-        $elements_list .= '<div class="fast_rating_block">';
-        $elements_list .= '<input name="val" value="'.$rate.'"';
-        $elements_list .= ' class="fast_rating" id="rating_'.$section.'_'.$element->id.'"';
-        $elements_list .= ' type="text" autocomplete="off">';
-        $elements_list .= '</div>';
-        $elements_list .= self::bindFastRating($section, $element->id);
-        return $elements_list;
-    }
-
-    /**
      * @param $element
      * @return array
      */
