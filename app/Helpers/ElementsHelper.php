@@ -135,24 +135,6 @@ class ElementsHelper
     }
 
     /**
-     * @param  string  $section
-     * @param  int  $element_id
-     * @return string
-     */
-    public static function getCardScripts(string $section = '', int $element_id = 0)
-    {
-        $element_scripts = '';
-        $element_scripts .= '<form method="POST">';
-        $element_scripts .= '<input type="hidden" name="element_section" id="element_section" value="'.$section.'" autocomplete="off">';
-        $element_scripts .= '<input type="hidden" name="element_id" id="element_id" value="'.$element_id.'" autocomplete="off">';
-        $element_scripts .= '</form>';
-        if (Auth::check()) {
-            $element_scripts .= '<script type="text/javascript" src="/data/js/card.js"></script>';
-        }
-        return $element_scripts;
-    }
-
-    /**
      * @param  int  $id
      * @param  string  $section
      * @param  string  $type
@@ -371,11 +353,13 @@ class ElementsHelper
     public static function getRate($element, $user)
     {
         $rate = 0;
-        $user_rate = $element->rates
-            ->where('user_id', $user->id)
-            ->first();
-        if (isset($user_rate->rate)) {
-            $rate = $user_rate->rate;
+        if($element->rates) {
+            $user_rate = $element->rates
+                ->where('user_id', $user->id)
+                ->first();
+            if (isset($user_rate->rate)) {
+                $rate = $user_rate->rate;
+            }
         }
         return $rate;
     }

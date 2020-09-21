@@ -5,4 +5,3 @@
     </div>
     @include('item.footer')
 </div>
-{!! ElementsHelper::getCardScripts($section->alt_name, $element->id) !!}

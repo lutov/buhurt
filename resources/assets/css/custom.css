@@ -42,7 +42,7 @@ No media query since this is the default in Bootstrap because it is "mobile firs
 .rating-container .clear-rating {
     font-size: 1.25rem;
 }
-.fast_rating_block .rating-xs .star {
+.fast_rating_block .star {
     font-size: 1.25rem;
 }
 
@@ -78,7 +78,7 @@ No media query since this is the default in Bootstrap because it is "mobile firs
     .rating-container .clear-rating {
         font-size: 1.5rem;
     }
-    .fast_rating_block .rating-xs .star {
+    .fast_rating_block .star {
         font-size: 1.5rem;
     }
 }

@@ -29,10 +29,10 @@
             /** @var bool $isWanted */
             if ($isWanted) {
                 $class = ' '.$liked_class;
-                $handler = 'unset_wanted('.$call.')';
+                $handler = 'toggle_wanted('.$call.')';
             } else {
                 $class = ' '.$like_class;
-                $handler = 'set_wanted('.$call.')';
+                $handler = 'toggle_wanted('.$call.')';
             }
         @endphp
         <button type="button" class="{!! $b_class.$class !!}" onclick="{!! $handler !!}"
@@ -44,10 +44,10 @@
             /** @var bool $isUnwanted */
             if ($isUnwanted) {
                 $class = ' '.$liked_class;
-                $handler = 'unset_unwanted('.$call.')';
+                $handler = 'toggle_unwanted('.$call.')';
             } else {
                 $class = ' '.$like_class;
-                $handler = 'set_unwanted('.$call.')';
+                $handler = 'toggle_unwanted('.$call.')';
             }
         @endphp
         <button type="button" class="{!! $b_class.$class !!}" onclick="{!! $handler !!}"

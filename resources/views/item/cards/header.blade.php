@@ -78,7 +78,7 @@
     </div>
 
     @if(Auth::check())
-        <input class="main_rating" name="val" value="{!! $rate !!}" type="text">
+        <input class="rating_input main_rating" name="val" value="{!! $rate !!}" type="text" data-section="{!! $section->alt_name !!}" data-element="{!! $element->id !!}">
     @else
         <div class="card-body">
             {!! DummyHelper::regToRate(); !!}
