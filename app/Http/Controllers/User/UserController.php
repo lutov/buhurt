@@ -850,7 +850,7 @@ class UserController extends Controller {
 					
 					// тут проверяем, если ид в базе. Если есть, авторизуем. Если нет - идем дальше	
 					$user = User::where('vk_id', '=', $vk_uid)->first();
-					if(!count($user)) {
+					if(!isset($user->id)) {
 						// обращаемся к ВК Api, получаем имя, фамилию и ID пользователя вконтакте
 						// метод users.get
 
