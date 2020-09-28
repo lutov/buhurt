@@ -20,7 +20,6 @@ use App\Models\User\User;
 use App\Models\User\Wanted;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use ResizeCrop;
@@ -38,13 +37,13 @@ class ElementsHelper
      */
     public static function tab(string $slug, string $name, int $count, Section $section, $elements)
     {
-       return array(
-           'slug' => $slug,
-           'name' => $name,
-           'count' => $count,
-           'section' => $section,
-           'elements' => $elements,
-       );
+        return array(
+            'slug' => $slug,
+            'name' => $name,
+            'count' => $count,
+            'section' => $section,
+            'elements' => $elements,
+        );
     }
 
     /**
@@ -176,6 +175,8 @@ class ElementsHelper
 
         self::deleteElement($donor_id, $section->alt_name, $section->type);
     }
+
+
 
     /**
      * @param  string  $section
@@ -353,7 +354,7 @@ class ElementsHelper
     public static function getRate($element, $user)
     {
         $rate = 0;
-        if($element->rates) {
+        if ($element->rates) {
             $user_rate = $element->rates
                 ->where('user_id', $user->id)
                 ->first();
