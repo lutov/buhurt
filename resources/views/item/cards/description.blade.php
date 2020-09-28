@@ -177,32 +177,32 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     Режиссёр
                                     <span class="">
-                                    {!! DatatypeHelper::arrayToString($element->directors, ', ', '/persons/', false, 'director'); !!}
-                                </span>
+                                        {!! DatatypeHelper::arrayToString($element->directors, ', ', '/persons/', false, 'director'); !!}
+                                    </span>
                                 </li>
                             @endif
                             @if($screenwriters)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     Сценарий
                                     <span class="">
-                                    {!! DatatypeHelper::arrayToString($element->screenwriters, ', ', '/persons/', false, 'creator'); !!}
-                                </span>
+                                        {!! DatatypeHelper::arrayToString($element->screenwriters, ', ', '/persons/', false, 'creator'); !!}
+                                    </span>
                                 </li>
                             @endif
                             @if($producers)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     Продюсер
                                     <span class="">
-                                    {!! DatatypeHelper::arrayToString($element->producers, ', ', '/persons/', false, 'producer'); !!}
-                                </span>
+                                        {!! DatatypeHelper::arrayToString($element->producers, ', ', '/persons/', false, 'producer'); !!}
+                                    </span>
                                 </li>
                             @endif
                             @if($actors)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    В ролях
-                                    <span class="">
-                                    {!! DatatypeHelper::arrayToString($element->actors, ', ', '/persons/', false, 'actor'); !!}
-                                </span>
+                                    <span class="">В&nbsp;ролях</span>
+                                    <span class="ml-4 text-right">
+                                        {!! DatatypeHelper::arrayToString($element->actors, ', ', '/persons/', false, 'actor'); !!}
+                                    </span>
                                 </li>
                             @endif
                         </ul>
