@@ -55,7 +55,7 @@ class SearchController extends Controller
                 $user_id = Auth::user()->id;
             }
             $isAdmin = RolesHelper::isAdmin($request);
-            if(!$isAdmin) {
+            if(!$isAdmin && !empty($query)) {
                 $not_found->user_id = $user_id;
                 $not_found->search = $query;
                 $not_found->save();
