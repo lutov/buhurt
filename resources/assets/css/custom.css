@@ -139,6 +139,9 @@ M E D I A  Q U E R I E S
 .fast_rating_block .rating-container {
     display: block;
 }
+.fast_rating_block .clear-rating {
+    display: none;
+}
 /* RATING */
 
 /* CARD */

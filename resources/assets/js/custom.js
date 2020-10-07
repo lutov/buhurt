@@ -231,14 +231,14 @@ $(function() {
         //size: 'xs',
         emptyStar: '&#9734;',
         filledStar: '&#9733;',
-        clearButton: '&#10006;',
+        clearButton: '⊝',
         min: 0,
         max: 10,
         step: 1.0,
         stars: '10',
         animate: false,
         showCaption: false,
-        showClear: false,
+        //showClear: false,
         clearCaption: 'Нет оценки',
         starCaptions: {
             1: 'Очень плохо',
@@ -277,11 +277,11 @@ $(function() {
             let path = '/rates/rate/'+section+'/'+element;
             let params = {rate_val: value};
             $.post(path, params, function(data) {
-                show_popup(data);
+                showToast(data);
                 $.post('/achievements', {}, function(data) {
-                    showToast(data);
+                    //showToast(data);
                 }, 'json');
-            });
+            }, 'json');
         });
         rating_input.on('rating:clear', function(event) {
             let that = $(this);
