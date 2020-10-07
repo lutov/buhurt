@@ -15,7 +15,7 @@
                 {!! Form::hidden('comment_id', null, array('id' => 'comment_id', 'autocomplete' => 'off')); !!}
             </div>
             <div class="card-footer">
-                {!! Form::button('Сохранить', array('id' => 'comment_save', 'role' => 'button', 'class' => 'btn btn-secondary', 'onclick' => 'comment_add(\''.$section.'\', \''.$element->id.'\')')); !!}
+                {!! Form::button('Сохранить', array('id' => 'comment_save', 'role' => 'button', 'class' => 'btn btn-secondary', 'onclick' => 'comment_add(\''.$section->alt_name.'\', \''.$element->id.'\')')); !!}
             </div>
         </div>
     </div>
