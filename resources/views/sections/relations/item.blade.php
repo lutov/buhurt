@@ -148,7 +148,7 @@
                                 'method' =>'POST',
                                 'files' => true
                                 )); !!}
-                                <input type="hidden" name="relation_id" value="'.$relation_simple['id'].'">
+                                <input type="hidden" name="relation_id" value="{!! $relation_simple['id'] !!}">
                                 {!! Form::submit('Удалить', $attributes = array(
                                 'id' => 'relation_save',
                                 'class' => 'btn btn-danger',
