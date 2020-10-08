@@ -168,11 +168,6 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
-		Greggilbert\Recaptcha\RecaptchaServiceProvider::class,
-		Laravelrus\LocalizedCarbon\LocalizedCarbonServiceProvider::class,
-		//Illuminate\Html\HtmlServiceProvider::class,
-		Collective\Html\HtmlServiceProvider::class,
-		//DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
 
         /*
          * Application Service Providers...

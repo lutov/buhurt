@@ -10,22 +10,18 @@
   "require": {
     "php": "7.4.1",
     "ext-json": "*",
-    "davejamesmiller/laravel-breadcrumbs": "3.x",
-    "greggilbert/recaptcha": "dev-master",
-    "ksubileau/color-thief-php": "^1.3",
-    "laravel/framework": "5.8.*",
-    "laravel/tinker": "~1.0",
-    "laravelcollective/html": "^5.4",
-    "laravelrus/localized-carbon": "2.3",
+    "laravel/framework": "^8.0",
+    "laravel/tinker": "~2.0",
+    "laravel/ui": "^3.0",
+    "nunomaduro/collision": "^5.0",
+    "facade/ignition": "^2.3.6",
+    "guzzlehttp/guzzle": "^7.0.1",
     "lutov/mdash": "1.0.1",
     "lutov/resize_crop": "2.0.1",
-    "lutov/server_yametrika": "^1.0",
-    "symfony/translation": "4.3.8"
+    "lutov/server_yametrika": "^1.0"
   },
   "require-dev": {
-    "fzaninotto/faker": "~1.4",
-    "mockery/mockery": "0.9.*",
-    "phpunit/phpunit": "^7.5"
+    "phpunit/phpunit": "^9.0"
   },
   "autoload": {
     "classmap": [

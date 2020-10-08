@@ -81,27 +81,14 @@
 
             <ul class="navbar-nav ml-auto">
                 <li>
-                    {!! Form::open(array(
-                        'action' => 'Search\SearchController@everything',
-                        'class' => 'form-inline my-2 my-lg-0',
-                        'id' => 'search_form',
-                        'method' => 'GET'
-                    )) !!}
+                    <form action="/search" class="form-inline my-2 my-lg-0" id="search_form" method="GET">
                     <div class="input-group input-group-sm">
-                        {!! Form::text(
-                            'query',
-                            $value = Input::get('query', ''),
-                            $attributes = array(
-                                'placeholder' => 'Поиск',
-                                'class' => 'form-control',
-                                'id' => 'search'
-                            )
-                        ) !!}
+                        <input name="query" value="{!! Request::input('query', '') !!}" placeholder="Поиск" class="form-control" id="search" />
                         <div class="input-group-append">
                             <button class="btn btn-outline-primary mr-sm-3 d-none d-xl-inline" type="submit">🔎</button>
                         </div>
                     </div>
-                    {!! Form::close() !!}
+                    </form>
                 </li>
 
                 @if (Auth::check())
