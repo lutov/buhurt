@@ -10,9 +10,8 @@ namespace App\Helpers;
 
 use App\Models\User\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Laravelrus\LocalizedCarbon\LocalizedCarbon;
-use Form;
 
 class CommentsHelper {
 
@@ -68,7 +67,7 @@ class CommentsHelper {
                 $comments_text .= '<div class="card-footer small text-muted">';
                     $comments_text .= '<a href="/user/' . $user_id . '/profile">' . $comment->user->username . '</a>';
                     $comments_text .= ', ';
-                    $comments_text .= LocalizedCarbon::instance($comment->created_at)->diffForHumans();
+                    $comments_text .= Carbon::instance($comment->created_at)->diffForHumans();
                 $comments_text .= '</div>';
 
 			$comments_text .= '</div>';

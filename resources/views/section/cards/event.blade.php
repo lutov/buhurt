@@ -17,6 +17,6 @@
     </div>
     <div class="card-footer small text-muted">
         <a href="/user/{!! $user->id !!}/profile">{!! $user->username !!}</a>,
-        {!! LocalizedCarbon::instance($element->created_at)->diffForHumans() !!}
+        {!! Illuminate\Support\Carbon::instance($element->created_at)->diffForHumans() !!}
     </div>
 </div>

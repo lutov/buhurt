@@ -229,13 +229,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
 		/* Packages */
-		'Form' => Collective\Html\FormFacade::class,
-		'Html' => Collective\Html\HtmlFacade::class,
-		'Recaptcha' => Greggilbert\Recaptcha\Facades\Recaptcha::class,
-		'LocalizedCarbon' => Laravelrus\LocalizedCarbon\LocalizedCarbon::class,
-        'DiffFormatter' => Laravelrus\LocalizedCarbon\DiffFactoryFacade::class,
-		'Input' => Illuminate\Support\Facades\Request::class,
-		//'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
 
 		/* Data */
 		'Book' => App\Models\Data\Book::class,

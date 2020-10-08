@@ -29,7 +29,7 @@
             @endif
         </div>
         <div class="card-footer small text-muted">
-            <a href="/user/{!! $user_id !!}/profile">{!! $comment->user->username !!}</a>, {!! LocalizedCarbon::instance($comment->created_at)->diffForHumans() !!}
+            <a href="/user/{!! $user_id !!}/profile">{!! $comment->user->username !!}</a>, {!! Illuminate\Support\Carbon::instance($comment->created_at)->diffForHumans() !!}
         </div>
     </div>
 @endif

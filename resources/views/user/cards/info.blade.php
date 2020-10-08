@@ -63,7 +63,7 @@
 @endphp
 <div class="card @include('card.class')">
     <div class="card-body">
-        <p class="card-text">Зарегистрирован {!! LocalizedCarbon::instance($user->created_at)->diffForHumans() !!}</p>
+        <p class="card-text">Зарегистрирован {!! Illuminate\Support\Carbon::instance($user->created_at)->diffForHumans() !!}</p>
         @if(!empty($city) && RolesHelper::isAdmin($request))<p>Предполагаемый город: {!! $city->name !!}</p>@endif
         @if(0 != $books_rated || 0 != $films_rated || 0 != $games_rated)
             <p class="card-text">
