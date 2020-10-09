@@ -6,7 +6,9 @@
     <div class="row">
         <div class="col-md-3 mb-4">
             @include('user.cards.avatar')
-            @include('user.cards.avatar-upload')
+            @if($has_options)
+                @include('user.cards.avatar-upload')
+            @endif
         </div>
         <div class="col-md-9 mb-4">
             <div class="tab-content" id="myTabContent">
