@@ -25,17 +25,19 @@
                     <h1 class="card-title m-0">@yield('title')</h1>
                 </div>
                 <div class="card-body">
-                    {!! Form::open(array('action' => 'User\UserController@store', 'id' => 'registration_form', 'class' => 'registration_form', 'method' => 'POST')) !!}
-                    <p>{!! Form::text('email', null, array('placeholder' => 'E-mail', 'class' => 'form-control w-100', 'autocomplete' => 'off')) !!}</p>
-                    <p>{!! Form::text('username', null, array('placeholder' => 'Логин', 'class' => 'form-control w-100', 'autocomplete' => 'off')) !!}</p>
-                    <p>{!! Form::password('password', array('placeholder' => 'Пароль', 'class' => 'form-control w-100', 'autocomplete' => 'off')) !!}</p>
-                    <p>{!! Recaptcha::render(array('theme' => 'clean', 'lang' => 'ru')) !!}</p>
-                    {!! Form::submit('Зарегистрироваться', array('class' => 'btn btn-success')) !!}
-                    <a class="btn btn-primary"
-                       href="https://oauth.vk.com/authorize?client_id=4591194&redirect_uri=https://buhurt.ru/user/vk_auth&scope=email&display=popup">
-                        <img src="https://vk.com/favicon.ico" alt="Вконтакте"/> vk.com
-                    </a>
-                    {!! Form::close() !!}
+                    <form action="/user/register" id="registration_form" class="registration_form" method="POST">
+                        <p><input name="email" placeholder="E-mail" class="form-control w-100" autocomplete="off" /></p>
+                        <p><input name="username" placeholder="Логин" class="form-control w-100" autocomplete="off" /></p>
+                        <p><input type="password" name="password" placeholder="Пароль" class="form-control w-100" autocomplete="off" /></p>
+                        <p>
+                            {!!  GoogleReCaptchaV3::renderField('user_register_captcha_id','user_register_captcha_action') !!}
+                        </p>
+                        <input type="submit" value="Зарегистрироваться" class="btn btn-success" />
+                        <a class="btn btn-primary"
+                           href="https://oauth.vk.com/authorize?client_id=4591194&redirect_uri=https://buhurt.ru/user/vk_auth&scope=email&display=popup">
+                            <img src="https://vk.com/favicon.ico" alt="Вконтакте" style="width: 1.2rem;" /> vk.com
+                        </a>
+                    </form>
                 </div>
                 <div class="card-footer small text-muted">
                     @include('widgets.report')
@@ -43,4 +45,5 @@
             </div>
         </div>
     </div>
+    {!!  GoogleReCaptchaV3::init() !!}
 @stop

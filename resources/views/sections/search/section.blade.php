@@ -18,7 +18,13 @@
         @if(Auth::check())
             @include('card.quick-links')
         @else
-            {!! DummyHelper::regToAdd() !!}
+            <div class="pb-4">
+                <div class="card @include('card.class')">
+                    <div class="card-body">
+                        {!! DummyHelper::regToAdd() !!}
+                    </div>
+                </div>
+            </div>
         @endif
     @endif
 @stop

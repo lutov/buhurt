@@ -30,6 +30,7 @@ use App\Models\Data\Section;
 use App\Models\User\Roleuser;
 use App\Models\Search\OptionUser;
 use App\Models\User\Achievement;
+use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
 
 class UserController extends Controller {
 
@@ -81,7 +82,8 @@ class UserController extends Controller {
 			'email' 	=> 'required|email|unique:users,email',
 			'password' 	=> 'required',
 			'username'	=> 'required|unique:users,username',
-			'g-recaptcha-response' => 'required|recaptcha',
+			//'g-recaptcha-response' => 'required|recaptcha',
+            'g-recaptcha-response' => [new GoogleReCaptchaV3ValidationRule('user_register_captcha_action')]
 		);
 
 		$validator = Validator::make($request->all(), $rules);
@@ -103,11 +105,9 @@ class UserController extends Controller {
 		$user_name = str_replace("%", "", $user_name);
 
 		if(empty($user_name)) {
-
 			return Redirect::to(URL::action('User\UserController@register'))
 				->withInput()
 				->with('message', 'Имя&nbsp;пользователя&nbsp;содержит&nbsp;недопустимые&nbsp;символы');
-
 		}
 
 		$credentials = array(
@@ -119,11 +119,7 @@ class UserController extends Controller {
 		$ip_table = 'ip2ruscity_ip_compact';
 		$city_id = DB::table($ip_table)
 			->whereRaw( "INET_ATON('".$user_ip."') BETWEEN `num_ip_start` AND `num_ip_end`" )
-			//->first()
-			//->remember(60)
 			->value('city_id')
-			//->toSql()
-			//->get()
 		;
 
 		// Create user
