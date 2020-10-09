@@ -9,13 +9,13 @@
         'desc' => 'Я→А'
     );
 @endphp
-{!! Form::open(array('class' => 'sort', 'method' => 'GET')); !!}
+<form class="sort" method="GET">
 <div class="input-group input-group-sm">
-    {!! Form::select('sort', $sort_options, $sort, array('class' => 'custom-select', 'autocomplete' => 'off')); !!}
-    {!! Form::select('order', $sort_direction, $order, array('class' => 'custom-select', 'autocomplete' => 'off')); !!}
-    {!! Form::hidden('page', $page); !!}
+    @include('widgets.select', array('select_name' => 'sort', 'options' => $sort_options, 'selected' => $sort))
+    @include('widgets.select', array('select_name' => 'order', 'options' => $sort_direction, 'selected' => $order))
+    <input type="hidden" name="page" value="{{ $page }}" autocomplete="off" />
     <div class="input-group-append">
-        {!! Form::submit('Сортировать', array('class' => 'btn btn-secondary')); !!}
+        <input type="submit" value="Сортировать" class="btn btn-secondary" />
     </div>
 </div>
-{!! Form::close(); !!}
+</form>
