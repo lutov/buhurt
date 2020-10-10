@@ -1,8 +1,8 @@
-{!! Form::open(array('action' => array('Data\\'.$controller.'@transfer', $element->id), 'class' => 'transfer', 'method' => 'POST', 'files' => false)) !!}
+<form action="/transfer/{{ $section->alt_name }}/{{ $element->id }}" class="transfer" method="POST">
 <div>
-    {!! Form::text('recipient_id', '', array('placeholder' => 'Преемник', 'id' => 'recipient', 'class' => 'form-control')) !!}
+    <input name="recipient_id" value="" placeholder="Преемник" id="recipient" class="form-control" />
 </div>
 <div class="btn-group mt-3">
-    {!! Form::submit('Перенести', array('id' => 'do_transfer', 'type' => 'button', 'class' => 'btn btn-sm btn-secondary')) !!}
+    <input type="submit" value="Перенести" id="do_transfer" class="btn btn-sm btn-secondary" />
 </div>
-{!! Form::close() !!}
+</form>
