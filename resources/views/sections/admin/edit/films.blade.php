@@ -23,40 +23,10 @@
             </div>
         @endif
         <div class="row">
-            <div class="col-md-9 mb-4">
-                <div class="card @include('card.class')">
-                    {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_film', 'method' => 'POST', 'files' => true)) !!}
-                    <div class="card-header">
-                        <h1 class="card-title">@yield('title')</h1>
-                        <h2 class="card-subtitle mb-2 text-muted">@yield('subtitle')</h2>
-                        {!! Form::hidden('action', 'edit') !!}
-                        {!! Form::hidden('section', 'films') !!}
-                        {!! Form::hidden('element_id', $element->id) !!}
-                    </div>
-                    <div class="card-body">
-                        <p>{!! Form::text('name', $element->name, array('placeholder' => 'Название фильма', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
-                        <p>{!! Form::text('alt_name', implode('; ', $element->alt_name), array('placeholder' => 'Альтернативное или оригинальное название фильма', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
-                        <p>{!! Form::text('directors', $directors, array('placeholder' => 'Режиссер', 'class' => 'form-control w-100', 'id' => 'directors')) !!}</p>
-                        <p>{!! Form::text('screenwriters', $screenwriters, array('placeholder' => 'Сценарист', 'class' => 'form-control w-100', 'id' => 'screenwriters')) !!}</p>
-                        <p>{!! Form::text('producers', $producers, array('placeholder' => 'Продюсер', 'class' => 'form-control w-100', 'id' => 'producers')) !!}</p>
-                        <p>{!! Form::textarea('description', $element->description, array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'description')) !!}</p>
-                        <p>{!! Form::text('genres', $genres, array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genres')) !!}</p>
-                        <p>{!! Form::text('countries', $countries, array('placeholder' => 'Страна производства', 'class' => 'form-control w-100', 'id' => 'countries')) !!}</p>
-                        <p>{!! Form::text('length', $element->length, array('placeholder' => 'Продолжительность', 'class' => 'form-control w-25', 'id' => 'length')) !!}</p>
-                        <p>{!! Form::text('year', $element->year, array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
-                        <p>{!! Form::text('actors', $actors, array('placeholder' => 'Актеры', 'class' => 'form-control w-100', 'id' => 'actors')) !!}</p>
-                        <p>{!! Form::text('collections', $collections, array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
-                        <b>Обложка</b> {!! Form::file('cover'); !!}
-                    </div>
-                    <div class="card-footer">
-                        {!! Form::submit('Сохранить', array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
-                    </div>
-                    {!! Form::close() !!}
-                </div>
-            </div>
+            <div class="col-md-9 mb-4"> @include('admin.cards.form') </div>
             <div class="col-md-3 mb-4">
                 <div class="card @include('card.class')">
-                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section, $element->id) !!}" alt="">
+                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section->alt_name, $element->id) !!}" alt="">
                     <div class="card-body text-center">
                         <div class="btn-group">
                             {!! DummyHelper::getExtLink('kinopoisk', $element->name); !!}
@@ -77,7 +47,7 @@
                         Жанры фильмов
                     </div>
                     <div class="collapse" id="genres_list_container">
-                        @include('collection.names.array', array('id' => 'genres_list', 'collection' => ElementsHelper::getGenres($section)))
+                        @include('collection.names.array', array('id' => 'genres_list', 'collection' => ElementsHelper::getGenres($section->alt_name)))
                     </div>
                     <div class="card-header" data-toggle="collapse" data-target="#countries_list_container"
                          aria-expanded="false" aria-controls="countries_list_container">

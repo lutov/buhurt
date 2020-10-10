@@ -21,6 +21,7 @@ class Country extends Eloquent {
 	protected $visible = ['id', 'name'];
 
 	public bool $verification = false;
+    public bool $has_description = true;
 
 	/**
 	 * Отношение с

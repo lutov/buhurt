@@ -1,13 +1,13 @@
 <?php namespace App\Models\Data;
 
 use App\Traits\SectionTrait;
-use Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property string name
  * @property string description
  */
-class Company extends Eloquent  {
+class Company extends Model {
 
 	use SectionTrait;
 
@@ -32,6 +32,7 @@ class Company extends Eloquent  {
 	protected $visible = ['id', 'name'];
 
 	public bool $verification = false;
+    public bool $has_description = true;
 
 	/**
 	 * @return mixed

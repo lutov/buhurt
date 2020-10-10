@@ -34,6 +34,7 @@ class Person extends Model {
 	protected $visible = ['id', 'name'];
 
 	public bool $verification = false;
+    public bool $has_description = true;
 
 	/**
 	 * @return mixed

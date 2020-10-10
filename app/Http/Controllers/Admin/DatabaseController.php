@@ -39,11 +39,11 @@ class DatabaseController extends Controller {
 	 * @param int $id
 	 * @return \Illuminate\Contracts\View\View
 	 */
-	public function edit(Request $request, string $section, int $id) {
-
-		$element = SectionsHelper::getSectionType($section)::find($id);
-
-		return View::make('sections.admin.edit.'.$section, array(
+	public function edit(Request $request, string $section, int $id)
+    {
+	    $section = SectionsHelper::getSection($section);
+		$element = $section->type::find($id);
+		return View::make('sections.admin.edit.'.$section->alt_name, array(
 			'request' => $request,
 			'section' => $section,
 			'element' => $element,

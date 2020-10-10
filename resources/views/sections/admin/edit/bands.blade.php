@@ -13,30 +13,10 @@
             </div>
         @endif
         <div class="row">
-            <div class="col-md-9 mb-4">
-                <div class="card @include('card.class')">
-                    {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_company', 'method' => 'POST', 'files' => true)) !!}
-                    <div class="card-header">
-                        <h1 class="card-title">@yield('title')</h1>
-                        <h2 class="card-subtitle mb-2 text-muted">@yield('subtitle')</h2>
-                        {!! Form::hidden('action', 'edit') !!}
-                        {!! Form::hidden('section', 'bands') !!}
-                        {!! Form::hidden('element_id', $element->id) !!}
-                    </div>
-                    <div class="card-body">
-                        <p>{!! Form::text('name', $element->name, array('placeholder' => 'Название', 'id' => 'game_name', 'class' => 'form-control w-100')) !!}</p>
-                        <p>{!! Form::textarea('description', $element->description, array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'game_description')) !!}</p>
-                        <b>Обложка</b> {!! Form::file('cover'); !!}
-                    </div>
-                    <div class="card-footer">
-                        {!! Form::submit('Сохранить', array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
-                    </div>
-                    {!! Form::close() !!}
-                </div>
-            </div>
+            <div class="col-md-9 mb-4"> @include('admin.cards.form') </div>
             <div class="col-md-3 mb-4">
                 <div class="card @include('card.class')">
-                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section, $element->id) !!}" alt="">
+                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section->alt_name, $element->id) !!}" alt="">
                     <div class="card-body text-center">
                         <div class="btn-group">
                             {!! DummyHelper::getExtLink('wiki', $element->name); !!}

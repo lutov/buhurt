@@ -21,37 +21,10 @@
             </div>
         @endif
         <div class="row">
-            <div class="col-md-9 mb-4">
-                <div class="card @include('card.class')">
-                    {!! Form::open(array('action' => 'Admin\DatabaseController@save', 'class' => 'add_game', 'method' => 'POST', 'files' => true)) !!}
-                    <div class="card-header">
-                        <h1 class="card-title">@yield('title')</h1>
-                        <h2 class="card-subtitle mb-2 text-muted">@yield('subtitle')</h2>
-                        {!! Form::hidden('action', 'edit') !!}
-                        {!! Form::hidden('section', 'games') !!}
-                        {!! Form::hidden('element_id', $element->id) !!}
-                    </div>
-                    <div class="card-body">
-                        <p>{!! Form::text('name', $element->name, array('placeholder' => 'Название игры', 'id' => 'name', 'class' => 'form-control w-100')) !!}</p>
-                        <p>{!! Form::text('alt_name', implode('; ', $element->alt_name), array('placeholder' => 'Альтернативное или оригинальное название игры', 'id' => 'alt_name', 'class' => 'form-control w-100')) !!}</p>
-                        <p>{!! Form::text('developers', $developers, array('placeholder' => 'Разработчик', 'class' => 'form-control w-100', 'id' => 'developers')) !!}</p>
-                        <p>{!! Form::text('games_publishers', $games_publishers, array('placeholder' => 'Издатель', 'class' => 'form-control w-100', 'id' => 'games_publishers')) !!}</p>
-                        <p>{!! Form::textarea('description', $element->description, array('placeholder' => 'Описание', 'class' => 'form-control w-100', 'id' => 'description')) !!}</p>
-                        <p>{!! Form::text('genres', $genres, array('placeholder' => 'Жанр', 'class' => 'form-control w-100', 'id' => 'genres')) !!}</p>
-                        <p>{!! Form::text('platforms', $platforms, array('placeholder' => 'Платформа', 'class' => 'form-control w-100', 'id' => 'platforms')) !!}</p>
-                        <p>{!! Form::text('year', $element->year, array('placeholder' => 'Год выпуска', 'class' => 'form-control w-25')) !!}</p>
-                        <p>{!! Form::text('collections', $collections, array('placeholder' => 'Коллекции', 'class' => 'form-control w-100', 'id' => 'collections')) !!}</p>
-                        <b>Обложка</b> {!! Form::file('cover'); !!}
-                    </div>
-                    <div class="card-footer">
-                        {!! Form::submit('Сохранить', array('id' => 'save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
-                    </div>
-                    {!! Form::close() !!}
-                </div>
-            </div>
+            <div class="col-md-9 mb-4"> @include('admin.cards.form') </div>
             <div class="col-md-3 mb-4">
                 <div class="card @include('card.class')">
-                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section, $element->id) !!}" alt="">
+                    <img class="card-img-top" src="{!! ElementsHelper::getCover($section->alt_name, $element->id) !!}" alt="">
                     <div class="card-body text-center">
                         <div class="btn-group">
                             {!! DummyHelper::getExtLink('wiki', $element->name); !!}
@@ -67,7 +40,7 @@
                         Жанры игр
                     </div>
                     <div class="collapse" id="games_genres_container">
-                        @include('collection.names.array', array('id' => 'genres_list', 'collection' => ElementsHelper::getGenres($section)))
+                        @include('collection.names.array', array('id' => 'genres_list', 'collection' => ElementsHelper::getGenres($section->alt_name)))
                     </div>
                     <div class="card-header" data-toggle="collapse" data-target="#platforms_container"
                          aria-expanded="false" aria-controls="platforms_container">

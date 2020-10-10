@@ -48,6 +48,10 @@ class Film extends Model {
 	protected $appends = ['cover', 'rating', 'simple_relations'];
 
 	public bool $verification = true;
+    public bool $has_alt_name = true;
+    public bool $has_description = true;
+    public bool $has_year = true;
+    public bool $has_length = true;
 
 	/**
 	 * @return mixed

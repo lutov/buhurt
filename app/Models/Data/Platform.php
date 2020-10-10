@@ -19,6 +19,7 @@ class Platform extends Eloquent {
 	protected $fillable = array('name');
 
 	public bool $verification = false;
+    public bool $has_description = true;
 
 	/**
 	 * @return mixed
