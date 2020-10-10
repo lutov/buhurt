@@ -14,7 +14,7 @@
                         @endphp
                         <a href="{{$url}}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-light">
                             <span class="text-dark">{!! $element->name !!}</span>
-                            @if($options['count']) <span class="small text-secondary">({{$element->count}})</span> @endif
+                            @if(isset($options['count']) && $options['count']) <span class="small text-secondary">({{$element->count}})</span> @endif
                         </a>
                     @endif
                 @endforeach

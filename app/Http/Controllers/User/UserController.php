@@ -34,7 +34,7 @@ use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationR
 
 class UserController extends Controller {
 
-	private $prefix = 'users';
+	private $prefix = 'user';
 
 	/**
 	 * @param Request $request
@@ -1024,17 +1024,30 @@ class UserController extends Controller {
 
 			$sort = $request->get('sort', 'created_at');
 			$order = $request->get('order', 'desc');
-			$limit = 28;
+			$limit = 60;
+
+            $sort_options = array(
+                'created_at' => 'Время добавления',
+                'name' => 'Имя',
+            );
 
 			$elements = User::select('id', 'username as name')
 				->orderBy($sort, $order)
 				->paginate($limit)
 			;
 
+			$options = array(
+                'paginate' => true,
+                'sort_options' => $sort_options,
+                'sort' => $sort,
+                'order' => $order,
+            );
+
 			return View::make('sections.user.list', array(
 				'request' => $request,
 				'elements' => $elements,
-				'section' => 'user',
+				'options' => $options,
+				'section' => SectionsHelper::getSection($section),
 				'ru_section' => $ru_section,
 			));
 

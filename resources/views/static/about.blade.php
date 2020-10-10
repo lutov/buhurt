@@ -1,22 +1,11 @@
 @extends('layouts.default')
-
 @section('title')О сайте@stop
-
 @section('subtitle')Часто задаваемые вопросы@stop
-
 @section('content')
-
-    <section class="text-center mt-5">
-
-        <h1 class="">@yield('title')</h1>
-        <h2 class="">@yield('subtitle')</h2>
-
-    </section>
-
-    <div class="row">
-        <div class="col-md-12">
-
-            {!! Breadcrumbs::render('about') !!}
+    @include('item.cards.title', array('title' => 'О сайте', 'subtitle' => 'Часто задаваемые вопросы'))
+    <div class="pb-4">
+    <div class="card">
+        <div class="card-body">
 
             <blockquote class="blockquote">Что это за сайт?</blockquote>
             <div class="mb-5">Бугурт — это система хранения оценок к фильмам, книгам, играм и музыкальным альбомам. Она
@@ -82,9 +71,9 @@
 
             <iframe frameborder="0" allowtransparency="true" scrolling="no"
                     src="https://money.yandex.ru/embed/donate.xml?account=410013434601073&quickpay=donate&payment-type-choice=on&default-sum=100&targets=%D0%9D%D0%B0+%D0%BF%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D1%83+%D0%B8+%D1%80%D0%B0%D0%B7%D0%B2%D0%B8%D1%82%D0%B8%D0%B5+%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B&target-visibility=on&project-name=%C2%AB%D0%91%D1%83%D0%B3%D1%83%D1%80%D1%82%C2%BB&project-site=http%3A%2F%2Fwww.free-buhurt.club%2F&button-text=05&successURL="
-                    width="509" height="133"></iframe>
+                    width="509" height="36"></iframe>
 
         </div>
     </div>
-
+    </div>
 @stop
