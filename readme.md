@@ -40,7 +40,7 @@ https://buhurt.ru
 
 ## Техническая реализация
 
-Проект написан на PHP и работает на фреймворке [Laravel](https://github.com/laravel/laravel), который последовательно обновлялся с версии 4.2 до 5.8 на данный момент.
+Проект написан на PHP и работает на фреймворке [Laravel](https://github.com/laravel/laravel), который последовательно обновлялся с версии 4.2 до 8.0 на данный момент.
 
 Фронтэнд реализован на [jQuery](https://github.com/jquery/jquery) и [Bootstrap](https://github.com/twbs/bootstrap) 4.
 
