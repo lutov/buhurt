@@ -4,7 +4,6 @@
 @section('keywords'){!! $element->name !!}, сиквелы, приквелы, ремейки, адаптации@stop
 @section('description')Связи «{!! $element->name !!}» с другими произведениями@stop
 @section('content')
-
     <div class="row">
         <div class="@include('card.grid.sidebar') mb-4">
             @include('section.cards.item')
@@ -27,9 +26,7 @@
             @endif
         </div>
     </div>
-
     @if(RolesHelper::isAdmin($request))
-
         <script>
             function preview(element_id, section) {
                 var block = $('#element_id_' + element_id);
@@ -41,130 +38,63 @@
                 }
             }
         </script>
-
         <div class="pb-4">
             <div class="card @include('card.class')">
                 <div class="card-body">
-
                     <div class="row">
-
                         <div class="col-md-10">
-
-                            {!! Form::open(array('action' => array('Search\RelationsController@addRelation', $section->alt_name, $element->id), 'class' => 'add_relation', 'method' => 'POST', 'files' => true)) !!}
-
-                            <div class="form-row">
-                                <div class="col">
-                                    {!! Form::text('relations', $value = '', $attributes = array(
-                                        'placeholder' => 'Связанные произведения',
-                                        'id' => 'relations',
-                                        'class' => 'form-control'
-                                    )) !!}
+                            <form action="/{{ $section->alt_name }}/{{ $element->id }}/relations/add" class="add_relation" method="POST">
+                                <div class="form-row">
+                                    <div class="col">
+                                        <input name="relations" placeholder="Связанные произведения" id="relations" class="form-control" />
+                                    </div>
+                                    <div class="col">
+                                        @include('widgets.select', array('select_name' => 'section', 'options' => $sections_list, 'selected' => $section->alt_name, 'class' => 'form-control'))
+                                    </div>
+                                    <div class="col">
+                                        @include('widgets.select', array('select_name' => 'relation', 'options' => $relations_list, 'selected' => null, 'class' => 'form-control'))
+                                    </div>
+                                    <div class="col">
+                                        <input type="submit" value="Сохранить" id="relation_save" class="btn btn-secondary" />
+                                    </div>
                                 </div>
-                                <div class="col">
-                                    {!! Form::select('section', $sections_list, $section->alt_name, $attributes = array(
-                                        'class' => 'form-control',
-                                        'autocomplete' => 'off',
-                                    )) !!}
-                                </div>
-                                <div class="col">
-                                    {!! Form::select('relation', $relations_list, null, $attributes = array(
-                                        'class' => 'form-control'
-                                    )) !!}
-                                </div>
-                                <div class="col">
-                                    {!! Form::submit('Сохранить', $attributes = array('id' => 'relation_save', 'class' => 'btn btn-secondary', 'role' => 'button')) !!}
-                                </div>
-                            </div>
-
-                            {!! Form::close() !!}
-
+                            </form>
                         </div>
-
                     </div>
-
                     @foreach($relations_simple as $relation_simple)
-
                         @php
                             $relation_section = SectionsHelper::getSectionBy($relation_simple['element_type']);
                         @endphp
-
                         <div class="row mt-3">
                             <div class="col-md-10">
-
-                                {!! Form::open(array(
-                                'action' => array('Search\RelationsController@editRelation', $section->alt_name, $element->id),
-                                'class' => 'edit_relation',
-                                'method' =>'POST',
-                                'files' => true
-                                )); !!}
-
+                                <form action="/{{ $section->alt_name }}/{{ $element->id }}/relations/edit" class="edit_relation" method="POST">
                                 <div class="form-row">
-
                                     <input type="hidden" name="relation_id" value="'.$relation_simple['id'].'">
-
                                     <div class="col">
-                                        {!! Form::text('element_id', $value = $relation_simple['element_id'], $attributes = array(
-                                        'placeholder' => 'Произведение',
-                                        'id' => 'element_id_'.$relation_simple['element_id'],
-                                        'class' => 'form-control',
-                                        'onmouseover' => 'preview('.$relation_simple['element_id'].', \''.$relation_section.'\')',
-                                        'autocomplete' => 'off',
-                                        )); !!}
+                                        <input name="element_id" value={{ $relation_simple['element_id'] }} placeholder="Произведение" id="element_id_{{ $relation_simple['element_id'] }}" class="form-control" onmouseover="preview('{{ $relation_simple['element_id'] }}', '{{ $relation_section }}')" autocomplete="off" />
                                     </div>
-
                                     <div class="col">
-                                        {!! Form::select('element_section', $sections_list, $relation_section, $attributes = array(
-                                        'class' => 'form-control',
-                                        'autocomplete' => 'off',
-                                        )); !!}
+                                        @include('widgets.select', array('select_name' => 'element_section', 'options' => $sections_list, 'selected' => $relation_section, 'class' => 'form-control'))
                                     </div>
-
                                     <div class="col">
-                                        {!! Form::select('relation_type', $relations_list, $relation_simple['relation_id'], $attributes = array(
-                                        'class' => 'form-control',
-                                        'autocomplete' => 'off',
-                                        )); !!}
-
+                                        @include('widgets.select', array('select_name' => 'relation_type', 'options' => $relations_list, 'selected' => $relation_simple['relation_id'], 'class' => 'form-control'))
                                     </div>
-
                                     <div class="col">
-                                        {!! Form::submit('Сохранить', $attributes = array(
-                                        'id' => 'relation_save',
-                                        'class' => 'btn btn-secondary',
-                                        'role' => 'button'
-                                        )); !!}
+                                        <input type="submit" value="Сохранить" id="relation_save" class="btn btn-secondary" />
                                     </div>
-
                                 </div>
-
-                                {!! Form::close(); !!}
-
+                                </form>
                             </div>
-
                             <div class="col-md-2">
-                                {!! Form::open(array(
-                                'action' => array('Search\RelationsController@deleteRelation', $section->alt_name, $element->id),
-                                'class' => 'delete_relation',
-                                'method' =>'POST',
-                                'files' => true
-                                )); !!}
-                                <input type="hidden" name="relation_id" value="{!! $relation_simple['id'] !!}">
-                                {!! Form::submit('Удалить', $attributes = array(
-                                'id' => 'relation_save',
-                                'class' => 'btn btn-danger',
-                                'role' => 'button'
-                                )); !!}
-                                {!! Form::close(); !!}
+                                <form action="/{{ $section->alt_name }}/{{ $element->id }}/relations/delete" class="delete_relation" method="POST">
+                                    <input type="hidden" name="relation_id" value="{!! $relation_simple['id'] !!}">
+                                    <input type="submit" value="Удалить" id="relation_save" class="btn btn-danger" />
+                                </form>
                             </div>
-
                         </div>
-
                     @endforeach
-
                 </div>
             </div>
         </div>
-
     @endif
-
 @stop
