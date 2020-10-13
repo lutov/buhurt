@@ -70,7 +70,7 @@
 
             @if(method_exists($element, 'games_publishers'))
                 <p>
-                    <input name="producers" value="{{ $games_publishers }}" placeholder="Издатель" id="games_publishers" class="form-control w-100" />
+                    <input name="games_publishers" value="{{ $games_publishers }}" placeholder="Издатель" id="games_publishers" class="form-control w-100" />
                 </p>
             @endif
 
