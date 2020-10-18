@@ -89,10 +89,7 @@
         <div class="card-footer">
             <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="small"
                  style="opacity: .5;">
-                <meta itemprop="worstRating" content="1">
-                Средняя оценка: <b itemprop="ratingValue">{!! $rating['average'] !!}</b>
-                <meta itemprop="bestRating" content="10">
-                ,
+                <meta itemprop="worstRating" content="1">Средняя оценка: <b itemprop="ratingValue">{!! $rating['average'] !!}</b><meta itemprop="bestRating" content="10">,
                 {!! TextHelper::ratingCount($rating['count'], array('голос', 'голоса', 'голосов')); !!}
             </div>
         </div>
