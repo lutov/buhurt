@@ -1,4 +1,4 @@
-<form action="/transfer/{{ $section->alt_name }}/{{ $element->id }}" class="transfer" method="POST">
+<form action="/admin/transfer/{{ $section->alt_name }}/{{ $element->id }}" class="transfer" method="POST">
 <div>
     <input name="recipient_id" value="" placeholder="Преемник" id="recipient" class="form-control" />
 </div>
