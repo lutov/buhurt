@@ -49,6 +49,8 @@ class Album extends Model {
 	protected $appends = ['cover', 'rating', 'simple_relations'];
 
 	public bool $verification = true;
+    public bool $has_description = true;
+    public bool $has_year = true;
 
 	/**
 	 * @return mixed

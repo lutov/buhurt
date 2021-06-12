@@ -20,6 +20,7 @@
             @endif
 
             @if(method_exists($element, 'tracks'))
+                <p><input type="button" class="btn btn-secondary" value="Добавить трек" onclick="add_track()"></p>
                 <ol id="tracks">
                     @php
                         /** @var $element */
@@ -29,7 +30,6 @@
                         <li><input type="text" class="form-control w-100 mb-3" name="tracks[]" placeholder="Трек" value="{!! $track->name !!}"/></li>
                     @endforeach
                 </ol>
-                <p><input type="button" class="btn btn-secondary" value="Добавить трек" onclick="add_track()"></p>
             @endif
 
             @if(method_exists($element, 'writers'))
