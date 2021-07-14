@@ -47,3 +47,13 @@
     ExpiresByType application/x-icon "access plus 1 year"
 </IfModule>
 # END EXPIRES
+
+ErrorDocument 403 /403.html
+# Order deny,allow
+# Deny from all
+# Allow from 127.0.0.1
+
+<files "403.html">
+Order deny,allow
+Allow from all
+</files>
