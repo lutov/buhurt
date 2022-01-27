@@ -1,35 +1,33 @@
 <?php namespace App\Http\Controllers\User;
 
-use App\Helpers\DebugHelper;
 use App\Helpers\ElementsHelper;
-use App\Helpers\UserHelper;
-use App\Http\Controllers\Controller;
-use App\Models\Data\Collection;
-use App\Models\User\Event;
 use App\Helpers\RolesHelper;
 use App\Helpers\SectionsHelper;
 use App\Helpers\TextHelper;
-use App\Models\User\Unwanted;
-use App\Models\User\User;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
-use ResizeCrop;
-use App\Models\User\Rate;
-use App\Models\User\Option;
-use App\Models\User\Wanted;
+use App\Helpers\UserHelper;
+use App\Http\Controllers\Controller;
+use App\Models\Data\Collection;
 use App\Models\Data\Section;
-use App\Models\User\Roleuser;
 use App\Models\Search\OptionUser;
 use App\Models\User\Achievement;
+use App\Models\User\Event;
+use App\Models\User\Option;
+use App\Models\User\Rate;
+use App\Models\User\Roleuser;
+use App\Models\User\Unwanted;
+use App\Models\User\User;
+use App\Models\User\Wanted;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\View;
+use ResizeCrop;
 use TimeHunter\LaravelGoogleReCaptchaV3\Validations\GoogleReCaptchaV3ValidationRule;
 
 class UserController extends Controller {
@@ -582,7 +580,7 @@ class UserController extends Controller {
 			$ru_section = SectionsHelper::getSectionName($section);
 			$type = SectionsHelper::getSectionType($section);
 
-			$sort = $request->get('sort','created_at');
+            $sort = $request->get('sort', 'wanted.created_at');
 			$order = $request->get('order', 'desc');
 			$limit = 28;
 
@@ -650,7 +648,7 @@ class UserController extends Controller {
             $ru_section = SectionsHelper::getSectionName($section);
             $type = SectionsHelper::getSectionType($section);
 
-			$sort = $request->get('sort', 'created_at');
+            $sort = $request->get('sort', 'unwanted.created_at');
 			$order = $request->get('order', 'desc');
 			$limit = 28;
 
