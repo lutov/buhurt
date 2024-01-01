@@ -8,8 +8,8 @@
 
 namespace App\Helpers;
 
-use DB;
 use Cache;
+use DB;
 use Illuminate\Http\Request;
 
 class DummyHelper {
@@ -230,19 +230,20 @@ class DummyHelper {
 				'albums' => 0,
 			);
 
-			$stats_array['users'] 		= DB::table('users')->count();
-			$stats_array['rates'] 		= DB::table('rates')->count();
-			$stats_array['comments'] 	= DB::table('comments')->count();
-			$stats_array['books'] 		= DB::table('books')->count();
-			$stats_array['films'] 		= DB::table('films')->count();
-			$stats_array['games'] 		= DB::table('games')->count();
-			$stats_array['albums'] 		= DB::table('albums')->count();
+            $stats_array['users'] = DB::table('users')->count();
+            $stats_array['rates'] = DB::table('rates')->count();
+            $stats_array['comments'] = DB::table('comments')->count();
+            $stats_array['books'] = DB::table('books')->count();
+            $stats_array['films'] = DB::table('films')->count();
+            $stats_array['games'] = DB::table('games')->count();
+            $stats_array['albums'] = DB::table('albums')->count();
 
-			$stats_array['created_at'] 	= date('Y-m-d H:i:s');
-			DB::table('stats')->insert($stats_array);
+            $stats_array['created_at'] = date('Y-m-d H:i:s');
+            $stats_array['updated_at'] = date('Y-m-d H:i:s');
+            DB::table('stats')->insert($stats_array);
 
-			return $stats_array;
-		});
+            return $stats_array;
+        });
 
 		$stats .= '<li class="nav"><a class="nav-link disabled" href="#">';
 		$stats .= TextHelper::number($stats_array['books'], array('книга', 'книги', 'книг')).', ';
