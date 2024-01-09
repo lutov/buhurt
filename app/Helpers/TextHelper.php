@@ -19,43 +19,14 @@ class TextHelper {
 		"я","ч","с","м","и","т","ь","б","ю"
 	);
 
-    /**
-     * @var array
-     */
-    protected static $alphaLat = array(
-        "q",
-        "w",
-        "e",
-        "r",
-        "t",
-        "y",
-        "u",
-        "i",
-        "o",
-        "p",
-        "[",
-        "]",
-        "a",
-        "s",
-        "d",
-        "f",
-        "g",
-        "h",
-        "j",
-        "k",
-        "l",
-        ";",
-        "'",
-        "z",
-        "x",
-        "c",
-        "v",
-        "b",
-        "n",
-        "m",
-        ",",
-        "."
-    );
+	/**
+	 * @var array
+	 */
+	protected static $alphaLat = array(
+		"q","w","e","r","t","y","u","i","o","p","[","]",
+		"a","s","d","f","g","h","j","k","l",";","'",
+		"z","x","c","v","b","n","m",",","."
+	);
 
     /**
      * @param string|null $input_text - исходная строка
@@ -63,17 +34,16 @@ class TextHelper {
      * @param string $end_str - символ/строка завершения. Вставляется в конце обрезанной строки
      * @return string
      */
-    public static function wordsLimit(?string $input_text, $limit = 50, $end_str = '…')
-    {
+	public static function wordsLimit(?string $input_text, $limit = 50, $end_str = '…') {
 
-        $input_text = strip_tags($input_text);
-        $words = explode(' ', $input_text); // создаём из строки массив слов
-        if ($limit < 1 || sizeof($words) <= $limit) { // если лимит указан не верно или количество слов меньше лимита, то возвращаем исходную строку
-            return $input_text;
-        }
-        $words = array_slice($words, 0, $limit); // укорачиваем массив до нужной длины
-        $out = implode(' ', $words);
-        return $out . $end_str; //возвращаем строку + символ/строка завершения
+		$input_text = strip_tags($input_text);
+		$words = explode(' ', $input_text); // создаём из строки массив слов
+		if ($limit < 1 || sizeof($words) <= $limit) { // если лимит указан не верно или количество слов меньше лимита, то возвращаем исходную строку
+			return $input_text;
+		}
+		$words = array_slice($words, 0, $limit); // укорачиваем массив до нужной длины
+		$out = implode(' ', $words);
+		return $out.$end_str; //возвращаем строку + символ/строка завершения
 
 	}
 
