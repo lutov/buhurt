@@ -370,8 +370,9 @@ class ElementsHelper
      * @param  User|Authenticatable  $user
      * @return mixed
      */
-    public static function isWanted($element, User $user)
+    public static function isWanted($element, User|Authenticatable $user)
     {
+        if(!$element) {return false;}
         if (method_exists($element, 'wanted')) {
             return $element->wanted
                 ->where('user_id', $user->id)
@@ -386,8 +387,9 @@ class ElementsHelper
      * @param  User|Authenticatable  $user
      * @return mixed
      */
-    public static function isUnwanted($element, User $user)
+    public static function isUnwanted($element, User|Authenticatable $user)
     {
+        if(!$element) {return false;}
         if (method_exists($element, 'wanted')) {
             return $element->unwanted
                 ->where('user_id', $user->id)
