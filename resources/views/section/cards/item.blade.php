@@ -17,6 +17,7 @@
     if('albums' == $section->alt_name) {$square = true;}
     $img_class = ($square) ? 'card-img-box-square' : 'card-img-box';
 @endphp
+@if($element)
 <div class="card @include('card.class') mb-4">
     <div class="card-header">
         <a href="/{{ $section->alt_name }}/{{ $element->id }}" class="one-liner" title="{!! $element->name !!}">
@@ -42,3 +43,4 @@
         </div>
     @endif
 </div>
+@endif
